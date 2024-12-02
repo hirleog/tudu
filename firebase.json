@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "dist/tudu",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

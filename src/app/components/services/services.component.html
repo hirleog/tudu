@@ -1,0 +1,43 @@
+<section id="services" class="container spacement">
+
+  <div data-aos="fade-right" data-aos-duration="900">
+    <div id="content-section" class="content container">
+      <h1>
+        Os <span class="highlight">Melhores</span> Serviços
+      </h1>
+      <p class="pb-3" style="font-size: larger">
+        Oferecemos uma ampla gama de serviços com foco em precisão e cuidado, garantindo que cada veículo receba o
+        melhor tratamento. Nossa equipe especializada utiliza as técnicas mais avançadas para entregar resultados que
+        superam as expectativas, proporcionando satisfação e confiança em cada atendimento.
+      </p>
+      <a class="view-more-btn" href="">Ver todos serviços</a>
+    </div>
+  </div>
+
+  <div id="cards">
+
+    <ng-container class="col-xxl-8 container" *ngFor="let card of cards">
+
+      <div style="padding-bottom: 3em;" class="container">
+        <div class="service-card floating-card col-lg-12 col-md-12 col-sm-12 mb-4" data-aos="fade-up" data-aos-duration="1200">
+          <div>
+            <img [src]="card.image" class=" ak-bg" alt="Card Image" />
+          </div>
+
+          <div class="">
+            <h3>{{ card.title }}</h3>
+            <p>{{ card.description }}</p>
+            <a class="view-more-btn" (click)="wppMessageOptions(card.title)" href="">Consultar</a>
+          </div>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+
+</section>
+
+
+<div id="sub-banner" data-aos="zoom-in">
+  <img class="img-fluid" src="../../../assets/carro-sub-banner.svg" alt="">
+</div>
