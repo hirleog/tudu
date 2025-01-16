@@ -13,7 +13,10 @@
       </div>
     </div>
 
-    <div id="fake"></div>
+    <button id="button-login" class="d-md-none d-block" routerLink="/login" routerLinkActive="active">
+      <li class="fas fa-sign-in-alt" style="color: var(--light); font-size: 2em;"></li>
+    </button>
+
   </div>
 
   <div class="hide-menu" style="display: flex; justify-content: flex-start">
@@ -40,7 +43,7 @@
 
     <!-- <a class="nav-link active" aria-current="page" routerLink="/login" routerLinkActive="active"></a> -->
 
-    <button id="button-login" routerLink="/login" routerLinkActive="active">
+    <button id="button-login" class="d-none d-md-block" routerLink="/login" routerLinkActive="active">
       <li class="fas fa-sign-in-alt" style="color: var(--light); font-size: 2em;"></li>
     </button>
 
