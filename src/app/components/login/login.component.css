@@ -1,0 +1,62 @@
+#login {
+    padding: 6em 0px 4em 0px;
+}
+
+.card {
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    height: 40em;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: var(--primary);
+    color: white;
+    font-weight: bold;
+}
+
+.nav-tabs .nav-link {
+    color: #495057;
+}
+
+.card-body {
+    padding: 2em;
+}
+
+h4 {
+    color: #343a40;
+}
+
+p {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.btn {
+    border-radius: 8px;
+    padding: 0.75em;
+    font-size: 1.1rem;
+}
+
+.btn-primary {
+    background-color: var(--primary);
+    border: none;
+}
+
+.btn-success {
+    background-color: var(--primary);
+    border: none;
+}
+
+.nav-link {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link.active-tab {
+    background-color: var(--primary);
+    /* Azul para o botão ativo */
+    color: white !important;
+    /* Texto branco */
+    font-weight: bold;
+    border-radius: 5px;
+    border-color: var(--primary);
+}

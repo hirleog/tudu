@@ -75,7 +75,10 @@ nav.hidden {
   display: none;
 }
 
-
+#button-login {
+  background-color: rgba(255, 0, 0, 0);
+  border-color: rgba(255, 0, 0, 0);
+}
 
 
 @media (max-width : 768px) {
