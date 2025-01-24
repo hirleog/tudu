@@ -28,16 +28,16 @@
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    background-color: var(--primary); /* Cor do card ao passar o mouse */
+    background-color: var(--primary); 
 }
 
 .card-body i {
-    transition: transform 0.3s, color 0.3s; /* Adicionando transição para a cor */
-    color: var(--primary)!important; /* Cor padrão do ícone */
+    transition: transform 0.3s, color 0.3s; 
+    color: var(--primary)!important; 
 }
 
 .card:hover .card-body i {
-    color: #ffffff!important; /* Cor do ícone quando o mouse passa sobre o card */
-    transform: scale(1.2); /* Aumenta o ícone ao passar o mouse */
+    color: #ffffff!important; 
+    transform: scale(1.2);
 }
   

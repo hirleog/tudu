@@ -1,38 +1,38 @@
 import { Component, OnInit } from '@angular/core';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
+  animations: [
+    trigger('fadeOut', [
+      transition(':leave', [
+        style({ opacity: 1 }),
+        animate('0.3s', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class HomeComponent implements OnInit {
 
+  selectedCard: number | null = null;
+
   serviceCards = [
-    {
-      icon: 'fas fa-laptop-code',
-      title: 'Design e Tecnologia',
-      description: 'Serviços criativos e tecnológicos para você.'
-    },
-    {
-      icon: 'fas fa-broom',
-      title: 'Serviços Domésticos',
-      description: 'Cuidamos da sua casa com dedicação.'
-    },
-    {
-      icon: 'fas fa-tools',
-      title: 'Reformas e Reparos',
-      description: 'Transformamos seus espaços com qualidade.'
-    },
-    {
-      icon: 'fas fa-user-tie',
-      title: 'Consultoria',
-      description: 'Orientação especializada para o seu negócio.'
-    }
+    { id: 1, icon: 'fas fa-cogs', title: 'Design e Tecnologia' },
+    { id: 2, icon: 'fas fa-home', title: 'Serviços Domésticos' },
+    { id: 3, icon: 'fas fa-wrench', title: 'Reformas e Reparos' },
+    { id: 4, icon: 'fas fa-briefcase', title: 'Consultoria' }
   ];
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  // Função para selecionar um card
+  selectCard(cardId: number) {
+    this.selectedCard = cardId;
   }
 
 }
