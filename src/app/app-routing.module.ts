@@ -5,11 +5,13 @@ import { ClientReviewsComponent } from './components/client-reviews/client-revie
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProposalComponent } from './components/proposal-flow/proposal/proposal.component';
+import { AddressComponent } from './components/address/address.component';
 
 const routes: Routes = [
   // { path: '', component: HeroComponent },
   { path: '', component: HomeComponent },
   { path: 'proposal', component: ProposalComponent },
+  { path: 'address', component: AddressComponent },
   { path: 'about', component: AboutComponent },
   { path: 'reviews', component: ClientReviewsComponent },
 

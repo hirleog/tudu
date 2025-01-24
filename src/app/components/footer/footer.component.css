@@ -1,9 +1,17 @@
+.container {
+  flex: 1; /* Faz com que o conteúdo da página ocupe o máximo de espaço possível */
+}
+
 #footer {
   display: flex;
   justify-content: center;
+  background: var(--secondary-light);
+  width: 100%;
+  padding: 10px 0;
+
 }
 
-p {
+/* p {
   color: rgb(184, 184, 184);
   font-size: x-small;
 }
@@ -72,9 +80,7 @@ hr {
 }
 
 @media (min-width:473px) {
-  /* h1 {
-    font-size: 22px;
-  } */
+ 
 }
 
 
@@ -84,4 +90,4 @@ hr {
     margin-right: 0;
     font-weight: 600
   }
-}
+} */

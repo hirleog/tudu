@@ -1,8 +1,8 @@
 #hero {
-    background-color: #f8f9fa;
+    /* background-color: #f8f9fa; */
     display: flex;
     align-items: center !important;
-    padding-top: 7em;
+    /* padding-top: 7em; */
 }
 
 .hr {

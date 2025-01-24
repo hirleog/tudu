@@ -41,7 +41,8 @@ export class ProposalComponent implements OnInit {
 
   // Método para tratar o envio do formulário
   onSubmit(): void {
-    console.log('Opções selecionadas:', this.selectedOptions);
+    this.route.navigate(['/address']);
+
   }
   goBack(): void {
     this.route.navigate(['/']);

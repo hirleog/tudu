@@ -16,6 +16,7 @@ import { NavComponent } from './components/nav/nav.component';
 import { ServicesComponent } from './components/services/services.component';
 import { ProposalComponent } from './components/proposal-flow/proposal/proposal.component';
 import { MultiSelectComponent } from './components/ui/multi-select/multi-select.component';
+import { AddressComponent } from './components/address/address.component';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { MultiSelectComponent } from './components/ui/multi-select/multi-select.
     HomeComponent,
     ProposalComponent,
     MultiSelectComponent,
+    AddressComponent,
   ],
   imports: [
     BrowserModule,

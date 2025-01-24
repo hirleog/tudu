@@ -69,10 +69,7 @@ body {
 }
 
 section {
-  background-color: var(--medium);
-  /* margin-bottom: 10em; */
-  /* height: 100%; */
-  /* padding-top: 6em !important; */
+  background-color: var(--light);
 }
 
 h1 {

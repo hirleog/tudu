@@ -39,13 +39,12 @@
                 </div>
             </div>
             <!-- Botão de envio -->
-            <div class="container fixed-buttons" >
+            <div class="container fixed-buttons">
                 <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button>
-                <button *ngIf="isLastSlide" class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="next"
-                    (click)="onSubmit()">Proxímo</button>
+                <button *ngIf="isLastSlide" class="btn btn-primary mt-3" data-bs-target="#formCarousel"
+                    data-bs-slide="next">Proxímo</button>
 
-                <button *ngIf="!isLastSlide" class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="next"
-                    (click)="onSubmit()">Avançar</button>
+                <button *ngIf="!isLastSlide" class="btn btn-primary mt-3" (click)="onSubmit()">Avançar</button>
             </div>
         </div>
     </div>
@@ -53,4 +52,4 @@
 </section>
 
 
-<app-footer></app-footer>
+<!-- <app-footer></app-footer> -->
