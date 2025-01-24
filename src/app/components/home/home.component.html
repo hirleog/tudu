@@ -1,16 +1,16 @@
-<section id="hero" class="mt-5">
+<section id="hero">
 
 
-    <div class="container p-5 bg-light">
+    <div class="container bg-light">
         <!-- Barra de busca -->
         <div class="row justify-content-center space">
             <div class="col-12">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Encontre o serviço que precisa..."
+                    <input type="text" class="form-control input-ui" placeholder="Encontre o serviço que precisa..."
                         aria-label="Buscar serviços">
-                    <button class="btn btn-primary" type="button">
+                    <!-- <button class="btn btn-primary" type="button">
                         Buscar
-                    </button>
+                    </button> -->
                 </div>
             </div>
         </div>
@@ -19,8 +19,8 @@
 
         <!-- Vitrine de serviços -->
         <div class="row g-4 space">
-            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3"
-                (click)="selectCard(card.id)">
+            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" (click)="selectCard(card)"
+                [ngClass]="{'disabled-card': card.disabled}">
 
                 <div class="card h-100 shadow-sm text-center" *ngIf="selectedCard === null || selectedCard === card.id"
                     [@fadeOut]>

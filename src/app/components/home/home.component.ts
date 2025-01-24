@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
+import { Router } from '@angular/router';
+import { card } from '../interfaces/card';
 
 @Component({
   selector: 'app-home',
@@ -18,21 +20,22 @@ export class HomeComponent implements OnInit {
 
   selectedCard: number | null = null;
 
-  serviceCards = [
-    { id: 1, icon: 'fas fa-cogs', title: 'Design e Tecnologia' },
-    { id: 2, icon: 'fas fa-home', title: 'Serviços Domésticos' },
-    { id: 3, icon: 'fas fa-wrench', title: 'Reformas e Reparos' },
-    { id: 4, icon: 'fas fa-briefcase', title: 'Consultoria' }
+  serviceCards: card[] = [
+    { id: 1, icon: 'fas fa-tools', title: 'Montador de Moveis', disabled: false },
+    { id: 2, icon: 'fas fa-home', title: 'Serviços Domésticos', disabled: true },
+    { id: 3, icon: 'fas fa-wrench', title: 'Reformas e Reparos', disabled: true },
+    { id: 4, icon: 'fas fa-briefcase', title: 'Consultoria', disabled: true },
   ];
 
-  constructor() { }
+  constructor(private route: Router) { }
 
   ngOnInit(): void {
   }
 
   // Função para selecionar um card
-  selectCard(cardId: number) {
-    this.selectedCard = cardId;
+  selectCard(card: any) {
+    this.selectedCard = card;
+    this.route.navigate(['/proposal', card]);
   }
 
 }

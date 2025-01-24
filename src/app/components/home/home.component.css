@@ -1,9 +1,8 @@
 #hero {
     background-color: #f8f9fa;
-}
-
-.space {
-    margin: 4em 0px 4em 0px;
+    display: flex;
+    align-items: center !important;
+    padding-top: 7em;
 }
 
 .hr {
@@ -28,16 +27,25 @@
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    background-color: var(--primary); 
+    background-color: var(--primary);
 }
 
 .card-body i {
-    transition: transform 0.3s, color 0.3s; 
-    color: var(--primary)!important; 
+    transition: transform 0.3s, color 0.3s;
+    color: var(--primary) !important;
 }
 
 .card:hover .card-body i {
-    color: #ffffff!important; 
+    color: #ffffff !important;
     transform: scale(1.2);
 }
-  
+
+.disabled-card {
+    pointer-events: none;
+    /* Desabilita interações com o card */
+    opacity: 0.5;
+    /* Reduz a opacidade para indicar desabilitado */
+    cursor: not-allowed;
+    /* Mostra o cursor de "não permitido" */
+}
+

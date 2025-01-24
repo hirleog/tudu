@@ -1,0 +1,46 @@
+body {
+    overflow: hidden !important;
+    /* background-color: var(--medium); */
+
+}
+
+.container {
+    overflow: hidden;
+}
+
+#proposal {
+    /* padding-bottom: 7em; */
+    /* background-color: red; */
+    height: 50em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+#proposal-header {
+    /* height: 49em; */
+    display: flex;
+    justify-content: start;
+}
+
+.fixed-buttons {
+    position: fixed;
+    bottom: 18%;
+    /* Distância do rodapé */
+    left: 50%;
+    /* Centraliza horizontalmente */
+    transform: translateX(-50%);
+    /* Ajusta para alinhar ao centro */
+    z-index: 1050;
+    /* Garante que fique acima dos outros elementos */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    /* Espaçamento entre os botões */
+}
+
+.fixed-buttons button {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    /* Sombras para destacar */
+}

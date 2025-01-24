@@ -11,10 +11,12 @@ p {
 .site-footer {
   background: var(--secondary-light);
   padding: 45px 0 20px;
-  margin-bottom: -4em;
+  margin-bottom: 0em;
   font-size: 15px;
   line-height: 24px;
   color: #737373;
+  position: relative;
+  height: 133px;
 }
 
 hr {

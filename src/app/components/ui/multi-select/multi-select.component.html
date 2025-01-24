@@ -1,0 +1,16 @@
+<div class="container d-flex justify-content-center" *ngIf="withoutInput">
+    <input id="filter" type="text" class="form-control input-ui" placeholder="Encontre o serviço que precisa..."
+        aria-label="Buscar serviços" [(ngModel)]="filterText" (input)="onFilterChange()" />
+</div>
+
+<div class="container d-flex justify-content-center">
+    <ul class="col-12" (click)="$event.stopPropagation()">
+        <li *ngFor="let option of filteredOptions">
+            <label class="form-check w-100 ms-2 d-flex align-items-center">
+                <input class="form-check-input me-2" type="checkbox" [id]="option" [value]="option"
+                    (change)="onOptionChange($event)" />
+                {{ option }}
+            </label>
+        </li>
+    </ul>
+</div>
