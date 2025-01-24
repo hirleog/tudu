@@ -8,10 +8,11 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientReviewsComponent } from './components/client-reviews/client-reviews.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { ServicesComponent } from './components/services/services.component';
-import { NavComponent } from './template/nav/nav.component';
-import { FooterComponent } from './components/footer/footer.component';
+import { NavComponent } from './components/nav/nav.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { FooterComponent } from './components/footer/footer.component';
     FooterComponent,
     ClientReviewsComponent,
     LoginComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,

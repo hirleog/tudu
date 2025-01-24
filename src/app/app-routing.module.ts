@@ -5,9 +5,11 @@ import { ServicesComponent } from './components/services/services.component';
 import { AboutComponent } from './components/about/about.component';
 import { ClientReviewsComponent } from './components/client-reviews/client-reviews.component';
 import { LoginComponent } from './components/login/login.component';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
-  { path: '', component: HeroComponent },
+  // { path: '', component: HeroComponent },
+  { path: '', component: HomeComponent },
   { path: 'services', component: ServicesComponent },
   { path: 'about', component: AboutComponent },
   { path: 'reviews', component: ClientReviewsComponent },

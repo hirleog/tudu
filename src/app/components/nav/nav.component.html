@@ -1,0 +1,92 @@
+<div *ngIf="openClose === true" (click)="openClose = false" class="overlay"></div>
+
+<nav [ngClass]="{ 'hidden': scrolled }" data-aos="fade-down" class="navbar navbar-expand-lg navbar-light">
+
+  <!-- MOBILE -->
+  <div class=" d-lg-none d-block" style="width: 100%;">
+    <div class="collapse navbar-collapse " data-aos="fade-down" id="ajustes">
+      <div id="burger">
+        <i data-aos="fade-down" (click)="menu()" class="fa-solid fa-bars"></i>
+      </div>
+
+      <div id="logo">
+        <a href="#inicio">
+          <img src="../../../assets/logo.png" class="container-fluid" alt="error" />
+        </a>
+      </div>
+
+      <a routerLink="/login" class="login-button">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-user"></i>
+      </a>
+    </div>
+  </div>
+  <!-- MOBILE -->
+
+
+
+</nav>
+
+
+<nav id="big-screen" class="d-none d-lg-block navbar-light navbar navbar-expand-lg">
+
+  <div class="container">
+    <div id="logo">
+      <a href="#inicio">
+        <img src="../../../assets/molinari-logo.webp" class="container-fluid" alt="error" />
+      </a>
+    </div>
+
+    <!-- <div class=" ">
+      <ul class="big-screen-nav me-auto mb-lg-0 ">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#home">Página Inicial</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#about">Sobre</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#services">Serviços</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#reviews">Clientes</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#contato">Contato</a>
+        </li>
+      </ul>
+    </div> -->
+
+    <a routerLink="/login" class="login-button">
+      <i class="fas fa-bars"></i>
+      <i class="fas fa-user"></i>
+    </a>
+  </div>
+</nav>
+
+<div data-aos="fade-right" class="side-bar" *ngIf="openClose">
+  <div id="logo" style="padding-bottom: 1em;">
+    <a class="d-flex justify-content-center align-content-center" style="width: 100%;" href="#inicio">
+      <img src="../../../assets/molinari-logo.webp" class="container-fluid" alt="error" />
+    </a>
+  </div>
+  <div class="tag-a-effect"></div>
+
+  <!-- <ul style="margin-top: 6em;">
+    <li class="side-item">
+      <a (click)="menu()" class="nav-link active" aria-current="page" href="#home">Pagina Inicial</a>
+    </li>
+    <li class="side-item">
+      <a (click)="menu()" class="nav-link active" aria-current="page" href="#about">Sobre</a>
+    </li>
+    <li class="side-item">
+      <a (click)="menu()" class="nav-link active" aria-current="page" href="#services">Serviços</a>
+    </li>
+    <li class="side-item">
+      <a (click)="menu()" class="nav-link active" aria-current="page" href="#reviews">Clientes</a>
+    </li>
+    <li class="side-item">
+      <a (click)="menu()" class="nav-link active" aria-current="page" href="#contato">Contato</a>
+    </li>
+  </ul> -->
+</div>

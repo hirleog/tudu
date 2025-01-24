@@ -1,0 +1,43 @@
+#hero {
+    background-color: #f8f9fa;
+}
+
+.space {
+    margin: 4em 0px 4em 0px;
+}
+
+.hr {
+    background-color: rgba(0, 0, 0, 0.187);
+}
+
+.search-bar .form-control {
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.search-bar .btn {
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+.card {
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    background-color: var(--primary); /* Cor do card ao passar o mouse */
+}
+
+.card-body i {
+    transition: transform 0.3s, color 0.3s; /* Adicionando transição para a cor */
+    color: var(--primary)!important; /* Cor padrão do ícone */
+}
+
+.card:hover .card-body i {
+    color: #ffffff!important; /* Cor do ícone quando o mouse passa sobre o card */
+    transform: scale(1.2); /* Aumenta o ícone ao passar o mouse */
+}
+  
