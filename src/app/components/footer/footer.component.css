@@ -1,7 +1,17 @@
+#footer {
+  display: flex;
+  justify-content: center;
+}
+
+p {
+  color: rgb(184, 184, 184);
+  font-size: x-small;
+}
+
 .site-footer {
-  background: #000;
-  /* background: var(--secondary); */
+  background: var(--secondary-light);
   padding: 45px 0 20px;
+  margin-bottom: -4em;
   font-size: 15px;
   line-height: 24px;
   color: #737373;
@@ -37,13 +47,6 @@ hr {
   justify-content: space-between;
 }
 
-h1 {
-color: var(--light);
-}
-p {
-  color: var(--light);
-}
-
 @media (max-width:991px) {
   .site-footer [class^=col-] {
     margin-bottom: 30px
@@ -61,7 +64,8 @@ p {
 
   .site-footer .copyright-text,
   .site-footer .social-icons {
-    text-align: center
+    text-align: center;
+    
   }
 }
 

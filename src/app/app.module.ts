@@ -4,12 +4,16 @@ import { AboutComponent } from './components/about/about.component';
 import { HeroComponent } from './components/hero/hero.component';
 
 import { HttpClientModule } from '@angular/common/http'; // Importa o módulo
+import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientReviewsComponent } from './components/client-reviews/client-reviews.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
 import { ServicesComponent } from './components/services/services.component';
-import { FooterComponent } from './template/footer/footer.component';
-import { NavComponent } from './template/nav/nav.component';
+import { NavComponent } from './components/nav/nav.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -20,11 +24,16 @@ import { NavComponent } from './template/nav/nav.component';
     ServicesComponent,
     FooterComponent,
     ClientReviewsComponent,
+    LoginComponent,
+    HomeComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]
