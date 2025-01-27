@@ -1,6 +1,6 @@
 <div class="container d-flex justify-content-center" *ngIf="withoutInput">
     <input id="filter" type="text" class="form-control input-ui" placeholder="Encontre o serviço que precisa..."
-        aria-label="Buscar serviços" [(ngModel)]="filterText" (input)="onFilterChange()" />
+        aria-label="Buscar serviços" [(ngModel)]="filterText" (ngModelChange)="onFilterChange()" />
 </div>
 
 <div class="container d-flex justify-content-center">

@@ -9,9 +9,7 @@ body {
 }
 
 #proposal {
-    /* padding-bottom: 7em; */
-    /* background-color: red; */
-    height: 50em;
+    /* height: 50em; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -26,7 +24,7 @@ body {
 
 .fixed-buttons {
     position: fixed;
-    bottom: 18%;
+    bottom: 2%;
     /* Distância do rodapé */
     left: 50%;
     /* Centraliza horizontalmente */

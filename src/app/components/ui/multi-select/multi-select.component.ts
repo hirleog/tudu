@@ -11,7 +11,7 @@ export class MultiSelectComponent implements OnInit {
   selectedOptions: string[] = [];
 
   filterText: string = '';  // Texto digitado no filtro
-  filteredOptions: string[] = [...this.options];  // Inicializa com todas as opções
+  filteredOptions: string[] = [];
 
   @Input() withoutInput: boolean = true;
   @Input() step: string = '';
@@ -22,10 +22,12 @@ export class MultiSelectComponent implements OnInit {
 
     switch (this.step) {
       case '1':
-        this.filteredOptions = ['Aparador', 'Armário de banheiro', 'Armario de cozinha', 'Beliche ou triliche', 'Berço'];
+        this.options = ['Aparador', 'Armário de banheiro', 'Armario de cozinha', 'Beliche ou triliche', 'Berço'];
+        this.filteredOptions = [...this.options];
         break;
-      case '2':
-        this.filteredOptions = ['Montagem', 'Desmontagem'];
+        case '2':
+          this.options = ['Montagem', 'Desmontagem'];
+          this.filteredOptions = [...this.options];
         break;
 
       default:
@@ -36,6 +38,7 @@ export class MultiSelectComponent implements OnInit {
 
   // Lógica para filtrar as opções conforme o texto digitado
   onFilterChange() {
+
     if (this.filterText) {
       this.filteredOptions = this.options.filter(option =>
         option.toLowerCase().includes(this.filterText.toLowerCase()) // Filtra as opções
