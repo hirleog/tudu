@@ -1,19 +1,111 @@
-<section id="address">
+<section>
 
-    <header>
+    <div id="address">
+
         <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <h1>Endereço</h1>
-                </div>
-            </div>
-        </div>
-    </header>
 
-     <!-- <div id="proposal-header" class="mb-3" style="cursor: pointer;">
-        <a routerLink="/proposal"  class="text-decoration-none text-dark">
-            <i class="fas fa-arrow-left"></i>
-             <p>djasldna</p>
-        </a>
-    </div> -->
+            <!-- Seta para voltar -->
+            <div id="proposal-header" class="mb-3 " style="cursor: pointer;">
+                <a routerLink="/proposal" class="text-decoration-none text-dark">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <!-- 
+                <a class="text-decoration-none text-dark" data-bs-target="#formCarousel" data-bs-slide="prev">
+                    <i class="fas fa-arrow-left"></i>
+                </a> -->
+
+            </div>
+
+
+            <div class="container">
+                <h4 class="text-start mb-3">Onde o serviço vai ser realizado?</h4>
+            </div>
+            <div class="container d-flex justify-content-center">
+
+                <ul class="col-12" (click)="$event.stopPropagation()">
+                    <li *ngFor="let option of options">
+                        <label class="form-check w-100 ms-2 d-flex align-items-center">
+                            <input class="form-check-input me-2" type="radio" [(ngModel)]="optionSelected"
+                                [value]="option" />
+                            {{ option }}
+                        </label>
+                    </li>
+                </ul>
+            </div>
+
+
+            <div *ngIf="optionSelected !== ''" class="container mt-5">
+
+                <hr class="mb-5">
+
+                <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="cep" class="form-label">CEP:</label>
+                            <input id="cep" formControlName="cep" class="form-control" (input)="onCepChange($event)"
+                                maxlength="8" placeholder="Digite o CEP" />
+                            <div *ngIf="addressForm.get('cep')?.invalid && addressForm.get('cep')?.touched"
+                                class="form-text text-danger">
+                                CEP inválido.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="street" class="form-label">Rua:</label>
+                            <input id="street" formControlName="street" class="form-control" readonly
+                                placeholder="Rua" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="neighborhood" class="form-label">Bairro:</label>
+                            <input id="neighborhood" formControlName="neighborhood" class="form-control" readonly
+                                placeholder="Bairro" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="city" class="form-label">Cidade:</label>
+                            <input id="city" formControlName="city" class="form-control" readonly
+                                placeholder="Cidade" />
+                        </div>
+                        <div class="col-md-6">
+                            <label for="state" class="form-label">Estado:</label>
+                            <input id="state" formControlName="state" class="form-control" readonly
+                                placeholder="Estado" />
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label for="number" class="form-label">Número:</label>
+                            <input id="number" formControlName="number" class="form-control" placeholder="Número" />
+                        </div>
+                        <div class="col-md-8">
+                            <label for="complement" class="form-label">Complemento:</label>
+                            <input id="complement" formControlName="complement" class="form-control"
+                                placeholder="Complemento" />
+                        </div>
+                    </div>
+                    <!-- <button type="submit" class="btn btn-primary" >Cadastrar</button> -->
+                    <div class="container fixed-buttons mt-5">
+                        <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
+
+                        <button routerLink="/proposal" class="btn btn-primary mt-3">Voltar</button>
+
+
+                        <button type="submit" [disabled]="addressForm.invalid"
+                            class="btn btn-primary mt-3 send-btn">Proxímo</button>
+
+                        <!-- <button class="btn btn-primary mt-3 send-btn" >Avançar</button> -->
+                    </div>
+                </form>
+            </div>
+
+
+
+            <!-- Botão de envio -->
+        </div>
+    </div>
 </section>
+
+
+<!-- <app-footer></app-footer> -->

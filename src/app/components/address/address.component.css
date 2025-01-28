@@ -5,5 +5,67 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    
+    overflow: auto;
+}
+
+.fixed-buttons {
+    /* position: fixed; */
+    bottom: 2%;
+    /* Distância do rodapé */
+    left: 50%;
+    /* Centraliza horizontalmente */
+    /* transform: translateX(-50%); */
+    /* Ajusta para alinhar ao centro */
+    z-index: 1050;
+    /* Garante que fique acima dos outros elementos */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    /* Espaçamento entre os botões */
+}
+
+.fixed-buttons button {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    /* Sombras para destacar */
+}
+
+.send-btn {
+    background-color: var(--primary);
+    color: var(--light);
+}
+
+
+
+
+
+/* SELECT COMPONENT */
+ul {
+    list-style-type: none;
+    /* background-color: #f1f1f1; */
+    padding: 0em;
+    border: 1px solid #ced4da;
+    appearance: none;
+    border-radius: .25rem;
+}
+
+li {
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    /* Divisória discreta */
+
+}
+
+li:last-child {
+    border-bottom: none;
+    /* Remove a borda do último item */
+}
+
+li:hover {
+    background-color: #f1f1f1;
+    /* Cor de fundo ao passar o mouse */
+    cursor: pointer;
+
+    /* Mostra o cursor como pointer */
 }

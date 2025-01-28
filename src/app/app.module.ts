@@ -4,7 +4,7 @@ import { AboutComponent } from './components/about/about.component';
 import { HeroComponent } from './components/hero/hero.component';
 
 import { HttpClientModule } from '@angular/common/http'; // Importa o módulo
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +17,8 @@ import { ServicesComponent } from './components/services/services.component';
 import { ProposalComponent } from './components/proposal-flow/proposal/proposal.component';
 import { MultiSelectComponent } from './components/ui/multi-select/multi-select.component';
 import { AddressComponent } from './components/address/address.component';
+import { MakeOfferComponent } from './components/proposal-flow/make-offer/make-offer.component';
+import { CurrencyFormatDirective } from './directives/currency-format.directive';
 
 @NgModule({
   declarations: [
@@ -32,6 +34,8 @@ import { AddressComponent } from './components/address/address.component';
     ProposalComponent,
     MultiSelectComponent,
     AddressComponent,
+    MakeOfferComponent,
+    CurrencyFormatDirective,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +43,7 @@ import { AddressComponent } from './components/address/address.component';
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

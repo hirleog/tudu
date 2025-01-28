@@ -1,5 +1,5 @@
 <div class="container d-flex justify-content-center" *ngIf="withoutInput">
-    <input id="filter" type="text" class="form-control input-ui" placeholder="Encontre o serviço que precisa..."
+    <input id="filter" type="text" class="form-control input-ui" placeholder="Digite para filtrar..."
         aria-label="Buscar serviços" [(ngModel)]="filterText" (ngModelChange)="onFilterChange()" />
 </div>
 
@@ -14,3 +14,5 @@
         </li>
     </ul>
 </div>
+
+

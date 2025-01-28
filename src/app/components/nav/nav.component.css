@@ -250,5 +250,4 @@ nav.hidden {
 .login-button:hover {
   background-color: var(--dark);
   color: white;
-  padding: 1em;
 }

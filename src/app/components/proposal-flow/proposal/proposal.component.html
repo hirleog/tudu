@@ -6,24 +6,31 @@
 
             <!-- Seta para voltar -->
             <div id="proposal-header" class="mb-3 " style="cursor: pointer;">
-                <a (click)="goBack()" class="text-decoration-none text-dark">
+                <a *ngIf="isFirstSlide" (click)="goBack()" class="text-decoration-none text-dark">
                     <i class="fas fa-arrow-left"></i> {{ titleCard }}
                 </a>
-            </div>
 
+                <a *ngIf="!isFirstSlide" class="text-decoration-none text-dark" data-bs-target="#formCarousel"
+                    data-bs-slide="prev">
+                    <i class="fas fa-arrow-left"></i> {{ titleCard }}
+                </a>
+
+            </div>
 
             <div id="formCarousel" class="carousel slide" data-bs-interval="false"
                 (slide.bs.carousel)="onSlide($event)">
                 <div class="carousel-inner">
                     <!-- Formulário 1 -->
                     <div class="carousel-item active">
+                        <h4 class="text-start mb-3">Digite o serviço que está procurando</h4>
+
                         <app-multi-select [step]="'1'"></app-multi-select>
                     </div>
 
                     <!-- Formulário 2 -->
                     <div class="carousel-item">
                         <div class="container">
-                            <h4 class="text-start mb-3">Qual serviço você procura?</h4>
+                            <h4 class="text-start mb-3">Qual finalidade?</h4>
                             <app-multi-select [withoutInput]="false" [step]="'2'"></app-multi-select>
                         </div>
                     </div>
@@ -31,7 +38,7 @@
                     <!-- Formulário 3 -->
                     <div class="carousel-item">
                         <div class="container">
-                            <h4 class="text-start mb-3">Explique com o máximo de detalhes o que você precisa</h4>
+                            <h4 class="text-start mb-3">Explique com detalhes o que você precisa</h4>
                             <textarea class="form-control" id="description" rows="4"
                                 placeholder="Digite a descrição aqui..."></textarea>
                         </div>
@@ -40,11 +47,16 @@
             </div>
             <!-- Botão de envio -->
             <div class="container fixed-buttons">
-                <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button>
-                <button *ngIf="isLastSlide" class="btn btn-primary mt-3" data-bs-target="#formCarousel"
+                <button *ngIf="!isFirstSlide" class="btn btn-primary mt-3" data-bs-target="#formCarousel"
+                    data-bs-slide="prev">Voltar</button>
+
+                <button *ngIf="isFirstSlide" routerLink="/" class="btn btn-primary mt-3">Voltar</button>
+
+
+                <button *ngIf="isLastSlide" class="btn btn-primary mt-3 send-btn" data-bs-target="#formCarousel"
                     data-bs-slide="next">Proxímo</button>
 
-                <button *ngIf="!isLastSlide" class="btn btn-primary mt-3" (click)="onSubmit()">Avançar</button>
+                <button *ngIf="!isLastSlide" class="btn btn-primary mt-3 send-btn" (click)="onSubmit()">Avançar</button>
             </div>
         </div>
     </div>

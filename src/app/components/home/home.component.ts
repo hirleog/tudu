@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Router } from '@angular/router';
-import { card } from '../interfaces/card';
+import { card } from '../../interfaces/card';
 
 @Component({
   selector: 'app-home',
