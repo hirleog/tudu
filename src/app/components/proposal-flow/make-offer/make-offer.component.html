@@ -37,16 +37,12 @@
             </div>
 
             <!-- Botão de envio -->
-            <div class="container fixed-buttons">
+            <div class="container d-flex justify-content-center mb-5">
                 <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
 
                 <button routerLink="/" class="btn btn-primary mt-3">Voltar</button>
 
-
-                <!-- <button class="btn btn-primary mt-3 send-btn" data-bs-target="#formCarousel"
-                    data-bs-slide="next">Proxímo</button> -->
-
-                <button class="btn btn-primary mt-3 send-btn"
+                <button class="btn btn-primary mt-3 send-btn" (click)="nextStep()"
                     style="background-color: var(--primary); color: white;">Avançar</button>
             </div>
         </div>

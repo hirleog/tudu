@@ -11,7 +11,7 @@ import { AppHomeComponent } from './components/main/app-home/app-home.component'
 
 const routes: Routes = [
   // { path: '', component: HeroComponent },
-  // { path: '', component: HomeComponent },
+  { path: 'inicio', component: HomeComponent },
   { path: 'proposal', component: ProposalComponent },
   { path: 'offer', component: MakeOfferComponent },
   
