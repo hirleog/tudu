@@ -1,0 +1,24 @@
+/* #address {
+} */
+
+h4,
+a,
+p {
+    color: var(--tag-p-grey) !important;
+    font-weight: 500;
+}
+
+i {
+    color: var(--tag-p-grey) !important;
+}
+
+/* #home-mobile {
+    display: none;
+}
+
+@media (max-width:767px) {
+    
+    #desktop {
+        display: none;
+    }
+  } */

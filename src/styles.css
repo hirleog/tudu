@@ -42,6 +42,7 @@
   --secondary: #1f1f1f;
   --secondary-transparent: #00000079;
   --secondary-light: rgba(24, 24, 24, 0.986);
+  --tag-p-grey: #a6a6a6;
   --light: #ffffff;
   --medium: #f8f9fa;
   --dark: #a2a2a2;
@@ -101,12 +102,13 @@ h4 {
   font-family: 'Poppins', sans-serif;
 
   color: var(--secondary);
-  
+
 }
 
 h4 {
   font-size: 28px;
-  font-size: clamp(18px, 4vw, 32px); /* Tamanho mínimo: 24px, adaptável até 32px */
+  font-size: clamp(18px, 4vw, 32px);
+  /* Tamanho mínimo: 24px, adaptável até 32px */
 
 }
 
@@ -200,7 +202,7 @@ p {
   background-color: var(--medium);
   color: var(--primary);
   border: 1px solid var(--primary);
-  border-radius: 50px!important;
+  border-radius: 50px !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
   padding: 10px 35px;
@@ -259,6 +261,10 @@ p {
   padding: 0.9rem .75rem !important;
 }
 
+.send-btn {
+  background-color: var(--primary);
+  color: var(--light);
+}	
 
 @media (max-width:767px) {
   h1 {

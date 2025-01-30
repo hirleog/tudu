@@ -1,5 +1,5 @@
 p {
-    color: #a6a6a6;
+    color: var(--tag-p-grey);
     font-weight: 700;
 }
 
@@ -54,10 +54,6 @@ p {
     /* Espaçamento entre os botões */
 }
 
-.fixed-buttons button {
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    /* Sombras para destacar */
-}
 
 
 @media (max-width:500px) {

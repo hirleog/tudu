@@ -19,6 +19,8 @@ import { MultiSelectComponent } from './components/ui/multi-select/multi-select.
 import { AddressComponent } from './components/address/address.component';
 import { MakeOfferComponent } from './components/proposal-flow/make-offer/make-offer.component';
 import { CurrencyFormatDirective } from './directives/currency-format.directive';
+import { AppHomeComponent } from './components/main/app-home/app-home.component';
+import { AppMenuComponent } from './components/main/app-menu/app-menu.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +38,8 @@ import { CurrencyFormatDirective } from './directives/currency-format.directive'
     AddressComponent,
     MakeOfferComponent,
     CurrencyFormatDirective,
+    AppHomeComponent,
+    AppMenuComponent,
   ],
   imports: [
     BrowserModule,
