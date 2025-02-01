@@ -14,7 +14,7 @@ export class AppHomeComponent implements OnInit {
       id: 101,
       icon: 'fas fa-tools', // Ícone FontAwesome
       serviceName: 'Reparo Hidráulico',
-      description: 'Preciso de um encanador para consertar um vazamento na cozinha...',
+      description: 'Preciso de um encanador para consertar um vazamento na cozinha djhashdkahkdhakshdhaskdhaksdhksahdkhkdhkashdkhaskdhakshdkshkashdkahk...',
       address: 'Rua das Flores, 123',
       dateTime: '2021-08-10T10:00:00',
       hasQuotes: true

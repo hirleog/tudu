@@ -8,6 +8,7 @@ import { AddressComponent } from './components/address/address.component';
 import { MakeOfferComponent } from './components/proposal-flow/make-offer/make-offer.component';
 import { AppHomeComponent } from './components/main/app-home/app-home.component';
 import { ShowcaseComponent } from './components/showcase/showcase.component';
+import { CardDetailComponent } from './components/main/card-detail/card-detail.component';
 
 const routes: Routes = [
   // { path: '', component: HeroComponent },
@@ -17,13 +18,14 @@ const routes: Routes = [
   
   // { path: 'app-home', component: AppHomeComponent },
   { path: '', component: AppHomeComponent },
+  { path: 'card-detail', component: CardDetailComponent },
 
 
   { path: 'address', component: AddressComponent },
-  { path: 'about', component: AboutComponent },
-  { path: 'reviews', component: ClientReviewsComponent },
-
   { path: 'login', component: LoginComponent },
+  // { path: 'about', component: AboutComponent },
+  // { path: 'reviews', component: ClientReviewsComponent },
+
 ];
 
 @NgModule({
