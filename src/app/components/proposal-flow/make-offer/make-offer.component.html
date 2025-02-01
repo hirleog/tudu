@@ -1,0 +1,50 @@
+<section>
+
+    <div id="make-offer">
+
+        <div class="container d-flex flex-column gap-4">
+
+            <!-- Seta para voltar -->
+            <div id="proposal-header" class="mb-3 " style="cursor: pointer;">
+                <a routerLink="/proposal" class="text-decoration-none text-dark">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <!-- 
+                <a class="text-decoration-none text-dark" data-bs-target="#formCarousel" data-bs-slide="prev">
+                    <i class="fas fa-arrow-left"></i>
+                </a> -->
+
+            </div>
+
+            <div class="d-flex align-items-center justify-content-center mb-5">
+                <h2 class="mb-0 fw-bold">Faça sua oferta</h2>
+                <i class="fas fa-credit-card" style="color: #F80E6E; font-size: 24px; margin-left: 10px;"></i>
+            </div>
+            <div class="d-flex flex-column gap-2">
+                <h2 class="mb-0 fw-bold text-start text-md-center">Defina um preço para esse serviço</h2>
+                <p class="text-start text-md-center">Dica: O preço para montar custa entre 15% e 30% do valor do móvel
+                </p>
+            </div>
+
+            <div class="custom-input-container container">
+                <!-- <label for="valor" class="custom-label">Valor em R$</label> -->
+                <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input" placeholder="0,00">
+            </div>
+
+            <div>
+                <p class="text-start text-md-center">Esse não é o valor final, você pode negociar diretamente com o
+                    prestador.</p>
+            </div>
+
+            <!-- Botão de envio -->
+            <div class="container d-flex justify-content-center mb-5">
+                <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
+
+                <button routerLink="/" class="btn btn-primary mt-3">Voltar</button>
+
+                <button class="btn btn-primary mt-3 send-btn" (click)="nextStep()"
+                    style="background-color: var(--primary); color: white;">Avançar</button>
+            </div>
+        </div>
+    </div>
+</section>

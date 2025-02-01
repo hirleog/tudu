@@ -1,0 +1,47 @@
+<section id="hero">
+
+
+    <div class="container">
+        <!-- Barra de busca -->
+        <div class="row justify-content-center space">
+            <div class="col-12">
+                <h4 class="text-start mb-3">Qual serviço você precisa?</h4>
+                <div class="position-relative">
+                    <input type="text" class="form-control input-ui pe-5"
+                        style="border-radius: 52px; padding-right: 70px; height: 58px;"
+                        placeholder="Encontre o serviço que precisa..." aria-label="Buscar serviços">
+
+                    <button
+                        class="btn btn-pink rounded-circle d-flex align-items-center justify-content-center position-absolute"
+                        style="width: 54.78px; height: 54.78px; right: 1px; top: 50%; transform: translateY(-50%);"
+                        (click)="search()">
+                        <i class="fas fa-search text-white"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr mt-5">
+
+        <!-- Vitrine de serviços -->
+        <div class="row g-4 space">
+            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" (click)="selectCard(card)"
+                [ngClass]="{'disabled-card': card.disabled}">
+
+                <div class="card h-100 shadow-sm text-center" *ngIf="selectedCard === null || selectedCard === card.id"
+                    [@fadeOut]>
+                    <div class="card-body">
+                        <i [class]="card.icon + ' fa-3x text-primary mb-3'"></i>
+                        <h5 class="card-title">{{ card.title }}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <hr class="hr mt-5 mb-5">
+    </div>
+</section>
+
+<ng-container>
+    <app-hero></app-hero>
+</ng-container>

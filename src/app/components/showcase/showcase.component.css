@@ -1,0 +1,73 @@
+#hero {
+    /* background-color: #f8f9fa; */
+    display: flex;
+    align-items: center !important;
+    /* padding-top: 7em; */
+}
+
+h4 {
+    color: var(--secondary) !important;
+}
+
+.hr {
+    background-color: rgba(0, 0, 0, 0.187);
+}
+
+.search-bar .form-control {
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+}
+
+.search-bar .btn {
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}
+
+.card {
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    background-color: var(--primary);
+}
+
+.card-body i {
+    transition: transform 0.3s, color 0.3s;
+    color: var(--primary) !important;
+}
+
+.card:hover .card-body i {
+    color: #ffffff !important;
+    transform: scale(1.2);
+}
+
+.disabled-card {
+    pointer-events: none;
+    /* Desabilita interações com o card */
+    opacity: 0.5;
+    /* Reduz a opacidade para indicar desabilitado */
+    cursor: not-allowed;
+    /* Mostra o cursor de "não permitido" */
+}
+
+
+.btn-pink {
+    background-color: var(--primary);
+    /* Rosa */
+    width: 54.78px;
+    height: 54.78px;
+    border: none;
+    /* box-shadow: 0; */
+}
+
+.btn-pink:hover {
+    background-color: #ff1493;
+    /* Rosa mais escuro ao passar o mouse */
+}
+
+.btn-pink i {
+    font-size: 1rem;
+}

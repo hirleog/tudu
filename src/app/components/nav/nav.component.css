@@ -1,5 +1,4 @@
-/* INCIO DO NAVBAR */
-html body {
+/* html body {
   max-width: 100%;
 }
 
@@ -28,7 +27,7 @@ html body {
   transition: background-color 0.3s ease-in-out;
   display: flex;
   justify-content: space-around;
-  position: fixed;
+  position: fixed !important;
   width: 100%;
 }
 
@@ -45,7 +44,6 @@ nav.hidden {
 
   z-index: 999 !important;
   transition: top 0.6s ease-in-out !important;
-  /* background-color: #00000013; */
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   transition: background-color 0.3s ease-in-out;
@@ -58,7 +56,6 @@ nav.hidden {
   justify-content: space-between;
   padding: 10px 15px;
   position: relative;
-  /* Garante controle sobre a posição dos elementos */
 }
 
 .big-screen-nav {
@@ -66,37 +63,12 @@ nav.hidden {
 
 }
 
-/* FIM DO NAVBAR */
-
-/* icones redes */
-.flex-icons {
-  display: flex;
-  justify-content: flex-end;
-}
-
-#ajustes {
-  display: flex;
-  /* justify-content: space-between; */
-  align-items: center;
-  margin: 0px 10px 0px 10px;
-}
-
-.icons-redes a {
-  font-size: 25px;
-  margin-right: 15px;
-}
-
 #burger i {
-  /* display: none;
-  color: var(--primary);
-  margin: 15px 10px 0px 0px; */
   color: var(--primary);
   font-size: 24px;
   cursor: pointer;
   width: 40px;
-  /* Define um tamanho fixo para alinhamento uniforme */
   text-align: center;
-  /* Centraliza o conteúdo do ícone */
 }
 
 
@@ -105,30 +77,19 @@ nav.hidden {
 #logo {
   width: 7em;
   left: 50%;
-  /* Move o logo para o meio do container */
   font-size: 18px;
   font-weight: bold;
 }
-
-ul {
-  list-style-type: none;
-  /* Remove os marcadores */
-  padding-left: 0;
-  /* Remove o recuo */
-}
-
-
-
 
 .login-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px; /* Espaço entre os ícones */
+  gap: 8px;
   padding: 8px 16px;
   background-color: white;
-  border: 2px solid var(--dark); /* Cor do contorno */
-  border-radius: 50px; /* Torna o contorno oval */
+  border: 2px solid var(--dark);
+  border-radius: 50px;
   color: var(--dark);
   text-decoration: none;
   transition: background-color 0.3s, color 0.3s;
@@ -136,7 +97,7 @@ ul {
 }
 
 .login-button i {
-  font-size: 16px; /* Tamanho dos ícones */
+  font-size: 16px;
 }
 
 .login-button:hover {
@@ -158,7 +119,6 @@ ul {
     opacity: 100%;
     transition: all 0.5s ease;
     z-index: 1000;
-    /* margin-top: 89px; */
   }
 
   #ajustes {
@@ -178,7 +138,6 @@ ul {
   #logo {
     position: absolute;
     transform: translateX(-50%);
-    /* Garante que o logo esteja perfeitamente centralizado */
   }
 
   #big-screen {
@@ -192,17 +151,12 @@ ul {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    /* Cor semitransparente */
     backdrop-filter: blur(5px);
-    /* Aplica o desfoque */
     z-index: 999;
-    /* Fica acima do conteúdo */
-    /* display: none; */
   }
 }
 
 
-/* Extra Small Devices, Phones */
 @media (min-width: 768px) and (max-width: 990px) {
   .side-bar {
     background: var(--secondary-light);
@@ -255,15 +209,45 @@ ul {
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.5);
-    /* Cor semitransparente */
     backdrop-filter: blur(5px);
-    /* Aplica o desfoque */
     z-index: 999;
-    /* Fica acima do conteúdo */
-    /* display: none; */
+
   }
 
   .overlay {
     display: none;
   }
+} */
+
+
+.navbar-expand-lg {
+  background-color: var(--medium);
+  display: flex;
+  justify-content: space-around;
+  padding: 1em;
+  
+}
+
+.login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: white;
+  border: 2px solid var(--dark);
+  border-radius: 50px;
+  color: var(--dark);
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+  gap: 8px;
+}
+
+.login-button i {
+  font-size: 16px;
+}
+
+.login-button:hover {
+  background-color: var(--dark);
+  color: white;
 }

@@ -1,0 +1,79 @@
+<section>
+
+    <div class="container">
+        <h4 class="text-start">Meus pedidos</h4>
+        <hr>
+    </div>
+
+    <div id="desktop" class="d-md-block d-none">
+        <div id="header-desktop" class="container">
+            <div class="d-flex justify-content-between">
+                <a>Publicados(0)</a>
+                <a>Em Andamento(0)</a>
+                <a>Finalizados(0)</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="home-mobile" class="d-block d-md-none">
+
+        <app-menu></app-menu>
+    </div>
+
+
+    <div id="my-orders" class="container">
+        <div class="request-cards-container">
+            <div class="request-card" *ngFor="let card of cards">
+                <div class="request-card-header">
+                    <div class="request-card-icon">
+                        <i [class]="card.icon"></i> <!-- Usando a propriedade icon do array -->
+                    </div>
+                    <div class="request-card-title">
+                        <div class="d-flex align-items-center">
+                            <h5>{{ card.serviceName }} </h5>
+                            <div>&nbsp;•&nbsp;</div>
+                            <!-- <p> {{ card.dateTime | date:'dd/MM/yyyy HH:mm:ss' }}</p> -->
+                            <!-- <p class="mb-0"> {{ card.dateTime | date:'dd-MM-yyyy' }}
+                            </p> -->
+                        </div>
+                        <p class="request-card-description truncate-text">{{ card.address }}</p>
+
+                    </div>
+                </div>
+                <hr>
+                <div class="request-card-body">
+                    <p class="request-card-number">Pedido #{{ card.id }}</p>
+                    <p class="request-card-description truncate-text">{{ card.description }}</p>
+                </div>
+                <hr>
+                <div class="request-card-footer d-flex justify-content-between">
+                    <a href="#" class="request-card-link">Detalhes</a>
+                    <button class="request-quote-btn" *ngIf="card.hasQuotes; else semQuotes">Oba! Orçamentos
+                        disponíveis</button>
+                    <ng-template #semQuotes>
+                        <!-- <span class="request-quote-badge">Orçamento disponível</span> -->
+                        <span class="request-quote-btn disabled-card" style="background-color: grey;">Aguardando uma proposta</span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <div *ngIf="cards.length === 0" class="d-flex align-items-center justify-content-center" style="height: 68vh;">
+        <div class="d-flex flex-column align-items-center gap-3">
+
+            <i class="fas fa-file-lines" style="font-size: 5em;"></i>
+            <p class="fs-3">Você ainda não possui anúncios</p>
+            <button class="btn btn-primary mt-3 send-btn" (click)="goToShowcase()">Anúnciar Gratís</button>
+        </div>
+    </div>
+</section>
+
+<!-- Conteúdo da página -->
+<div class="container mt-5 pt-5">
+</div>

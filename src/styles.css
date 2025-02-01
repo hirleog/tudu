@@ -42,8 +42,9 @@
   --secondary: #1f1f1f;
   --secondary-transparent: #00000079;
   --secondary-light: rgba(24, 24, 24, 0.986);
+  --tag-p-grey: #a6a6a6;
   --light: #ffffff;
-  --medium: #cacacabd;
+  --medium: #f8f9fa;
   --dark: #a2a2a2;
 }
 
@@ -62,16 +63,14 @@ body {
   background: var(--light);
 }
 
-/* 
-body::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-} */
-
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
   /* Oculta a barra de rolagem no Firefox */
+}
+
+section {
+  background-color: var(--light);
 }
 
 h1 {
@@ -91,20 +90,27 @@ h1 {
   /* text-transform: uppercase; */
   font-weight: 600;
 }
+
 h2 {
   font-size: 30px;
   font-weight: 500;
 }
+
 h2,
 h3,
 h4 {
   font-family: 'Poppins', sans-serif;
 
   color: var(--secondary);
+
 }
 
-h4 {
+h4,
+p {
+  color: var(--tag-p-grey) !important;
+  font-weight: 500;
   font-size: 28px;
+  font-size: clamp(18px, 4vw, 32px);
 }
 
 h5 {
@@ -118,8 +124,13 @@ p {
   color: var(--secondary);
 }
 
+hr {
+  background-color: rgba(0, 0, 0, 0.187);
+}
+
 .highlight {
   color: var(--primary);
+  margin: 0px 0px;
 }
 
 .view-more-btn {
@@ -194,22 +205,23 @@ p {
 .btn {
   font-family: 'Poppins', sans-serif;
 
-  background-color: var(--primary);
-  color: var(--light);
-  border: 2px solid var(--primary);
+  background-color: var(--medium);
+  color: var(--primary);
+  border: 1px solid var(--primary);
+  border-radius: 50px !important;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  /* transition: transform 0.3s ease, box-shadow 0.3s ease; */
   padding: 10px 35px;
   font-size: 20px;
   border-radius: unset;
 }
 
 .btn:hover {
-  background-color: var(--light);
-  color: black;
-  transform: translateY(-8px);
+  background-color: var(--primary);
+  color: var(--medium);
+  /* transform: translateY(-8px); */
   box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
-  border: 2px solid var(--light);
+  border: 1px solid var(--primary);
 }
 
 .btn-review {
@@ -247,6 +259,18 @@ p {
   padding-bottom: 3em;
 }
 
+.space {
+  margin: 4em 0px 4em 0px;
+}
+
+.input-ui {
+  padding: 0.9rem .75rem !important;
+}
+
+.send-btn {
+  background-color: var(--primary);
+  color: var(--light);
+}
 
 @media (max-width:767px) {
   h1 {

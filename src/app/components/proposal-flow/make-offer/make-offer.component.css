@@ -1,0 +1,63 @@
+p {
+    color: var(--tag-p-grey);
+    font-weight: 700;
+}
+
+#main-price {
+    font-size: 100px;
+    font-weight: 700;
+    color: #000;
+    display: flex;
+    justify-content: center;
+    padding: 0.5em;
+}
+
+.custom-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.custom-input {
+    font-size: 5rem;
+    font-weight: 600 !important;
+    text-align: center;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: var(--secondary);
+}
+
+.custom-input:focus {
+    /* border-bottom: 3px solid #007bff; */
+    /* Adiciona destaque ao focar */
+}
+
+.custom-input::placeholder {
+    color: var(--secondary);
+}
+
+.fixed-buttons {
+    position: fixed;
+    bottom: 2%;
+    /* Distância do rodapé */
+    left: 50%;
+    /* Centraliza horizontalmente */
+    transform: translateX(-50%);
+    /* Ajusta para alinhar ao centro */
+    z-index: 1050;
+    /* Garante que fique acima dos outros elementos */
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    /* Espaçamento entre os botões */
+}
+
+
+
+@media (max-width:500px) {
+    .custom-input {
+        font-size: 3rem;
+    }
+}
