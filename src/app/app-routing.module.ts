@@ -2,16 +2,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './components/about/about.component';
 import { ClientReviewsComponent } from './components/client-reviews/client-reviews.component';
-import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { ProposalComponent } from './components/proposal-flow/proposal/proposal.component';
 import { AddressComponent } from './components/address/address.component';
 import { MakeOfferComponent } from './components/proposal-flow/make-offer/make-offer.component';
 import { AppHomeComponent } from './components/main/app-home/app-home.component';
+import { ShowcaseComponent } from './components/showcase/showcase.component';
 
 const routes: Routes = [
   // { path: '', component: HeroComponent },
-  { path: 'inicio', component: HomeComponent },
+  { path: 'showcase', component: ShowcaseComponent },
   { path: 'proposal', component: ProposalComponent },
   { path: 'offer', component: MakeOfferComponent },
   

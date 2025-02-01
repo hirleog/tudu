@@ -1,7 +1,6 @@
-/* #address {
-} */
-
-h4,
+#app-home {
+    /* height: 100em; */
+}
 a,
 p {
     color: var(--tag-p-grey) !important;
@@ -12,13 +11,149 @@ i {
     color: var(--tag-p-grey) !important;
 }
 
-/* #home-mobile {
-    display: none;
+
+
+
+
+.request-cards-container {
+    max-width: 700px;
+    margin: auto;
 }
 
-@media (max-width:767px) {
-    
-    #desktop {
-        display: none;
-    }
-  } */
+.request-card {
+    display: flex;
+    flex-direction: column;
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 15px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.request-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.request-card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.request-card-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.request-card-icon i {
+    font-size: 2rem;
+    color: var(--primary) !important;
+    /* Cor rosa */
+}
+
+.request-card-title h5 {
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin: 0;
+    color: #333;
+}
+
+.request-card-title p {
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.request-card-body {
+    margin-bottom: 20px;
+}
+
+.request-card-number {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.request-card-description {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* .request-card-footer {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+} */
+
+.request-card-link {
+    font-size: 0.9rem;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.request-card-link:hover {
+    text-decoration: underline;
+}
+
+.request-quote-badge {
+    background: #28a745;
+    color: white;
+    padding: 5px 10px;
+    font-size: 0.8rem;
+    border-radius: 5px;
+}
+
+.truncate-text {
+    white-space: nowrap;            /* Não permite que o texto quebre a linha */
+    overflow: hidden;               /* Esconde o texto que ultrapassa o limite do contêiner */
+    text-overflow: ellipsis;        /* Adiciona as reticências (...) ao final do texto */
+  }
+
+
+
+
+
+
+
+  .request-quote-btn {
+    background: var(--primary);
+    color: white;
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 600;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.request-quote-btn:hover {
+    background: var(--primary-dark);
+}
+
+.request-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.disabled-card {
+    pointer-events: none;
+    /* Desabilita interações com o card */
+    opacity: 0.5;
+    /* Reduz a opacidade para indicar desabilitado */
+    cursor: not-allowed;
+    /* Mostra o cursor de "não permitido" */
+}

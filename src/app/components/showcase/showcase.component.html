@@ -5,9 +5,18 @@
         <!-- Barra de busca -->
         <div class="row justify-content-center space">
             <div class="col-12">
-                <div class="input-group">
-                    <input type="text" class="form-control input-ui" placeholder="Encontre o serviço que precisa..."
-                        aria-label="Buscar serviços">
+                <h4 class="text-start mb-3">Qual serviço você precisa?</h4>
+                <div class="position-relative">
+                    <input type="text" class="form-control input-ui pe-5"
+                        style="border-radius: 52px; padding-right: 70px; height: 58px;"
+                        placeholder="Encontre o serviço que precisa..." aria-label="Buscar serviços">
+
+                    <button
+                        class="btn btn-pink rounded-circle d-flex align-items-center justify-content-center position-absolute"
+                        style="width: 54.78px; height: 54.78px; right: 1px; top: 50%; transform: translateY(-50%);"
+                        (click)="search()">
+                        <i class="fas fa-search text-white"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -30,15 +39,9 @@
         </div>
 
         <hr class="hr mt-5 mb-5">
-
-        <!-- Mensagem de boas-vindas -->
-        <div class="col-12 space">
-            <div class="text-center">
-                <h1 class="text-center">Tudü que você precisa dentro de um app!</h1>
-                <h2 class="text-muted text-center">Anuncie um serviço e escolha o profissional <br>que mais se adequar!
-                </h2>
-            </div>
-        </div>
     </div>
-
 </section>
+
+<ng-container>
+    <app-hero></app-hero>
+</ng-container>

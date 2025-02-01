@@ -5,6 +5,10 @@
     /* padding-top: 7em; */
 }
 
+h4 {
+    color: var(--secondary) !important;
+}
+
 .hr {
     background-color: rgba(0, 0, 0, 0.187);
 }
@@ -49,3 +53,21 @@
     /* Mostra o cursor de "não permitido" */
 }
 
+
+.btn-pink {
+    background-color: var(--primary);
+    /* Rosa */
+    width: 54.78px;
+    height: 54.78px;
+    border: none;
+    /* box-shadow: 0; */
+}
+
+.btn-pink:hover {
+    background-color: #ff1493;
+    /* Rosa mais escuro ao passar o mouse */
+}
+
+.btn-pink i {
+    font-size: 1rem;
+}

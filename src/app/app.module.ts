@@ -10,7 +10,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientReviewsComponent } from './components/client-reviews/client-reviews.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { NavComponent } from './components/nav/nav.component';
 import { ServicesComponent } from './components/services/services.component';
@@ -21,6 +20,7 @@ import { MakeOfferComponent } from './components/proposal-flow/make-offer/make-o
 import { CurrencyFormatDirective } from './directives/currency-format.directive';
 import { AppHomeComponent } from './components/main/app-home/app-home.component';
 import { AppMenuComponent } from './components/main/app-menu/app-menu.component';
+import { ShowcaseComponent } from './components/showcase/showcase.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +32,7 @@ import { AppMenuComponent } from './components/main/app-menu/app-menu.component'
     FooterComponent,
     ClientReviewsComponent,
     LoginComponent,
-    HomeComponent,
+    ShowcaseComponent,
     ProposalComponent,
     MultiSelectComponent,
     AddressComponent,

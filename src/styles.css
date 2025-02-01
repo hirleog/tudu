@@ -105,11 +105,12 @@ h4 {
 
 }
 
-h4 {
+h4,
+p {
+  color: var(--tag-p-grey) !important;
+  font-weight: 500;
   font-size: 28px;
   font-size: clamp(18px, 4vw, 32px);
-  /* Tamanho mínimo: 24px, adaptável até 32px */
-
 }
 
 h5 {
@@ -123,8 +124,13 @@ p {
   color: var(--secondary);
 }
 
+hr {
+  background-color: rgba(0, 0, 0, 0.187);
+}
+
 .highlight {
   color: var(--primary);
+  margin: 0px 0px;
 }
 
 .view-more-btn {
@@ -264,7 +270,7 @@ p {
 .send-btn {
   background-color: var(--primary);
   color: var(--light);
-}	
+}
 
 @media (max-width:767px) {
   h1 {

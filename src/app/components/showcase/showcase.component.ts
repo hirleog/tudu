@@ -4,9 +4,9 @@ import { Router } from '@angular/router';
 import { card } from '../../interfaces/card';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css'],
+  selector: 'app-showcase',
+  templateUrl: './showcase.component.html',
+  styleUrls: ['./showcase.component.css'],
   animations: [
     trigger('fadeOut', [
       transition(':leave', [
@@ -16,9 +16,10 @@ import { card } from '../../interfaces/card';
     ])
   ]
 })
-export class HomeComponent implements OnInit {
+export class ShowcaseComponent implements OnInit {
 
   selectedCard: number | null = null;
+  searchValue: string = '';
 
   serviceCards: card[] = [
     { id: 1, icon: 'fas fa-tools', title: 'Montador de Moveis', disabled: false },
@@ -32,10 +33,16 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  search() {
+    if (this.searchValue.trim()) {
+      console.log('Você pesquisou por:', this.searchValue);
+      // Aqui você pode implementar a lógica para buscar os serviços
+    }
+  }
+
   // Função para selecionar um card
   selectCard(card: any) {
     this.selectedCard = card;
     this.route.navigate(['/proposal', card]);
   }
-
 }
