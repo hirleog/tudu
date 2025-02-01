@@ -21,6 +21,7 @@ import { CurrencyFormatDirective } from './directives/currency-format.directive'
 import { AppHomeComponent } from './components/main/app-home/app-home.component';
 import { AppMenuComponent } from './components/main/app-menu/app-menu.component';
 import { ShowcaseComponent } from './components/showcase/showcase.component';
+import { CardDetailComponent } from './components/main/card-detail/card-detail.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { ShowcaseComponent } from './components/showcase/showcase.component';
     CurrencyFormatDirective,
     AppHomeComponent,
     AppMenuComponent,
+    CardDetailComponent,
   ],
   imports: [
     BrowserModule,
