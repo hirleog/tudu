@@ -1,6 +1,6 @@
 import { AddressService } from './../../services/address.service';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 
 @Component({
@@ -15,10 +15,10 @@ export class AddressComponent implements OnInit {
   optionSelected: string = '';
   titleFlow: string = 'Onde o serviço vai ser realizado?';
 
-  addressForm: FormGroup;
+  addressForm: UntypedFormGroup;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private addressService: AddressService,
     private route: Router
   ) {
