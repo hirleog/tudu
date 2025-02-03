@@ -45,8 +45,8 @@
                     </div>
                     <hr>
                     <div class="request-card-footer d-flex justify-content-between">
-                        <a href="#" class="request-card-link" routerLink="/card-detail">Detalhes</a>
-                        <button class="request-quote-btn" routerLink="/budgets" *ngIf="card.hasQuotes; else semQuotes">
+                        <a href="#" class="request-card-link" routerLink="/home/detail">Detalhes</a>
+                        <button class="request-quote-btn" routerLink="/home/budgets" *ngIf="card.hasQuotes; else semQuotes">
                             Oba! Orçamentos disponíveis
                         </button>
                         <ng-template #semQuotes>

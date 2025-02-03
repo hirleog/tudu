@@ -2,22 +2,20 @@ import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { HeroComponent } from '../hero/hero.component';
 import { ShowcaseComponent } from './showcase.component';
 
 const routes: Routes = [
-  { path: '', component: ShowcaseComponent }
-
+  { path: '', component: ShowcaseComponent },
 ];
 @NgModule({
   declarations: [
-    ShowcaseComponent
+    ShowcaseComponent,
+    HeroComponent
   ],
   imports: [
-    // CommonModule,
-    // ShowcaseRoutingModule,
     SharedModule,
     RouterModule.forChild(routes), // Importante: Use forChild() aqui
-
   ],
   exports: [
     // ShowcaseComponent

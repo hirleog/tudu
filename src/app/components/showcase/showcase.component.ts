@@ -34,6 +34,6 @@ export class ShowcaseComponent implements OnInit {
   // Função para selecionar um card
   selectCard(card: any) {
     this.selectedCard = card;
-    this.route.navigate(['proposal', card]);
+    // this.route.navigate(['/proposal', card]);
   }
 }

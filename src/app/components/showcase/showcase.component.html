@@ -25,7 +25,7 @@
 
         <!-- Vitrine de serviços -->
         <div class="row g-4 space">
-            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" (click)="selectCard(card)"
+            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" routerLink="/proposal" (click)="selectCard(card)"
                 [ngClass]="{'disabled-card': card.disabled}">
 
                 <div class="card h-100 shadow-sm text-center" *ngIf="selectedCard === null || selectedCard === card.id">
@@ -42,5 +42,5 @@
 </section>
 
 <ng-container>
-    <!-- <app-hero></app-hero> -->
+    <app-hero></app-hero>
 </ng-container>

@@ -47,7 +47,7 @@ export class AppHomeComponent implements OnInit {
   }
 
   goToShowcase() {
-    this.route.navigate(['/showcase']);
+    this.route.navigate(['/']);
   }
 
 }

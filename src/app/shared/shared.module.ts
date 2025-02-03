@@ -10,19 +10,19 @@ import { MultiSelectComponent } from '../components/ui/multi-select/multi-select
 
 
 @NgModule({
-  declarations: [
+  // declarations: [
 
-  ],
+  // ],
   imports: [
-    CommonModule,
+    // CommonModule,
   ],
   exports: [
-    // CommonModule,
     // BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
+    // BrowserAnimationsModule,
+    // HttpClientModule,
+    // BrowserAnimationsModule
     // AppRoutingModule,
-    HttpClientModule,
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
   ]
