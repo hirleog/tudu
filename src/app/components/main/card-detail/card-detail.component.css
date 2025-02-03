@@ -1,0 +1,7 @@
+h4,
+span {
+    color: var(--secondary) !important;
+    font-weight: bold;
+    font-size: 18px;
+    
+}

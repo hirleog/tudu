@@ -10,7 +10,6 @@ import { Router } from '@angular/router';
 })
 export class AddressComponent implements OnInit {
 
-  // options: string[] = ['Utilizar endereço do cadastro', 'Cadastrar novo endereço'];
   options: string[] = ['Cadastrar novo endereço'];
   optionSelected: string = '';
   titleFlow: string = 'Onde o serviço vai ser realizado?';
@@ -73,7 +72,7 @@ export class AddressComponent implements OnInit {
   onSubmit() {
     if (this.addressForm.valid) {
 
-      this.route.navigate(['/offer']);
+      this.route.navigate(['/proposal/offer']);
     }
   }
 }

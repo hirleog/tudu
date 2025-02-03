@@ -5,10 +5,10 @@
         <hr>
     </div>
 
-    <div id="desktop" class="d-md-block d-none">
+    <div id="desktop" class="d-md-block d-none mb-md-5">
         <div id="header-desktop" class="container">
             <div class="d-flex justify-content-between">
-                <a>Publicados(0)</a>
+                <a class="a-selected">Publicados(3)</a>
                 <a>Em Andamento(0)</a>
                 <a>Finalizados(0)</a>
             </div>
@@ -16,51 +16,50 @@
     </div>
 
 
-    <div id="home-mobile" class="d-block d-md-none">
+    <!-- <div id="home-mobile" class="d-block d-md-none">
 
         <app-menu></app-menu>
     </div>
-
+ -->
 
     <div id="my-orders" class="container">
-        <div class="request-cards-container">
-            <div class="request-card" *ngFor="let card of cards">
-                <div class="request-card-header">
-                    <div class="request-card-icon">
-                        <i [class]="card.icon"></i> <!-- Usando a propriedade icon do array -->
-                    </div>
-                    <div class="request-card-title">
-                        <div class="d-flex align-items-center">
-                            <h5>{{ card.serviceName }} </h5>
-                            <div>&nbsp;•&nbsp;</div>
-                            <!-- <p> {{ card.dateTime | date:'dd/MM/yyyy HH:mm:ss' }}</p> -->
-                            <!-- <p class="mb-0"> {{ card.dateTime | date:'dd-MM-yyyy' }}
-                            </p> -->
+        <div class="row g-3 m-0 p-0"> <!-- Linha Bootstrap com espaçamento -->
+            <div class="col-12 col-md-6 col-lg-6 m-0 p-0" *ngFor="let card of cards"> <!-- Colunas responsivas -->
+                <div class="request-card">
+                    <div class="request-card-header">
+                        <div class="request-card-icon">
+                            <i [class]="card.icon"></i>
                         </div>
-                        <p class="request-card-description truncate-text">{{ card.address }}</p>
-
+                        <div class="request-card-title">
+                            <div class="d-flex align-items-center">
+                                <h5>{{ card.serviceName }} </h5>
+                                <div>&nbsp;•&nbsp;</div>
+                            </div>
+                            <p class="request-card-description truncate-text">{{ card.address }}</p>
+                        </div>
                     </div>
-                </div>
-                <hr>
-                <div class="request-card-body">
-                    <p class="request-card-number">Pedido #{{ card.id }}</p>
-                    <p class="request-card-description truncate-text">{{ card.description }}</p>
-                </div>
-                <hr>
-                <div class="request-card-footer d-flex justify-content-between">
-                    <a href="#" class="request-card-link">Detalhes</a>
-                    <button class="request-quote-btn" *ngIf="card.hasQuotes; else semQuotes">Oba! Orçamentos
-                        disponíveis</button>
-                    <ng-template #semQuotes>
-                        <!-- <span class="request-quote-badge">Orçamento disponível</span> -->
-                        <span class="request-quote-btn disabled-card" style="background-color: grey;">Aguardando uma proposta</span>
-                    </ng-template>
+                    <hr>
+                    <div class="request-card-body">
+                        <p class="request-card-number">Pedido #{{ card.id }}</p>
+                        <p class="request-card-description truncate-text">{{ card.description }}</p>
+                    </div>
+                    <hr>
+                    <div class="request-card-footer d-flex justify-content-between">
+                        <a href="#" class="request-card-link" routerLink="/home/detail">Detalhes</a>
+                        <button class="request-quote-btn" routerLink="/home/budgets" *ngIf="card.hasQuotes; else semQuotes">
+                            Oba! Orçamentos disponíveis
+                        </button>
+                        <ng-template #semQuotes>
+                            <span class="request-quote-btn disabled-card bg-secondary">
+                                Aguardando uma proposta
+                            </span>
+                        </ng-template>
+                    </div>
                 </div>
             </div>
         </div>
-
-
     </div>
+
 
 
 

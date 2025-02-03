@@ -25,11 +25,10 @@
 
         <!-- Vitrine de serviços -->
         <div class="row g-4 space">
-            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" (click)="selectCard(card)"
+            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" routerLink="/proposal" (click)="selectCard(card)"
                 [ngClass]="{'disabled-card': card.disabled}">
 
-                <div class="card h-100 shadow-sm text-center" *ngIf="selectedCard === null || selectedCard === card.id"
-                    [@fadeOut]>
+                <div class="card h-100 shadow-sm text-center" *ngIf="selectedCard === null || selectedCard === card.id">
                     <div class="card-body">
                         <i [class]="card.icon + ' fa-3x text-primary mb-3'"></i>
                         <h5 class="card-title">{{ card.title }}</h5>

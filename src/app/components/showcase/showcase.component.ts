@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { trigger, transition, style, animate } from '@angular/animations';
 import { Router } from '@angular/router';
 import { card } from '../../interfaces/card';
 
@@ -7,14 +6,6 @@ import { card } from '../../interfaces/card';
   selector: 'app-showcase',
   templateUrl: './showcase.component.html',
   styleUrls: ['./showcase.component.css'],
-  animations: [
-    trigger('fadeOut', [
-      transition(':leave', [
-        style({ opacity: 1 }),
-        animate('0.3s', style({ opacity: 0 }))
-      ])
-    ])
-  ]
 })
 export class ShowcaseComponent implements OnInit {
 
@@ -43,6 +34,6 @@ export class ShowcaseComponent implements OnInit {
   // Função para selecionar um card
   selectCard(card: any) {
     this.selectedCard = card;
-    this.route.navigate(['/proposal', card]);
+    // this.route.navigate(['/proposal', card]);
   }
 }

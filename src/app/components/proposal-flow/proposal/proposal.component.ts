@@ -62,7 +62,7 @@ export class ProposalComponent implements OnInit {
 
   // Método para tratar o envio do formulário
   onSubmit(): void {
-    this.route.navigate(['/address']);
+    this.route.navigate(['/proposal/address']);
 
   }
   goBack(): void {

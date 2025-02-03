@@ -26,24 +26,24 @@ export class HeroComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-    const video: HTMLVideoElement = this.bannerVideo.nativeElement;
+    // const video: HTMLVideoElement = this.bannerVideo.nativeElement;
 
-    // Tenta carregar o vídeo
-    video.load();
+    // // Tenta carregar o vídeo
+    // video.load();
 
-    // Tenta reproduzir o vídeo quando estiver pronto
-    video.addEventListener('canplay', () => {
-      video.play().catch(error => {
-        console.error("Erro ao tentar reproduzir o vídeo, substituindo por imagem:", error);
-        this.isVideoPlaying = false;  // Se der erro, substitui o vídeo pela imagem
-      });
-    });
+    // // Tenta reproduzir o vídeo quando estiver pronto
+    // video.addEventListener('canplay', () => {
+    //   video.play().catch(error => {
+    //     console.error("Erro ao tentar reproduzir o vídeo, substituindo por imagem:", error);
+    //     this.isVideoPlaying = false;  // Se der erro, substitui o vídeo pela imagem
+    //   });
+    // });
 
-    // Caso o vídeo falhe ao carregar
-    video.addEventListener('error', () => {
-      console.error("Erro ao carregar o vídeo, substituindo por imagem.");
-      this.isVideoPlaying = false;
-    });
+    // // Caso o vídeo falhe ao carregar
+    // video.addEventListener('error', () => {
+    //   console.error("Erro ao carregar o vídeo, substituindo por imagem.");
+    //   this.isVideoPlaying = false;
+    // });
   }
 
 }
