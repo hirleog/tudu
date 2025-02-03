@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-make-offer',
@@ -8,13 +7,9 @@ import { Router } from '@angular/router';
 })
 export class MakeOfferComponent implements OnInit {
 
-  constructor(
-    private route: Router,
-  ) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
 
-  nextStep(): void {
-this.route.navigate(['/']);  }
 }
