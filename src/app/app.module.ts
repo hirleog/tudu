@@ -22,6 +22,7 @@ import { AppHomeComponent } from './components/main/app-home/app-home.component'
 import { AppMenuComponent } from './components/main/app-menu/app-menu.component';
 import { ShowcaseComponent } from './components/showcase/showcase.component';
 import { CardDetailComponent } from './components/main/card-detail/card-detail.component';
+import { BudgetsComponent } from './components/main/budgets/budgets.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { CardDetailComponent } from './components/main/card-detail/card-detail.c
     AppHomeComponent,
     AppMenuComponent,
     CardDetailComponent,
+    BudgetsComponent,
   ],
   imports: [
     BrowserModule,

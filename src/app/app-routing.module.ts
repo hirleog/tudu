@@ -9,20 +9,22 @@ import { MakeOfferComponent } from './components/proposal-flow/make-offer/make-o
 import { AppHomeComponent } from './components/main/app-home/app-home.component';
 import { ShowcaseComponent } from './components/showcase/showcase.component';
 import { CardDetailComponent } from './components/main/card-detail/card-detail.component';
+import { BudgetsComponent } from './components/main/budgets/budgets.component';
 
 const routes: Routes = [
   // { path: '', component: HeroComponent },
+  // { path: 'app-home', component: AppHomeComponent },
+  { path: 'login', component: LoginComponent },
+
   { path: 'showcase', component: ShowcaseComponent },
   { path: 'proposal', component: ProposalComponent },
   { path: 'offer', component: MakeOfferComponent },
-  
-  // { path: 'app-home', component: AppHomeComponent },
+
   { path: '', component: AppHomeComponent },
   { path: 'card-detail', component: CardDetailComponent },
-
+  { path: 'budgets', component: BudgetsComponent },
 
   { path: 'address', component: AddressComponent },
-  { path: 'login', component: LoginComponent },
   // { path: 'about', component: AboutComponent },
   // { path: 'reviews', component: ClientReviewsComponent },
 
