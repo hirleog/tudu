@@ -60,7 +60,6 @@ span {
 .request-card-icon i {
     font-size: 2rem;
     color: var(--primary) !important;
-    /* Cor rosa */
 }
 
 .request-card-title h5 {
@@ -122,20 +121,14 @@ color: rgb(90, 90, 255) !important;
     /* Adiciona as reticências (...) ao final do texto */
 }
 
-
-
-
-
-
-
 .request-quote-btn {
     background: var(--primary);
     color: white;
-    padding: 8px 15px;
-    font-size: 14px;
+    padding: 10px 15px;
+    font-size: 17px;
     font-weight: 600;
     border: none;
-    border-radius: 30px;
+    border-radius: 10px;
     cursor: pointer;
     transition: background 0.3s ease;
 }
@@ -144,12 +137,7 @@ color: rgb(90, 90, 255) !important;
     background: var(--primary-dark);
 }
 
-.request-card-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
+
 
 .disabled-card {
     pointer-events: none;
