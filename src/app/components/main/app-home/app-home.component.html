@@ -1,4 +1,17 @@
 <section>
+    <app-nav>
+        <a routerLink="/" class="logo">
+            <img src="../../../assets/logo-rosa.webp" class="img-fluid" style="width: 4em;" alt="error" />
+        </a>
+
+        <div></div>
+
+        <!-- Botão de login -->
+        <a routerLink="/login" class="login-button">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-user fs-3"></i>
+        </a>
+    </app-nav>
 
     <div class="container">
         <h4 class="text-start">Meus pedidos</h4>
@@ -46,7 +59,8 @@
                     <hr>
                     <div class="request-card-footer d-flex justify-content-between">
                         <a href="#" class="request-card-link" routerLink="/home/detail">Detalhes</a>
-                        <button class="request-quote-btn" routerLink="/home/budgets" *ngIf="card.hasQuotes; else semQuotes">
+                        <button class="request-quote-btn" routerLink="/home/budgets"
+                            *ngIf="card.hasQuotes; else semQuotes">
                             Oba! Orçamentos disponíveis
                         </button>
                         <ng-template #semQuotes>

@@ -227,27 +227,3 @@ nav.hidden {
   padding: 1em;
   
 }
-
-.login-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background-color: white;
-  border: 2px solid var(--dark);
-  border-radius: 50px;
-  color: var(--dark);
-  text-decoration: none;
-  transition: background-color 0.3s, color 0.3s;
-  gap: 8px;
-}
-
-.login-button i {
-  font-size: 16px;
-}
-
-.login-button:hover {
-  background-color: var(--dark);
-  color: white;
-}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -8,17 +9,20 @@ import { Subscription } from 'rxjs';
 })
 export class NavComponent implements OnInit {
 
-  public openClose: boolean = false;
-  public scrolled = false;
-  public previousScrollPosition = window.pageYOffset;
-  public navbarVisible = true;
-  public lastScrollTop = 0;
+  openClose: boolean = false;
+  scrolled = false;
+  previousScrollPosition = window.pageYOffset;
+  navbarVisible = true;
+  lastScrollTop = 0;
+  message: string = '';
 
-  public itemCount: number = 0;
+  itemCount: number = 0;
   private subscription: Subscription = new Subscription();
   private cardItemsSubscription: Subscription = new Subscription();
 
-  constructor() { }
+  constructor(private router: Router) {
+ 
+  }
 
   ngOnInit(): void {
     // Inscreve-se no Observable para escutar mudanças
@@ -26,13 +30,16 @@ export class NavComponent implements OnInit {
     //   (count) => (this.itemCount = count)
     // );
 
-   
+
   }
 
   public menu() {
     this.openClose = !this.openClose;
   }
 
+  receiveMessage(event: string) {
+    this.message = event;
+  }
 
   // @HostListener('window:scroll', [])
   // onWindowScroll() {

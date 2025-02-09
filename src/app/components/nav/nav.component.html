@@ -58,12 +58,12 @@
 
 
 
-<nav class="navbar navbar-expand-lg fixed-top">
+<!-- Navbar para card-detail -->
+<!-- <nav *ngIf="isCardDetailPage" class="navbar navbar-expand-lg fixed-top">
   <div class="container-fluid">
     <a routerLink="/" class="logo">
       <img src="../../../assets/logo-rosa.webp" class="img-fluid" style="width: 4em;" alt="error" />
     </a>
-
 
     <a routerLink="/login" class="login-button">
       <i class="fas fa-bars"></i>
@@ -71,7 +71,27 @@
     </a>
   </div>
 </nav>
+ -->
+
+
+<nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid">
+    <!-- Slot para conteúdo customizável -->
+    <ng-content id="right-content"></ng-content>
+
+    <ng-content id="central-content"></ng-content>
+    
+    <ng-content id="central-content"></ng-content>
+
+    <!-- Botão de login -->
+    <!-- <a routerLink="/login" class="login-button">
+      <i class="fas fa-bars"></i>
+      <i class="fas fa-user fs-3"></i>
+    </a> -->
+  </div>
+</nav>
+
 
 <!-- Conteúdo da página -->
-<div class="container mt-5 pt-5">
+<div class="container mt-5 pt-2">
 </div>

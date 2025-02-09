@@ -1,14 +1,27 @@
 <section>
 
+    <app-nav>
+        <a routerLink="/" class="logo">
+            <img src="../../../assets/logo-rosa.webp" class="img-fluid" style="width: 4em;" alt="error" />
+        </a>
+        <div></div>
+
+        <!-- Botão de login -->
+        <a routerLink="/login" class="login-button">
+            <i class="fas fa-bars"></i>
+            <i class="fas fa-user fs-3"></i>
+        </a>
+    </app-nav>
+
     <div id="make-offer">
 
-        <div class="container d-flex flex-column gap-4">
+        <div class="container d-flex flex-column gap-2">
 
             <!-- Seta para voltar -->
             <div id="proposal-header" class="mb-3 " style="cursor: pointer;">
-                <a routerLink="/proposal" class="text-decoration-none text-dark">
+                <!-- <a routerLink="/proposal" class="text-decoration-none text-dark">
                     <i class="fas fa-arrow-left"></i>
-                </a>
+                </a> -->
                 <!-- 
                 <a class="text-decoration-none text-dark" data-bs-target="#formCarousel" data-bs-slide="prev">
                     <i class="fas fa-arrow-left"></i>
@@ -29,6 +42,9 @@
             <div class="custom-input-container container">
                 <!-- <label for="valor" class="custom-label">Valor em R$</label> -->
                 <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input" placeholder="0,00">
+                <!-- <input id="valor" type="number" maxlength="15" class="custom-input2" placeholder="0,00"> -->
+
+
             </div>
 
             <div>
@@ -37,7 +53,7 @@
             </div>
 
             <!-- Botão de envio -->
-            <div class="container d-flex justify-content-center mb-5">
+            <div class="container fixed-buttons d-flex justify-content-center mb-5">
                 <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
 
                 <button routerLink="/" class="btn btn-primary mt-3">Voltar</button>
