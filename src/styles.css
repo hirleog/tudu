@@ -69,6 +69,11 @@ body {
   /* Oculta a barra de rolagem no Firefox */
 }
 
+.container {
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
 section {
   background-color: var(--light);
 }

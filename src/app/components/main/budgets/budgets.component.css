@@ -1,3 +1,8 @@
+
+h5, p {
+    font-size: 14px !important;
+}
+
 .request-card {
     background: #ffffff;
     border-radius: 10px;
@@ -12,7 +17,7 @@
 }
 
 .request-quote-btn {
-    background: var(--primary);
+    /* background: var(--primary); */
     color: white;
     padding: 10px 15px;
     font-size: 17px;
@@ -29,20 +34,25 @@
 
 
 .request-card-icon {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-right: 15px;
-    border: 3px solid blueviolet; /* Borda rosa */
-    border-radius: 50%; /* Garante que a borda seja circular */
-    overflow: hidden; /* Garante que a imagem se encaixe dentro do círculo */
+    border: 3px solid blueviolet;
+    /* Borda rosa */
+    border-radius: 50%;
+    /* Garante que a borda seja circular */
+    overflow: hidden;
+    /* Garante que a imagem se encaixe dentro do círculo */
 }
 
 .request-card-icon img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Faz com que a imagem se ajuste ao contêiner sem distorcer */
-    border-radius: 50%; /* Certifique-se de que a imagem tenha bordas arredondadas */
+    object-fit: cover;
+    /* Faz com que a imagem se ajuste ao contêiner sem distorcer */
+    border-radius: 50%;
+    /* Certifique-se de que a imagem tenha bordas arredondadas */
 }

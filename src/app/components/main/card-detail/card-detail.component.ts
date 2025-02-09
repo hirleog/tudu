@@ -6,10 +6,11 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./card-detail.component.css']
 })
 export class CardDetailComponent implements OnInit {
+  isModalVisible: boolean = false;
 
-  valorNegociado:any = 250
-  servicoMontagemDesmontagem:any = 'Desejo uma montagem e desmontagem do movel'
-  imagens:any = [
+  valorNegociado: any = 250
+  servicoMontagemDesmontagem: any = 'Desejo uma montagem e desmontagem do movel'
+  imagens: any = [
     '../../../../assets/tradicional1.webp',
     '../../../../assets/tradicional2.webp'
   ]
@@ -20,6 +21,29 @@ export class CardDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.sendMessage()
+  }
+
+  openModal() {
+    this.isModalVisible = true;
+  }
+
+  closeModal() {
+    this.isModalVisible = false;
+  }
+
+  editarAnuncio() {
+    console.log('Editar anúncio clicado');
+    this.closeModal();
+  }
+
+  cancelarPedido() {
+    console.log('Cancelar pedido clicado');
+    this.closeModal();
+  }
+
+  falarComAtendente() {
+    console.log('Falar com atendente clicado');
+    this.closeModal();
   }
 
   sendMessage() {
