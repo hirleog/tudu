@@ -58,7 +58,7 @@
                     </div>
                     <hr>
                     <div class="request-card-footer d-flex justify-content-between">
-                        <a href="#" class="request-card-link" routerLink="/home/detail">Detalhes</a>
+                        <!-- <a href="#" class="request-card-link" routerLink="/home/detail">Detalhes</a> -->
                         <button class="request-quote-btn" routerLink="/home/budgets"
                             *ngIf="card.hasQuotes; else semQuotes">
                             Oba! Orçamentos disponíveis
@@ -68,6 +68,12 @@
                                 Aguardando uma proposta
                             </span>
                         </ng-template>
+
+                        <button class="request-quote-btn" routerLink="/home/detail"
+                            style="background-color: var(--light) important;" >
+                            <i class="fas fa-search" style="font-size: 1.5em; color: var(--primary) !important;"
+                                title="Clique para ver os detalhes"></i>
+                        </button>
                     </div>
 
 

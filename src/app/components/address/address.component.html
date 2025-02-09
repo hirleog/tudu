@@ -56,7 +56,7 @@
                         <div class="col-md-4">
                             <label for="cep" class="form-label">CEP:</label>
                             <input id="cep" formControlName="cep" class="form-control" (input)="onCepChange($event)"
-                                maxlength="8" placeholder="Digite o CEP" />
+                                maxlength="9" placeholder="Digite o CEP" />
                             <div *ngIf="addressForm.get('cep')?.invalid && addressForm.get('cep')?.touched"
                                 class="form-text text-danger">
                                 CEP inválido.

@@ -124,11 +124,11 @@ color: rgb(90, 90, 255) !important;
 .request-quote-btn {
     background: var(--primary);
     color: white;
-    padding: 10px 15px;
-    font-size: 17px;
+    padding: 8px 15px;
+    font-size: 14px;
     font-weight: 600;
     border: none;
-    border-radius: 10px;
+    border-radius: 30px;
     cursor: pointer;
     transition: background 0.3s ease;
 }
@@ -142,7 +142,7 @@ color: rgb(90, 90, 255) !important;
 .disabled-card {
     pointer-events: none;
     /* Desabilita interações com o card */
-    opacity: 0.5;
+    opacity: 0.3;
     /* Reduz a opacidade para indicar desabilitado */
     cursor: not-allowed;
     /* Mostra o cursor de "não permitido" */
