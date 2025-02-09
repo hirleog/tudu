@@ -1,18 +1,14 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppRoutingModule } from '../app-routing.module';
-import { HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MultiSelectComponent } from '../components/ui/multi-select/multi-select.component';
+import { NavModule } from '../components/nav/nav.module';
 
 
 
 @NgModule({
-  // declarations: [
+  declarations: [
 
-  // ],
+  ],
   imports: [
     // CommonModule,
   ],
@@ -25,6 +21,7 @@ import { MultiSelectComponent } from '../components/ui/multi-select/multi-select
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NavModule
   ]
 })
 export class SharedModule { }

@@ -33,10 +33,23 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
 
-  { path: '', loadChildren: () => import('./components/showcase/showcase.module').then(m => m.ShowcaseModule) },
-  { path: 'login', loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule) },
-  { path: 'proposal', loadChildren: () => import('./components/proposal-flow/proposal/proposal.module').then(m => m.ProposalModule) },
-  { path: 'home', loadChildren: () => import('./components/main/main-app.module').then(m => m.MainAppModule) },
+  {
+    path: '',
+    loadChildren: () => import('./components/showcase/showcase.module').then(m => m.ShowcaseModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./components/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'proposal',
+    loadChildren: () => import('./components/proposal-flow/proposal/proposal.module').then(m => m.ProposalModule)
+  },
+  {
+    path: 'home',
+    loadChildren: () => import('./components/main/main-app.module').then(m => m.MainAppModule)
+
+  },
 ];
 
 

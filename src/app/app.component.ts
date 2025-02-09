@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+// import { SwUpdate } from '@angular/service-worker';
+
 import * as AOS from 'aos';
 
 @Component({
@@ -14,7 +16,19 @@ export class AppComponent implements OnInit {
   showHomeMobile: boolean = true;
   hiddenRoutes: string[] = ['/showcase', '/proposal', '/offer', '/address', 'login'];
 
-  constructor(private router: Router) { }
+  constructor(
+    private router: Router,
+    // private swUpdate: SwUpdate
+
+  ) {
+    // if (this.swUpdate.isEnabled) {
+    //   this.swUpdate.available.subscribe(() => {
+    //     if (confirm('Nova versão disponível! Atualizar agora?')) {
+    //       window.location.reload();
+    //     }
+    //   });
+    // }
+  }
 
 
   ngOnInit() {
