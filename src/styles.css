@@ -70,8 +70,8 @@ body {
 }
 
 .container {
-  padding-right: 10px;
-  padding-left: 10px;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 section {
@@ -304,6 +304,38 @@ hr {
 .login-button:hover {
   background-color: var(--dark);
   color: white;
+}
+
+.custom-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.custom-input {
+  font-size: 5rem;
+  font-weight: 600 !important;
+  text-align: center;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--secondary);
+}
+
+.custom-input:focus {
+  /* border-bottom: 3px solid #007bff; */
+  /* Adiciona destaque ao focar */
+}
+
+.custom-input::placeholder {
+  color: var(--secondary);
+}
+
+@media (max-width:500px) {
+  .custom-input {
+    font-size: 3rem;
+  }
 }
 
 @media (max-width:767px) {

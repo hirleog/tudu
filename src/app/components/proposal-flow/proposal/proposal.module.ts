@@ -5,7 +5,6 @@ import { AddressComponent } from '../../address/address.component';
 import { MultiSelectModule } from '../../ui/multi-select/multi-select.module';
 import { MakeOfferComponent } from './make-offer/make-offer.component';
 import { ProposalComponent } from './proposal.component';
-import { CurrencyFormatDirective } from 'src/app/directives/currency-format.directive';
 
 
 const routes: Routes = [
@@ -19,7 +18,6 @@ const routes: Routes = [
     ProposalComponent,
     AddressComponent,
     MakeOfferComponent,
-    CurrencyFormatDirective,
   ],
   imports: [
     MultiSelectModule,

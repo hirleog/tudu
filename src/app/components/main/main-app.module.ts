@@ -8,6 +8,7 @@ import { CardDetailComponent } from './card-detail/card-detail.component';
 import { NavComponent } from '../nav/nav.component';
 import { PaymentsComponent } from '../payments/payments.component';
 import { PaymentsModule } from '../payments/payments.module';
+import { CurrencyFormatDirective } from 'src/app/directives/currency-format.directive';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -18,12 +19,10 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    // NavComponent,
     AppHomeComponent,
-    // AppMenuComponent,
     BudgetsComponent,
     CardDetailComponent,
-
+    CurrencyFormatDirective
   ],
   imports: [
     SharedModule,
