@@ -13,7 +13,7 @@
         </a>
     </app-nav>
 
-    <div id="proposal">
+    <div id="proposal" data-aos="fade-right">
 
         <div class="container">
 
@@ -59,19 +59,19 @@
                 </div>
             </div>
             <!-- Botão de envio -->
-            <div class="container fixed-buttons">
-                <button *ngIf="!isFirstSlide" class="btn btn-primary mt-3" data-bs-target="#formCarousel"
-                    data-bs-slide="prev">Voltar</button>
-
-                <button *ngIf="isFirstSlide" routerLink="/" class="btn btn-primary mt-3">Voltar</button>
-
-
-                <button *ngIf="isLastSlide" class="btn btn-primary mt-3 send-btn" data-bs-target="#formCarousel"
-                    data-bs-slide="next">Proxímo</button>
-
-                <button *ngIf="!isLastSlide" class="btn btn-primary mt-3 send-btn" (click)="onSubmit()">Avançar</button>
-            </div>
         </div>
+    </div>
+    <div class="container fixed-buttons">
+        <button *ngIf="!isFirstSlide" class="btn btn-primary mt-3" data-bs-target="#formCarousel"
+            data-bs-slide="prev">Voltar</button>
+
+        <button *ngIf="isFirstSlide" routerLink="/" class="btn btn-primary mt-3">Voltar</button>
+
+
+        <button *ngIf="isLastSlide" class="btn btn-primary mt-3 send-btn" data-bs-target="#formCarousel"
+            data-bs-slide="next">Proxímo</button>
+
+        <button *ngIf="!isLastSlide" class="btn btn-primary mt-3 send-btn" (click)="onSubmit()">Avançar</button>
     </div>
 
 </section>

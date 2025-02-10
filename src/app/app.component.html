@@ -3,7 +3,10 @@
 <app-about></app-about>
 <app-client-reviews></app-client-reviews> -->
 
-<router-outlet></router-outlet>
+<!-- <router-outlet></router-outlet> -->
+<div [@routeAnimations]="prepareRoute(outlet)">
+    <router-outlet #outlet="outlet"></router-outlet>
+  </div>
 
 <!-- <app-menu></app-menu> -->
 <!-- <app-services></app-services> -->

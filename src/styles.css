@@ -37,7 +37,7 @@
   --primary: #F80E6E;
   /* Cor sólida */
   --primary-dark: #d10050;
-
+  --premium: blueviolet;
   /* --secondary: #1f1f1f; */
   --secondary: #1f1f1f;
   --secondary-transparent: #00000079;
@@ -310,11 +310,11 @@ hr {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: 17px;
 }
 
 .custom-input {
-  font-size: 5rem;
+  font-size: 3rem;
   font-weight: 600 !important;
   text-align: center;
   border: none;

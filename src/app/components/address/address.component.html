@@ -12,8 +12,8 @@
             <i class="fas fa-user fs-3"></i>
         </a>
     </app-nav>
-    
-    <div id="address">
+
+    <div id="address" data-aos="fade-down">
 
         <div class="container">
 
@@ -47,7 +47,7 @@
             </div>
 
 
-            <div *ngIf="optionSelected !== ''" class="container mt-5">
+            <div *ngIf="optionSelected !== ''" class="container mt-5" data-aos="fade-down">
 
                 <hr class="mb-5">
 
@@ -117,6 +117,9 @@
 
             <!-- Botão de envio -->
         </div>
+    </div>
+    <div class="container fixed-buttons mt-5">
+        <button *ngIf="optionSelected === ''" routerLink="/proposal" class="btn btn-primary mt-3">Voltar</button>
     </div>
 </section>
 

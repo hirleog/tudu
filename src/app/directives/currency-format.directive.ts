@@ -9,14 +9,16 @@ export class CurrencyFormatDirective {
 
   constructor(private el: ElementRef) { }
 
-  @HostListener('input', ['$event.target.value'])
-  onInput(value: string) {
-    // Remove caracteres não numéricos
-    let numericValue = value.replace(/\D/g, '');
+  @HostListener('input', ['$event'])
+  onInput(event: InputEvent) {
+    let input = event.target as HTMLInputElement;
+    let cursorPosition = input.selectionStart || 0; // Captura posição do cursor
 
-    // Se o campo estiver vazio, limpa o valor e retorna
+    // Remove tudo que não for número
+    let numericValue = input.value.replace(/\D/g, '');
+
     if (!numericValue) {
-      this.el.nativeElement.value = '';
+      input.value = '';
       return;
     }
 
@@ -26,16 +28,18 @@ export class CurrencyFormatDirective {
       currency: this.currency,
     }).format(parseInt(numericValue, 10) / 100);
 
-    // Remove o espaço entre "R$" e o valor
-    formattedValue = formattedValue.replace(/\s/g, '');
+    formattedValue = formattedValue.replace(/\s/g, ''); // Remove espaço entre "R$" e valor
 
-    // Atualiza o valor do campo com a formatação
-    this.el.nativeElement.value = formattedValue;
+    input.value = formattedValue;
+
+    // Reposiciona o cursor corretamente
+    setTimeout(() => {
+      input.setSelectionRange(cursorPosition, cursorPosition);
+    });
   }
 
   @HostListener('blur', ['$event.target.value'])
   onBlur(value: string) {
-    // Se o campo estiver vazio ao perder o foco, define como R$0,00
     if (!value) {
       this.el.nativeElement.value = 'R$0,00';
     }
@@ -43,7 +47,6 @@ export class CurrencyFormatDirective {
 
   @HostListener('focus', ['$event.target.value'])
   onFocus(value: string) {
-    // Se o campo estiver vazio ou contiver "R$0,00", esvazia para facilitar a edição
     if (value === 'R$0,00') {
       this.el.nativeElement.value = '';
     }
