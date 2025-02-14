@@ -17,7 +17,9 @@
 
     <div id="my-budgets" class="container">
         <div class="row g-3 m-0 p-0"> <!-- Linha Bootstrap com espaçamento -->
-            <div class="col-12 col-md-6 col-lg-6 m-0 p-0" *ngFor="let card of budgets"> <!-- Colunas responsivas -->
+            <div class="col-12 col-md-6 col-lg-6 m-0 p-0" *ngFor="let card of budgets; let i = index"
+                data-aos="fade-down">
+                <!-- Colunas responsivas -->
                 <div class="request-card d-flex flex-column p-4 gap-4">
                     <div class="d-flex justify-content-between align-items-center">
 
@@ -30,14 +32,12 @@
                                 <div class="d-flex justify-content-between">
                                     <div class="d-flex align-items-center gap-2">
                                         <h5 class="m-0">{{ card.name }}</h5>
-                                        <!-- <div class="d-flex align-items-center m-0 gap-1"> -->
-                                            <i class="fas fa-star text-warning"></i>
-                                            <p class="m-0" style="color: var(--secondary);">{{ card.rate }}</p>
-                                        <!-- </div> -->
+                                        <i class="fas fa-star text-warning"></i>
+                                        <p class="m-0" style="color: var(--secondary);">{{ card.rate }}</p>
                                         <p class="mb-0">({{ card.serviceComplete }} serviços)</p>
                                     </div>
                                 </div>
-                                <p style="color: blueviolet!important;">Prestador Premium</p>
+                                <p style="color: var(--premium)!important;">Prestador Premium</p>
                             </div>
                         </div>
 
@@ -47,8 +47,20 @@
                         </div>
                     </div>
 
-                    <div id="card-price" >
-                        <h2><strong>R{{ card.price | currency }}</strong></h2>
+                    <!-- <div class="container d-flex justify-content-center align-items-center">
+
+
+                        <div class="custom-input-container container">
+                            <h3 style="font-weight: 500; margin: 0px; font-size: 2em;">
+                                R$
+                            </h3>
+                            <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input"
+                                [(ngModel)]="card.editedPrice" [placeholder]="card.price">
+                        </div>
+                    </div> -->
+                    <div class="custom-input-container container">
+                        <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input"
+                            [(ngModel)]="card.editedPrice" [placeholder]="card.price | currency:'BRL':'symbol':'1.2-2'">
                     </div>
 
                     <div class="request-card-footer d-flex gap-2">
@@ -56,10 +68,10 @@
                             class="request-quote-btn bg-secondary col-6">Detalhes</button>
 
                         <button class="request-quote-btn col-6"
-                            style="background-color: var(--primary); color: var(--light);">
-                            Aceitar
+                            [ngClass]="{'change-button': card.editedPrice && card.editedPrice !== card.price}"
+                            style="background-color: var(--primary); color: var(--light);" routerLink="/home/progress">
+                            {{ card.editedPrice && card.editedPrice !== card.price ? 'Negociar' : 'Contratar' }}
                         </button>
-
                     </div>
                 </div>
             </div>

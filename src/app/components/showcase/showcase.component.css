@@ -1,3 +1,6 @@
+#hero {
+    margin-top: -3em;
+}
 h4 {
     color: var(--secondary) !important;
 }

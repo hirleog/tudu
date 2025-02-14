@@ -37,7 +37,7 @@
   --primary: #F80E6E;
   /* Cor sólida */
   --primary-dark: #d10050;
-
+  --premium: blueviolet;
   /* --secondary: #1f1f1f; */
   --secondary: #1f1f1f;
   --secondary-transparent: #00000079;
@@ -70,8 +70,8 @@ body {
 }
 
 .container {
-  padding-right: 10px;
-  padding-left: 10px;
+  padding-right: 15px;
+  padding-left: 15px;
 }
 
 section {
@@ -304,6 +304,55 @@ hr {
 .login-button:hover {
   background-color: var(--dark);
   color: white;
+}
+/* 
+.custom-input-container {
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  margin-top: 17px;
+}
+
+.custom-input {
+  font-size: 2em;
+  font-weight: 600 !important;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--secondary);
+} */
+
+
+.custom-input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 17px;
+}
+
+.custom-input {
+  font-size: 3rem;
+  font-weight: 600 !important;
+  text-align: center;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--secondary);
+}
+
+.custom-input:focus {
+  /* border-bottom: 3px solid #007bff; */
+  /* Adiciona destaque ao focar */
+}
+
+.custom-input::placeholder {
+  color: var(--secondary);
+}
+
+@media (max-width:500px) {
+  .custom-input {
+    font-size: 3rem;
+  }
 }
 
 @media (max-width:767px) {

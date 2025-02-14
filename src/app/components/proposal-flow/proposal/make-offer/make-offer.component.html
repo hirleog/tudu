@@ -13,7 +13,7 @@
         </a>
     </app-nav>
 
-    <div id="make-offer">
+    <div id="make-offer" data-aos="fade-right">
 
         <div class="container d-flex flex-column gap-2">
 
@@ -38,14 +38,14 @@
                 <p class="text-start text-md-center">Dica: O preço para montar custa entre 15% e 30% do valor do móvel
                 </p>
             </div>
-            
 
-            <div class="custom-input-container container">
-                <!-- <label for="valor" class="custom-label">Valor em R$</label> -->
+
+            <!-- <div class="custom-input-container container">
                 <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input" placeholder="0,00">
-                <!-- <input id="valor" type="number" maxlength="15" class="custom-input2" placeholder="0,00"> -->
-
-
+            </div> -->
+            <div class="custom-input-container container">
+                <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input"
+                    placeholder="R$0,00">
             </div>
 
             <div>
@@ -53,15 +53,15 @@
                     prestador.</p>
             </div>
 
-            <!-- Botão de envio -->
-            <div class="container fixed-buttons d-flex justify-content-center mb-5">
-                <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
-
-                <button routerLink="/" class="btn btn-primary mt-3">Voltar</button>
-
-                <button class="btn btn-primary mt-3 send-btn" routerLink="/home"
-                    style="background-color: var(--primary); color: white;">Avançar</button>
-            </div>
         </div>
+    </div>
+    <!-- Botão de envio -->
+    <div class="container fixed-buttons d-flex justify-content-center mb-5">
+        <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
+
+        <button routerLink="/proposal/address" class="btn btn-primary mt-3">Voltar</button>
+
+        <button class="btn btn-primary mt-3 send-btn" routerLink="/home"
+            style="background-color: var(--primary); color: white;">Avançar</button>
     </div>
 </section>

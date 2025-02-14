@@ -7,6 +7,7 @@ import { Budget } from 'src/app/interfaces/budgets';
   styleUrls: ['./budgets.component.css']
 })
 export class BudgetsComponent implements OnInit {
+  cardPrice = '';
   budgets: Budget[] = [
     {
       id: 1,
@@ -16,7 +17,8 @@ export class BudgetsComponent implements OnInit {
       serviceComplete: '66',
       price: '39.45',
       distance: '1.5',
-      distanceMinutes: '60'
+      distanceMinutes: '60',
+      editedPrice: '' // Adicionamos esta propriedade
     },
     {
       id: 2,
@@ -26,7 +28,8 @@ export class BudgetsComponent implements OnInit {
       serviceComplete: '15',
       price: '45.54',
       distance: '1.0',
-      distanceMinutes: '8'
+      distanceMinutes: '8',
+      editedPrice: '' // Adicionamos esta propriedade
     },
     {
       id: 3,
@@ -36,13 +39,16 @@ export class BudgetsComponent implements OnInit {
       serviceComplete: '234',
       price: '33.00',
       distance: '4.6',
-      distanceMinutes: '24'
+      distanceMinutes: '24',
+      editedPrice: '' // Adicionamos esta propriedade
     }
   ];
 
   constructor() { }
 
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
+
   }
 
 }

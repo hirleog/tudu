@@ -10,15 +10,15 @@ import { CardOrders } from 'src/app/interfaces/card-orders';
 export class AppHomeComponent implements OnInit {
 
   cards: CardOrders[] = [
-    {
-      id: 101,
-      icon: 'fas fa-tools', // Ícone FontAwesome
-      serviceName: 'Reparo Hidráulico',
-      description: 'Preciso de um encanador para consertar um vazamento na cozinha djhashdkahkdhakshdhaskdhaksdhksahdkhkdhkashdkhaskdhakshdkshkashdkahk...',
-      address: 'Rua das Flores, 123',
-      dateTime: '2021-08-10T10:00:00',
-      hasQuotes: true
-    },
+    // {
+    //   id: 101,
+    //   icon: 'fas fa-tools', // Ícone FontAwesome
+    //   serviceName: 'Reparo Hidráulico',
+    //   description: 'Preciso de um encanador para consertar um vazamento na cozinha djhashdkahkdhakshdhaskdhaksdhksahdkhkdhkashdkhaskdhakshdkshkashdkahk...',
+    //   address: 'Rua das Flores, 123',
+    //   dateTime: '2021-08-10T10:00:00',
+    //   hasQuotes: true
+    // },
     {
       id: 102,
       icon: 'fas fa-car', // Ícone FontAwesome
@@ -44,6 +44,7 @@ export class AppHomeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
   }
 
   goToShowcase() {

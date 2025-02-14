@@ -7,10 +7,11 @@
         <div></div>
 
         <!-- Botão de login -->
-        <a routerLink="/login" class="login-button">
+        <!-- <a routerLink="/login" class="login-button">
             <i class="fas fa-bars"></i>
             <i class="fas fa-user fs-3"></i>
-        </a>
+        </a> -->
+        <div></div>
     </app-nav>
 
     <div class="container">
@@ -37,7 +38,7 @@
 
     <div id="my-orders" class="container">
         <div class="row g-3 m-0 p-0"> <!-- Linha Bootstrap com espaçamento -->
-            <div class="col-12 col-md-6 col-lg-6 m-0 p-0" *ngFor="let card of cards"> <!-- Colunas responsivas -->
+            <div class="col-12 col-md-6 col-lg-6 m-0 p-0" *ngFor="let card of cards" data-aos="fade-down"> <!-- Colunas responsivas -->
                 <div class="request-card">
                     <div class="request-card-header">
                         <div class="request-card-icon">
@@ -59,7 +60,7 @@
                     <hr>
                     <div class="request-card-footer d-flex justify-content-between">
                         <!-- <a href="#" class="request-card-link" routerLink="/home/detail">Detalhes</a> -->
-                        <button class="request-quote-btn" routerLink="/home/budgets"
+                        <button class="request-quote-btn" routerLink="/home/budgets" routerLinkActive="active"
                             *ngIf="card.hasQuotes; else semQuotes">
                             Oba! Orçamentos disponíveis
                         </button>
@@ -69,7 +70,7 @@
                             </span>
                         </ng-template>
 
-                        <button class="request-quote-btn" routerLink="/home/detail"
+                        <button class="request-quote-btn" routerLink="/home/detail" routerLinkActive="active"
                             style="background-color: var(--light) important;" >
                             <i class="fas fa-search" style="font-size: 1.5em; color: var(--primary) !important;"
                                 title="Clique para ver os detalhes"></i>

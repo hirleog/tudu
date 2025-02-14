@@ -1,5 +1,5 @@
-
-h5, p {
+h5,
+p {
     font-size: 14px !important;
 }
 
@@ -17,7 +17,6 @@ h5, p {
 }
 
 .request-quote-btn {
-    /* background: var(--primary); */
     color: white;
     padding: 10px 15px;
     font-size: 17px;
@@ -25,13 +24,17 @@ h5, p {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background-color 0.8s ease-in-out;
+    /* Tempo aumentado para 0.8s */
 }
 
 .request-quote-btn:hover {
     background: var(--primary-dark);
 }
 
+.change-button {
+    background-color: var(--premium) !important;
+}
 
 .request-card-icon {
     width: 40px;
@@ -40,7 +43,7 @@ h5, p {
     align-items: center;
     justify-content: center;
     margin-right: 15px;
-    border: 3px solid blueviolet;
+    border: 3px solid var(--premium);
     /* Borda rosa */
     border-radius: 50%;
     /* Garante que a borda seja circular */

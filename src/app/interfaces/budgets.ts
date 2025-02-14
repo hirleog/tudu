@@ -7,4 +7,5 @@ export interface Budget {
   price: string;
   distance: string;
   distanceMinutes: string;
+  editedPrice?: string
 }

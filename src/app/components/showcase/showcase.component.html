@@ -17,7 +17,7 @@
         <!-- Barra de busca -->
         <div class="row justify-content-center space">
             <div class="col-12">
-                <h4 class="text-start mb-3">Qual serviço você precisa?</h4>
+                <h1 class="text-start mb-3">Qual serviço você precisa?</h1>
                 <div class="position-relative">
                     <input type="text" class="form-control input-ui pe-5"
                         style="border-radius: 52px; padding-right: 70px; height: 58px;"
@@ -33,14 +33,14 @@
             </div>
         </div>
 
-        <hr class="hr mt-5">
+        <!-- <hr class="hr mt-5"> -->
 
         <!-- Vitrine de serviços -->
         <div class="row g-4 space">
-            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" routerLink="/proposal"
-                (click)="selectCard(card)" [ngClass]="{'disabled-card': card.disabled}">
+            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" 
+                routerLink="/proposal" (click)="selectCard(card)" [ngClass]="{'disabled-card': card.disabled}">
 
-                <div class="card h-100 shadow-sm text-center" *ngIf="selectedCard === null || selectedCard === card.id">
+                <div data-aos="fade-down" class="card h-100 shadow-sm text-center" *ngIf="selectedCard === null || selectedCard === card.id">
                     <div class="card-body">
                         <i [class]="card.icon + ' fa-3x text-primary mb-3'"></i>
                         <h5 class="card-title">{{ card.title }}</h5>
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <hr class="hr mt-5 mb-5">
+        <!-- <hr class="hr mt-5 mb-5"> -->
     </div>
 </section>
 
