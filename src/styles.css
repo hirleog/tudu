@@ -305,6 +305,23 @@ hr {
   background-color: var(--dark);
   color: white;
 }
+/* 
+.custom-input-container {
+  display: flex;
+  justify-content: center !important;
+  align-items: center;
+  margin-top: 17px;
+}
+
+.custom-input {
+  font-size: 2em;
+  font-weight: 600 !important;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--secondary);
+} */
+
 
 .custom-input-container {
   display: flex;

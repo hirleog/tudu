@@ -47,6 +47,17 @@
                         </div>
                     </div>
 
+                    <!-- <div class="container d-flex justify-content-center align-items-center">
+
+
+                        <div class="custom-input-container container">
+                            <h3 style="font-weight: 500; margin: 0px; font-size: 2em;">
+                                R$
+                            </h3>
+                            <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input"
+                                [(ngModel)]="card.editedPrice" [placeholder]="card.price">
+                        </div>
+                    </div> -->
                     <div class="custom-input-container container">
                         <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input"
                             [(ngModel)]="card.editedPrice" [placeholder]="card.price | currency:'BRL':'symbol':'1.2-2'">
@@ -58,8 +69,8 @@
 
                         <button class="request-quote-btn col-6"
                             [ngClass]="{'change-button': card.editedPrice && card.editedPrice !== card.price}"
-                            style="background-color: var(--primary); color: var(--light);">
-                            {{ card.editedPrice && card.editedPrice !== card.price ? 'Negociar' : 'Aceitar' }}
+                            style="background-color: var(--primary); color: var(--light);" routerLink="/home/progress">
+                            {{ card.editedPrice && card.editedPrice !== card.price ? 'Negociar' : 'Contratar' }}
                         </button>
                     </div>
                 </div>

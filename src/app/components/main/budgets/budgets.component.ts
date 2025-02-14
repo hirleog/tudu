@@ -47,6 +47,8 @@ export class BudgetsComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
+
   }
 
 }

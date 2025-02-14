@@ -17,7 +17,6 @@ p {
 }
 
 .request-quote-btn {
-    /* background: var(--primary); */
     color: white;
     padding: 10px 15px;
     font-size: 17px;
@@ -25,13 +24,17 @@ p {
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background-color 0.8s ease-in-out;
+    /* Tempo aumentado para 0.8s */
 }
 
 .request-quote-btn:hover {
     background: var(--primary-dark);
 }
 
+.change-button {
+    background-color: var(--premium) !important;
+}
 
 .request-card-icon {
     width: 40px;
@@ -55,8 +58,4 @@ p {
     /* Faz com que a imagem se ajuste ao contêiner sem distorcer */
     border-radius: 50%;
     /* Certifique-se de que a imagem tenha bordas arredondadas */
-}
-
-.change-button {
-    background-color: var(--premium) !important;
 }
