@@ -1,4 +1,4 @@
-export interface InProgressCard {
+export interface ProgressCard {
     name: string;
     photo: string;
     service: string;

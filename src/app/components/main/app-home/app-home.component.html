@@ -40,7 +40,7 @@
         <div class="row g-3 m-0 p-0"> <!-- Linha Bootstrap com espaçamento -->
             <div class="col-12 col-md-6 col-lg-6 m-0 p-0" *ngFor="let card of cards" data-aos="fade-down"> <!-- Colunas responsivas -->
                 <div class="request-card">
-                    <div class="request-card-header">
+                    <div class="request-card-header card-header p-3">
                         <div class="request-card-icon">
                             <i [class]="card.icon"></i>
                         </div>
@@ -52,13 +52,13 @@
                             <p class="request-card-description truncate-text">{{ card.address }}</p>
                         </div>
                     </div>
-                    <hr>
-                    <div class="request-card-body">
+                    <!-- <hr> -->
+                    <div class="request-card-body card-body p-3">
                         <p class="request-card-number">Pedido #{{ card.id }}</p>
                         <p class="request-card-description truncate-text">{{ card.description }}</p>
                     </div>
-                    <hr>
-                    <div class="request-card-footer d-flex justify-content-between">
+                    <!-- <hr> -->
+                    <div class="d-flex justify-content-between card-footer p-3">
                         <!-- <a href="#" class="request-card-link" routerLink="/home/detail">Detalhes</a> -->
                         <button class="request-quote-btn" routerLink="/home/budgets" routerLinkActive="active"
                             *ngIf="card.hasQuotes; else semQuotes">

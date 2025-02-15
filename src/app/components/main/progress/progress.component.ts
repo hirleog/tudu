@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { InProgressCard } from 'src/app/interfaces/progress-card';
+import { ProgressCard } from 'src/app/interfaces/progress-card';
 
 @Component({
-  selector: 'app-in-progress',
-  templateUrl: './in-progress.component.html',
-  styleUrls: ['./in-progress.component.css']
+  selector: 'app-progress',
+  templateUrl: './progress.component.html',
+  styleUrls: ['./progress.component.css']
 })
-export class InProgressComponent implements OnInit {
+export class ProgressComponent implements OnInit {
 
-  cards: InProgressCard[] = [
+  cards: ProgressCard[] = [
     {
       name: 'Aline',
       photo: '../../../../assets/aline.PNG', // Ícone FontAwesome

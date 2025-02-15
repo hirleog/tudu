@@ -1,7 +1,13 @@
-section {
+/* #budgets {
     background-color: var(--medium);
+
+
+} */
+
+section {
     margin-top: -3em;
 }
+
 h5,
 p {
     font-size: 16px !important;
@@ -33,14 +39,6 @@ p {
     /* Tempo aumentado para 0.8s */
 }
 
-/* .request-quote-btn:hover {
-    background: var(--primary-dark);
-} */
-
-/* .change-button {
-    background-color: var(--premium) !important;
-} */
-
 .request-card-icon {
     width: 40px;
     height: 40px;
@@ -65,14 +63,19 @@ p {
     /* Certifique-se de que a imagem tenha bordas arredondadas */
 }
 
+.card-footer {
+    background-color: transparent;
+}
+
 
 @media (max-width: 350px) {
-    h3 {
+    .request-card h3 {
         font-size: 20px;
     }
 }
+
 @media (max-width: 998px) {
-    h3 {
+    .request-card h3 {
         font-size: 21px;
     }
 }
