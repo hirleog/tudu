@@ -12,16 +12,25 @@ export class InProgressComponent implements OnInit {
     {
       name: 'Aline',
       photo: '../../../../assets/aline.PNG', // Ícone FontAwesome
+      icon: 'fa-paint-brush',
+      service: 'Pintura Residencial',
+      status: 'Aguardando prestador',
       dateTime: '' // Adicionamos esta propriedade
     },
     {
       name: 'Matheus',
       photo: '../../../../assets/matheus.PNG', // Ícone FontAwesome
+      icon: 'fa-paint-brush',
+      service: 'Lavagem de Automotiva',
+      status: 'Hoje, 15:00 - 15:30',
       dateTime: '' // Adicionamos esta propriedade
     },
     {
       name: 'Guilherme',
       photo: '../../../../assets/GUI.PNG',
+      icon: 'fa-paint-brush',
+      service: 'Lavagem de Automotiva',
+      status: 'Hoje, 12:20 - 15:00',
       dateTime: '' // Adicionamos esta propriedade
     }
   ];
