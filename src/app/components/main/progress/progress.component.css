@@ -1,6 +1,16 @@
+/* #budgets {
+    background-color: var(--medium);
+
+
+} */
+
+section {
+    margin-top: -3em;
+}
+
 h5,
 p {
-    font-size: 14px !important;
+    font-size: 16px !important;
 }
 
 .request-card {
@@ -17,7 +27,7 @@ p {
 }
 
 .request-quote-btn {
-    color: white;
+    color: var(--primary) !important;
     padding: 10px 15px;
     font-size: 17px;
     font-weight: 600;
@@ -25,19 +35,8 @@ p {
     border-radius: 10px;
     cursor: pointer;
     transition: background-color 0.8s ease-in-out;
-    /* Tempo aumentado para 0.8s */
-}
-
-.request-quote-btn:hover {
-    background: var(--primary-dark);
-}
-
-.card-footer {
     background-color: transparent;
-}
-
-.change-button {
-    background-color: var(--premium) !important;
+    /* Tempo aumentado para 0.8s */
 }
 
 .request-card-icon {
@@ -62,4 +61,21 @@ p {
     /* Faz com que a imagem se ajuste ao contêiner sem distorcer */
     border-radius: 50%;
     /* Certifique-se de que a imagem tenha bordas arredondadas */
+}
+
+.card-footer {
+    background-color: transparent;
+}
+
+
+@media (max-width: 350px) {
+    .request-card h3 {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 998px) {
+    .request-card h3 {
+        font-size: 21px;
+    }
 }

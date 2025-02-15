@@ -31,7 +31,7 @@ span {
     flex-direction: column;
     background: #ffffff;
     border-radius: 10px;
-    padding: 20px;
+    /* padding: 20px; */
     margin: 15px 0;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -78,6 +78,15 @@ span {
     margin-bottom: 20px;
 }
 
+.card-header {
+    background-color: transparent;
+
+}
+
+.card-footer {
+    background-color: transparent;
+}
+
 .request-card-number {
     font-weight: 600;
     font-size: 1rem;
@@ -96,7 +105,7 @@ span {
 
 .request-card-link {
     font-size: 0.9rem;
-color: rgb(90, 90, 255) !important;
+    color: rgb(90, 90, 255) !important;
     text-decoration: none;
 }
 

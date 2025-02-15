@@ -6,23 +6,26 @@ import { PaymentsModule } from '../payments/payments.module';
 import { AppHomeComponent } from './app-home/app-home.component';
 import { BudgetsComponent } from './budgets/budgets.component';
 import { CardDetailComponent } from './card-detail/card-detail.component';
-import { InProgressComponent } from './in-progress/in-progress.component';
+import { ProgressComponent } from './progress/progress.component';
+import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
   { path: '', component: AppHomeComponent },
   { path: 'budgets', component: BudgetsComponent },
-  { path: 'progress', component: InProgressComponent },
+  { path: 'progress', component: ProgressComponent },
+  { path: 'progress-detail', component: ProgressDetailComponent },
   { path: 'detail', component: CardDetailComponent },
 ];
 
 @NgModule({
-  declarations: [
+  declarations: [	
     AppHomeComponent,
     BudgetsComponent,
     CardDetailComponent,
-    InProgressComponent
-  ],
+    ProgressComponent,
+      ProgressDetailComponent
+   ],
   imports: [
     SharedModule,
     PaymentsModule,
