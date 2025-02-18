@@ -22,7 +22,7 @@
 
 
     <div class="row g-3 m-0 p-0"> <!-- Linha Bootstrap com espaçamento -->
-      <div class="col-12 col-md-6 col-lg-6 m-0 p-0" *ngFor="let card of cards; let i = index" data-aos="fade-down">
+      <div class="col-12 col-md-6 col-lg-6 m-0 p-2" *ngFor="let card of cards; let i = index" data-aos="fade-down">
         <!-- Colunas responsivas -->
         <div class="request-card d-flex flex-column gap-4">
 
@@ -46,7 +46,7 @@
                     <p class="mb-0">({{ card.serviceComplete }} serviços)</p> -->
                   </div>
                 </div>
-                <div class="d-flex gap-1">
+                <div class="d-flex align-items-center gap-1">
 
                   <h5>Serviço:</h5>
                   <p>{{ card.service }}</p>
