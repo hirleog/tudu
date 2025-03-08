@@ -87,12 +87,6 @@ span {
     background-color: transparent;
 }
 
-.request-card-number {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 5px;
-}
 
 .request-card-description {
     font-size: 0.9rem;

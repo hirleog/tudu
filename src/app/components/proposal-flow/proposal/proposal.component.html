@@ -62,16 +62,16 @@
         </div>
     </div>
     <div class="container fixed-buttons">
-        <button *ngIf="!isFirstSlide" class="btn btn-primary mt-3" data-bs-target="#formCarousel"
+        <button *ngIf="!isFirstSlide" class="btn-ui btn-primary mt-3" data-bs-target="#formCarousel"
             data-bs-slide="prev">Voltar</button>
 
-        <button *ngIf="isFirstSlide" routerLink="/" class="btn btn-primary mt-3">Voltar</button>
+        <button *ngIf="isFirstSlide" routerLink="/" class="btn-ui btn-primary mt-3">Voltar</button>
 
 
-        <button *ngIf="isLastSlide" class="btn btn-primary mt-3 send-btn" data-bs-target="#formCarousel"
+        <button *ngIf="isLastSlide" class="btn-ui btn-primary mt-3 send-btn" data-bs-target="#formCarousel"
             data-bs-slide="next">Proxímo</button>
 
-        <button *ngIf="!isLastSlide" class="btn btn-primary mt-3 send-btn" (click)="onSubmit()">Avançar</button>
+        <button *ngIf="!isLastSlide" class="btn-ui btn-primary mt-3 send-btn" (click)="onSubmit()">Avançar</button>
     </div>
 
 </section>

@@ -21,6 +21,7 @@
     "@angular/router": "^14.3.0",
     "@mercadopago/sdk-js": "^0.0.3",
     "aos": "^2.3.4",
+    "bootstrap": "^5.3.3",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
@@ -29,6 +30,7 @@
     "@angular-devkit/build-angular": "^14.2.13",
     "@angular/cli": "^14.2.13",
     "@angular/compiler-cli": "^14.3.0",
+    "@types/aos": "^3.0.7",
     "@types/jasmine": "~3.10.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~4.0.0",

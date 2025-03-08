@@ -8,6 +8,7 @@ import { BudgetsComponent } from './budgets/budgets.component';
 import { CardDetailComponent } from './card-detail/card-detail.component';
 import { ProgressComponent } from './progress/progress.component';
 import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -16,20 +17,18 @@ const routes: Routes = [
   { path: 'progress', component: ProgressComponent },
   { path: 'progress-detail', component: ProgressDetailComponent },
   { path: 'detail', component: CardDetailComponent },
+  { path: 'profile', component: ProfileComponent },
 ];
 
 @NgModule({
-  declarations: [	
+  declarations: [
     AppHomeComponent,
     BudgetsComponent,
     CardDetailComponent,
     ProgressComponent,
-      ProgressDetailComponent
-   ],
-  imports: [
-    SharedModule,
-    PaymentsModule,
-    RouterModule.forChild(routes)
-  ]
+    ProgressDetailComponent,
+    ProfileComponent,
+  ],
+  imports: [SharedModule, PaymentsModule, RouterModule.forChild(routes)],
 })
-export class MainAppModule { }
+export class MainAppModule {}

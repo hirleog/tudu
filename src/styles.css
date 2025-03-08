@@ -207,7 +207,7 @@ hr {
   background-color: var(--primary);
 }
 
-.btn {
+.btn-ui {
   font-family: 'Poppins', sans-serif;
 
   background-color: var(--medium);
@@ -221,7 +221,7 @@ hr {
   border-radius: unset;
 }
 
-.btn:hover {
+.btn-ui:hover {
   background-color: var(--primary);
   color: var(--medium);
   /* transform: translateY(-8px); */
@@ -347,6 +347,13 @@ hr {
   text-transform: uppercase;
   font-size: medium;
   color: var(--secondary);
+}
+
+.request-card-number {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 @media (max-width:500px) {
