@@ -58,7 +58,7 @@
         </div>
       </div>
 
-      <div style="margin-top: -1.5em">
+      <div style="margin-top: -48px;">
         <div class="details border d-flex flex-column gap-3 p-3">
           <div class="d-flex justify-content-between align-items-center">
             <p class="title-section">Detalhes do pedido</p>
@@ -104,19 +104,30 @@
         </div>
 
         <div class="details border mt-3 p-3">
+          <p class="title-section">Código de conclusão</p>
+
           <div class="input-group flex-nowrap">
             <span class="input-group-text" id="addon-wrapping">#</span>
             <input
               type="text"
               class="form-control"
-              placeholder="Digite o codigo do prestador"
+              placeholder="Digite"
               aria-label="Username"
               aria-describedby="addon-wrapping"
             />
-            <button class="btn btn-outline-secondary" type="button" id="button-addon2" [routerLink]="['/home/end']" routerLinkActive="router-link-active" >Confirmar</button>
+            <button
+              class="btn btn-outline-secondary"
+              type="button"
+              id="button-addon2"
+              [routerLink]="['/home/end']"
+              routerLinkActive="router-link-active"
+            >
+              Confirmar
+            </button>
           </div>
-          <div class="form-text" id="basic-addon4">Codigo gerado pelo prestador para concluir o serviço</div>
-
+          <div class="form-text" id="basic-addon4">
+            Código gerado pelo prestador
+          </div>
         </div>
       </div>
 
