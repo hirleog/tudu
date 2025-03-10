@@ -12,6 +12,7 @@ import { FooterComponent } from './components/footer/footer.component';
 import { AppMenuComponent } from './components/main/app-menu/app-menu.component';
 import { ServicesComponent } from './components/services/services.component';
 import { SharedModule } from './shared/shared.module';
+import { SignUpComponent } from './components/user-login/sign-up/sign-up.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { SharedModule } from './shared/shared.module';
     FooterComponent,
     ClientReviewsComponent,
     AppMenuComponent,
+    SignUpComponent,
   ],
   imports: [
 

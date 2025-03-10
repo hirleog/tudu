@@ -1,67 +1,79 @@
 <section>
+  <app-nav>
+    <a routerLink="/" class="logo">
+      <img
+        src="../../../assets/logo-rosa.webp"
+        class="img-fluid"
+        style="width: 4em"
+        alt="error"
+      />
+    </a>
+    <div></div>
 
-    <app-nav>
-        <a routerLink="/" class="logo">
-            <img src="../../../assets/logo-rosa.webp" class="img-fluid" style="width: 4em;" alt="error" />
-        </a>
-        <div></div>
+    <!-- Botão de login -->
+    <a routerLink="/login" class="login-button">
+      <i class="fas fa-bars"></i>
+      <i class="fas fa-user fs-3"></i>
+    </a>
+  </app-nav>
 
-        <!-- Botão de login -->
-        <a routerLink="/login" class="login-button">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-user fs-3"></i>
-        </a>
-    </app-nav>
+  <div id="make-offer" data-aos="fade-right">
+    <div class="container d-flex flex-column gap-4">
+      <!-- Seta para voltar -->
+      <div id="proposal-header" class="mb-3" style="cursor: pointer"></div>
 
-    <div id="make-offer" data-aos="fade-right">
+      <div class="d-flex align-items-center justify-content-center mb-5">
+        <h2 class="mb-0 fw-bold">Faça sua oferta</h2>
+        <i
+          class="fas fa-credit-card"
+          style="color: #f80e6e; font-size: 24px; margin-left: 10px"
+        ></i>
+      </div>
+      <div class="d-flex flex-column gap-2">
+        <h2 class="mb-0 fw-bold text-start text-md-center">
+          Defina um preço para esse serviço
+        </h2>
+        <p class="text-start text-md-center">
+          Dica: O preço para montar custa entre 15% e 30% do valor do móvel
+        </p>
+      </div>
 
-        <div class="container d-flex flex-column gap-2">
-
-            <!-- Seta para voltar -->
-            <div id="proposal-header" class="mb-3 " style="cursor: pointer;">
-                <!-- <a routerLink="/proposal" class="text-decoration-none text-dark">
-                    <i class="fas fa-arrow-left"></i>
-                </a> -->
-                <!-- 
-                <a class="text-decoration-none text-dark" data-bs-target="#formCarousel" data-bs-slide="prev">
-                    <i class="fas fa-arrow-left"></i>
-                </a> -->
-
-            </div>
-
-            <div class="d-flex align-items-center justify-content-center mb-5">
-                <h2 class="mb-0 fw-bold">Faça sua oferta</h2>
-                <i class="fas fa-credit-card" style="color: #F80E6E; font-size: 24px; margin-left: 10px;"></i>
-            </div>
-            <div class="d-flex flex-column gap-2">
-                <h2 class="mb-0 fw-bold text-start text-md-center">Defina um preço para esse serviço</h2>
-                <p class="text-start text-md-center">Dica: O preço para montar custa entre 15% e 30% do valor do móvel
-                </p>
-            </div>
-
-
-            <!-- <div class="custom-input-container container">
-                <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input" placeholder="0,00">
-            </div> -->
-            <div class="custom-input-container container">
+      <!-- <div class="custom-input-container container">
                 <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input"
                     placeholder="R$0,00">
-            </div>
+            </div> -->
+      <div class="input-group mb-3 d-flex container">
+        <span class="input-group-text">$</span>
+        <input
+          type="text"
+          class="form-control col-4"
+          aria-label="Amount (to the nearest dollar)"
+        />
+        <span class="input-group-text">.00</span>
+      </div>
 
-            <div>
-                <p class="text-start text-md-center">Esse não é o valor final, você pode negociar diretamente com o
-                    prestador.</p>
-            </div>
-
-        </div>
+      <div>
+        <p class="text-start text-md-center">
+          Esse não é o valor final, você pode negociar diretamente com o
+          prestador.
+        </p>
+      </div>
     </div>
-    <!-- Botão de envio -->
-    <div class="container fixed-buttons d-flex justify-content-center mb-5">
-        <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
+  </div>
+  <!-- Botão de envio -->
+  <div class="container fixed-buttons d-flex justify-content-center mb-5">
+    <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
 
-        <button routerLink="/proposal/address" class="btn-ui btn-primary mt-3">Voltar</button>
+    <button routerLink="/proposal/address" class="btn-ui btn-primary mt-3">
+      Voltar
+    </button>
 
-        <button class="btn-ui btn-primary mt-3 send-btn" routerLink="/home"
-            style="background-color: var(--primary); color: white;">Avançar</button>
-    </div>
+    <button
+      class="btn-ui btn-primary mt-3 send-btn"
+      routerLink="/home"
+      style="background-color: var(--primary); color: white"
+    >
+      Avançar
+    </button>
+  </div>
 </section>

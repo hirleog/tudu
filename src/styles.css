@@ -219,6 +219,7 @@ hr {
   padding: 10px 35px;
   font-size: 20px;
   border-radius: unset;
+  margin-bottom: 1em;
 }
 
 .btn-ui:hover {

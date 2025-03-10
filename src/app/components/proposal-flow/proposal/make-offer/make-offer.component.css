@@ -28,5 +28,22 @@ p {
     /* Espaçamento entre os botões */
 }
 
+.input-group input {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #ced4da !important; /* Mantém a borda normal */
+}
+.input-group {
+    width: 100%;
+}
 
-
+/* @media (min-width: 768px) {
+    .input-group {
+        width: 90%;
+    }
+}
+@media (min-width: 992px) {
+    .input-group {
+        width: 55%;
+    }
+} */
