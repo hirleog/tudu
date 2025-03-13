@@ -15,7 +15,7 @@ const routes: Routes = [
   ],
   imports: [
     SharedModule,
-    RouterModule.forChild(routes), // Importante: Use forChild() aqui
+    RouterModule.forChild(routes), 
   ],
   exports: [
     // ShowcaseComponent

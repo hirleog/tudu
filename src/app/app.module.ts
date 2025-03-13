@@ -11,8 +11,9 @@ import { ClientReviewsComponent } from './components/client-reviews/client-revie
 import { FooterComponent } from './components/footer/footer.component';
 import { AppMenuComponent } from './components/main/app-menu/app-menu.component';
 import { ServicesComponent } from './components/services/services.component';
-import { SharedModule } from './shared/shared.module';
 import { SignUpComponent } from './components/user-login/sign-up/sign-up.component';
+import { SharedModule } from './shared/shared.module';
+
 
 @NgModule({
   declarations: [
@@ -33,7 +34,9 @@ import { SignUpComponent } from './components/user-login/sign-up/sign-up.compone
     BrowserAnimationsModule,
     AppRoutingModule,
 
-    SharedModule
+    SharedModule,
+
+    // PrestadorModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

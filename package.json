@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js"
   },
   "private": true,
   "dependencies": {
@@ -20,13 +21,16 @@
     "@angular/pwa": "^0.5.3",
     "@angular/router": "^14.3.0",
     "@mercadopago/sdk-js": "^0.0.3",
+    "@schematics/angular": "^14.2.13",
     "aos": "^2.3.4",
     "bootstrap": "^5.3.3",
+    "ngx-build-plus": "^14.0.0",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
+    "@angular-architects/module-federation": "^13.0.1",
     "@angular-devkit/build-angular": "^14.2.13",
     "@angular/cli": "^14.2.13",
     "@angular/compiler-cli": "^14.3.0",
