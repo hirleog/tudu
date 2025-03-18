@@ -46,23 +46,23 @@ export class ShowcaseComponent implements OnInit {
   constructor(private route: Router, private cfr: ComponentFactoryResolver) {}
 
   async ngOnInit() {
-    try {
-      // Carrega o módulo exposto pelo MFE
-      const module = await loadRemoteModule({
-        remoteEntry: 'http://localhost:4201/remoteEntry.js', // URL do remoteEntry do MFE
-        remoteName: 'tuduProfessional', // Nome do MFE
-        exposedModule: './BudgetsModule', // Nome do módulo exposto
-      });
+    // try {
+    //   // Carrega o módulo exposto pelo MFE
+    //   const module = await loadRemoteModule({
+    //     remoteEntry: 'http://localhost:4201/remoteEntry.js', // URL do remoteEntry do MFE
+    //     remoteName: 'tuduProfessional', // Nome do MFE
+    //     exposedModule: './BudgetsModule', // Nome do módulo exposto
+    //   });
 
-      // Obtém o componente usando o método estático
-      const component = module.BudgetsModule.getComponent();
+    //   // Obtém o componente usando o método estático
+    //   const component = module.BudgetsModule.getComponent();
 
-      // Cria uma instância do componente e o insere no template
-      const componentFactory = this.cfr.resolveComponentFactory(component);
-      const componentRef = this.mfeContainer.createComponent(componentFactory);
-    } catch (error) {
-      console.error('Erro ao carregar o MFE:', error);
-    }
+    //   // Cria uma instância do componente e o insere no template
+    //   const componentFactory = this.cfr.resolveComponentFactory(component);
+    //   const componentRef = this.mfeContainer.createComponent(componentFactory);
+    // } catch (error) {
+    //   console.error('Erro ao carregar o MFE:', error);
+    // }
   }
 
   search() {

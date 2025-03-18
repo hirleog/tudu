@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { loadRemoteModule } from '@angular-architects/module-federation';
+import { TuduProfessionalComponent } from './external-components/tudu-professional/tudu-professional.component';
 
 // AppRoutingModule
 // |
@@ -56,21 +56,10 @@ const routes: Routes = [
     loadChildren: () =>
       import('./components/main/main-app.module').then((m) => m.MainAppModule),
   },
-
   {
-    path: 'mfe',
-    loadChildren: () =>
-      loadRemoteModule({
-        remoteEntry: 'http://localhost:4201/remoteEntry.js', // URL do remoteEntry do MFE
-        remoteName: 'tuduProfessional', // Nome do MFE (definido no webpack.config.js do MFE)
-        exposedModule: './BudgetsModule', // Nome do módulo exposto pelo MFE
-      }).then((m) => m.BudgetsModule), // Nome da classe do módulo
+    path: 'tudu-professional',
+    component: TuduProfessionalComponent,
   },
-  // {
-  //   path: 'prestador',
-  //   loadChildren: () =>
-  //     import('mfe/Module').then((m) => m.PrestadorModule),
-  // },
 ];
 
 @NgModule({

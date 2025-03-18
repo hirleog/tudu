@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -14,7 +14,6 @@ import { ServicesComponent } from './components/services/services.component';
 import { SignUpComponent } from './components/user-login/sign-up/sign-up.component';
 import { SharedModule } from './shared/shared.module';
 
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +24,6 @@ import { SharedModule } from './shared/shared.module';
     SignUpComponent,
   ],
   imports: [
-
     CommonModule,
     BrowserModule,
     FormsModule,
@@ -39,6 +37,7 @@ import { SharedModule } from './shared/shared.module';
     // PrestadorModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA], // Adicione o CUSTOM_ELEMENTS_SCHEMA aqui
 })
-export class AppModule { }
+export class AppModule {}
