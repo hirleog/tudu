@@ -8,17 +8,23 @@
         alt="error"
       />
     </a>
-    <a
-      [routerLink]="['/tudu-professional']"
-      routerLinkActive="router-link-active"
-      >Seja um profissional</a
-    >
 
-    <!-- Botão de login -->
-    <a routerLink="/login" class="login-button">
-      <i class="fas fa-bars"></i>
-      <i class="fas fa-user fs-3"></i>
-    </a>
+    <div></div>
+
+    <div class="d-flex align-items-center gap-2">
+      <a
+      style="color: var(--tag-p-grey); "
+        [routerLink]="['/tudu-professional']"
+        routerLinkActive="router-link-active"
+        >Seja um profissional</a
+      >
+
+      <!-- Botão de login -->
+      <a routerLink="/login" class="login-button">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-user fs-3"></i>
+      </a>
+    </div>
   </app-nav>
 
   <ng-container #mfeContainer></ng-container>

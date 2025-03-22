@@ -60,6 +60,7 @@ const routes: Routes = [
     path: 'tudu-professional',
     component: TuduProfessionalComponent,
   },
+
 ];
 
 @NgModule({
