@@ -1,8 +1,8 @@
-<section *ngIf="showMenu">
+<section>
   <div class="d-flex align-items-center justify-content-around menu-fixo">
     <div
       class="menu-item"
-      routerLink="/"
+      [routerLink]="isProfessional === true ? '/tudu-professional/home' : '/'"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
     >

@@ -7,12 +7,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./app-menu.component.css'],
 })
 export class AppMenuComponent implements OnInit {
-  showMenu: boolean = true;
+  isProfessional: boolean = false;
 
   constructor(private router: Router) {
     // Verifica a rota atual e atualiza a variável showMenu
     this.router.events.subscribe(() => {
-      this.showMenu = !this.router.url.includes('tudu-professional');
+      this.isProfessional = !this.router.url.includes('tudu-professional');
     });
   }
 

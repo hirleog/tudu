@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TuduProfessionalComponent } from './external-components/tudu-professional/tudu-professional.component';
+import { loadRemoteModule } from '@angular-architects/module-federation';
 
 // AppRoutingModule
 // |
@@ -58,9 +59,24 @@ const routes: Routes = [
   },
   {
     path: 'tudu-professional',
-    component: TuduProfessionalComponent,
+    loadChildren: () =>
+      loadRemoteModule({
+        remoteEntry: 'http://localhost:4201/remoteEntry.js',
+        remoteName: 'mfeApp',
+        exposedModule: './MainAppModule',
+      })
+        .then((m) => m.MainAppModule)
+        .catch((err) => console.error('Error loading remote module', err)),
   },
-
+  // path: 'tudu-professional',
+  // loadChildren: () =>
+  //   loadRemoteModule({
+  //     remoteEntry: 'http://localhost:4201/remoteEntry.js',
+  //     remoteName: 'tuduProfessional',
+  //     exposedModule: './MainAppModule',
+  //   })
+  //     .then((m) => m.MainAppModule)
+  //     .catch((err) => console.error('Error loading remote module', err)),
 ];
 
 @NgModule({
