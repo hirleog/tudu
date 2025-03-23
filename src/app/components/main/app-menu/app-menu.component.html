@@ -12,7 +12,9 @@
     </div>
     <div
       class="menu-item"
-      routerLink="/home"
+      [routerLink]="
+        isProfessional === true ? '/tudu-professional/home' : '/home'
+      "
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
     >
@@ -23,16 +25,9 @@
 
     <div
       class="menu-item"
-      routerLink="/tudu-professional/budgets"
-      routerLinkActive="active"
-    >
-      <i class="fas fa-file-invoice-dollar"></i>
-      <p>Orçamentos</p>
-    </div>
-
-    <div
-      class="menu-item"
-      routerLink="/home/progress"
+      [routerLink]="
+        isProfessional === true ? '/tudu-professional/home' : '/home/progress'
+      "
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
     >
@@ -42,7 +37,9 @@
     </div>
     <div
       class="menu-item"
-      routerLink="/home/profile"
+      [routerLink]="
+        isProfessional === true ? '/tudu-professional/home' : '/home/profile'
+      "
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
     >

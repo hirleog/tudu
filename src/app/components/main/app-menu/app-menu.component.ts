@@ -16,5 +16,12 @@ export class AppMenuComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // const array:any = [1];
+    // for (let index = 0; index < array.length; index++) {
+    //   const element = array[index];
+    //   console.log(this.isProfessional);
+      
+    // }
+  }
 }
