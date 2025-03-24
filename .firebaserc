@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "use-tudu"
-  }
+    "default": "use-tudu",
+    "tudu": "u-tudu"
+  },
+  "targets": {},
+  "etags": {}
 }

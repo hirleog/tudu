@@ -35,3 +35,18 @@
     border-radius: 50%;
     /* Certifique-se de que a imagem tenha bordas arredondadas */
 }
+
+.input-group button {
+    background-color: var(--primary);
+    color: var(--light);
+    border: none;
+}
+.input-group button:hover {
+    background-color: var(--premium);
+}
+
+@media (max-width: 450px) {
+    p {
+        font-size: 16px;
+    }
+}

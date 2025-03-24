@@ -1,191 +1,141 @@
-#app-home {
-    /* height: 100em; */
-}
-
-#header-desktop a {
-    color: var(--tag-p-grey) !important;
-    font-weight: 500 !important;
-    font-size: 20px !important;
-}
-
 p {
-    color: var(--tag-p-grey) !important;
-    font-weight: 500;
+  color: var(--tag-p-grey) !important;
+  font-weight: 500;
 }
 
 i {
-    color: var(--tag-p-grey) !important;
+  color: var(--tag-p-grey) !important;
 }
 
-
-/* h4,
-span {
-    color: var(--secondary) !important;
-    font-weight: bold;
-    font-size: 18px;
-} */
-
-
 .request-card {
-    display: flex;
-    flex-direction: column;
-    background: #ffffff;
-    border-radius: 10px;
-    /* padding: 20px; */
-    margin: 15px 0;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  background: var(--light);
+  border-radius: 10px;
+  /* padding: 20px; */
+  margin: 15px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .request-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
 .request-card-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
 }
 
 .request-card-icon {
-    width: 50px;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
 }
 
 .request-card-icon i {
-    font-size: 2rem;
-    color: var(--primary) !important;
+  font-size: 2rem;
+  color: var(--primary) !important;
 }
 
 .request-card-title h5 {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin: 0;
-    color: #333;
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin: 0;
+  color: #333;
 }
 
 .request-card-title p {
-    font-size: 0.9rem;
-    color: #666;
+  font-size: 0.9rem;
+  color: #666;
 }
 
 .request-card-body {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .card-header {
-    background-color: transparent;
-
+  background-color: transparent;
 }
 
 .card-footer {
-    background-color: transparent;
-}
-
-.request-card-number {
-    font-weight: 600;
-    font-size: 1rem;
-    color: #333;
-    margin-bottom: 5px;
+  background-color: transparent;
 }
 
 .request-card-description {
-    font-size: 0.9rem;
-    color: #666;
-    margin-bottom: 10px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .request-card-link {
-    font-size: 0.9rem;
-    color: rgb(90, 90, 255) !important;
-    text-decoration: none;
+  font-size: 0.9rem;
+  color: rgb(90, 90, 255) !important;
+  text-decoration: none;
 }
 
 .request-card-link:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .request-quote-badge {
-    background: #28a745;
-    color: white;
-    padding: 5px 10px;
-    font-size: 0.8rem;
-    border-radius: 5px;
+  background: #28a745;
+  color: white;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  border-radius: 5px;
 }
 
 .truncate-text {
-    white-space: nowrap;
-    /* Não permite que o texto quebre a linha */
-    overflow: hidden;
-    /* Esconde o texto que ultrapassa o limite do contêiner */
-    text-overflow: ellipsis;
-    /* Adiciona as reticências (...) ao final do texto */
+  white-space: nowrap;
+  /* Não permite que o texto quebre a linha */
+  overflow: hidden;
+  /* Esconde o texto que ultrapassa o limite do contêiner */
+  text-overflow: ellipsis;
+  /* Adiciona as reticências (...) ao final do texto */
 }
 
 .request-quote-btn {
-    background: var(--primary);
-    color: white;
-    padding: 8px 15px;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    transition: background 0.3s ease;
+  background: var(--primary);
+  color: white;
+  padding: 8px 15px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
 
 .request-quote-btn:hover {
-    background: var(--primary-dark);
+  background: var(--primary-dark);
 }
-
-
 
 .disabled-card {
-    pointer-events: none;
-    /* Desabilita interações com o card */
-    opacity: 0.3;
-    /* Reduz a opacidade para indicar desabilitado */
-    cursor: not-allowed;
-    /* Mostra o cursor de "não permitido" */
+  pointer-events: none;
+  /* Desabilita interações com o card */
+  opacity: 0.3;
+  /* Reduz a opacidade para indicar desabilitado */
+  cursor: not-allowed;
+  /* Mostra o cursor de "não permitido" */
 }
-
-
-
-.a-selected {
-    text-decoration: none !important;
-    /* Remove qualquer sublinhado padrão */
-    color: inherit;
-}
-
-.a-selected:hover,
-.a-selected:focus,
-.a-selected {
-    text-decoration: underline !important;
-    /* Força o sublinhado */
-    text-decoration-color: var(--primary) !important;
-    /* Define a cor */
-    text-decoration-thickness: 4px !important;
-    text-underline-offset: 10px !important;
-}
-
-
 
 @media (max-width: 400px) {
-    .request-quote-btn {
-        padding: 7px 10px;
-        font-size: 12px;
-        font-weight: 600;
-    }
+  .request-quote-btn {
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
 
-    .truncate-text {
-        max-width: 70%;
-    }
+  .truncate-text {
+    max-width: 70%;
+  }
 }

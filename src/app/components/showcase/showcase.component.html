@@ -1,58 +1,93 @@
 <section id="hero">
+  <app-nav>
+    <a routerLink="/" class="logo">
+      <img
+        src="../../../assets/logo-rosa.webp"
+        class="img-fluid"
+        style="width: 4em"
+        alt="error"
+      />
+    </a>
 
-    <app-nav>
-        <a routerLink="/" class="logo">
-            <img src="../../../assets/logo-rosa.webp" class="img-fluid" style="width: 4em;" alt="error" />
-        </a>
-        <div></div>
+    <div></div>
 
-        <!-- Botão de login -->
-        <a routerLink="/login" class="login-button">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-user fs-3"></i>
-        </a>
-    </app-nav>
+    <div class="d-flex align-items-center gap-2">
+      <a
+      style="color: var(--tag-p-grey); "
+        [routerLink]="['/tudu-professional/home']"
+        routerLinkActive="router-link-active"
+        >Seja um profissional</a
+      >
 
-    <div class="container">
-        <!-- Barra de busca -->
-        <div class="row justify-content-center space">
-            <div class="col-12">
-                <h1 class="text-start mb-3">Qual serviço você precisa?</h1>
-                <div class="position-relative">
-                    <input type="text" class="form-control input-ui pe-5"
-                        style="border-radius: 52px; padding-right: 70px; height: 58px;"
-                        placeholder="Encontre o serviço que precisa..." aria-label="Buscar serviços">
-
-                    <button
-                        class="btn btn-pink rounded-circle d-flex align-items-center justify-content-center position-absolute"
-                        style="width: 54.78px; height: 54.78px; right: 1px; top: 50%; transform: translateY(-50%);"
-                        (click)="search()">
-                        <i class="fas fa-search text-white"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- <hr class="hr mt-5"> -->
-
-        <!-- Vitrine de serviços -->
-        <div class="row g-4 space">
-            <div *ngFor="let card of serviceCards" class="col-12 col-sm-6 col-md-4 col-lg-3" 
-                routerLink="/proposal" (click)="selectCard(card)" [ngClass]="{'disabled-card': card.disabled}">
-
-                <div data-aos="fade-down" class="card h-100 shadow-sm text-center" *ngIf="selectedCard === null || selectedCard === card.id">
-                    <div class="card-body">
-                        <i [class]="card.icon + ' fa-3x text-primary mb-3'"></i>
-                        <h5 class="card-title">{{ card.title }}</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- <hr class="hr mt-5 mb-5"> -->
+      <!-- Botão de login -->
+      <a routerLink="/login" class="login-button">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-user fs-3"></i>
+      </a>
     </div>
+  </app-nav>
+
+  <ng-container #mfeContainer></ng-container>
+
+  <div class="container">
+    <!-- Barra de busca -->
+    <div class="row justify-content-center space">
+      <div class="col-12">
+        <h1 class="text-start mb-3">Qual serviço você precisa?</h1>
+        <div class="position-relative">
+          <input
+            type="text"
+            class="form-control input-ui pe-5"
+            style="border-radius: 52px; padding-right: 70px; height: 58px"
+            placeholder="Encontre o serviço que precisa..."
+            aria-label="Buscar serviços"
+          />
+
+          <button
+            class="btn-ui btn-pink rounded-circle d-flex align-items-center justify-content-center position-absolute"
+            style="
+              width: 54.78px;
+              height: 54.78px;
+              right: 1px;
+              top: 50%;
+              transform: translateY(-50%);
+            "
+            (click)="search()"
+          >
+            <i class="fas fa-search text-white"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- <hr class="hr mt-5"> -->
+
+    <!-- Vitrine de serviços -->
+    <div class="row g-4 space">
+      <div
+        *ngFor="let card of serviceCards"
+        class="col-6 col-sm-6 col-md-4 col-lg-3"
+        routerLink="/proposal"
+        (click)="selectCard(card)"
+        [ngClass]="{ 'disabled-card': card.disabled }"
+      >
+        <div
+          data-aos="fade-down"
+          class="card h-100 shadow-sm text-center"
+          *ngIf="selectedCard === null || selectedCard === card.id"
+        >
+          <div class="card-body">
+            <i [class]="card.icon + ' fa-3x text-primary mb-3'"></i>
+            <h5 class="card-title">{{ card.title }}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- <hr class="hr mt-5 mb-5"> -->
+  </div>
 </section>
 
 <ng-container>
-    <app-hero></app-hero>
+  <app-hero></app-hero>
 </ng-container>

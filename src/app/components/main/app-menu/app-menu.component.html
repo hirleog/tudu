@@ -1,25 +1,48 @@
 <section>
-    <div class="d-flex align-items-center justify-content-around menu-fixo">
-        <div class="menu-item" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <i class="fas fa-search"></i> <!-- Ícone de pedidos -->
-            <p>Serviços</p>
-        </div>
-        <div class="menu-item" routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-            <i class="fas fa-tasks"></i> <!-- Ícone de pedidos -->
-            <p>Pedidos</p>
-        </div>
-        <!-- <div class="menu-item-central">
-            <i class="fas fa-plus" routerLink="/"></i>
-        </div> -->
-        <div class="menu-item" routerLink="/home/progress" routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
-            <i class="fas fa-clock"></i> <!-- Ícone de pendentes -->
-            <p>Pendentes</p>
-        </div>
-        <div class="menu-item"  routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
-             <i class="fas fa-user fs-3"></i>
-            <p>Perfil</p>
-        </div>
+  <div class="d-flex align-items-center justify-content-around menu-fixo">
+    <div
+      class="menu-item"
+      [routerLink]="isProfessional === true ? '/tudu-professional/home' : '/'"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-search"></i>
+      <!-- Ícone de pedidos -->
+      <p>Serviços</p>
     </div>
+    <div
+      *ngIf="isProfessional === false"
+      class="menu-item"
+      routerLink="/home"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-tasks"></i>
+      <!-- Ícone de pedidos -->
+      <p>Pedidos</p>
+    </div>
+
+    <div
+      class="menu-item"
+      [routerLink]="
+        isProfessional === true ? '/tudu-professional/home' : '/home/progress'
+      "
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-clock"></i>
+      <!-- Ícone de pendentes -->
+      <p>Pendentes</p>
+    </div>
+    <div
+      class="menu-item"
+      routerLink="/home/profile"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+    >
+      <i class="fas fa-user fs-3"></i>
+      <p>Perfil</p>
+    </div>
+  </div>
 </section>
+]

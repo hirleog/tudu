@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  mfeUrl: 'https://tudu-professional.web.app'  // URL do MFE em produção
+
 };
