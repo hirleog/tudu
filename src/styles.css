@@ -326,6 +326,50 @@ hr {
   color: var(--secondary);
 }
 
+.request-card {
+  background: #ffffff;
+  border-radius: 10px;
+  margin: 15px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.request-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+.request-quote-btn {
+  /* color: var(--primary) !important; */
+  padding: 10px 15px;
+  font-size: 17px;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.8s ease-in-out;
+  background-color: transparent;
+}
+
+.request-card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  border: 3px solid var(--premium);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.request-card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
 .request-card-number {
   font-weight: 600;
   font-size: 1rem;
@@ -348,11 +392,9 @@ hr {
   .custom-input {
     font-size: 3rem;
   }
-
 }
 .header-desktop {
   font-size: 15px !important;
-
 }
 
 @media (max-width: 767px) {

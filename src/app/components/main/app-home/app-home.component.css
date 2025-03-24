@@ -10,7 +10,7 @@ i {
 .request-card {
   display: flex;
   flex-direction: column;
-  background: #ffffff;
+  background: var(--light);
   border-radius: 10px;
   /* padding: 20px; */
   margin: 15px 0;

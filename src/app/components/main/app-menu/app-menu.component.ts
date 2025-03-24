@@ -12,7 +12,7 @@ export class AppMenuComponent implements OnInit {
   constructor(private router: Router) {
     // Verifica a rota atual e atualiza a variável showMenu
     this.router.events.subscribe(() => {
-      this.isProfessional = !this.router.url.includes('tudu-professional');
+      this.isProfessional = this.router.url.includes('tudu-professional');
     });
   }
 
