@@ -24,6 +24,7 @@
     "@angular/service-worker": "^14.3.0",
     "@mercadopago/sdk-js": "^0.0.3",
     "@schematics/angular": "^14.2.13",
+    "@types/gapi": "^0.0.47",
     "aos": "^2.3.4",
     "bootstrap": "^5.3.3",
     "ngx-build-plus": "^14.0.0",
