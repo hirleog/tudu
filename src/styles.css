@@ -37,7 +37,7 @@
   /* Cor sólida */
   --primary-dark: #d10050;
   /* --premium: #b80aea; */
-  --premium: #0432ca;
+  --premium: blueviolet;
   /* --premium: blueviolet; */
 
   /* --secondary: #1f1f1f; */
@@ -49,7 +49,7 @@
   --medium: #f8f9fa;
   --dark: #a2a2a2;
   /* --blue: #b80aea; */
-  --blue: #0051f8;
+  --blue: blueviolet;
 }
 
 html {
