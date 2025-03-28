@@ -1,40 +1,53 @@
 <section>
   <app-nav>
-    <a routerLink="/" class="logo">
-      <img
-        src="../../../assets/logo-rosa.webp"
-        class="img-fluid"
-        style="width: 4em"
-        alt="error"
-      />
-    </a>
+    <div left-content>
+      <a
+        routerLink="/"
+        class="text-decoration-none text-dark"
+        style="margin-right: 10px"
+      >
+        <i
+          class="fas fa-arrow-left"
+          style="font-size: 1.5em; color: var(--primary) !important"
+        ></i>
+      </a>
+    </div>
 
-    <div></div>
-
-    <div></div>
+    <div central-content>
+      <a routerLink="/" class="logo">
+        <img
+          src="../../../assets/logo-rosa.webp"
+          class="img-fluid"
+          style="width: 4em"
+          alt="error"
+        />
+      </a>
+    </div>
+    <!-- <div central-content></div> -->
+    <div right-content>
+      <i
+        class="fas fa-question-circle"
+        style="font-size: 1.5em; color: var(--primary) !important"
+        title="Clique para mais informações"
+      ></i>
+    </div>
   </app-nav>
 
   <div class="container">
-    <h4 class="text-start">Meus pedidos</h4>
-    <hr />
-  </div>
-
-  <div id="desktop" class="d-md-block d-none mb-md-5">
     <div
       class="header-desktop"
-      class="d-flex justify-content-between container"
+      class="d-flex justify-content-between mt-3 mb-3"
     >
-      <a class="a-selected">Publicados(3)</a>
-      <a class="a-selected">Em Andamento(0)</a>
-      <a class="a-selected">Finalizados(0)</a>
+      <a
+        *ngFor="let item of headerPageOptions; let i = index"
+        class="text-start header-desktop"
+        [class.a-selected]="selectedIndex === i"
+        (click)="selectItem(i)"
+      >
+        {{ item }}
+      </a>
     </div>
   </div>
-
-  <!-- <div id="home-mobile" class="d-block d-md-none">
-
-        <app-menu></app-menu>
-    </div>
- -->
 
   <div id="my-orders" class="container">
     <div class="row g-3 m-0 p-0">
@@ -47,8 +60,11 @@
         <!-- Colunas responsivas -->
         <div class="request-card">
           <div class="request-card-header card-header p-3">
-            <div class="request-card-icon">
-              <i [class]="card.icon"></i>
+            <div class="request-card-icon border-0">
+              <i
+                [class]="card.icon"
+                style="color: var(--primary) !important"
+              ></i>
             </div>
             <div class="request-card-title">
               <div class="d-flex align-items-center">

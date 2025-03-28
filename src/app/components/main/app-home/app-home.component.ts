@@ -5,20 +5,17 @@ import { CardOrders } from 'src/app/interfaces/card-orders';
 @Component({
   selector: 'app-home',
   templateUrl: './app-home.component.html',
-  styleUrls: ['./app-home.component.css']
+  styleUrls: ['./app-home.component.css'],
 })
 export class AppHomeComponent implements OnInit {
+  headerPageOptions: string[] = [
+    'Serviços(23)',
+    'Em andamento(3)',
+    'Finalizados(5)',
+  ]; // Lista dinâmica
+  selectedIndex: number = 0; // Inicia a primeira opção já selecionada
 
   cards: CardOrders[] = [
-    // {
-    //   id: 101,
-    //   icon: 'fas fa-tools', // Ícone FontAwesome
-    //   serviceName: 'Reparo Hidráulico',
-    //   description: 'Preciso de um encanador para consertar um vazamento na cozinha djhashdkahkdhakshdhaskdhaksdhksahdkhkdhkashdkhaskdhakshdkshkashdkahk...',
-    //   address: 'Rua das Flores, 123',
-    //   dateTime: '2021-08-10T10:00:00',
-    //   hasQuotes: true
-    // },
     {
       id: 102,
       icon: 'fas fa-car', // Ícone FontAwesome
@@ -26,7 +23,7 @@ export class AppHomeComponent implements OnInit {
       description: 'Lavagem completa com polimento para meu carro...',
       address: 'Rua doutor paulo de andrade arantes, 52',
       dateTime: '2021-08-10T10:00:00',
-      hasQuotes: false
+      hasQuotes: false,
     },
     {
       id: 103,
@@ -35,20 +32,21 @@ export class AppHomeComponent implements OnInit {
       description: 'Preciso pintar a sala e os quartos do apartamento...',
       address: 'Rua doutor antonio lobo sobrinho, 123',
       dateTime: '2021-08-10T10:00:00',
-      hasQuotes: true
-    }
+      hasQuotes: true,
+    },
   ];
 
-  constructor(
-    private route: Router
-  ) { }
+  constructor(private route: Router) {}
 
   ngOnInit(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
   }
 
+  selectItem(index: number): void {
+    this.selectedIndex = index; // Atualiza o item selecionado
+  }
+
   goToShowcase() {
     this.route.navigate(['/']);
   }
-
 }

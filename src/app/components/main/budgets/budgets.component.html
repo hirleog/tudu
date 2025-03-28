@@ -1,74 +1,112 @@
 <section>
-    <app-nav>
-        <a routerLink="/home" class="text-decoration-none text-dark" style="margin-right: 10px;">
-            <i class="fas fa-arrow-left"></i>
-        </a>
-
-        <h3 class="title-page m-0">Orçamentos</h3>
-
-        <i class="fas fa-question-circle" style="font-size: 1.5em; color: var(--primary)"
-            title="Clique para mais informações"></i>
-    </app-nav>
-
-    <div id="budgets" class="container">
-        <h4 class="text-start">Meus orçamentos</h4>
-
+  <app-nav>
+    <div left-content>
+      <a routerLink="/home" class="text-decoration-none text-dark">
+        <i class="fas fa-arrow-left"></i>
+      </a>
     </div>
+    <div central-content>
+      <h3 class="title-page m-0">Orçamentos</h3>
+    </div>
+    <div right-content>
+      <i
+        class="fas fa-question-circle"
+        style="font-size: 1.5em; color: var(--primary)"
+        title="Clique para mais informações"
+      ></i>
+    </div>
+  </app-nav>
 
-    <div id="my-budgets" class="container">
-        <div class="row g-3 m-0 p-0"> <!-- Linha Bootstrap com espaçamento -->
-            <div class="col-12 col-md-6 col-lg-6 m-0 p-0" *ngFor="let card of budgets; let i = index"
-                data-aos="fade-down">
-                <!-- Colunas responsivas -->
-                <div class="request-card d-flex flex-column p-4 gap-5">
-                    <div class="d-flex justify-content-between align-items-center">
+  <div id="budgets" class="container">
+    <h4 class="text-start">Meus orçamentos</h4>
+  </div>
 
-                        <div class="d-flex">
-                            <div class="request-card-icon">
-                                <img [src]="card.photo" class="img-fluid">
-                            </div>
-                            <div>
-
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex align-items-center gap-2">
-                                        <h5 class="m-0">{{ card.name }}</h5>
-                                        <i class="fas fa-star text-warning"></i>
-                                        <p class="m-0" style="color: var(--secondary);">{{ card.rate }}</p>
-                                        <p class="mb-0">({{ card.serviceComplete }} serviços)</p>
-                                    </div>
-                                </div>
-                                <p style="color: var(--premium)!important;">Prestador Premium</p>
-                            </div>
-                        </div>
-
-                        <div>
-                            <p class="m-0" style="color: var(--secondary) !important">{{ card.distanceMinutes }} min</p>
-                            <p style="color: var(--secondary) !important"> {{ card.distance }} km</p>
-                        </div>
-                    </div>
-
-                    <div class="custom-input-container container">
-                        <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input"
-                            [(ngModel)]="card.editedPrice" [placeholder]="card.price | currency:'BRL':'symbol':'1.2-2'">
-                    </div>
-
-                    <div class="request-card-footer d-flex gap-2">
-                        <button style=" color: var(--light); background-color: rgb(195 195 195) !important;"
-                            class="request-quote-btn bg-secondary col-6">Detalhes</button>
-
-                        <button class="request-quote-btn col-6"
-                            [ngClass]="{'change-button': card.editedPrice && card.editedPrice !== card.price}"
-                            style="background-color: var(--primary); color: var(--light);" routerLink="/home/progress">
-                            {{ card.editedPrice && card.editedPrice !== card.price ? 'Negociar' : 'Contratar' }}
-                        </button>
-                    </div>
+  <div id="my-budgets" class="container">
+    <div class="row g-3 m-0 p-0">
+      <!-- Linha Bootstrap com espaçamento -->
+      <div
+        class="col-12 col-md-6 col-lg-6 m-0 p-0"
+        *ngFor="let card of budgets; let i = index"
+        data-aos="fade-down"
+      >
+        <!-- Colunas responsivas -->
+        <div class="request-card d-flex flex-column p-4 gap-5">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex">
+              <div class="request-card-icon">
+                <img [src]="card.photo" class="img-fluid" />
+              </div>
+              <div>
+                <div class="d-flex justify-content-between">
+                  <div class="d-flex align-items-center gap-2">
+                    <h5 class="m-0">{{ card.name }}</h5>
+                    <i class="fas fa-star text-warning"></i>
+                    <p class="m-0" style="color: var(--secondary)">
+                      {{ card.rate }}
+                    </p>
+                    <p class="mb-0">({{ card.serviceComplete }} serviços)</p>
+                  </div>
                 </div>
+                <p style="color: var(--premium) !important">
+                  Prestador Premium
+                </p>
+              </div>
             </div>
-        </div>
-    </div>
 
+            <div>
+              <p class="m-0" style="color: var(--secondary) !important">
+                {{ card.distanceMinutes }} min
+              </p>
+              <p style="color: var(--secondary) !important">
+                {{ card.distance }} km
+              </p>
+            </div>
+          </div>
+
+          <div class="custom-input-container container">
+            <input
+              id="valor"
+              type="text"
+              maxlength="15"
+              appCurrencyFormat
+              class="custom-input"
+              [(ngModel)]="card.editedPrice"
+              [placeholder]="card.price | currency : 'BRL' : 'symbol' : '1.2-2'"
+            />
+          </div>
+
+          <div class="request-card-footer d-flex gap-2">
+            <button
+              style="
+                color: var(--light);
+                background-color: rgb(195 195 195) !important;
+              "
+              class="request-quote-btn bg-secondary col-6"
+            >
+              Detalhes
+            </button>
+
+            <button
+              class="request-quote-btn col-6"
+              [ngClass]="{
+                'change-button':
+                  card.editedPrice && card.editedPrice !== card.price
+              }"
+              style="background-color: var(--primary); color: var(--light)"
+              routerLink="/home/progress"
+            >
+              {{
+                card.editedPrice && card.editedPrice !== card.price
+                  ? "Negociar"
+                  : "Contratar"
+              }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <!-- Conteúdo da página -->
-<div class="container mt-5 pt-5">
-</div>
+<div class="container mt-5 pt-5"></div>

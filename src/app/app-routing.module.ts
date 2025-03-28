@@ -2,6 +2,7 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { ProfileComponent } from './components/main/profile/profile.component';
 
 // AppRoutingModule
 // |
@@ -67,6 +68,10 @@ const routes: Routes = [
       })
         .then((m) => m.MainAppModule)
         .catch((err) => console.error('Error loading remote module', err)),
+  },
+  {
+    path: 'tudu-professional/profile',
+    component: ProfileComponent,
   },
 ];
 

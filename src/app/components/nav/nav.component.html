@@ -1,4 +1,8 @@
-<div *ngIf="openClose === true" (click)="openClose = false" class="overlay"></div>
+<div
+  *ngIf="openClose === true"
+  (click)="openClose = false"
+  class="overlay"
+></div>
 
 <!-- <nav [ngClass]="{ 'hidden': scrolled }" data-aos="fade-down" class="navbar navbar-expand-lg navbar-light fixed-top"> -->
 
@@ -23,8 +27,6 @@
     </div>
   </div> -->
 <!-- MOBILE -->
-
-
 
 <!-- </nav> -->
 
@@ -55,9 +57,6 @@
 </div>
  -->
 
-
-
-
 <!-- Navbar para card-detail -->
 <!-- <nav *ngIf="isCardDetailPage" class="navbar navbar-expand-lg fixed-top">
   <div class="container-fluid">
@@ -72,26 +71,36 @@
   </div>
 </nav>
  -->
-
-
 <nav class="navbar navbar-expand-lg fixed-top">
-  <div class="container-fluid">
-    <!-- Slot para conteúdo customizável -->
-    <ng-content id="right-content"></ng-content>
+  <div
+    class="container-fluid d-flex justify-content-between align-items-center"
+  >
+    <!-- Slot esquerdo -->
+    <div class="navbar-left">
+      <ng-content select="[left-content]"></ng-content>
+    </div>
 
-    <ng-content id="central-content"></ng-content>
-    
-    <ng-content id="central-content"></ng-content>
+    <!-- Slot central -->
+    <div class="navbar-center">
+      <ng-content select="[central-content]"></ng-content>
+    </div>
 
-    <!-- Botão de login -->
-    <!-- <a routerLink="/login" class="login-button">
-      <i class="fas fa-bars"></i>
-      <i class="fas fa-user fs-3"></i>
-    </a> -->
+    <!-- Slot direito -->
+    <div class="navbar-right">
+      <ng-content select="[right-content]"></ng-content>
+    </div>
   </div>
 </nav>
 
+<!-- <nav class="navbar navbar-expand-lg fixed-top">
+  <div class="container-fluid">
+    <ng-content id="right-content"></ng-content>
+
+    <ng-content id="central-content"></ng-content>
+
+    <ng-content id="central-content"></ng-content>
+  </div>
+</nav> -->
 
 <!-- Conteúdo da página -->
-<div class="container mt-4 pt-3">
-</div>
+<div class="container mt-4 pt-3"></div>

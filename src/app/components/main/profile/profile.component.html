@@ -1,22 +1,19 @@
 <section id="profile" class="container menu-perfil">
   <app-nav>
-    <a routerLink="/" class="logo">
-      <img
-        src="../../../assets/logo-rosa.webp"
-        class="img-fluid"
-        style="width: 4em"
-        alt="error"
-      />
-    </a>
+    <div left-content>
+      <a routerLink="/" class="logo">
+        <img
+          src="../../../assets/logo-rosa.webp"
+          class="img-fluid"
+          style="width: 4em"
+          alt="error"
+        />
+      </a>
+    </div>
 
-    <div></div>
-
-    <!-- Botão de login -->
-    <!-- <a routerLink="/login" class="login-button">
-                <i class="fas fa-bars"></i>
-                <i class="fas fa-user fs-3"></i>
-            </a> -->
-    <div></div>
+    <div central-content></div>
+    <!-- <div central-content></div> -->
+    <div right-content></div>
   </app-nav>
 
   <div>
@@ -65,6 +62,15 @@
     <li class="nav-item">
       <p class="nav-link d-flex align-items-center" href="#">
         <i class="fas fa-question-circle me-2"></i> Central de Ajuda
+      </p>
+    </li>
+    <li class="nav-item">
+      <p
+        class="nav-link d-flex align-items-center"
+        routerLink="/tudu-professional/home"
+        routerLinkActive="active"
+      >
+        <i class="fa-solid fa-briefcase me-2"></i>Prestar serviços
       </p>
     </li>
     <li class="nav-item mt-3">
