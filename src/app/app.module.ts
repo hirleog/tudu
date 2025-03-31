@@ -14,7 +14,7 @@ import { ServicesComponent } from './components/services/services.component';
 import { SignUpComponent } from './components/user-login/sign-up/sign-up.component';
 import { SharedModule } from './shared/shared.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+const environment = require('./environments/environment');
 
 @NgModule({
   declarations: [
