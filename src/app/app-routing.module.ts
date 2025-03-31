@@ -1,8 +1,8 @@
-import { loadRemoteModule } from '@angular-architects/module-federation';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProfileComponent } from './components/main/profile/profile.component';
-const environment = require('./environments/environment');
+import { TuduProfessionalComponent } from './external-components/tudu-professional/tudu-professional.component';
+import { loadRemoteModule } from '@angular-architects/module-federation';
+import { environment } from 'src/environments/environment';
 
 // AppRoutingModule
 // |
@@ -62,16 +62,13 @@ const routes: Routes = [
     path: 'tudu-professional',
     loadChildren: () =>
       loadRemoteModule({
-        remoteEntry: `${environment.mfeUrl}/remoteEntry.js`,
+        // remoteEntry: 'http://localhost:4201/remoteEntry.js',
+        remoteEntry: `${environment.mfeUrl}/remoteEntry.js` ,
         remoteName: 'mfeApp',
         exposedModule: './MainAppModule',
       })
         .then((m) => m.MainAppModule)
         .catch((err) => console.error('Error loading remote module', err)),
-  },
-  {
-    path: 'tudu-professional/profile',
-    component: ProfileComponent,
   },
 ];
 

@@ -7,7 +7,7 @@ const sharedMappings = new mf.SharedMappings();
 sharedMappings.register(path.join(__dirname, "tsconfig.json"), [
   /* mapped paths to share */
 ]);
-const { environment } = require("./../tudu/src/environments/environment.ts"); 
+// const environment = require('./environments/environment');
 
 module.exports = {
   output: {
@@ -37,7 +37,7 @@ module.exports = {
 
       // For hosts (please adjust)
       remotes: {
-        mfeApp: `mfeApp@${environment.mfeUrl}/remoteEntry.js`, // Usando a URL do MFE dinâmica
+        // mfeApp: `mfeApp@${environment.mfeUrl}/remoteEntry.js`, // Usando a URL do MFE dinâmica
         // mfeApp: "mfeApp@http://localhost:4201/remoteEntry.js", // Usando a URL do MFE dinâmica
       },
 
