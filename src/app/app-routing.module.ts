@@ -1,8 +1,8 @@
 import { loadRemoteModule } from '@angular-architects/module-federation';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { environment } from 'src/environments/environment';
 import { ProfileComponent } from './components/main/profile/profile.component';
+const environment = require('./environments/environment');
 
 // AppRoutingModule
 // |
