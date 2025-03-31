@@ -57,7 +57,14 @@ html {
   overflow: auto;
 }
 
+.calendar-container {
+  position: absolute;
+  z-index: 1001;
+}
+
 body {
+  position: relative;
+
   overflow: hidden;
 
   max-width: 100%;
