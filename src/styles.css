@@ -414,6 +414,7 @@ hr {
   font-weight: 500 !important;
   font-size: 20px;
   text-decoration: none;
+  cursor: pointer !important;
 }
 
 .a-selected {
@@ -436,6 +437,40 @@ hr {
   /* Espaçamento entre os botões */
 }
 
+#btn-renegotiate {
+  background-color: var(--primary);
+  border: 1px solid #e9ecef;
+  width: 65px;
+}
+#btn-renegotiate:hover {
+  background-color: var(--primary-dark);
+  border: 1px solid #e9ecef;
+}
+
+#btn-renegotiate i {
+  color: var(--light) !important;
+}
+.change-renegotiate-btn {
+  background-color: var(--blue) !important;
+}
+/* Correção do Carrossel */
+.carousel {
+  overflow: hidden;
+  width: 100%;
+  touch-action: pan-y;
+}
+
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease-out;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  width: 100%;
+  margin-right: 0;
+  backface-visibility: hidden;
+}
 @media (max-width: 500px) {
   .custom-input {
     font-size: 3rem;

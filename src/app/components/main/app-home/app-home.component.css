@@ -108,6 +108,14 @@ i {
   /* Mostra o cursor de "não permitido" */
 }
 
+/* .carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+}
+.carousel-item {
+  transition: transform 0.6s ease-in-out;
+} */
+
 @media (max-width: 400px) {
   .request-quote-btn {
     padding: 7px 10px;

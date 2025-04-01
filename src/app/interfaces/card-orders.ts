@@ -4,6 +4,11 @@ export interface CardOrders {
     serviceName: string;
     description: string;
     address: string;
+    price: string;
+    editedPrice?: string;
+    renegotiateActive?: boolean;
+    calendarActive?: boolean;
+    placeholderDataHora?: string;
     dateTime: string;
     hasQuotes: boolean; // Se há orçamentos disponíveis
 }

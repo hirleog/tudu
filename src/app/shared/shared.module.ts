@@ -18,7 +18,6 @@ import { CurrencyFormatDirective } from '../directives/currency-format.directive
     FormsModule,
     ReactiveFormsModule,
     NavModule,
-
     CurrencyFormatDirective
   ]
 })

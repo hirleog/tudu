@@ -24,7 +24,9 @@
             "tsConfig": "tsconfig.app.json",
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.css", "node_modules/aos/dist/aos.css"],
-            "scripts": [],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
             "commonChunk": false,
             "extraWebpackConfig": "webpack.config.js",
             "serviceWorker": true,
@@ -46,8 +48,8 @@
               ],
               "fileReplacements": [
                 {
-                  "replace": "../environments/environment.ts",
-                  "with": "../environments/environment.prod.ts"
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
                 }
               ],
               "outputHashing": "none",
@@ -106,7 +108,9 @@
               "src/styles.css",
               "node_modules/bootstrap/dist/css/bootstrap.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           }
         }
       }

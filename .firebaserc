@@ -1,7 +1,8 @@
 {
   "projects": {
     "default": "use-tudu",
-    "tudu": "u-tudu"
+    "tudu": "u-tudu",
+    "dist/tudu": "u-tudu"
   },
   "targets": {},
   "etags": {}

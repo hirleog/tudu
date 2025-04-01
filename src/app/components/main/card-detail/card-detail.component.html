@@ -1,16 +1,18 @@
 <section style="margin-bottom: 6em; margin-top:-2em;">
-    <div>
-        <app-nav>
+    <app-nav>
+        <div left-content>
             <a routerLink="/home" class="text-decoration-none text-dark">
                 <i class="fas fa-arrow-left me-2" style="font-size: 1.5em; color: var(--primary)"></i>
             </a>
+        </div>
+        <div central-content>
             <h3 class="title-page m-0">Detalhes</h3>
-
+        </div>
+        <div right-content>
             <i class="fas fa-question-circle" style="font-size: 1.5em; color: var(--primary)"
-                title="Clique para mais informações" (click)="openModal()"></i>
-            <!-- </button> -->
-        </app-nav>
-    </div>
+            title="Clique para mais informações" (click)="openModal()"></i>
+        </div>
+      </app-nav>
 
 
 
