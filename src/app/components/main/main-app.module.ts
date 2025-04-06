@@ -6,10 +6,11 @@ import { PaymentsModule } from '../payments/payments.module';
 import { AppHomeComponent } from './app-home/app-home.component';
 import { BudgetsComponent } from './budgets/budgets.component';
 import { CardDetailComponent } from './card-detail/card-detail.component';
-import { ProgressComponent } from './progress/progress.component';
-import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
-import { ProfileComponent } from './profile/profile.component';
 import { FlowEndComponent } from './flow-end/flow-end.component';
+import { ProfileComponent } from './profile/profile.component';
+import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
+import { ProgressComponent } from './progress/progress.component';
+import { CalendarComponent } from '../calendar/calendar.component';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -31,6 +32,7 @@ const routes: Routes = [
     ProgressDetailComponent,
     ProfileComponent,
     FlowEndComponent,
+    CalendarComponent
   ],
   imports: [SharedModule, PaymentsModule, RouterModule.forChild(routes)],
 })

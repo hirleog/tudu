@@ -24,10 +24,7 @@
   border-radius: 50%;
   /* Certifique-se de que a imagem tenha bordas arredondadas */
 }
-.request-card-icon i {
-  font-size: 2rem;
-  color: var(--primary) !important;
-}
+
 .nav-link {
     color: var(--secondary) !important;
     cursor: pointer;

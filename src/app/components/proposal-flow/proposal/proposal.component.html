@@ -1,79 +1,109 @@
 <section>
+  <app-nav>
+    <div left-content>
+      <a
+        *ngIf="isFirstSlide"
+        (click)="goBack()"
+        class="text-decoration-none text-dark"
+      >
+        <i class="fas fa-arrow-left"></i> {{ titleCard }}
+      </a>
+    </div>
+    <div central-content>
+      <a routerLink="/" class="logo">
+        <img
+          src="../../../assets/logo-rosa.webp"
+          class="img-fluid"
+          style="width: 4em"
+          alt="error"
+        />
+      </a>
+    </div>
+    <div right-content>
+      <a routerLink="/login" class="login-button">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-user fs-3"></i>
+      </a>
+    </div>
+  </app-nav>
 
-    <app-nav>
-        <a routerLink="/" class="logo">
-            <img src="../../../assets/logo-rosa.webp" class="img-fluid" style="width: 4em;" alt="error" />
+  <div id="proposal" data-aos="fade-right">
+    <div class="container">
+      <!-- Seta para voltar -->
+      <div id="proposal-header" class="mb-4" style="cursor: pointer">
+        <a
+          *ngIf="!isFirstSlide"
+          class="text-decoration-none text-dark"
+          data-bs-target="#formCarousel"
+          data-bs-slide="prev"
+        >
+          <i class="fas fa-arrow-left"></i> {{ titleCard }}
         </a>
-        <div></div>
+      </div>
 
-        <!-- Botão de login -->
-        <a routerLink="/login" class="login-button">
-            <i class="fas fa-bars"></i>
-            <i class="fas fa-user fs-3"></i>
-        </a>
-    </app-nav>
-
-    <div id="proposal" data-aos="fade-right">
-
-        <div class="container">
-
-            <!-- Seta para voltar -->
-            <div id="proposal-header" class="mb-3 " style="cursor: pointer;">
-                <a *ngIf="isFirstSlide" (click)="goBack()" class="text-decoration-none text-dark">
-                    <i class="fas fa-arrow-left"></i> {{ titleCard }}
-                </a>
-
-                <a *ngIf="!isFirstSlide" class="text-decoration-none text-dark" data-bs-target="#formCarousel"
-                    data-bs-slide="prev">
-                    <i class="fas fa-arrow-left"></i> {{ titleCard }}
-                </a>
-
+      <!-- <div id="formCarousel" class="carousel slide" data-bs-interval="false"
+                (slide.bs.carousel)="onSlide($event)"> -->
+      <div id="formCarousel" class="carousel slide" data-bs-interval="false">
+        <div class="carousel-inner">
+          <!-- Formulário 1 -->
+          <div class="container">
+            <div class="container">
+              <h4 class="text-start mb-3">
+                Digite o serviço que está procurando
+              </h4>
             </div>
 
-            <div id="formCarousel" class="carousel slide" data-bs-interval="false"
-                (slide.bs.carousel)="onSlide($event)">
-                <div class="carousel-inner">
-                    <!-- Formulário 1 -->
-                    <div class="carousel-item active">
-                        <h4 class="text-start mb-3">Digite o serviço que está procurando</h4>
+            <app-multi-select [step]="'1'"></app-multi-select>
+          </div>
 
-                        <app-multi-select [step]="'1'"></app-multi-select>
-                    </div>
-
-                    <!-- Formulário 2 -->
-                    <div class="carousel-item">
+          <!-- Formulário 2 -->
+          <!-- <div class="carousel-item">
                         <div class="container">
                             <h4 class="text-start mb-3">Qual finalidade?</h4>
                             <app-multi-select [withoutInput]="false" [step]="'2'"></app-multi-select>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <!-- Formulário 3 -->
-                    <div class="carousel-item">
+          <!-- Formulário 3 -->
+          <!-- <div class="carousel-item">
                         <div class="container">
                             <h4 class="text-start mb-3">Explique com detalhes o que você precisa</h4>
                             <textarea class="form-control" id="description" rows="4"
                                 placeholder="Digite a descrição aqui..."></textarea>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Botão de envio -->
+                    </div> -->
         </div>
+      </div>
+      <!-- Botão de envio -->
     </div>
-    <div class="container fixed-buttons">
-        <button *ngIf="!isFirstSlide" class="btn-ui btn-primary mt-3" data-bs-target="#formCarousel"
-            data-bs-slide="prev">Voltar</button>
+  </div>
+  <div class="container fixed-buttons">
+    <button
+      *ngIf="!isFirstSlide"
+      class="btn-ui btn-primary mt-3"
+      data-bs-target="#formCarousel"
+      data-bs-slide="prev"
+    >
+      Voltar
+    </button>
 
-        <button *ngIf="isFirstSlide" routerLink="/" class="btn-ui btn-primary mt-3">Voltar</button>
+    <button *ngIf="isFirstSlide" routerLink="/" class="btn-ui btn-primary mt-3">
+      Voltar
+    </button>
 
+    <!-- <button
+      *ngIf="isLastSlide"
+      class="btn-ui btn-primary mt-3 send-btn"
+      data-bs-target="#formCarousel"
+      data-bs-slide="next"
+    >
+      Proxímo
+    </button> -->
 
-        <button *ngIf="isLastSlide" class="btn-ui btn-primary mt-3 send-btn" data-bs-target="#formCarousel"
-            data-bs-slide="next">Proxímo</button>
-
-        <button *ngIf="!isLastSlide" class="btn-ui btn-primary mt-3 send-btn" (click)="onSubmit()">Avançar</button>
-    </div>
-
+    <button class="btn-ui btn-primary mt-3 send-btn" (click)="onSubmit()">
+      Avançar
+    </button>
+  </div>
 </section>
 
 <!-- <app-footer></app-footer> -->

@@ -1,29 +1,34 @@
 <section id="hero">
   <app-nav>
-    <a routerLink="/" class="logo">
-      <img
-        src="../../../assets/logo-rosa.webp"
-        class="img-fluid"
-        style="width: 4em"
-        alt="error"
-      />
-    </a>
-
-    <div></div>
-
-    <div class="d-flex align-items-center gap-2">
-      <a
-      style="color: var(--tag-p-grey); "
-        [routerLink]="['/tudu-professional/home']"
-        routerLinkActive="router-link-active"
-        >Seja um profissional</a
-      >
-
-      <!-- Botão de login -->
-      <a routerLink="/login" class="login-button">
-        <i class="fas fa-bars"></i>
-        <i class="fas fa-user fs-3"></i>
+    <div left-content>
+      <a routerLink="/" class="logo">
+        <img
+          src="../../../assets/logo-rosa.webp"
+          class="img-fluid"
+          style="width: 4em"
+          alt="error"
+        />
       </a>
+    </div>
+
+    <div central-content>
+
+    </div>
+    <!-- <div central-content></div> -->
+    <div right-content style="flex: none !important">
+      <div class="d-flex align-items-center gap-1">
+        <a
+        class="professional-link"
+          [routerLink]="['/tudu-professional/home']"
+          routerLinkActive="router-link-active"
+          >Seja um profissional</a
+        >
+        <!-- Botão de login -->
+        <a routerLink="/login" class="login-button">
+          <i class="fas fa-bars"></i>
+          <i class="fas fa-user fs-3"></i>
+        </a>
+      </div>
     </div>
   </app-nav>
 

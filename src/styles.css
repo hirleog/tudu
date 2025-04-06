@@ -36,7 +36,10 @@
   --primary: #f80e6e;
   /* Cor sólida */
   --primary-dark: #d10050;
+  /* --premium: #b80aea; */
   --premium: blueviolet;
+  /* --premium: blueviolet; */
+
   /* --secondary: #1f1f1f; */
   --secondary: #1f1f1f;
   --secondary-transparent: #00000079;
@@ -45,6 +48,8 @@
   --light: #ffffff;
   --medium: #f8f9fa;
   --dark: #a2a2a2;
+  /* --blue: #b80aea; */
+  --blue: blueviolet;
 }
 
 html {
@@ -52,18 +57,26 @@ html {
   overflow: auto;
 }
 
+.calendar-container {
+  position: absolute;
+  z-index: 1001;
+}
+
 body {
+  position: relative;
+
   overflow: hidden;
 
   max-width: 100%;
 
   background: var(--light);
-}
-
-body {
   -ms-overflow-style: none;
   scrollbar-width: none;
-  /* Oculta a barra de rolagem no Firefox */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-touch-callout: none; /* Impede o menu de tradução no celular */
 }
 
 .container {
@@ -369,6 +382,25 @@ hr {
   object-fit: cover;
   border-radius: 50%;
 }
+.request-card-icon {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.request-card-icon i {
+  font-size: 2rem;
+  color: var(--primary) !important;
+}
+
+.request-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
 
 .request-card-number {
   font-weight: 600;
@@ -380,21 +412,72 @@ hr {
 .header-desktop {
   color: var(--tag-p-grey) !important;
   font-weight: 500 !important;
-  font-size: 20px !important;
+  font-size: 20px;
   text-decoration: none;
+  cursor: pointer !important;
 }
 
 .a-selected {
   color: var(--primary) !important;
 }
 
+.fixed-buttons {
+  position: fixed;
+  bottom: 2%;
+  /* Distância do rodapé */
+  left: 50%;
+  /* Centraliza horizontalmente */
+  transform: translateX(-50%);
+  /* Ajusta para alinhar ao centro */
+  z-index: 1050;
+  /* Garante que fique acima dos outros elementos */
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  /* Espaçamento entre os botões */
+}
+
+#btn-renegotiate {
+  background-color: var(--primary);
+  border: 1px solid #e9ecef;
+  width: 65px;
+}
+#btn-renegotiate:hover {
+  background-color: var(--primary-dark);
+  border: 1px solid #e9ecef;
+}
+
+#btn-renegotiate i {
+  color: var(--light) !important;
+}
+.change-renegotiate-btn {
+  background-color: var(--blue) !important;
+}
+/* Correção do Carrossel */
+.carousel {
+  overflow: hidden;
+  width: 100%;
+  touch-action: pan-y;
+}
+
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease-out;
+}
+
+.carousel-item {
+  flex: 0 0 100%;
+  width: 100%;
+  margin-right: 0;
+  backface-visibility: hidden;
+}
 @media (max-width: 500px) {
   .custom-input {
     font-size: 3rem;
   }
-}
-.header-desktop {
-  font-size: 15px !important;
+  .header-desktop {
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 767px) {

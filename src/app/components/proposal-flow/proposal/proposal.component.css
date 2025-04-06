@@ -22,22 +22,6 @@ body {
     justify-content: start;
 }
 
-.fixed-buttons {
-    position: fixed;
-    bottom: 2%;
-    /* Distância do rodapé */
-    left: 50%;
-    /* Centraliza horizontalmente */
-    transform: translateX(-50%);
-    /* Ajusta para alinhar ao centro */
-    z-index: 1050;
-    /* Garante que fique acima dos outros elementos */
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    /* Espaçamento entre os botões */
-}
-
 .send-btn {
     background-color: var(--primary);
     color: var(--light);

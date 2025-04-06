@@ -1,20 +1,27 @@
 <section>
   <app-nav>
-    <a routerLink="/" class="logo">
-      <img
-        src="../../../assets/logo-rosa.webp"
-        class="img-fluid"
-        style="width: 4em"
-        alt="error"
-      />
-    </a>
-    <div></div>
-
-    <!-- Botão de login -->
-    <a routerLink="/login" class="login-button">
-      <i class="fas fa-bars"></i>
-      <i class="fas fa-user fs-3"></i>
-    </a>
+    <div left-content>
+      <a routerLink="/proposal" class="text-decoration-none text-dark">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+    </div>
+    <div central-content>
+      <a routerLink="/" class="logo">
+        <img
+          src="../../../assets/logo-rosa.webp"
+          class="img-fluid"
+          style="width: 4em"
+          alt="error"
+        />
+      </a>
+    </div>
+    <div right-content>
+      <!-- Botão de login -->
+      <a routerLink="/login" class="login-button">
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-user fs-3"></i>
+      </a>
+    </div>
   </app-nav>
 
   <div id="make-offer" data-aos="fade-right">

@@ -23,26 +23,6 @@ i {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
-.request-card-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.request-card-icon {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 15px;
-}
-
-.request-card-icon i {
-  font-size: 2rem;
-  color: var(--primary) !important;
-}
-
 .request-card-title h5 {
   font-size: 1.2rem;
   font-weight: 500;
@@ -127,6 +107,14 @@ i {
   cursor: not-allowed;
   /* Mostra o cursor de "não permitido" */
 }
+
+/* .carousel-control-prev,
+.carousel-control-next {
+  width: 5%;
+}
+.carousel-item {
+  transition: transform 0.6s ease-in-out;
+} */
 
 @media (max-width: 400px) {
   .request-quote-btn {

@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="showDiv">
   <div class="d-flex align-items-center justify-content-around menu-fixo">
     <div
       class="menu-item"
@@ -25,7 +25,9 @@
     <div
       class="menu-item"
       [routerLink]="
-        isProfessional === true ? '/tudu-professional/home' : '/home/progress'
+        isProfessional === true
+          ? '/tudu-professional/progress'
+          : '/home/progress'
       "
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
@@ -36,7 +38,9 @@
     </div>
     <div
       class="menu-item"
-      routerLink="/home/profile"
+      [routerLink]="
+        isProfessional === true ? '/tudu-professional/profile' : '/home/profile'
+      "
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
     >
