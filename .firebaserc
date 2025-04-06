@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "use-tudu",
+    "default": "u-tudu",
     "tudu": "u-tudu",
     "dist/tudu": "u-tudu"
   },
