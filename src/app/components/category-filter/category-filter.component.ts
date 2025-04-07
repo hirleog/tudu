@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FilterCategory } from 'src/app/interfaces/filters-model';
+import { FilterCategory, FilterOption } from 'src/app/interfaces/filters-model';
 
 @Component({
   selector: 'app-category-filter',
@@ -14,4 +14,17 @@ export class CategoryFilterComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {}
+
+  onOptionSelected(category: FilterCategory, selectedOption: FilterOption): void {
+    if (category.isSingleSelect) {
+      // Desmarca todas as outras opções do mesmo grupo
+      category.options.forEach(option => {
+        option.selected = (option.value === selectedOption.value);
+      });
+    } else {
+      // Comportamento normal de checkbox (multiseleção)
+      selectedOption.selected = !selectedOption.selected;
+    }
+  }
+
 }

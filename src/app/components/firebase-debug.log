@@ -1,0 +1,16 @@
+[debug] [2025-04-07T21:47:43.223Z] ----------------------------------------------------------------------
+[debug] [2025-04-07T21:47:43.225Z] Command:       C:\nvm4w\nodejs\node.exe C:\nvm4w\nodejs\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2025-04-07T21:47:43.225Z] CLI Version:   13.34.0
+[debug] [2025-04-07T21:47:43.225Z] Platform:      win32
+[debug] [2025-04-07T21:47:43.225Z] Node Version:  v18.20.7
+[debug] [2025-04-07T21:47:43.226Z] Time:          Mon Apr 07 2025 18:47:43 GMT-0300 (Horário Padrão de Brasília)
+[debug] [2025-04-07T21:47:43.226Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-04-07T21:47:43.403Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-04-07T21:47:43.404Z] > authorizing via signed-in user (guilherme.hirle1@gmail.com)
+[debug] [2025-04-07T21:47:43.404Z] [iam] checking project u-tudu for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-04-07T21:47:43.405Z] Checked if tokens are valid: true, expires at: 1744065966740
+[debug] [2025-04-07T21:47:43.405Z] Checked if tokens are valid: true, expires at: 1744065966740
+[debug] [2025-04-07T21:47:43.406Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/u-tudu:testIamPermissions [none]
+[debug] [2025-04-07T21:47:43.406Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/u-tudu:testIamPermissions x-goog-quota-user=projects/u-tudu
+[debug] [2025-04-07T21:47:43.406Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/u-tudu:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}

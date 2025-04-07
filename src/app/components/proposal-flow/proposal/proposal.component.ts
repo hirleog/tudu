@@ -12,10 +12,10 @@ export class ProposalComponent implements OnInit {
   selectedOptions: any[] = [];
   paramCategory: any;
 
-  // infos que viram do backend
   filterCategories: FilterCategory[] = [
     {
       title: '1. Local do Serviço',
+      isSingleSelect: true, // Marca como seleção única
       options: [
         { label: 'Apartamento', value: 'apartment', selected: false },
         { label: 'Casa', value: 'house', selected: false },
@@ -33,8 +33,12 @@ export class ProposalComponent implements OnInit {
           value: 'facade',
           selected: false,
         },
-        { label: 'Pintura de teto', value: 'ceiling', selected: false },
-        { label: 'Pintura de portas/portões', value: 'doors', selected: false },
+        { label: 'Pintura de teto', value: 'ceiling_paint', selected: false }, // Alterado
+        {
+          label: 'Pintura de portas/portões',
+          value: 'doors_paint',
+          selected: false,
+        }, // Alterado
         { label: 'Pintura de móveis', value: 'furniture', selected: false },
       ],
     },
@@ -42,7 +46,7 @@ export class ProposalComponent implements OnInit {
       title: '3. Área a Ser Pintada',
       options: [
         { label: 'Parede(s)', value: 'walls', selected: false },
-        { label: 'Teto', value: 'ceiling', selected: false },
+        { label: 'Teto', value: 'ceiling_area', selected: false }, // Alterado
         { label: 'Portas/Janelas', value: 'doors_windows', selected: false },
         {
           label: 'Móveis embutidos',
@@ -124,6 +128,7 @@ export class ProposalComponent implements OnInit {
       // Aqui você pode usar o cardId para buscar mais informações ou realizar outras ações
     });
   }
+
 
   // Método para tratar o envio do formulário
   onSubmit(): void {

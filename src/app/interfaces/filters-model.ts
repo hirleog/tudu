@@ -1,6 +1,7 @@
 export interface FilterCategory {
-  title: string; // Ex: "1. Local do Serviço"
-  options: FilterOption[]; // Subcategorias (checkboxes)
+  title: string;
+  options: FilterOption[];
+  isSingleSelect?: boolean; // Flag para indicar se é seleção única
 }
 
 export interface FilterOption {
