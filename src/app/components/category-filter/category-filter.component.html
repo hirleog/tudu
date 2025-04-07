@@ -1,0 +1,35 @@
+<!-- service-filter.component.html -->
+<div class="service-filter mt-3 mb-3 container">
+  <h2 class="text-md-start" style="margin-left: 11px">{{ serviceTitle }}</h2>
+  <!-- Título do serviço (ex: "Pintura Residencial") -->
+  <hr />
+
+  <div
+    *ngFor="let category of filterCategories"
+    class="category d-flex flex-column align-items-start gap-2"
+  >
+    <h3>{{ category.title }}</h3>
+    <!-- Título da seção (ex: "1. Local do Serviço") -->
+
+    <div
+      *ngFor="let option of category.options"
+      class="option d-flex align-items-center gap-1"
+    >
+      <input
+        type="checkbox"
+        [id]="option.value"
+        [(ngModel)]="option.selected"
+      />
+      <label [for]="option.value">{{ option.label }}</label>
+
+      <input
+        *ngIf="option.value === 'other' && option.selected === true"
+        type="text"
+        name=""
+        placeholder="Digite"
+        id=""
+      />
+      <!-- <p *ngIf="">dasdasd</p> -->
+    </div>
+  </div>
+</div>

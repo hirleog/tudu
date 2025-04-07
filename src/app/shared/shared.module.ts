@@ -8,7 +8,7 @@ import { CurrencyFormatDirective } from '../directives/currency-format.directive
 
 @NgModule({
   declarations: [
-    CurrencyFormatDirective
+    CurrencyFormatDirective,
   ],
   imports: [
     // CommonModule,

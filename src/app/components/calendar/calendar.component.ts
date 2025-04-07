@@ -19,6 +19,7 @@ export class CalendarComponent implements OnInit {
   currentDate = moment();
   days: moment.Moment[] = [];
   weekdays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
   selectedDate: moment.Moment | null = null;
   selectedTime: string = '';
 
@@ -37,9 +38,12 @@ export class CalendarComponent implements OnInit {
 
   @Input() showWeekView: boolean = false;
   weekDays: { date: moment.Moment; isFirst: boolean }[] = [];
+  calendarActive: boolean = false;
 
   constructor(private elementRef: ElementRef) {
     this.generateCalendar();
+
+    console.log('CalendarComponent', this.openCalendar);
   }
 
   ngOnInit() {
@@ -54,6 +58,13 @@ export class CalendarComponent implements OnInit {
       if (this.showWeekView && this.markedDates?.length > 0) {
         this.generateWeekDays();
       }
+    }
+
+    if (changes['openCalendar']) {
+      this.openCalendar = changes['openCalendar'].currentValue;
+      this.calendarActive = this.openCalendar;
+      console.log('Calendar state changed:', this.openCalendar);
+      // Aqui você pode executar lógica adicional quando o valor mudar
     }
   }
 
@@ -99,7 +110,7 @@ export class CalendarComponent implements OnInit {
   }
 
   getDisplayedDays() {
-    const screenWidth = window.innerWidth;
+  const screenWidth = window.innerWidth;
     // Se a tela for menor que 380px, mostra 6 dias, senão mostra todos os 7
     return screenWidth < 380 ? this.weekDays.slice(0, 6) : this.weekDays;
   }
@@ -155,11 +166,15 @@ export class CalendarComponent implements OnInit {
   }
 
   selectDate(date: moment.Moment, event: MouseEvent) {
-    event.stopPropagation(); // Impede que o clique propague para o document
+    if (this.isDateDisabled(date)) {
+      event.stopPropagation();
+      return; // Impede seleção de datas desabilitadas
+    }
+  
+    event.stopPropagation();
     this.selectedDate = date;
     this.dateSelected.emit(date.format('YYYY-MM-DD'));
-
-    // Mantém o calendário aberto se tiver campo de hora
+  
     if (this.hasTime) {
       this.openCalendar = true;
     }
@@ -174,6 +189,16 @@ export class CalendarComponent implements OnInit {
 
   getMonthYear(): string {
     return this.currentDate.format('MMMM YYYY');
+  }
+
+  closeCalendarActive() {
+    this.openCalendar = false;
+    this.calendarActive = false;
+  }
+
+  isDateDisabled(date: moment.Moment): boolean {
+    const tomorrowNoon = moment().add(1, 'day').startOf('day').add(12, 'hours');
+    return date.isBefore(tomorrowNoon, 'day');
   }
 
   @HostListener('document:click', ['$event'])

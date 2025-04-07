@@ -1,7 +1,6 @@
+import { loadRemoteModule } from '@angular-architects/module-federation';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TuduProfessionalComponent } from './external-components/tudu-professional/tudu-professional.component';
-import { loadRemoteModule } from '@angular-architects/module-federation';
 import { environment } from 'src/environments/environment';
 
 // AppRoutingModule

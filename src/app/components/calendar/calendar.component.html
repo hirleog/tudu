@@ -24,7 +24,11 @@
   <div class="container d-flex justify-content-center">
     <div class="d-flex flex-column mt-1">
       <div class="d-flex justify-content-center mb-2" *ngIf="!hasTime">
-        <button *ngIf="showChangeDateBtn" class="calendar-toggle-btn" (click)="toggleCalendar()">
+        <button
+          *ngIf="showChangeDateBtn"
+          class="calendar-toggle-btn"
+          (click)="toggleCalendar()"
+        >
           <i class="fas fa-calendar-alt"></i>
         </button>
       </div>
@@ -38,7 +42,7 @@
 
       <!-- Calendário flutuante -->
       <div
-        *ngIf="openCalendar"
+        *ngIf="openCalendar || calendarActive"
         class="calendar-container bg-white rounded-3 shadow-sm mt-2"
       >
         <div
@@ -77,6 +81,7 @@
             <div
               *ngFor="let day of days"
               class="col calendar-day position-relative"
+              [class.disabled]="isDateDisabled(day)"
               [class.calendar-day-marked]="isMarked(day)"
               [class.calendar-day-outside]="!isCurrentMonth(day)"
               [class.calendar-day-selected]="isSelected(day)"
@@ -96,7 +101,6 @@
               class="form-control"
               id="inputTime"
               [value]="selectedTime"
-
               (change)="onTimeChange($event)"
               placeholder="12:00"
               required
@@ -104,9 +108,9 @@
           </div>
           <div class="mt-1">
             <button
-            style="border-radius: 5px;"
+              style="border-radius: 5px"
               class="col-12 check-button d-flex align-items-center justify-content-center gap-2 p-2"
-              (click)="openCalendar = false"
+              (click)="closeCalendarActive()"
             >
               Salvar
               <i class="far fa-check-circle"></i>

@@ -11,6 +11,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
 import { ProgressComponent } from './progress/progress.component';
 import { CalendarComponent } from '../calendar/calendar.component';
+import { CalendarModule } from '../calendar/calendar.module';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -32,8 +33,12 @@ const routes: Routes = [
     ProgressDetailComponent,
     ProfileComponent,
     FlowEndComponent,
-    CalendarComponent
   ],
-  imports: [SharedModule, PaymentsModule, RouterModule.forChild(routes)],
+  imports: [
+    SharedModule,
+    PaymentsModule,
+    CalendarModule,
+    RouterModule.forChild(routes),
+  ],
 })
 export class MainAppModule {}
