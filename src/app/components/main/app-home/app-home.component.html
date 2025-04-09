@@ -33,7 +33,7 @@
     </div>
   </app-nav>
 
-  <div class="container">
+  <div class="container" *ngIf="cards.length > 0">
     <div
       class="header-desktop"
       class="d-flex justify-content-between mt-3 mb-3"
@@ -72,7 +72,8 @@
                 <div>&nbsp;•&nbsp;</div>
               </div>
               <p class="request-card-description truncate-text">
-                {{ card.address }}
+                {{ card.address.street }}, {{ card.address.number }} -
+                {{ card.address.city }} - {{ card.address.state }}
               </p>
             </div>
           </div>
@@ -361,6 +362,21 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- EXPETION PARA QUANDO NAO HOVER PERDIDOS PENDENTES -->
+  <div
+    *ngIf="cards.length === 0"
+    class="d-flex align-items-center justify-content-center mt-5"
+    style="height: 68vh"
+  >
+    <div class="d-flex flex-column align-items-center gap-3">
+      <i class="fas fa-file-lines" style="font-size: 5em"></i>
+      <p class="fs-3">Você ainda não possui negociações</p>
+      <button class="btn-ui btn-primary mt-3 send-btn" routerLink="/">
+        Anúnciar Gratís
+      </button>
     </div>
   </div>
 </section>

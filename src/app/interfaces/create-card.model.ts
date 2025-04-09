@@ -1,8 +1,17 @@
 export interface CreateCard {
+  id_pedido?: string;
+  id_cliente?: number;
+  id_prestador?: any;
+
   categoria: string;
   subcategoria: string;
   valor: string;
   horario_preferencial: string;
+
+  codigo_confirmacao?: string;
+  data_finalizacao?: string;
+  status_pedido: string; // publicado, em andamento, finalizado
+
   cep: string; // CEP do endereço
   street: string; // Rua
   neighborhood: string; // Bairro

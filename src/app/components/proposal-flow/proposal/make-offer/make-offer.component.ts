@@ -54,26 +54,31 @@ export class MakeOfferComponent implements OnInit {
       'DD/MM/YYYY - HH:mm'
     ).format('YYYY-MM-DD HH:mm');
 
-    // const payload: any = {
-    //   filters: this.filters,
-    //   address: this.addressContent,
-    //   cardTitle: this.cardTitle,
-    //   dateTimeSelected: dateTimeFormat,
-    //   price: this.price,
-    // };
-
     const filtersConcat = this.filters
       .map((category: any) =>
         category.filters.map((filter: any) => filter.label).join(', ')
       )
       .join(', ');
 
+    const id_cliente = Math.floor(
+      100000 + Math.random() * 900000
+    )
+
+    const codigoConfirmacao = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
     const payloadCard: CreateCard = {
-      // client_id: '',
+      id_cliente: id_cliente, // precisa criar tabela de cliente para pegar o ID auto incrementavel
+      id_prestador: 0, // precisa criar tabela de cliente para pegar o ID auto incrementavel
       categoria: this.cardTitle,
+      status_pedido: 'publicado',
       subcategoria: filtersConcat,
       valor: this.price,
       horario_preferencial: dateTimeFormat,
+
+      codigo_confirmacao: codigoConfirmacao,
+
       cep: this.addressContent[0].cep, // CEP do endereço
       street: this.addressContent[0].street,
       neighborhood: this.addressContent[0].neighborhood,
@@ -84,8 +89,7 @@ export class MakeOfferComponent implements OnInit {
     };
 
     this.cardService.postCard(payloadCard).subscribe((response) => {
-
-      this.route.navigate(['/home'])
+      // this.route.navigate(['/home']);
     });
 
     return of();
