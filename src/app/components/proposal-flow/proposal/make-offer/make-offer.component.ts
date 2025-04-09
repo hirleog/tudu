@@ -54,16 +54,38 @@ export class MakeOfferComponent implements OnInit {
       'DD/MM/YYYY - HH:mm'
     ).format('YYYY-MM-DD HH:mm');
 
-    const payload: CreateCard = {
-      filters: this.filters,
-      address: this.addressContent,
-      cardTitle: this.cardTitle,
-      dateTimeSelected: dateTimeFormat,
-      price: this.price,
+    // const payload: any = {
+    //   filters: this.filters,
+    //   address: this.addressContent,
+    //   cardTitle: this.cardTitle,
+    //   dateTimeSelected: dateTimeFormat,
+    //   price: this.price,
+    // };
+
+    const filtersConcat = this.filters
+      .map((category: any) =>
+        category.filters.map((filter: any) => filter.label).join(', ')
+      )
+      .join(', ');
+
+    const payloadCard: CreateCard = {
+      // client_id: '',
+      categoria: this.cardTitle,
+      subcategoria: filtersConcat,
+      valor: this.price,
+      horario_preferencial: dateTimeFormat,
+      cep: this.addressContent[0].cep, // CEP do endereço
+      street: this.addressContent[0].street,
+      neighborhood: this.addressContent[0].neighborhood,
+      city: this.addressContent[0].city,
+      state: this.addressContent[0].state,
+      number: this.addressContent[0].number,
+      complement: this.addressContent[0].complement,
     };
 
-    this.cardService.postCard(payload).subscribe((response) => {
-      console.log('Card created successfully:', response);
+    this.cardService.postCard(payloadCard).subscribe((response) => {
+
+      this.route.navigate(['/home'])
     });
 
     return of();

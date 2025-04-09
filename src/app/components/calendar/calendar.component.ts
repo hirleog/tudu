@@ -42,10 +42,8 @@ export class CalendarComponent implements OnInit {
 
   constructor(private elementRef: ElementRef) {
     this.generateCalendar();
-
-    console.log('CalendarComponent', this.openCalendar);
   }
-
+  
   ngOnInit() {
     this.processInitialDateTime();
   }

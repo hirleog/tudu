@@ -115,30 +115,35 @@ export class ProposalComponent implements OnInit {
   ];
 
   constructor(private routeActive: ActivatedRoute, private route: Router) {
-    let filtersFormat: any; // Inicializa a variável filtersFormatted como null
-    let filtersFormatted: any;
+    // let filtersFormat: any; // Inicializa a variável filtersFormatted como null
+    // let filtersFormatted: any;
 
     this.routeActive.queryParams.subscribe((params) => {
       const filters = params['filters'] ? JSON.parse(params['filters']) : null;
-      filtersFormatted = filters;
+      // filtersFormatted = filters;
 
-      if (typeof filters === 'string') {
-        filtersFormat = JSON.parse(filters);
-        filtersFormatted = filtersFormatted;
-      }
+      // if (typeof filters === 'string') {
+      //   filtersFormat = JSON.parse(filters);
+      //   filtersFormatted = filtersFormatted;
+      // }
 
-      if (filtersFormatted) {
+      if (filters) {
         // Atualiza os checkboxes com base nos filtros selecionados
         this.filterCategories.forEach((category) => {
-          category.options.forEach((option) => {
-            // Verifica se o valor da opção está nos filtros
-            const selectedFilter = filters.find(
-              (filter: any) => filter.value === option.value
-            );
-            if (selectedFilter) {
-              option.selected = true; // Marca como selecionado
-            }
-          });
+          // Encontra a categoria correspondente no JSON retornado
+          const matchingCategory = filters.find(
+            (filter: any) => filter.title === category.title
+          );
+
+          if (matchingCategory) {
+            // Atualiza as opções da categoria com base nos filtros selecionados
+            category.options.forEach((option) => {
+              const selectedFilter = matchingCategory.filters.find(
+                (filter: any) => filter.value === option.value
+              );
+              option.selected = !!selectedFilter; // Marca como selecionado se encontrado
+            });
+          }
         });
       }
     });

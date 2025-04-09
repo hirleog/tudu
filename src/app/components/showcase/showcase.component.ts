@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { card } from '../../interfaces/card';
+import { CardService } from 'src/app/services/card.service';
 
 @Component({
   selector: 'app-showcase',
@@ -11,57 +12,13 @@ export class ShowcaseComponent implements OnInit {
   selectedCard: number | null = null;
   searchValue: string = '';
 
-  serviceCards: card[] = [
-    {
-      id: 1,
-      icon: 'fas fa-tools',
-      cardDetail: {
-        label: 'Serviços de Manutenção',
-        value: 'manutencao',
-      },
-      disabled: false,
-    },
-    {
-      id: 2,
-      icon: 'fas fa-paint-roller',
-      cardDetail: {
-        label: 'Pintura Residencial',
-        value: 'pintura',
-      },
-      disabled: false,
-    },
-    {
-      id: 2,
-      icon: 'fas fa-home',
-      cardDetail: {
-        label: 'Limpeza e Conservação',
-        value: 'limpeza',
-      },
-      disabled: true,
-    },
-    {
-      id: 3,
-      icon: 'fas fa-wrench',
-      cardDetail: {
-        label: 'Reformas e Reparos',
-        value: 'reformas',
-      },
-      disabled: true,
-    },
-    {
-      id: 4,
-      icon: 'fas fa-briefcase',
-      cardDetail: {
-        label: 'Consultoria',
-        value: 'consultoria',
-      },
-      disabled: true,
-    },
-  ];
+  serviceCards: card[] = [];
 
-  constructor(private route: Router) {}
+  constructor(private route: Router, public cardService: CardService) {}
 
-  async ngOnInit() {}
+  async ngOnInit() {
+    this.serviceCards = this.cardService.getServiceCards();
+  }
 
   search() {
     if (this.searchValue.trim()) {
