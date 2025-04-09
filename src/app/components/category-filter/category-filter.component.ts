@@ -15,16 +15,18 @@ export class CategoryFilterComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onOptionSelected(category: FilterCategory, selectedOption: FilterOption): void {
+  onOptionSelected(
+    category: FilterCategory,
+    selectedOption: FilterOption
+  ): void {
     if (category.isSingleSelect) {
       // Desmarca todas as outras opções do mesmo grupo
-      category.options.forEach(option => {
-        option.selected = (option.value === selectedOption.value);
+      category.options.forEach((option) => {
+        option.selected = option.value === selectedOption.value;
       });
     } else {
-      // Comportamento normal de checkbox (multiseleção)
-      selectedOption.selected = !selectedOption.selected;
+      //   // Comportamento normal de checkbox (multiseleção)
+      selectedOption.selected = selectedOption.selected;
     }
   }
-
 }

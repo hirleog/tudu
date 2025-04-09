@@ -21,7 +21,10 @@ export class AppMenuComponent implements OnInit {
         )
       )
       .subscribe((event: NavigationEnd) => {
-        this.showDiv = !this.hiddenRoutes.includes(event.url);
+        // Verifica se a URL começa com alguma das rotas em hiddenRoutes
+        this.showDiv = !this.hiddenRoutes.some((route) =>
+          event.url.startsWith(route)
+        );
       });
 
     // Verifica a rota atual e atualiza a variável showMenu

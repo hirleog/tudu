@@ -115,33 +115,79 @@ export class ProposalComponent implements OnInit {
   ];
 
   constructor(private routeActive: ActivatedRoute, private route: Router) {
-    // parametro para chamar a api de categorias e listar os filtros da categoria
-    this.paramCategory = this.routeActive.snapshot.paramMap.get('card');
-    console.log(this.paramCategory, 'asdhasdkasbd');
+    let filtersFormat: any; // Inicializa a variável filtersFormatted como null
+    let filtersFormatted: any;
+
+    this.routeActive.queryParams.subscribe((params) => {
+      const filters = params['filters'] ? JSON.parse(params['filters']) : null;
+      filtersFormatted = filters;
+
+      if (typeof filters === 'string') {
+        filtersFormat = JSON.parse(filters);
+        filtersFormatted = filtersFormatted;
+      }
+
+      if (filtersFormatted) {
+        // Atualiza os checkboxes com base nos filtros selecionados
+        this.filterCategories.forEach((category) => {
+          category.options.forEach((option) => {
+            // Verifica se o valor da opção está nos filtros
+            const selectedFilter = filters.find(
+              (filter: any) => filter.value === option.value
+            );
+            if (selectedFilter) {
+              option.selected = true; // Marca como selecionado
+            }
+          });
+        });
+      }
+    });
+
+    this.routeActive.queryParams.subscribe((params) => {
+      this.paramCategory = params['card'];
+    });
   }
 
   ngOnInit(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
-
-    this.routeActive.paramMap.subscribe((params) => {
-      this.titleCard = params.get('title'); // 'id' deve corresponder ao nome do parâmetro na rota
-      // Aqui você pode usar o cardId para buscar mais informações ou realizar outras ações
-    });
   }
 
-
-  // Método para tratar o envio do formulário
   onSubmit(): void {
-    this.filterCategories.forEach((element) => {
-      element.options.forEach((option) => {
+    const groupedOptions: { [key: string]: any } = {}; // Objeto para agrupar os filtros por título
+
+    this.filterCategories.forEach((category) => {
+      category.options.forEach((option) => {
         if (option.selected) {
-          this.selectedOptions.push(option);
+          // Se o título já existir no agrupamento, adiciona o filtro ao array
+          if (groupedOptions[category.title]) {
+            groupedOptions[category.title].push(option);
+          } else {
+            // Caso contrário, cria uma nova entrada com o título e o filtro
+            groupedOptions[category.title] = [option];
+          }
         }
       });
     });
-    console.log(this.selectedOptions, 'filterCategories');
 
-    this.route.navigate(['/proposal/address']);
+    // Converte o objeto agrupado em um array de objetos
+    this.selectedOptions = Object.keys(groupedOptions).map((title) => ({
+      title,
+      filters: groupedOptions[title],
+    }));
+
+    // Navega para a próxima rota com os dados agrupados
+    this.route.navigate(['/proposal/address'], {
+      queryParams: {
+        cardTitle: this.paramCategory,
+        filters: JSON.stringify(this.selectedOptions),
+      },
+    });
+    this.route.navigate(['/proposal/address'], {
+      queryParams: {
+        cardTitle: this.paramCategory,
+        filters: JSON.stringify(this.selectedOptions),
+      },
+    });
   }
   goBack(): void {
     this.route.navigate(['/']);

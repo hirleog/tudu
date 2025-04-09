@@ -1,13 +1,6 @@
-import {
-  Component,
-  ComponentFactoryResolver,
-  OnInit,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { card } from '../../interfaces/card';
-import { FilterCategory } from 'src/app/interfaces/filters-model';
 
 @Component({
   selector: 'app-showcase',
@@ -15,9 +8,6 @@ import { FilterCategory } from 'src/app/interfaces/filters-model';
   styleUrls: ['./showcase.component.css'],
 })
 export class ShowcaseComponent implements OnInit {
-  @ViewChild('mfeContainer', { read: ViewContainerRef })
-  mfeContainer!: ViewContainerRef;
-
   selectedCard: number | null = null;
   searchValue: string = '';
 
@@ -69,53 +59,13 @@ export class ShowcaseComponent implements OnInit {
     },
   ];
 
+  constructor(private route: Router) {}
 
-
-
-  // infos que viram do backend
-  filterCategories: FilterCategory[] = [
-    {
-      title: "1. Local do Serviço",
-      options: [
-        { label: "Apartamento", value: "apartment", selected: false },
-        { label: "Casa", value: "house", selected: false },
-        { label: "Comercial/Escritório", value: "commercial", selected: false },
-      ],
-    },
-    {
-      title: "2. Tipo de Pintura",
-      options: [
-        { label: "Pintura interna", value: "internal", selected: false },
-        { label: "Pintura externa", value: "external", selected: false },
-      ],
-    },
-    // ... outras categorias
-  ];
-
-  constructor(private route: Router, private cfr: ComponentFactoryResolver) {}
-
-  async ngOnInit() {
-    // try {
-    //   // Carrega o módulo exposto pelo MFE
-    //   const module = await loadRemoteModule({
-    //     remoteEntry: 'http://localhost:4201/remoteEntry.js', // URL do remoteEntry do MFE
-    //     remoteName: 'tuduProfessional', // Nome do MFE
-    //     exposedModule: './BudgetsModule', // Nome do módulo exposto
-    //   });
-    //   // Obtém o componente usando o método estático
-    //   const component = module.BudgetsModule.getComponent();
-    //   // Cria uma instância do componente e o insere no template
-    //   const componentFactory = this.cfr.resolveComponentFactory(component);
-    //   const componentRef = this.mfeContainer.createComponent(componentFactory);
-    // } catch (error) {
-    //   console.error('Erro ao carregar o MFE:', error);
-    // }
-  }
+  async ngOnInit() {}
 
   search() {
     if (this.searchValue.trim()) {
       console.log('Você pesquisou por:', this.searchValue);
-      // Aqui você pode implementar a lógica para buscar os serviços
     }
   }
 
@@ -123,8 +73,8 @@ export class ShowcaseComponent implements OnInit {
   selectCard(card: any) {
     this.selectedCard = card;
 
-    // passar o conteudo por shared service
-    // this.route.navigate(['/proposal', { card: card.cardDetail.value }]);
-    this.route.navigate(['/proposal']);
+    this.route.navigate(['/proposal'], {
+      queryParams: { card: card.cardDetail.label },
+    });
   }
 }

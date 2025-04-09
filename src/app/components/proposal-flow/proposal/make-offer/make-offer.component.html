@@ -1,7 +1,7 @@
 <section>
   <app-nav>
     <div left-content>
-      <a routerLink="/proposal" class="text-decoration-none text-dark">
+      <a (click)="goBack()" class="text-decoration-none text-dark">
         <i class="fas fa-arrow-left"></i>
       </a>
     </div>
@@ -143,13 +143,13 @@
   <div class="container fixed-buttons d-flex justify-content-center mb-5">
     <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
 
-    <button routerLink="/proposal/address" class="btn-ui btn-primary mt-3">
+    <button (click)="goBack()" class="btn-ui btn-primary mt-3">
       Voltar
     </button>
 
     <button
       class="btn-ui btn-primary mt-3 send-btn"
-      routerLink="/home"
+      (click)="createCard()"
       style="background-color: var(--primary); color: white"
     >
       Avançar

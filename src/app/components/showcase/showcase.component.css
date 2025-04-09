@@ -40,7 +40,7 @@ h4 {
 }
 
 .card:hover .card-body i {
-  color: #ffffff !important;
+  color: var(--primary) !important;
   transform: scale(1.2);
 }
 
@@ -82,4 +82,9 @@ h4 {
   padding: 8px 16px;
   border-radius: 50px;
   background-color: rgba(0, 0, 0, 0.096);
+}
+.card-title {
+  display: block; /* Garante que o elemento seja tratado como bloco */
+  white-space: pre-wrap; /* Mantém quebras de linha */
+  text-align: center; /* Centraliza o texto */
 }
