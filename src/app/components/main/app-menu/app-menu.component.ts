@@ -8,7 +8,7 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./app-menu.component.css'],
 })
 export class AppMenuComponent implements OnInit {
-  hiddenRoutes = ['/proposal', '/proposal/address', '/proposal/offer'];
+  hiddenRoutes = ['/login', '/proposal', '/proposal/address', '/proposal/offer'];
   showDiv = true;
   isProfessional: boolean = false;
 

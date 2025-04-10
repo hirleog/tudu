@@ -1,43 +1,80 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
-export class LoginComponent {
-  
-  loginEmail: string = '';
-  loginPassword: string = '';
-  registerName: string = '';
-  registerEmail: string = '';
-  registerPassword: string = '';
-  confirmPassword: string = '';
-
+export class LoginComponent implements OnInit {
   selectedTab: string = 'login';
 
+  loginForm!: FormGroup;
+  registerForm!: FormGroup;
 
-  selectTab(tab: string) {
+  constructor(private fb: FormBuilder, private authService: AuthService) {}
 
+  ngOnInit(): void {
+    // Inicializa o formulário de login
+    this.loginForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+    });
 
+    // Inicializa o formulário de registro
+    this.registerForm = this.fb.group({
+      name: ['', [Validators.required]], // Nome
+      lastName: ['', [Validators.required]], // Sobrenome
+      email: ['', [Validators.required, Validators.email]], // Email
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]], // Telefone
+      password: ['', [Validators.required, Validators.minLength(6)]], // Senha
+      confirmPassword: ['', [Validators.required]], // Confirmar Senha
+    });
+  }
+
+  selectTab(tab: string): void {
     this.selectedTab = tab;
   }
 
   onLogin(): void {
-    console.log('Login:', { email: this.loginEmail, password: this.loginPassword });
-    // Adicione a lógica de autenticação aqui
+    if (this.loginForm.valid) {
+      const { email, password } = this.loginForm.value;
+      this.authService.login(email, password).subscribe({
+        next: (response) => {
+          console.log('Login bem-sucedido:', response);
+        },
+        error: (error) => {
+          console.error('Erro no login:', error);
+        },
+      });
+    } else {
+      console.error('Formulário de login inválido');
+    }
   }
 
   onRegister(): void {
-    if (this.registerPassword === this.confirmPassword) {
-      console.log('Register:', {
-        name: this.registerName,
-        email: this.registerEmail,
-        password: this.registerPassword
+    if (this.registerForm.valid) {
+      const { name, lastName, email, phone, password } =
+        this.registerForm.value;
+      const payload = {
+        nome: name,
+        sobrenome: lastName,
+        email,
+        telefone: phone,
+        password,
+      };
+
+      this.authService.register(payload).subscribe({
+        next: (response) => {
+          console.log('Cadastro bem-sucedido:', response);
+        },
+        error: (error) => {
+          console.error('Erro no cadastro:', error);
+        },
       });
-      // Adicione a lógica de cadastro aqui
     } else {
-      console.error('As senhas não conferem');
+      console.error('Formulário de registro inválido');
     }
   }
 }
