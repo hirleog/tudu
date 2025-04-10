@@ -184,7 +184,8 @@
                 <div>&nbsp;•&nbsp;</div>
               </div>
               <p class="request-card-description truncate-text">
-                {{ card.address }}
+                {{ card.address.street }}, {{ card.address.number }} -
+                {{ card.address.city }} - {{ card.address.state }}
               </p>
             </div>
           </div>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
+import { AuthHelper } from 'src/app/components/helpers/auth-helper';
 import { CreateCard } from 'src/app/interfaces/create-card.model';
 import { CardService } from 'src/app/services/card.service';
 
@@ -23,12 +24,15 @@ export class MakeOfferComponent implements OnInit {
   renegotiateActive: boolean = false;
   calendarActive: boolean = false;
   initialDateTime: string = '';
+  isLogged: boolean = false;
 
   constructor(
     private routeActive: ActivatedRoute,
     private route: Router,
     public cardService: CardService
   ) {
+    this.isLogged = AuthHelper.isLoggedIn(); // Usa o helper diretamente
+
     this.initialDateTime = moment()
       .add(1, 'day')
       .set({ hour: 12, minute: 0, second: 0 })
@@ -60,9 +64,7 @@ export class MakeOfferComponent implements OnInit {
       )
       .join(', ');
 
-    const id_cliente = Math.floor(
-      100000 + Math.random() * 900000
-    )
+    const id_cliente = Math.floor(100000 + Math.random() * 900000);
 
     const codigoConfirmacao = Math.floor(
       100000 + Math.random() * 900000
@@ -88,10 +90,13 @@ export class MakeOfferComponent implements OnInit {
       complement: this.addressContent[0].complement,
     };
 
-    this.cardService.postCard(payloadCard).subscribe((response) => {
-      // this.route.navigate(['/home']);
-    });
-
+    if (this.isLogged) {
+      this.cardService.postCard(payloadCard).subscribe((response) => {
+        this.route.navigate(['/home']);
+      });
+    } else {
+      this.route.navigate(['/']);
+    }
     return of();
   }
 

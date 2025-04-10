@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { card } from '../../interfaces/card';
 import { CardService } from 'src/app/services/card.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { AuthHelper } from '../helpers/auth-helper';
 
 @Component({
   selector: 'app-showcase',
@@ -13,10 +15,21 @@ export class ShowcaseComponent implements OnInit {
   searchValue: string = '';
 
   serviceCards: card[] = [];
+  isLogged: boolean = false;
 
-  constructor(private route: Router, public cardService: CardService) {}
+  constructor(
+    private route: Router,
+    public cardService: CardService,
+    public authService: AuthService
+  ) {
+    this.isLogged = AuthHelper.isLoggedIn(); // Usa o helper diretamente
+  }
 
   async ngOnInit() {
+    // this.authService.isLoggedIn$.subscribe((loggedIn) => {
+    //   this.isLogged = loggedIn;
+    // });
+
     this.serviceCards = this.cardService.getServiceCards();
   }
 

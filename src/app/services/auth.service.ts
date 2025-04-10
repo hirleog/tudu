@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'https://sua-api.com/api'; // Substitua pela URL da sua API
+  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(private http: HttpClient) {}
 
@@ -28,6 +28,7 @@ export class AuthService {
       tap((response: any) => {
         // Salva o token no localStorage
         localStorage.setItem('access_token', response.access_token);
+        this.isLoggedInSubject.next(true); // Atualiza o estado de login
       })
     );
   }
@@ -40,5 +41,15 @@ export class AuthService {
   // Método para remover o token (logout)
   logout(): void {
     localStorage.removeItem('access_token');
+    this.isLoggedInSubject.next(false); // Atualiza o estado de login
+  }
+
+  private hasToken(): boolean {
+    return !!localStorage.getItem('access_token');
+  }
+
+  // Observable para o estado de login
+  get isLoggedIn$(): Observable<boolean> {
+    return this.isLoggedInSubject.asObservable();
   }
 }
