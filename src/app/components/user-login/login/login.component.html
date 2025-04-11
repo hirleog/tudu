@@ -14,12 +14,9 @@
 </app-nav>
 
 <section id="login" class="d-flex justify-content-center mt-2">
-  <div
-    class="row container d-flex justify-content-center"
-    
-  >
+  <div class="row container d-flex justify-content-center">
     <div class="col-md-8">
-      <div class="card shadow" style="height: auto;">
+      <div class="card shadow" style="height: auto">
         <div class="card-header text-center">
           <ul class="nav nav-tabs card-header-tabs" role="tablist">
             <li class="nav-item" role="presentation">
@@ -63,7 +60,7 @@
                   required
                 />
               </div>
-              <div class="mb-5">
+              <div class="mb-3">
                 <label for="loginPassword" class="form-label">Senha</label>
                 <input
                   type="password"
@@ -74,6 +71,7 @@
                   required
                 />
               </div>
+
               <button
                 type="submit"
                 style="color: white"
@@ -92,12 +90,24 @@
             </p>
             <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
               <div class="mb-3">
+                <label for="userType" class="form-label">Tipo de Usuário</label>
+                <select
+                  id="userType"
+                  class="form-select"
+                  [(ngModel)]="userType"
+                  required
+                >
+                  <option value="cliente">Cliente</option>
+                  <option value="prestador">Prestador</option>
+                </select>
+              </div>
+              <div class="mb-3">
                 <label for="registerName" class="form-label">Nome</label>
                 <input
                   type="text"
                   class="form-control"
                   id="registerName"
-                  formControlName="name"
+                  formControlName="nome"
                   placeholder="Digite seu nome"
                   required
                 />
@@ -110,19 +120,8 @@
                   type="text"
                   class="form-control"
                   id="registerLastName"
-                  formControlName="lastName"
+                  formControlName="sobrenome"
                   placeholder="Digite seu sobrenome"
-                  required
-                />
-              </div>
-              <div class="mb-3">
-                <label for="registerEmail" class="form-label">Email</label>
-                <input
-                  type="email"
-                  class="form-control"
-                  id="registerEmail"
-                  formControlName="email"
-                  placeholder="Digite seu email"
                   required
                 />
               </div>
@@ -132,8 +131,42 @@
                   type="text"
                   class="form-control"
                   id="registerPhone"
-                  formControlName="phone"
+                  formControlName="telefone"
                   placeholder="Digite seu telefone"
+                  required
+                />
+              </div>
+              <!-- <div class="mb-3">
+                <label for="registerCpf" class="form-label">CPF</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerCpf"
+                  formControlName="cpf"
+                  placeholder="Digite seu CPF"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="registerBirthDate" class="form-label"
+                  >Data de Nascimento</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="registerBirthDate"
+                  formControlName="data_nascimento"
+                  required
+                />
+              </div> -->
+              <div class="mb-3">
+                <label for="registerEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="registerEmail"
+                  formControlName="email"
+                  placeholder="Digite seu email"
                   required
                 />
               </div>
@@ -148,7 +181,7 @@
                   required
                 />
               </div>
-              <div class="mb-5">
+              <div class="mb-3">
                 <label for="confirmPassword" class="form-label"
                   >Confirmar Senha</label
                 >
@@ -160,7 +193,56 @@
                   placeholder="Confirme sua senha"
                   required
                 />
+                <div
+                  *ngIf="
+                    registerForm.get('confirmPassword')?.touched &&
+                    registerForm.get('confirmPassword')?.hasError('mismatch')
+                  "
+                  class="text-danger"
+                >
+                  As senhas não coincidem.
+                </div>
               </div>
+              <!-- <div class="mb-3">
+                <label for="registerAddress" class="form-label">Endereço</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerAddress"
+                  formControlName="endereco_rua"
+                  placeholder="Digite sua rua"
+                  required
+                />
+              </div> -->
+              <!-- <div
+                class="mb-3"
+                *ngIf="registerForm.value.userType === 'prestador'"
+              >
+                <label for="registerSpecialization" class="form-label"
+                  >Especialização</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerSpecialization"
+                  formControlName="especializacao"
+                  placeholder="Digite sua especialização"
+                />
+              </div>
+              <div
+                class="mb-3"
+                *ngIf="registerForm.value.userType === 'prestador'"
+              >
+                <label for="registerDescription" class="form-label"
+                  >Descrição</label
+                >
+                <textarea
+                  class="form-control"
+                  id="registerDescription"
+                  formControlName="descricao"
+                  placeholder="Descreva seus serviços"
+                ></textarea>
+              </div> -->
               <button
                 type="submit"
                 style="color: white"

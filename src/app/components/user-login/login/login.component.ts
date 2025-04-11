@@ -10,9 +10,11 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginComponent implements OnInit {
   selectedTab: string = 'login';
+  userType: string = 'cliente'; // Define o tipo de usuário (cliente ou prestador)
 
   loginForm!: FormGroup;
   registerForm!: FormGroup;
+  isWorker: boolean = false; // Define se a rota é para "tudu-professional"
 
   constructor(
     private fb: FormBuilder,
@@ -21,6 +23,8 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.isWorker = this.router.url.startsWith('/tudu-professional');
+
     // Inicializa o formulário de login
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -29,12 +33,30 @@ export class LoginComponent implements OnInit {
 
     // Inicializa o formulário de registro
     this.registerForm = this.fb.group({
-      name: ['', [Validators.required]], // Nome
-      lastName: ['', [Validators.required]], // Sobrenome
-      email: ['', [Validators.required, Validators.email]], // Email
-      phone: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]], // Telefone
-      password: ['', [Validators.required, Validators.minLength(6)]], // Senha
-      confirmPassword: ['', [Validators.required]], // Confirmar Senha
+      // telefone: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]],
+      nome: ['', [Validators.required]],
+      sobrenome: ['', [Validators.required]],
+      // cpf: [
+      //   '',
+      //   [
+      //     Validators.required,
+      //     Validators.pattern(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/),
+      //   ],
+      // ],
+      // data_nascimento: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]],
+      // password: ['', [Validators.required, Validators.minLength(6)]],
+      // endereco_estado: ['', [Validators.required]],
+      // endereco_cidade: ['', [Validators.required]],
+      // endereco_bairro: ['', [Validators.required]],
+      // endereco_rua: ['', [Validators.required]],
+      // endereco_numero: ['', [Validators.required]],
+      // Campos adicionais para prestador
+      // especializacao: [''],
+      // descricao: [''],
+      // avaliacao: [''],
     });
   }
 
@@ -44,8 +66,12 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
     if (this.loginForm.valid) {
+      this.isWorker === true
+        ? (this.userType = 'prestador')
+        : (this.userType = 'cliente');
+
       const { email, password } = this.loginForm.value;
-      this.authService.login(email, password).subscribe({
+      this.authService.login(email, password, this.userType).subscribe({
         next: (response) => {
           this.router.navigate(['/']);
         },
@@ -60,17 +86,44 @@ export class LoginComponent implements OnInit {
 
   onRegister(): void {
     if (this.registerForm.valid) {
-      const { name, lastName, email, phone, password } =
-        this.registerForm.value;
-      const payload = {
-        nome: name,
-        sobrenome: lastName,
-        email,
-        telefone: phone,
-        password,
-      };
+      const formValue = this.registerForm.value;
 
-      this.authService.register(payload).subscribe({
+      // Cria o payload com base no tipo de usuário
+      const payload =
+        this.userType === 'cliente'
+          ? {
+              telefone: formValue.telefone,
+              nome: formValue.nome,
+              sobrenome: formValue.sobrenome,
+              cpf: formValue.cpf,
+              data_nascimento: formValue.data_nascimento,
+              email: formValue.email,
+              password: formValue.password,
+              endereco_estado: formValue.endereco_estado,
+              endereco_cidade: formValue.endereco_cidade,
+              endereco_bairro: formValue.endereco_bairro,
+              endereco_rua: formValue.endereco_rua,
+              endereco_numero: formValue.endereco_numero,
+            }
+          : {
+              telefone: formValue.telefone,
+              nome: formValue.nome,
+              sobrenome: formValue.sobrenome,
+              cpf: formValue.cpf,
+              data_nascimento: formValue.data_nascimento,
+              email: formValue.email,
+              password: formValue.password,
+              endereco_estado: formValue.endereco_estado,
+              endereco_cidade: formValue.endereco_cidade,
+              endereco_bairro: formValue.endereco_bairro,
+              endereco_rua: formValue.endereco_rua,
+              endereco_numero: formValue.endereco_numero,
+              especializacao: formValue.especializacao,
+              descricao: formValue.descricao,
+              avaliacao: formValue.avaliacao,
+            };
+
+      this.authService.register(payload, this.userType).subscribe({
         next: (response) => {
           this.router.navigate(['/']);
         },
@@ -80,6 +133,17 @@ export class LoginComponent implements OnInit {
       });
     } else {
       console.error('Formulário de registro inválido');
+    }
+  }
+
+  passwordMatchValidator(formGroup: FormGroup): void {
+    const password = formGroup.get('password')?.value;
+    const confirmPassword = formGroup.get('confirmPassword')?.value;
+
+    if (password !== confirmPassword) {
+      formGroup.get('confirmPassword')?.setErrors({ mismatch: true });
+    } else {
+      formGroup.get('confirmPassword')?.setErrors(null);
     }
   }
 }
