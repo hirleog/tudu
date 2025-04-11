@@ -3,13 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavModule } from '../components/nav/nav.module';
 import { CurrencyFormatDirective } from '../directives/currency-format.directive';
-
-
+import { StatusFilterPipe } from '../components/helpers/status-filter.pipe';
 
 @NgModule({
-  declarations: [
-    CurrencyFormatDirective,
-  ],
+  declarations: [CurrencyFormatDirective, StatusFilterPipe],
   imports: [
     // CommonModule,
   ],
@@ -18,7 +15,8 @@ import { CurrencyFormatDirective } from '../directives/currency-format.directive
     FormsModule,
     ReactiveFormsModule,
     NavModule,
-    CurrencyFormatDirective
-  ]
+    CurrencyFormatDirective,
+    StatusFilterPipe,
+  ],
 })
-export class SharedModule { }
+export class SharedModule {}

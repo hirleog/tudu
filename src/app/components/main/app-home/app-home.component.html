@@ -51,15 +51,15 @@
   </div>
 
   <!-- My Orders -->
-  <div class="container" *ngIf="selectedIndex === 0">
+  <div class="container" *ngIf="cards.length > 0">
     <div class="row g-3 m-0 p-0">
       <div
         class="col-12 col-md-6 col-lg-6 m-0 p-2"
-        *ngFor="let card of cards"
+        *ngFor="let card of cards | filterByStatus : selectedIndex"
         data-aos="fade-down"
       >
         <div class="request-card">
-          <div class="request-card-header card-header p-3">
+          <div class="request-card-header card-header bg-light p-3">
             <div class="request-card-icon border-0">
               <i
                 [class]="card.icon"
@@ -83,16 +83,32 @@
               {{ card.subcategoria }}
             </p>
           </div>
+
           <div class="custom-input-container container">
             <div class="input-group mb-3">
               <span class="input-group-text">$</span>
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="card.editedPrice"
-                [placeholder]="card.valor"
+                [(ngModel)]="card.valor_negociado"
+                [placeholder]="card.valor | currency : 'BRL'"
                 [disabled]="!!card.renegotiateActive"
               />
+              <button
+                *ngIf="card.status_pedido === 'em andamento'"
+                [ngClass]="{
+                  'change-renegotiate-btn': !card.renegotiateActive
+                }"
+                class="btn btn-outline-secondary"
+                type="button"
+                id="btn-renegotiate"
+                (click)="renegotiateActive(card)"
+              >
+                <i
+                  class="fa"
+                  [ngClass]="card.renegotiateActive ? 'fa-pencil' : 'fa-undo'"
+                ></i>
+              </button>
             </div>
           </div>
 
@@ -109,6 +125,24 @@
                   [disabled]="!card.calendarActive"
                   (click)="openCalendar(card)"
                 />
+                <button
+                  *ngIf="card.status_pedido === 'em andamento'"
+                  [ngClass]="{
+                    'change-renegotiate-btn':
+                      card.calendarActive && card.placeholderDataHora
+                  }"
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  id="btn-renegotiate"
+                  (click)="toggleCalendar(card, $event)"
+                >
+                  <i
+                    class="fas"
+                    [ngClass]="
+                      !card.calendarActive ? 'fa-calendar-alt' : 'fa-undo'
+                    "
+                  ></i>
+                </button>
               </div>
             </div>
 
@@ -117,8 +151,8 @@
                 [initialDateTime]="card.placeholderDataHora"
                 [openCalendar]="card.calendarActive || false"
                 [hasTime]="true"
-                (dateSelected)="onDateSelected(card.id, $event)"
-                (timeSelected)="onTimeSelected(card.id, $event)"
+                (dateSelected)="onDateSelected(card.id_pedido, $event)"
+                (timeSelected)="onTimeSelected(card.id_pedido, $event)"
                 (closeCalendar)="onCalendarClose(card)"
                 [showWeekView]="false"
               >
@@ -126,8 +160,10 @@
             </div>
           </div>
 
+          <!-- Botões para "publicado" -->
           <div
-            class="d-flex justify-content-between card-footer p-3"
+            *ngIf="card.status_pedido === 'publicado'"
+            class="d-flex justify-content-between card-footer bg-light p-4"
             style="margin-top: -3em"
           >
             <button
@@ -145,10 +181,9 @@
             </ng-template>
 
             <button
-              class="request-quote-btn"
+              class="request-quote-btn bg-light"
               routerLink="/home/detail"
               routerLinkActive="active"
-              style="background-color: var(--light) !important"
             >
               <i
                 class="fas fa-search"
@@ -157,13 +192,49 @@
               ></i>
             </button>
           </div>
+
+          <!-- Botões para "em andamento" -->
+          <div
+            *ngIf="card.status_pedido === 'em andamento'"
+            class="request-card-footer bg-light d-flex gap-2 p-4"
+            style="margin-top: -3em"
+          >
+            <button
+              class="request-quote-btn col-6"
+              [ngClass]="{
+                'change-renegotiate-btn':
+                  (card.valor_negociado &&
+                    card.valor_negociado !== card.valor) ||
+                  (card.calendarActive === true &&
+                    dateTimeFormatted !== card.placeholderDataHora)
+              }"
+              style="background-color: var(--primary); color: var(--light)"
+              routerLink="/home/progress"
+            >
+              {{
+                card.valor_negociado && card.valor_negociado !== card.valor
+                  ? "Renegociar"
+                  : "Aceitar"
+              }}
+            </button>
+            <button
+              style="
+                color: var(--primary) !important;
+                background-color: var(--light) !important;
+                border: 1px solid var(--primary) !important;
+              "
+              class="request-quote-btn bg-secondary col-6"
+            >
+              Detalhes
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <!-- In Progress -->
-  <div class="container" *ngIf="selectedIndex === 1">
+  <!-- <div class="container" *ngIf="selectedIndex === 1">
     <div class="row g-3 m-0 p-0">
       <div
         class="col-12 col-md-6 col-lg-6 m-0 p-2"
@@ -171,7 +242,7 @@
         data-aos="fade-down"
       >
         <div class="request-card">
-          <div class="request-card-header card-header p-3">
+          <div class="request-card-header card-header bg-light p-3">
             <div class="request-card-icon border-0">
               <i
                 [class]="card.icon"
@@ -194,14 +265,15 @@
             <p class="request-card-description truncate-text">
               {{ card.subcategoria }}
             </p>
-          </div>
-          <div class="custom-input-container container">
+          </div> -->
+
+  <!-- <div class="custom-input-container container">
             <div class="input-group mb-3">
               <span class="input-group-text">$</span>
               <input
                 type="text"
                 class="form-control"
-                [(ngModel)]="card.editedPrice"
+                [(ngModel)]="card.valor_negociado"
                 [placeholder]="card.valor"
                 [disabled]="!!card.renegotiateActive"
               />
@@ -267,18 +339,18 @@
               >
               </app-calendar>
             </div>
-          </div>
+          </div> -->
 
-          <!-- Botões de ação -->
-          <div
-            class="request-card-footer d-flex gap-2 p-3"
+  <!-- Botões de ação -->
+  <!-- <div
+            class="request-card-footer bg-light d-flex gap-2 p-3"
             style="margin-top: -3em"
           >
             <button
               class="request-quote-btn col-6"
               [ngClass]="{
                 'change-button':
-                  (card.editedPrice && card.editedPrice !== card.valor) ||
+                  (card.valor_negociado && card.valor_negociado !== card.valor) ||
                   (card.calendarActive === true &&
                     dateTimeFormatted !== card.placeholderDataHora)
               }"
@@ -286,7 +358,7 @@
               routerLink="/home/progress"
             >
               {{
-                card.editedPrice && card.editedPrice !== card.valor
+                card.valor_negociado && card.valor_negociado !== card.valor
                   ? "Renegociar"
                   : "Aceitar"
               }}
@@ -301,11 +373,11 @@
             >
               Detalhes
             </button>
-          </div>
-        </div>
+          </div> -->
+  <!-- </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- Finalized Orders -->
   <div class="container" *ngIf="selectedIndex === 2">
@@ -316,7 +388,7 @@
         data-aos="fade-down"
       >
         <div class="request-card">
-          <div class="request-card-header card-header p-3">
+          <div class="request-card-header card-header bg-light p-3">
             <div class="request-card-icon border-0">
               <i
                 [class]="historic.icon"
@@ -339,7 +411,7 @@
               {{ historic.description }}
             </p>
           </div>
-          <div class="d-flex justify-content-between card-footer p-3">
+          <div class="d-flex justify-content-between card-footer bg-light p-3">
             <button
               class="request-quote-btn"
               routerLink="/home/budgets"

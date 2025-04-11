@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
 import {
+  HttpErrorResponse,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -25,9 +27,37 @@ export class AuthInterceptor implements HttpInterceptor {
           Authorization: `Bearer ${token}`,
         },
       });
-      return next.handle(cloned);
+      return next.handle(cloned).pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 401 || error.status === 403) {
+            // Exibe o modal de reautenticação
+            // this.dialog.open(ReauthModalComponent, {
+            //   width: '400px',
+            //   disableClose: true,
+            // });
+
+            // Redireciona para a rota de login
+            this.router.navigate(['/login']);
+          }
+          return throwError(() => error);
+        })
+      );
     }
 
-    return next.handle(req); // Continua sem o cabeçalho se o token não existir
+    return next.handle(req).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401 || error.status === 403) {
+          // Exibe o modal de reautenticação
+          // this.dialog.open(ReauthModalComponent, {
+          //   width: '400px',
+          //   disableClose: true,
+          // });
+
+          // Redireciona para a rota de login
+          this.router.navigate(['/login']);
+        }
+        return throwError(() => error);
+      })
+    );
   }
 }

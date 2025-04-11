@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { AuthHelper } from 'src/app/components/helpers/auth-helper';
 import { CreateCard } from 'src/app/interfaces/create-card.model';
+import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
 
 @Component({
@@ -25,13 +26,20 @@ export class MakeOfferComponent implements OnInit {
   calendarActive: boolean = false;
   initialDateTime: string = '';
   isLogged: boolean = false;
+  id_cliente: any = '';
 
   constructor(
     private routeActive: ActivatedRoute,
     private route: Router,
-    public cardService: CardService
+    public cardService: CardService,
+    public authService: AuthService
   ) {
     this.isLogged = AuthHelper.isLoggedIn(); // Usa o helper diretamente
+
+    this.authService.idCliente$.subscribe((id) => {
+      this.id_cliente = id;
+      console.log('ID do Cliente:', this.id_cliente);
+    });
 
     this.initialDateTime = moment()
       .add(1, 'day')
@@ -64,14 +72,12 @@ export class MakeOfferComponent implements OnInit {
       )
       .join(', ');
 
-    const id_cliente = Math.floor(100000 + Math.random() * 900000);
-
     const codigoConfirmacao = Math.floor(
       100000 + Math.random() * 900000
     ).toString();
 
     const payloadCard: CreateCard = {
-      id_cliente: 1, // precisa criar tabela de cliente para pegar o ID auto incrementavel
+      id_cliente: this.id_cliente, // precisa criar tabela de cliente para pegar o ID auto incrementavel
       id_prestador: 0, // precisa criar tabela de cliente para pegar o ID auto incrementavel
       categoria: this.cardTitle,
       status_pedido: 'publicado',

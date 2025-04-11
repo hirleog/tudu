@@ -2,13 +2,16 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
+  private idClienteSubject = new BehaviorSubject<string | null>(this.getIdClienteFromToken()); // Inicializa com o valor do token
 
+  idCliente: string = '';
   constructor(private http: HttpClient) {}
 
   // Método para cadastro
@@ -29,6 +32,12 @@ export class AuthService {
         // Salva o token no localStorage
         localStorage.setItem('access_token', response.access_token);
         this.isLoggedInSubject.next(true); // Atualiza o estado de login
+
+        // Decodifica o token para obter o id_cliente e atualiza o BehaviorSubject
+        const idCliente = this.getIdClienteFromToken();
+        if (idCliente) {
+          this.setIdCliente(idCliente);
+        }
       })
     );
   }
@@ -51,5 +60,23 @@ export class AuthService {
   // Observable para o estado de login
   get isLoggedIn$(): Observable<boolean> {
     return this.isLoggedInSubject.asObservable();
+  }
+
+  getIdClienteFromToken(): string | null {
+    const token = this.getToken();
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      return decoded.sub; // Supondo que o idCliente esteja no campo "sub"
+    }
+    return null;
+  }
+
+  // Métodos para gerenciar o idCliente
+  setIdCliente(id: string | null): void {
+    this.idClienteSubject.next(id);
+  }
+
+  get idCliente$(): Observable<string | null> {
+    return this.idClienteSubject.asObservable();
   }
 }

@@ -1,6 +1,5 @@
 export const environment = {
   production: true,
-  mfeUrl: 'https://tudu-professional.web.app',  // URL do MFE em produção
-  apiUrl: 'http://host-real',
-
+  mfeUrl: 'https://tudu-professional.web.app', // URL do MFE em produção
+  apiUrl: 'http://89.116.73.70:3000',
 };

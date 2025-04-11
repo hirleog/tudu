@@ -36,7 +36,7 @@ export class AppHomeComponent implements OnInit {
   //     description: 'Lavagem completa com polimento para meu carro...',
   //     address: 'Rua doutor paulo de andrade arantes, 52',
   //     price: '150,00',
-  //     editedPrice: '150,00',
+  //     valor_negociado: '150,00',
   // renegotiateActive: true,
   // calendarActive: false,
   // dateTime: '2025-08-08T10:00:00',
@@ -50,7 +50,7 @@ export class AppHomeComponent implements OnInit {
   //     description: 'Preciso pintar a sala e os quartos do apartamento...',
   //     address: 'Rua doutor antonio lobo sobrinho, 123',
   //     price: '150,00',
-  //     editedPrice: '',
+  //     valor_negociado: '',
   //     renegotiateActive: true,
   //     calendarActive: false,
   //     dateTime: '2025-10-10T10:00:00',
@@ -101,8 +101,8 @@ export class AppHomeComponent implements OnInit {
         card.placeholderDataHora = dateTimeFormatted;
       }
 
-      if (card.editedPrice) {
-        card.editedPrice = card.valor;
+      if (card.valor_negociado) {
+        card.valor_negociado = card.valor;
       }
     });
   }
@@ -112,14 +112,6 @@ export class AppHomeComponent implements OnInit {
       interval: false,
       touch: true, // Habilita o arrasto
     });
-
-    // Listen to slide events
-    this.carousel.nativeElement.addEventListener(
-      'slid.bs.carousel',
-      (event: any) => {
-        this.selectedIndex = event.to;
-      }
-    );
   }
   ngOnInit(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
@@ -155,7 +147,7 @@ export class AppHomeComponent implements OnInit {
       cardInfo.renegotiateActive = !cardInfo.renegotiateActive; // Alterna o estado
 
       if (cardInfo.renegotiateActive === true) {
-        cardInfo.editedPrice = cardInfo.valor;
+        cardInfo.valor_negociado = cardInfo.valor;
       }
     }
   }
@@ -204,8 +196,8 @@ export class AppHomeComponent implements OnInit {
     }
   }
 
-  onDateSelected(cardId: number, date: string) {
-    const card: any = this.cards.find((c) => c.id === cardId);
+  onDateSelected(cardId: string, date: string) {
+    const card: any = this.cards.find((c) => c.id_pedido === cardId);
     if (card.placeholderDataHora === '') {
       card.placeholderDataHora = card.dateTime;
     }
@@ -221,8 +213,8 @@ export class AppHomeComponent implements OnInit {
     }
   }
 
-  onTimeSelected(cardId: number, time: string) {
-    const card: any = this.cards.find((c) => c.id === cardId);
+  onTimeSelected(cardId: string, time: string) {
+    const card: any = this.cards.find((c) => c.id_pedido === cardId);
     if (card.placeholderDataHora === '') {
       card.placeholderDataHora = card.dateTime;
     }
@@ -260,8 +252,8 @@ export class AppHomeComponent implements OnInit {
         card.calendarActive = false; // desabilita campo de calendario
       }
 
-      if (card.editedPrice) {
-        card.editedPrice = card.valor;
+      if (card.valor_negociado) {
+        card.valor_negociado = card.valor;
         card.renegotiateActive = true; // desabilita campo de edição de valor
       }
     });
