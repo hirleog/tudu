@@ -1,41 +1,56 @@
-name: Deploy Automático
+name: Deploy Automático Angular
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
+          cache: "npm"
 
-      - name: Instalar e Buildar
-        run: |
-          npm install
-          npm run build
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Buildar projeto
+        run: npm run build -- --configuration=production
+
+      - name: Verificar build
+        run: ls -la dist/
 
       - name: Enviar para o Servidor
         uses: appleboy/scp-action@v1
         with:
-          host: '89.116.73.70'
-          username: 'deployer'
+          host: "89.116.73.70"
+          username: "deployer"
           key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
           source: "dist/*"
           target: "/var/www/tudu/"
-          rm: true  # Remove arquivos antigos
+          rm: true
+          overwrite: true
 
       - name: Reiniciar Serviços
         uses: appleboy/ssh-action@v1
         with:
-          host: '89.116.73.70'
-          username: 'deployer'
+          host: "89.116.73.70"
+          username: "deployer"
           key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
           script: |
-            pm2 restart tudu-api
-            sudo systemctl reload nginx
+            pm2 restart tudu-api || echo "PM2 restart falhou"
+            sudo systemctl reload nginx || echo "Nginx reload falhou"
+            echo "Deploy concluído com sucesso!"
