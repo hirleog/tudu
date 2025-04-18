@@ -10,28 +10,29 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Configurar SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TUDU_SERVER_SSH_KEY }}" > ~/.ssh/tudu_deploy_key
+          chmod 600 ~/.ssh/tudu_deploy_key
+          ssh-keyscan -t ed25519 89.116.73.70 >> ~/.ssh/known_hosts
+
       - name: Cache node modules
         uses: actions/cache@v3
         with:
           path: node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
 
       - name: Instalar dependências
-        run: npm install --force
+        run: npm ci
 
       - name: Buildar projeto
         run: npm run build -- --configuration=production
-
-      - name: Verificar build
-        run: ls -la dist/
 
       - name: Enviar para o Servidor
         uses: appleboy/scp-action@v0.1.4
@@ -44,8 +45,7 @@ jobs:
           target: "/var/www/tudu/"
           rm: true
           overwrite: true
-          ssh_options: '-o HostKeyAlgorithms=ssh-rsa'
-
+          ssh_options: "-o HostKeyAlgorithms=ssh-ed25519,rsa-sha2-512"
 
       - name: Reiniciar Serviços
         uses: appleboy/ssh-action@v0.1.10
@@ -56,4 +56,3 @@ jobs:
           script: |
             pm2 restart tudu-api || echo "PM2 restart falhou"
             sudo systemctl reload nginx || echo "Nginx reload falhou"
-            echo "Deploy concluído com sucesso!"
