@@ -29,7 +29,7 @@ jobs:
           node-version: "20"
 
       - name: Instalar dependências
-        run: npm ci
+        run: npm i --force
 
       - name: Buildar projeto
         run: npm run build -- --configuration=production
