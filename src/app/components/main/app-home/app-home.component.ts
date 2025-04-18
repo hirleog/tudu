@@ -4,6 +4,7 @@ import { CardOrders } from 'src/app/interfaces/card-orders';
 import * as moment from 'moment';
 import { HistoricModel } from 'src/app/interfaces/historic.model';
 import { Carousel } from 'bootstrap';
+import { CardService } from 'src/app/services/card.service';
 
 @Component({
   selector: 'app-home',
@@ -25,36 +26,38 @@ export class AppHomeComponent implements OnInit {
   selectedIndex: number = 0; // Inicia a primeira opção já selecionada
   placeholderDataHora: string = '';
 
-  cards: CardOrders[] = [
-    {
-      id: 102,
-      icon: 'fas fa-car', // Ícone FontAwesome
-      serviceName: 'Lavagem Automotiva',
-      description: 'Lavagem completa com polimento para meu carro...',
-      address: 'Rua doutor paulo de andrade arantes, 52',
-      price: '150,00',
-      editedPrice: '150,00',
-      renegotiateActive: true,
-      calendarActive: false,
-      dateTime: '2025-08-08T10:00:00',
-      placeholderDataHora: '',
-      hasQuotes: false,
-    },
-    {
-      id: 103,
-      icon: 'fas fa-paint-roller',
-      serviceName: 'Pintura Residencial',
-      description: 'Preciso pintar a sala e os quartos do apartamento...',
-      address: 'Rua doutor antonio lobo sobrinho, 123',
-      price: '150,00',
-      editedPrice: '',
-      renegotiateActive: true,
-      calendarActive: false,
-      dateTime: '2025-10-10T10:00:00',
-      placeholderDataHora: '',
-      hasQuotes: true,
-    },
-  ];
+  cards: CardOrders[] = [];
+
+  // cards: CardOrders[] = [
+  //   {
+  //     id: 102,
+  //     icon: 'fas fa-car', // Ícone FontAwesome
+  //     serviceName: 'Lavagem Automotiva',
+  //     description: 'Lavagem completa com polimento para meu carro...',
+  //     address: 'Rua doutor paulo de andrade arantes, 52',
+  //     price: '150,00',
+  //     valor_negociado: '150,00',
+  // renegotiateActive: true,
+  // calendarActive: false,
+  // dateTime: '2025-08-08T10:00:00',
+  // placeholderDataHora: '',
+  //     hasQuotes: false,
+  //   },
+  //   {
+  //     id: 103,
+  //     icon: 'fas fa-paint-roller',
+  //     serviceName: 'Pintura Residencial',
+  //     description: 'Preciso pintar a sala e os quartos do apartamento...',
+  //     address: 'Rua doutor antonio lobo sobrinho, 123',
+  //     price: '150,00',
+  //     valor_negociado: '',
+  //     renegotiateActive: true,
+  //     calendarActive: false,
+  //     dateTime: '2025-10-10T10:00:00',
+  //     placeholderDataHora: '',
+  //     hasQuotes: true,
+  //   },
+  // ];
 
   historicOrders: HistoricModel[] = [
     {
@@ -80,43 +83,61 @@ export class AppHomeComponent implements OnInit {
       dateTime: '2021-08-10T10:00:00',
     },
   ];
-  constructor(private route: Router) {
-    moment.locale('pt-br');
-    this.placeholderDataHora =
-      moment().add(1, 'days').format('DD/MM/YYYY') + ' - 12:00'; // Data de amanhã às 12:00
+  constructor(private route: Router, public cardService: CardService) {
+    // moment.locale('pt-br');
+    // this.placeholderDataHora =
+    //   moment().add(1, 'days').format('DD/MM/YYYY') + ' - 12:00'; // Data de amanhã às 12:00
 
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
 
-      if (card.dateTime) {
-        const formattedDate = moment(card.dateTime).format('DD/MM/YYYY');
-        const formattedTime = moment(card.dateTime).format('HH:mm');
+      if (card.horario_preferencial) {
+        const formattedDate = moment(card.horario_preferencial).format(
+          'DD/MM/YYYY'
+        );
+        const formattedTime = moment(card.horario_preferencial).format('HH:mm');
         dateTimeFormatted = `${formattedDate} - ${formattedTime}`;
 
         card.placeholderDataHora = dateTimeFormatted;
       }
 
-      if (card.editedPrice) {
-        card.editedPrice = card.price;
+      if (card.valor_negociado) {
+        card.valor_negociado = card.valor;
       }
     });
   }
+
   ngAfterViewInit() {
     this.bsCarousel = new Carousel(this.carousel.nativeElement, {
       interval: false,
       touch: true, // Habilita o arrasto
     });
-
-    // Listen to slide events
-    this.carousel.nativeElement.addEventListener(
-      'slid.bs.carousel',
-      (event: any) => {
-        this.selectedIndex = event.to;
-      }
-    );
   }
   ngOnInit(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
+    this.listCards();
+  }
+
+  listCards() {
+    this.cardService.getCards().subscribe({
+      next: (response) => {
+        this.cards = (response as CardOrders[]).map((card) => ({
+          ...card, // Mantém os campos existentes
+          icon: this.cardService.getIconByLabel(card.categoria) || '', // Garante que o ícone nunca seja null
+          renegotiateActive: true, // Adiciona o campo manualmente
+          calendarActive: false, // Adiciona o campo manualmente
+          horario_preferencial: card.horario_preferencial, // Usa o valor existente ou um padrão
+          placeholderDataHora: '', // Adiciona o campo manualmente
+        }));
+        this.selectItem(0);
+      },
+      error: (error) => {
+        console.error('Erro ao obter os cartões:', error);
+      },
+      complete: () => {
+        console.log('Requisição concluída');
+      },
+    });
   }
 
   renegotiateActive(card?: any): void {
@@ -126,7 +147,7 @@ export class AppHomeComponent implements OnInit {
       cardInfo.renegotiateActive = !cardInfo.renegotiateActive; // Alterna o estado
 
       if (cardInfo.renegotiateActive === true) {
-        cardInfo.editedPrice = cardInfo.price;
+        cardInfo.valor_negociado = cardInfo.valor;
       }
     }
   }
@@ -149,9 +170,12 @@ export class AppHomeComponent implements OnInit {
     card.calendarActive = !card.calendarActive;
 
     if (card) {
-      const formattedDate = moment(card.dateTime).format('DD/MM/YYYY');
-      const formattedTime = moment(card.dateTime).format('HH:mm');
-      dateTimeFormatted = `${formattedDate} - ${formattedTime}`;
+      // const formattedDate = moment(card.hora).format('DD/MM/YYYY');
+      // const formattedTime = moment(card.dateTime).format('HH:mm');
+      // dateTimeFormatted = `${formattedDate} - ${formattedTime}`;
+      dateTimeFormatted = moment(card.horario_preferencial).format(
+        'DD/MM/YYYY - HH:mm'
+      );
 
       card.placeholderDataHora = dateTimeFormatted;
 
@@ -172,8 +196,8 @@ export class AppHomeComponent implements OnInit {
     }
   }
 
-  onDateSelected(cardId: number, date: string) {
-    const card: any = this.cards.find((c) => c.id === cardId);
+  onDateSelected(cardId: string, date: string) {
+    const card: any = this.cards.find((c) => c.id_pedido === cardId);
     if (card.placeholderDataHora === '') {
       card.placeholderDataHora = card.dateTime;
     }
@@ -189,8 +213,8 @@ export class AppHomeComponent implements OnInit {
     }
   }
 
-  onTimeSelected(cardId: number, time: string) {
-    const card: any = this.cards.find((c) => c.id === cardId);
+  onTimeSelected(cardId: string, time: string) {
+    const card: any = this.cards.find((c) => c.id_pedido === cardId);
     if (card.placeholderDataHora === '') {
       card.placeholderDataHora = card.dateTime;
     }
@@ -208,26 +232,14 @@ export class AppHomeComponent implements OnInit {
 
     if (index >= 0 && index <= 2 && index !== this.selectedIndex) {
       this.selectedIndex = index;
-
-      // Adicione esta verificação para garantir que o carrossel está inicializado
-      if (this.bsCarousel) {
-        // Força uma transição suave
-        const carouselElement = this.carousel.nativeElement;
-        carouselElement.classList.remove('slide'); // Remove temporariamente a classe de transição
-
-        this.bsCarousel.to(index);
-
-        // Restaura a classe após um pequeno delay
-        setTimeout(() => {
-          carouselElement.classList.add('slide');
-        }, 50);
-      }
     }
 
     this.cards.forEach((card) => {
-      if (card.dateTime) {
-        const formattedDate = moment(card.dateTime).format('DD/MM/YYYY');
-        const formattedTime = moment(card.dateTime).format('HH:mm');
+      if (card.horario_preferencial) {
+        const formattedDate = moment(card.horario_preferencial).format(
+          'DD/MM/YYYY'
+        );
+        const formattedTime = moment(card.horario_preferencial).format('HH:mm');
         dateTimeFormatted = `${formattedDate} - ${formattedTime}`;
       }
 
@@ -240,8 +252,8 @@ export class AppHomeComponent implements OnInit {
         card.calendarActive = false; // desabilita campo de calendario
       }
 
-      if (card.editedPrice) {
-        card.editedPrice = card.price;
+      if (card.valor_negociado) {
+        card.valor_negociado = card.valor;
         card.renegotiateActive = true; // desabilita campo de edição de valor
       }
     });

@@ -1,13 +1,9 @@
-import {
-  Component,
-  ComponentFactoryResolver,
-  OnInit,
-  ViewChild,
-  ViewContainerRef,
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { card } from '../../interfaces/card';
-import { loadRemoteModule } from '@angular-architects/module-federation';
+import { CardService } from 'src/app/services/card.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { AuthHelper } from '../helpers/auth-helper';
 
 @Component({
   selector: 'app-showcase',
@@ -15,66 +11,40 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
   styleUrls: ['./showcase.component.css'],
 })
 export class ShowcaseComponent implements OnInit {
-  @ViewChild('mfeContainer', { read: ViewContainerRef })
-  mfeContainer!: ViewContainerRef;
-
   selectedCard: number | null = null;
   searchValue: string = '';
 
-  serviceCards: card[] = [
-    {
-      id: 1,
-      icon: 'fas fa-tools',
-      title: 'Montador de Moveis',
-      disabled: false,
-    },
-    {
-      id: 2,
-      icon: 'fas fa-home',
-      title: 'Serviços Domésticos',
-      disabled: true,
-    },
-    {
-      id: 3,
-      icon: 'fas fa-wrench',
-      title: 'Reformas e Reparos',
-      disabled: true,
-    },
-    { id: 4, icon: 'fas fa-briefcase', title: 'Consultoria', disabled: true },
-  ];
+  serviceCards: card[] = [];
+  isLogged: boolean = false;
 
-  constructor(private route: Router, private cfr: ComponentFactoryResolver) {}
+  constructor(
+    private route: Router,
+    public cardService: CardService,
+    public authService: AuthService
+  ) {
+    this.isLogged = AuthHelper.isLoggedIn(); // Usa o helper diretamente
+  }
 
   async ngOnInit() {
-    // try {
-    //   // Carrega o módulo exposto pelo MFE
-    //   const module = await loadRemoteModule({
-    //     remoteEntry: 'http://localhost:4201/remoteEntry.js', // URL do remoteEntry do MFE
-    //     remoteName: 'tuduProfessional', // Nome do MFE
-    //     exposedModule: './BudgetsModule', // Nome do módulo exposto
-    //   });
+    // this.authService.isLoggedIn$.subscribe((loggedIn) => {
+    //   this.isLogged = loggedIn;
+    // });
 
-    //   // Obtém o componente usando o método estático
-    //   const component = module.BudgetsModule.getComponent();
-
-    //   // Cria uma instância do componente e o insere no template
-    //   const componentFactory = this.cfr.resolveComponentFactory(component);
-    //   const componentRef = this.mfeContainer.createComponent(componentFactory);
-    // } catch (error) {
-    //   console.error('Erro ao carregar o MFE:', error);
-    // }
+    this.serviceCards = this.cardService.getServiceCards();
   }
 
   search() {
     if (this.searchValue.trim()) {
       console.log('Você pesquisou por:', this.searchValue);
-      // Aqui você pode implementar a lógica para buscar os serviços
     }
   }
 
   // Função para selecionar um card
   selectCard(card: any) {
     this.selectedCard = card;
-    // this.route.navigate(['/proposal', card]);
+
+    this.route.navigate(['/proposal'], {
+      queryParams: { card: card.cardDetail.label },
+    });
   }
 }

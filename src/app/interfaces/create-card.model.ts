@@ -1,13 +1,7 @@
-export interface CardOrders {
-  id?: number;
+export interface CreateCard {
   id_pedido?: string;
   id_cliente?: number;
-  id_prestador?: number;
-
-  valor_negociado?: string;
-  horario_negociado?: string;
-  data_candidatura?: string;
-  status?: string;
+  id_prestador?: any;
 
   categoria: string;
   subcategoria: string;
@@ -25,10 +19,4 @@ export interface CardOrders {
   state: string; // Estado
   number: string; // Número
   complement?: string; // Complemento (opcional)
-
-  // para controle do dinamico dos botões doscards
-  renegotiateActive?: boolean;
-  calendarActive?: boolean;
-  placeholderDataHora?: string;
-  hasQuotes: boolean; // Se há orçamentos disponíveis
 }

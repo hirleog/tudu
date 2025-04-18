@@ -1,7 +1,7 @@
 <section>
   <app-nav>
     <div left-content>
-      <a routerLink="/proposal" class="text-decoration-none text-dark">
+      <a (click)="goBack()" class="text-decoration-none text-dark">
         <i class="fas fa-arrow-left"></i>
       </a>
     </div>
@@ -31,12 +31,13 @@
       </div>
       <div class="container d-flex justify-content-center">
         <ul class="col-12" (click)="$event.stopPropagation()">
-          <li *ngFor="let option of options">
+          <li *ngFor="let option of options; let i = index">
             <label class="form-check w-100 ms-2 d-flex align-items-center">
               <input
                 class="form-check-input me-2"
                 type="radio"
                 [(ngModel)]="optionSelected"
+                (click)="selectItem(i)"
                 [value]="option"
               />
               {{ option }}
@@ -46,7 +47,7 @@
       </div>
 
       <div
-        *ngIf="optionSelected !== ''"
+        *ngIf="optionSelected !== undefined && optionSelected === 0"
         class="container mt-5"
         data-aos="fade-down"
       >
@@ -140,15 +141,13 @@
             </div>
           </div>
           <div class="container send-btn-fixed mt-5">
-            <button routerLink="/proposal" class="btn-ui btn-primary mt-3">
+            <button (click)="goBack()" class="btn-ui btn-primary mt-3">
               Voltar
             </button>
             <button
               type="submit"
               [disabled]="addressForm.invalid"
               class="btn-ui btn-primary mt-3 send-btn"
-              [routerLink]="['/offer']"
-              routerLinkActive="router-link-active"
             >
               Proxímo
             </button>
@@ -161,8 +160,8 @@
   </div>
   <div class="container fixed-buttons mt-5">
     <button
-      *ngIf="optionSelected === ''"
-      routerLink="/proposal"
+      *ngIf="optionSelected === undefined"
+     (click)="goBack()"
       class="btn-ui btn-primary mt-3"
     >
       Voltar

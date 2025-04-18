@@ -1,11 +1,7 @@
 <section>
   <app-nav>
     <div left-content>
-      <a
-        *ngIf="isFirstSlide"
-        (click)="goBack()"
-        class="text-decoration-none text-dark"
-      >
+      <a (click)="goBack()" class="text-decoration-none text-dark">
         <i class="fas fa-arrow-left"></i> {{ titleCard }}
       </a>
     </div>
@@ -27,78 +23,15 @@
     </div>
   </app-nav>
 
-  <div id="proposal" data-aos="fade-right">
-    <div class="container">
-      <!-- Seta para voltar -->
-      <div id="proposal-header" class="mb-4" style="cursor: pointer">
-        <a
-          *ngIf="!isFirstSlide"
-          class="text-decoration-none text-dark"
-          data-bs-target="#formCarousel"
-          data-bs-slide="prev"
-        >
-          <i class="fas fa-arrow-left"></i> {{ titleCard }}
-        </a>
-      </div>
-
-      <!-- <div id="formCarousel" class="carousel slide" data-bs-interval="false"
-                (slide.bs.carousel)="onSlide($event)"> -->
-      <div id="formCarousel" class="carousel slide" data-bs-interval="false">
-        <div class="carousel-inner">
-          <!-- Formulário 1 -->
-          <div class="container">
-            <div class="container">
-              <h4 class="text-start mb-3">
-                Digite o serviço que está procurando
-              </h4>
-            </div>
-
-            <app-multi-select [step]="'1'"></app-multi-select>
-          </div>
-
-          <!-- Formulário 2 -->
-          <!-- <div class="carousel-item">
-                        <div class="container">
-                            <h4 class="text-start mb-3">Qual finalidade?</h4>
-                            <app-multi-select [withoutInput]="false" [step]="'2'"></app-multi-select>
-                        </div>
-                    </div> -->
-
-          <!-- Formulário 3 -->
-          <!-- <div class="carousel-item">
-                        <div class="container">
-                            <h4 class="text-start mb-3">Explique com detalhes o que você precisa</h4>
-                            <textarea class="form-control" id="description" rows="4"
-                                placeholder="Digite a descrição aqui..."></textarea>
-                        </div>
-                    </div> -->
-        </div>
-      </div>
-      <!-- Botão de envio -->
-    </div>
+  <div>
+    <app-category-filter
+      [serviceTitle]="'Pintura Residencial'"
+      [filterCategories]="filterCategories"
+    ></app-category-filter>
   </div>
-  <div class="container fixed-buttons">
-    <button
-      *ngIf="!isFirstSlide"
-      class="btn-ui btn-primary mt-3"
-      data-bs-target="#formCarousel"
-      data-bs-slide="prev"
-    >
-      Voltar
-    </button>
 
-    <button *ngIf="isFirstSlide" routerLink="/" class="btn-ui btn-primary mt-3">
-      Voltar
-    </button>
-
-    <!-- <button
-      *ngIf="isLastSlide"
-      class="btn-ui btn-primary mt-3 send-btn"
-      data-bs-target="#formCarousel"
-      data-bs-slide="next"
-    >
-      Proxímo
-    </button> -->
+  <div class="container d-flex justify-content-center align-items-center gap-2 mt-5 pt-2">
+    <button routerLink="/" class="btn-ui btn-primary mt-3">Voltar</button>
 
     <button class="btn-ui btn-primary mt-3 send-btn" (click)="onSubmit()">
       Avançar

@@ -11,20 +11,18 @@
       </a>
     </div>
 
-    <div central-content>
-
-    </div>
+    <div central-content></div>
     <!-- <div central-content></div> -->
     <div right-content style="flex: none !important">
       <div class="d-flex align-items-center gap-1">
         <a
-        class="professional-link"
-          [routerLink]="['/tudu-professional/home']"
+          class="professional-link"
+          [routerLink]="isLogged ? '/tudu-professional/home' : '/login'"
           routerLinkActive="router-link-active"
           >Seja um profissional</a
         >
         <!-- Botão de login -->
-        <a routerLink="/login" class="login-button">
+        <a [routerLink]="isLogged ? '/home/profile' :'/login'" [ngClass]="isLogged ? 'login-button2' : 'login-button'" >
           <i class="fas fa-bars"></i>
           <i class="fas fa-user fs-3"></i>
         </a>
@@ -72,7 +70,6 @@
       <div
         *ngFor="let card of serviceCards"
         class="col-6 col-sm-6 col-md-4 col-lg-3"
-        routerLink="/proposal"
         (click)="selectCard(card)"
         [ngClass]="{ 'disabled-card': card.disabled }"
       >
@@ -82,8 +79,8 @@
           *ngIf="selectedCard === null || selectedCard === card.id"
         >
           <div class="card-body">
-            <i [class]="card.icon + ' fa-3x text-primary mb-3'"></i>
-            <h5 class="card-title">{{ card.title }}</h5>
+            <i [class]="card.icon + ' fa-3x text-primary mb-1'"></i>
+            <h5 class="card-title">{{ card.cardDetail.label }}</h5>
           </div>
         </div>
       </div>

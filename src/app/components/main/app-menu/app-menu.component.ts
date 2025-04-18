@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/auth.service';
+import { AuthHelper } from '../../helpers/auth-helper';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-menu',
@@ -8,11 +11,18 @@ import { filter } from 'rxjs/operators';
   styleUrls: ['./app-menu.component.css'],
 })
 export class AppMenuComponent implements OnInit {
-  hiddenRoutes = ['/proposal', '/proposal/address', '/proposal/offer'];
+  hiddenRoutes = [
+    '/login',
+    '/proposal',
+    '/proposal/address',
+    '/proposal/offer',
+  ];
   showDiv = true;
+  isLogged = false;
   isProfessional: boolean = false;
+  private subscriptions: Subscription = new Subscription();
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public authService: AuthService) {
     this.router.events
       .pipe(
         filter(
@@ -21,7 +31,10 @@ export class AppMenuComponent implements OnInit {
         )
       )
       .subscribe((event: NavigationEnd) => {
-        this.showDiv = !this.hiddenRoutes.includes(event.url);
+        // Verifica se a URL começa com alguma das rotas em hiddenRoutes
+        this.showDiv = !this.hiddenRoutes.some((route) =>
+          event.url.startsWith(route)
+        );
       });
 
     // Verifica a rota atual e atualiza a variável showMenu
@@ -31,10 +44,16 @@ export class AppMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // const array:any = [1];
-    // for (let index = 0; index < array.length; index++) {
-    //   const element = array[index];
-    //   console.log(this.isProfessional);
-    // }
+    // Inscreve-se no estado de login
+    this.subscriptions.add(
+      this.authService.isLoggedIn$.subscribe((loggedIn) => {
+        this.isLogged = loggedIn;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {
+    // Cancela as inscrições para evitar vazamentos de memória
+    this.subscriptions.unsubscribe();
   }
 }

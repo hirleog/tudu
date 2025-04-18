@@ -1,7 +1,7 @@
 <section>
   <app-nav>
     <div left-content>
-      <a routerLink="/proposal" class="text-decoration-none text-dark">
+      <a (click)="goBack()" class="text-decoration-none text-dark">
         <i class="fas fa-arrow-left"></i>
       </a>
     </div>
@@ -24,7 +24,11 @@
     </div>
   </app-nav>
 
-  <div id="make-offer" data-aos="fade-right">
+  <div
+    id="make-offer"
+    class="d-flex flex-column justify-content-center"
+    data-aos="fade-right"
+  >
     <div class="container d-flex flex-column gap-4">
       <!-- Seta para voltar -->
       <div id="proposal-header" class="mb-3" style="cursor: pointer"></div>
@@ -45,18 +49,86 @@
         </p>
       </div>
 
-      <!-- <div class="custom-input-container container">
-                <input id="valor" type="text" maxlength="15" appCurrencyFormat class="custom-input"
-                    placeholder="R$0,00">
-            </div> -->
-      <div class="input-group mb-3 d-flex container">
-        <span class="input-group-text">$</span>
-        <input
-          type="text"
-          class="form-control col-4"
-          aria-label="Amount (to the nearest dollar)"
-        />
-        <span class="input-group-text">.00</span>
+      <div>
+        <div
+          class="col-12 col-md-8 col-lg-5 p-0 custom-input-container container"
+        >
+          <div class="input-group mb-3">
+            <span class="input-group-text">$</span>
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="price"
+              placeholder="0,00"
+              [disabled]="!!renegotiateActive"
+            />
+            <span class="input-group-text">.00</span>
+
+            <!-- <button
+            [ngClass]="{
+              'change-renegotiate-btn': renegotiateActive
+            }"
+            class="btn btn-outline-secondary"
+            type="button"
+            id="btn-renegotiate"
+            (click)="onPriceClose()"
+          >
+            <i
+              class="fa"
+              [ngClass]="!renegotiateActive ? 'fa-pencil' : 'fa-undo'"
+            ></i>
+          </button> -->
+          </div>
+        </div>
+
+        <div class="col-12 col-md-8 col-lg-5 p-0 container" #calendarContainer>
+          <div class="custom-input-container">
+            <div class="input-group mb-3">
+              <span class="input-group-text">#</span>
+              <input
+                [readonly]="true"
+                type="datetime"
+                class="form-control"
+                aria-label="Amount (to the nearest dollar)"
+                [(ngModel)]="dateTimeSelected"
+                (click)="onCalendarClose()"
+              />
+              <span
+                class="input-group-text"
+                (click)="onCalendarClose()"
+                style="width: 46.72px"
+                ><i class="fas fa-calendar-alt"></i
+              ></span>
+
+              <!-- <button
+              [ngClass]="{
+                'change-renegotiate-btn': calendarActive
+              }"
+              class="btn btn-outline-secondary"
+              type="button"
+              id="btn-renegotiate"
+              (click)="onCalendarClose()"
+            >
+              <i
+                class="fas"
+                [ngClass]="!calendarActive ? 'fa-calendar-alt' : 'fa-undo'"
+              ></i>
+            </button> -->
+            </div>
+          </div>
+
+          <div style="z-index: 1001">
+            <app-calendar
+              [initialDateTime]="initialDateTime"
+              [openCalendar]="calendarActive"
+              [hasTime]="true"
+              [showWeekView]="false"
+              (dateSelected)="onDateSelected($event)"
+              (timeSelected)="onTimeSelected($event)"
+            >
+            </app-calendar>
+          </div>
+        </div>
       </div>
 
       <div>
@@ -68,16 +140,16 @@
     </div>
   </div>
   <!-- Botão de envio -->
-  <div class="container fixed-buttons d-flex justify-content-center mb-5">
+  <div class="container d-flex justify-content-center mt-5 gap-2 mb-5">
     <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
 
-    <button routerLink="/proposal/address" class="btn-ui btn-primary mt-3">
+    <button (click)="goBack()" class="btn-ui btn-primary mt-3">
       Voltar
     </button>
 
     <button
       class="btn-ui btn-primary mt-3 send-btn"
-      routerLink="/home"
+      (click)="createCard()"
       style="background-color: var(--primary); color: white"
     >
       Avançar

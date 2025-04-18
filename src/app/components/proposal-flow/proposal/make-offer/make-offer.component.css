@@ -33,9 +33,9 @@ p {
     box-shadow: none !important;
     border-color: #ced4da !important; /* Mantém a borda normal */
 }
-.input-group {
+/* .input-group {
     width: 100%;
-}
+} */
 
 /* @media (min-width: 768px) {
     .input-group {

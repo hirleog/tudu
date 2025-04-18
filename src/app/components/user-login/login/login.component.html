@@ -1,93 +1,259 @@
 <app-nav>
+  <div left-content></div>
+  <div central-content>
     <a routerLink="/" class="logo">
-        <img src="../../../assets/logo-rosa.webp" class="img-fluid" style="width: 4em;" alt="error" />
+      <img
+        src="../../../assets/logo-rosa.webp"
+        class="img-fluid"
+        style="width: 4em"
+        alt="error"
+      />
     </a>
-    <div></div>
-
-    <!-- Botão de login -->
-    <a routerLink="/login" class="login-button">
-        <i class="fas fa-bars"></i>
-        <i class="fas fa-user fs-3"></i>
-    </a>
+  </div>
+  <div right-content></div>
 </app-nav>
+
 <section id="login" class="d-flex justify-content-center mt-2">
-    <div class="row container d-flex justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header text-center">
-                    <ul class="nav nav-tabs card-header-tabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" [ngClass]="{'active-tab': selectedTab === 'login'}"
-                                (click)="selectTab('login')" type="button">
-                                Login
-                            </button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link" [ngClass]="{'active-tab': selectedTab === 'register'}"
-                                (click)="selectTab('register')" type="button">
-                                Cadastro
-                            </button>
-                        </li>
-                    </ul>
-                </div>
-                <div class="card-body">
-                    <!-- Login Form -->
-                    <div *ngIf="selectedTab === 'login'">
-                        <h4 class="text-center mb-3">Bem-vindo de volta!</h4>
-                        <p class="text-center mb-4 text-muted">Faça login para continuar sua jornada conosco.</p>
-                        <form (ngSubmit)="onLogin()">
-                            <div class="mb-3">
-                                <label for="loginEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="loginEmail" [(ngModel)]="loginEmail"
-                                    name="loginEmail" placeholder="Digite seu email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="loginPassword" class="form-label">Senha</label>
-                                <input type="password" class="form-control" id="loginPassword"
-                                    [(ngModel)]="loginPassword" name="loginPassword" placeholder="Digite sua senha"
-                                    required>
-                            </div>
-                            <button type="submit" style="color: white;" class="btn-ui btn-primary w-100">Entrar</button>
-                        </form>
-                    </div>
-
-                    <!-- Register Form -->
-                    <div *ngIf="selectedTab === 'register'">
-                        <h4 class="text-center mb-3">Crie sua Conta</h4>
-                        <p class="text-center mb-4 text-muted">Cadastre-se agora para aproveitar todas as
-                            funcionalidades!</p>
-                        <form (ngSubmit)="onRegister()">
-                            <div class="mb-3">
-                                <label for="registerName" class="form-label">Nome Completo</label>
-                                <input type="text" class="form-control" id="registerName" [(ngModel)]="registerName"
-                                    name="registerName" placeholder="Digite seu nome completo" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="registerEmail" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="registerEmail" [(ngModel)]="registerEmail"
-                                    name="registerEmail" placeholder="Digite seu email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="registerPassword" class="form-label">Senha</label>
-                                <input type="password" class="form-control" id="registerPassword"
-                                    [(ngModel)]="registerPassword" name="registerPassword"
-                                    placeholder="Digite sua senha" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="confirmPassword" class="form-label">Confirmar Senha</label>
-                                <input type="password" class="form-control" id="confirmPassword"
-                                    [(ngModel)]="confirmPassword" name="confirmPassword"
-                                    placeholder="Confirme sua senha" required>
-                            </div>
-                        </form>
-
-                        <div class="align-btn">
-                            <button type="submit" style="color: white;" class="btn-ui btn-success w-100">Cadastrar</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
+  <div class="row container d-flex justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow" style="height: auto">
+        <div class="card-header text-center">
+          <ul class="nav nav-tabs card-header-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [ngClass]="{ 'active-tab': selectedTab === 'login' }"
+                (click)="selectTab('login')"
+                type="button"
+              >
+                Login
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                [ngClass]="{ 'active-tab': selectedTab === 'register' }"
+                (click)="selectTab('register')"
+                type="button"
+              >
+                Cadastro
+              </button>
+            </li>
+          </ul>
         </div>
+        <div class="card-body">
+          <!-- Login Form -->
+          <div *ngIf="selectedTab === 'login'">
+            <h4 class="text-center mb-3">Bem-vindo de volta!</h4>
+            <p class="text-center mb-4 text-muted">
+              Faça login para continuar sua jornada conosco.
+            </p>
+            <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="loginEmail"
+                  formControlName="email"
+                  placeholder="Digite seu email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="loginPassword"
+                  formControlName="password"
+                  placeholder="Digite sua senha"
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                style="color: white"
+                class="btn-ui btn-primary w-100"
+              >
+                Entrar
+              </button>
+            </form>
+          </div>
+
+          <!-- Register Form -->
+          <div *ngIf="selectedTab === 'register'">
+            <h4 class="text-center mb-3">Crie sua Conta</h4>
+            <p class="text-center mb-4 text-muted">
+              Cadastre-se agora para aproveitar todas as funcionalidades!
+            </p>
+            <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+              <div class="mb-3">
+                <label for="userType" class="form-label">Tipo de Usuário</label>
+                <select
+                  id="userType"
+                  class="form-select"
+                  [(ngModel)]="userType"
+                  required
+                >
+                  <option value="cliente">Cliente</option>
+                  <option value="prestador">Prestador</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="registerName" class="form-label">Nome</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerName"
+                  formControlName="nome"
+                  placeholder="Digite seu nome"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="registerLastName" class="form-label"
+                  >Sobrenome</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerLastName"
+                  formControlName="sobrenome"
+                  placeholder="Digite seu sobrenome"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="registerPhone" class="form-label">Telefone</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerPhone"
+                  formControlName="telefone"
+                  placeholder="Digite seu telefone"
+                  required
+                />
+              </div>
+              <!-- <div class="mb-3">
+                <label for="registerCpf" class="form-label">CPF</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerCpf"
+                  formControlName="cpf"
+                  placeholder="Digite seu CPF"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="registerBirthDate" class="form-label"
+                  >Data de Nascimento</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="registerBirthDate"
+                  formControlName="data_nascimento"
+                  required
+                />
+              </div> -->
+              <div class="mb-3">
+                <label for="registerEmail" class="form-label">Email</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="registerEmail"
+                  formControlName="email"
+                  placeholder="Digite seu email"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="registerPassword" class="form-label">Senha</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="registerPassword"
+                  formControlName="password"
+                  placeholder="Digite sua senha"
+                  required
+                />
+              </div>
+              <div class="mb-3">
+                <label for="confirmPassword" class="form-label"
+                  >Confirmar Senha</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmPassword"
+                  formControlName="confirmPassword"
+                  placeholder="Confirme sua senha"
+                  required
+                />
+                <div
+                  *ngIf="
+                    registerForm.get('confirmPassword')?.touched &&
+                    registerForm.get('confirmPassword')?.hasError('mismatch')
+                  "
+                  class="text-danger"
+                >
+                  As senhas não coincidem.
+                </div>
+              </div>
+              <!-- <div class="mb-3">
+                <label for="registerAddress" class="form-label">Endereço</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerAddress"
+                  formControlName="endereco_rua"
+                  placeholder="Digite sua rua"
+                  required
+                />
+              </div> -->
+              <!-- <div
+                class="mb-3"
+                *ngIf="registerForm.value.userType === 'prestador'"
+              >
+                <label for="registerSpecialization" class="form-label"
+                  >Especialização</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="registerSpecialization"
+                  formControlName="especializacao"
+                  placeholder="Digite sua especialização"
+                />
+              </div>
+              <div
+                class="mb-3"
+                *ngIf="registerForm.value.userType === 'prestador'"
+              >
+                <label for="registerDescription" class="form-label"
+                  >Descrição</label
+                >
+                <textarea
+                  class="form-control"
+                  id="registerDescription"
+                  formControlName="descricao"
+                  placeholder="Descreva seus serviços"
+                ></textarea>
+              </div> -->
+              <button
+                type="submit"
+                style="color: white"
+                class="btn-ui btn-success w-100"
+              >
+                Cadastrar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </section>
