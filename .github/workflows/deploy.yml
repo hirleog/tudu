@@ -39,10 +39,13 @@ jobs:
           host: "89.116.73.70"
           username: "deployer"
           key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
+          port: 22
           source: "dist/*"
           target: "/var/www/tudu/"
           rm: true
           overwrite: true
+          ssh_options: '-o HostKeyAlgorithms=ssh-rsa'
+
 
       - name: Reiniciar Serviços
         uses: appleboy/ssh-action@v0.1.10
