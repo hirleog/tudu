@@ -1,4 +1,4 @@
-name: Deploy Automático Angular
+name: Deploy Automático
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
         run: ls -la dist/
 
       - name: Enviar para o Servidor
-        uses: appleboy/scp-action@v1
+        uses: appleboy/scp-action@v0.1.4
         with:
           host: "89.116.73.70"
           username: "deployer"
@@ -45,7 +45,7 @@ jobs:
           overwrite: true
 
       - name: Reiniciar Serviços
-        uses: appleboy/ssh-action@v1
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: "89.116.73.70"
           username: "deployer"
