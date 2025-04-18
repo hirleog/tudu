@@ -13,15 +13,11 @@ jobs:
       - name: Configurar SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.TUDU_SERVER_SSH_KEY }}" > ~/.ssh/tudu_deploy_key
-          chmod 600 ~/.ssh/tudu_deploy_key
+          echo "${{ secrets.TUDU_SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          # Forçar algoritmos compatíveis
+          echo -e "Host 89.116.73.70\n  HostKeyAlgorithms ssh-ed25519,rsa-sha2-512\n  KexAlgorithms curve25519-sha256\n  Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com" >> ~/.ssh/config
           ssh-keyscan -t ed25519,rsa-sha2-512 89.116.73.70 >> ~/.ssh/known_hosts
-
-      - name: Cache node modules
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
@@ -34,26 +30,16 @@ jobs:
       - name: Buildar projeto
         run: npm run build -- --configuration=production
 
-      - name: Enviar para o Servidor
-        uses: appleboy/scp-action@v0.1.4
-        with:
-          host: "89.116.73.70"
-          username: "deployer"
-          key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
-          port: 22
-          source: "dist/*"
-          target: "/var/www/tudu/"
-          rm: true
-          overwrite: true
-          # Configuração alternativa para algoritmos SSH
-          ciphers: "ssh-ed25519,rsa-sha2-512"
+      - name: Enviar arquivos via SCP
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -r dist/* deployer@89.116.73.70:/var/www/tudu/
 
-      - name: Reiniciar Serviços
+      - name: Reiniciar serviços
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: "89.116.73.70"
           username: "deployer"
           key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
           script: |
-            pm2 restart tudu-api || echo "PM2 restart falhou"
-            sudo systemctl reload nginx || echo "Nginx reload falhou"
+            pm2 restart tudu-api || echo "PM2 restart falhou (ignorando)"
+            sudo systemctl reload nginx || echo "Nginx reload falhou (ignorando)"
