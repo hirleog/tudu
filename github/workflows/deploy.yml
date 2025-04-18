@@ -1,0 +1,41 @@
+name: Deploy Automático
+
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Instalar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instalar e Buildar
+        run: |
+          npm install
+          npm run build
+
+      - name: Enviar para o Servidor
+        uses: appleboy/scp-action@v1
+        with:
+          host: '89.116.73.70'
+          username: 'deployer'
+          key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
+          source: "dist/*"
+          target: "/var/www/tudu/"
+          rm: true  # Remove arquivos antigos
+
+      - name: Reiniciar Serviços
+        uses: appleboy/ssh-action@v1
+        with:
+          host: '89.116.73.70'
+          username: 'deployer'
+          key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
+          script: |
+            pm2 restart tudu-api
+            sudo systemctl reload nginx
