@@ -10,19 +10,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Configuração robusta do SSH
-      - name: Configurar ambiente SSH
+      - name: Configurar SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.TUDU_SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.TUDU_SERVER_SSH_KEY }}" > ~/.ssh/tudu_deploy_key
+          chmod 600 ~/.ssh/tudu_deploy_key
           ssh-keyscan -t ed25519,rsa-sha2-512 89.116.73.70 >> ~/.ssh/known_hosts
+
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-          cache: "npm"
 
       - name: Instalar dependências
         run: npm install --force
@@ -30,8 +34,7 @@ jobs:
       - name: Buildar projeto
         run: npm run build -- --configuration=production
 
-      # Deploy otimizado
-      - name: Enviar arquivos para o servidor
+      - name: Enviar para o Servidor
         uses: appleboy/scp-action@v0.1.4
         with:
           host: "89.116.73.70"
@@ -42,24 +45,15 @@ jobs:
           target: "/var/www/tudu/"
           rm: true
           overwrite: true
-          args: "-o HostKeyAlgorithms=ssh-ed25519,rsa-sha2-512"
+          # Configuração alternativa para algoritmos SSH
+          ciphers: "ssh-ed25519,rsa-sha2-512"
 
-      - name: Verificar deploy no servidor
+      - name: Reiniciar Serviços
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: "89.116.73.70"
           username: "deployer"
           key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
           script: |
-            ls -la /var/www/tudu/
-            echo "Deploy verificado com sucesso!"
-
-      - name: Reiniciar serviços
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: "89.116.73.70"
-          username: "deployer"
-          key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
-          script: |
-            pm2 restart tudu-api || echo "PM2 restart falhou (ignorando)"
-            sudo systemctl reload nginx || echo "Nginx reload falhou (ignorando)"
+            pm2 restart tudu-api || echo "PM2 restart falhou"
+            sudo systemctl reload nginx || echo "Nginx reload falhou"
