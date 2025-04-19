@@ -92,7 +92,8 @@ export class LoginComponent implements OnInit {
       const payload =
         this.userType === 'cliente'
           ? {
-              telefone: formValue.telefone,
+              // telefone: formValue.telefone,
+              telefone: '11974109625',
               nome: formValue.nome,
               sobrenome: formValue.sobrenome,
               cpf: formValue.cpf,
