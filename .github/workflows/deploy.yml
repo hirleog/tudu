@@ -76,4 +76,9 @@ jobs:
             sudo rm -rf /var/cache/nginx/*
             sudo find /var/www/tudu/ -type f -exec chmod 644 {} \;
             sudo find /var/www/tudu/ -type d -exec chmod 755 {} \;
-            sudo systemctl reload nginx  
+            sudo systemctl reload nginx
+
+      - name: Enviar arquivos para o servidor
+        run: |
+          # Envia o conteúdo DE DENTRO da pasta tudu/
+          scp -i ~/.ssh/deploy_key -rp dist/tudu/* deployer@89.116.73.70:/var/www/tudu/
