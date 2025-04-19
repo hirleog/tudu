@@ -40,7 +40,7 @@ jobs:
           node-version: "20"
 
       - name: Instalar dependências
-        run: npm install --forcez'
+        run: npm install --force
 
       - name: Buildar projeto
         run: npm run build -- --configuration=production
