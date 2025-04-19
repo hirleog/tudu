@@ -49,23 +49,6 @@ jobs:
         run: |
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -r dist/* deployer@89.116.73.70:${{ steps.project.outputs.dest_dir }}
 
-      - name: Reiniciar serviços
-        uses: appleboy/ssh-action@v0.1.10
-        with:
-          host: "89.116.73.70"
-          username: "deployer"
-          key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
-          script: |
-            # Reinicia o Nginx para ambos os projetos
-            sudo /usr/bin/systemctl reload nginx || echo "Nginx reload falhou (ignorando)"
-
-            # Reinicia o backend específico se necessário
-            if [ "${{ steps.project.outputs.type }}" == "main" ]; then
-              pm2 restart tudu-api || echo "PM2 não configurado para main (ignorando)"
-            elif [ "${{ steps.project.outputs.type }}" == "professional" ]; then
-              pm2 restart tudu-professional-api || echo "PM2 não configurado para professional (ignorando)"
-            fi
-
       - name: Enviar arquivos para o servidor
         run: |
           # Envia o conteúdo DE DENTRO da pasta tudu/
