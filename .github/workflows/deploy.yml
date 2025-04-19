@@ -3,6 +3,8 @@ name: Deploy Automático
 on:
   push:
     branches: ["master"]
+    paths:
+      - "**" # Ou especifique pastas específicas para cada projeto
 
 jobs:
   deploy:
@@ -15,9 +17,22 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.TUDU_SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          # Forçar algoritmos compatíveis
           echo -e "Host 89.116.73.70\n  HostKeyAlgorithms ssh-ed25519,rsa-sha2-512\n  KexAlgorithms curve25519-sha256\n  Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com" >> ~/.ssh/config
           ssh-keyscan -t ed25519,rsa-sha2-512 89.116.73.70 >> ~/.ssh/known_hosts
+
+      - name: Identificar projeto
+        id: project
+        run: |
+          if [[ "$GITHUB_REPOSITORY" == *"use-tudu.com.br"* ]]; then
+            echo "::set-output name=type::main"
+            echo "::set-output name=dest_dir::/var/www/tudu/"
+          elif [[ "$GITHUB_REPOSITORY" == *"professional.use-tudu.com.br"* ]]; then
+            echo "::set-output name=type::professional"
+            echo "::set-output name=dest_dir::/var/www/tudu-professional/"
+          else
+            echo "::set-output name=type::unknown"
+            echo "::set-output name=dest_dir::/var/www/tudu/"
+          fi
 
       - name: Instalar Node.js
         uses: actions/setup-node@v4
@@ -32,7 +47,7 @@ jobs:
 
       - name: Enviar arquivos via SCP
         run: |
-          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -r dist/* deployer@89.116.73.70:/var/www/tudu/
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -r dist/* deployer@89.116.73.70:${{ steps.project.outputs.dest_dir }}
 
       - name: Reiniciar serviços
         uses: appleboy/ssh-action@v0.1.10
@@ -41,11 +56,12 @@ jobs:
           username: "deployer"
           key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
           script: |
-            # Backend (PM2)
-            if [ -f "/caminho/real/do/backend/package.json" ]; then
-              command -v pm2 >/dev/null || npm install -g pm2
-              pm2 restart tudu-api || echo "PM2 não configurado (ignorando)"
-            fi
-            
-            # Frontend (Nginx)
+            # Reinicia o Nginx para ambos os projetos
             sudo /usr/bin/systemctl reload nginx || echo "Nginx reload falhou (ignorando)"
+
+            # Reinicia o backend específico se necessário
+            if [ "${{ steps.project.outputs.type }}" == "main" ]; then
+              pm2 restart tudu-api || echo "PM2 não configurado para main (ignorando)"
+            elif [ "${{ steps.project.outputs.type }}" == "professional" ]; then
+              pm2 restart tudu-professional-api || echo "PM2 não configurado para professional (ignorando)"
+            fi
