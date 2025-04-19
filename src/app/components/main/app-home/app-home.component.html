@@ -58,18 +58,18 @@
         *ngFor="let card of cards | filterByStatus : selectedIndex"
         data-aos="fade-down"
       >
-        <div class="request-card">
-          <div class="request-card-header card-header bg-light p-3">
-            <div class="request-card-icon border-0">
+        <div class="request-card ">
+          <div class="request-card-header card-header  bg-light p-3">
+            <div class="col-1 request-card-icon border-0">
               <i
                 [class]="card.icon"
                 style="color: var(--primary) !important"
               ></i>
             </div>
-            <div class="request-card-title">
+            <div class="col-11 request-card-title">
               <div class="d-flex align-items-center">
                 <h5>{{ card.categoria }}</h5>
-                <div>&nbsp;•&nbsp;</div>
+                <!-- <div>&nbsp;•&nbsp;</div> -->
               </div>
               <p class="request-card-description truncate-text">
                 {{ card.address.street }}, {{ card.address.number }} -

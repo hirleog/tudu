@@ -495,12 +495,22 @@ hr {
   margin-right: 0;
   backface-visibility: hidden;
 }
+
 @media (max-width: 500px) {
   .custom-input {
     font-size: 3rem;
   }
   .header-desktop {
     font-size: 15px;
+  }
+  .request-quote-btn {
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .truncate-text {
+    max-width: 70%;
   }
 }
 
@@ -512,5 +522,9 @@ hr {
   .btn {
     padding: 11px 23px;
     font-size: 19px;
+  }
+
+  .truncate-text {
+    max-width: 79%;
   }
 }
