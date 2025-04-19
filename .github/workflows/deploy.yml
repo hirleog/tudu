@@ -41,9 +41,11 @@ jobs:
           username: "deployer"
           key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
           script: |
-            # Verifica se o PM2 está instalado (apenas para backend)
-            if [ -f "/path/to/your/backend/package.json" ]; then
-              command -v pm2 || npm install -g pm2
+            # Backend (PM2)
+            if [ -f "/caminho/real/do/backend/package.json" ]; then
+              command -v pm2 >/dev/null || npm install -g pm2
               pm2 restart tudu-api || echo "PM2 não configurado (ignorando)"
             fi
-            sudo systemctl reload nginx
+            
+            # Frontend (Nginx)
+            sudo /usr/bin/systemctl reload nginx || echo "Nginx reload falhou (ignorando)"
