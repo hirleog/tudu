@@ -35,6 +35,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key deployer@89.116.73.70 "
             # Limpa o diretório mantendo .env e uploads
+            rm -rf
           "
           scp -i ~/.ssh/deploy_key -rp dist/* deployer@89.116.73.70:/var/www/tudu/
 
