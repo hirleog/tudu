@@ -1,8 +1,10 @@
-name: Deploy Tudu Principal
+name: Deploy Automático
 
 on:
   push:
-    branches: [main]
+    branches: ["master"]
+    paths:
+      - "**" # Ou especifique pastas específicas para cada projeto
 
 jobs:
   deploy:
@@ -10,50 +12,56 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Configuração SSH segura
       - name: Configurar SSH
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.TUDU_SERVER_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          echo -e "Host 89.116.73.70\n  StrictHostKeyChecking yes\n  UserKnownHostsFile ~/.ssh/known_hosts" > ~/.ssh/config
-          ssh-keyscan -t ed25519 89.116.73.70 >> ~/.ssh/known_hosts
+          echo -e "Host 89.116.73.70\n  HostKeyAlgorithms ssh-ed25519,rsa-sha2-512\n  KexAlgorithms curve25519-sha256\n  Ciphers chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes128-gcm@openssh.com" >> ~/.ssh/config
+          ssh-keyscan -t ed25519,rsa-sha2-512 89.116.73.70 >> ~/.ssh/known_hosts
 
-      # Build otimizado
-      - name: Build do Projeto
+      - name: Identificar projeto
+        id: project
+        run: |
+          if [[ "$GITHUB_REPOSITORY" == *"use-tudu.com.br"* ]]; then
+            echo "::set-output name=type::main"
+            echo "::set-output name=dest_dir::/var/www/tudu/"
+          elif [[ "$GITHUB_REPOSITORY" == *"professional.use-tudu.com.br"* ]]; then
+            echo "::set-output name=type::professional"
+            echo "::set-output name=dest_dir::/var/www/tudu-professional/"
+          else
+            echo "::set-output name=type::unknown"
+            echo "::set-output name=dest_dir::/var/www/tudu/"
+          fi
+
+      - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: "20"
-        run: |
-          npm ci --no-audit
-          npm run build -- --configuration=production
-          echo "Verificando arquivos buildados:"
-          ls -la dist/
 
-      # Deploy com limpeza prévia
-      - name: Enviar para o Servidor
-        run: |
-          ssh -i ~/.ssh/deploy_key deployer@89.116.73.70 "
-            # Limpa o diretório mantendo .env e uploads
-            rm -rf
-          "
-          scp -i ~/.ssh/deploy_key -rp dist/* deployer@89.116.73.70:/var/www/tudu/
+      - name: Instalar dependências
+        run: npm install --forcez'
 
-      # Pós-deploy robusto
-      - name: Atualizar Serviços
-        uses: appleboy/ssh-action@v1.0.0
+      - name: Buildar projeto
+        run: npm run build -- --configuration=production
+
+      - name: Enviar arquivos via SCP
+        run: |
+          scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -r dist/* deployer@89.116.73.70:${{ steps.project.outputs.dest_dir }}
+
+      - name: Reiniciar serviços
+        uses: appleboy/ssh-action@v0.1.10
         with:
-          host: 89.116.73.70
-          username: deployer
+          host: "89.116.73.70"
+          username: "deployer"
           key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
           script: |
-            echo "=== Verificando arquivos no servidor ==="
-            ls -la /var/www/tudu/
+            # Reinicia o Nginx para ambos os projetos
+            sudo /usr/bin/systemctl reload nginx || echo "Nginx reload falhou (ignorando)"
 
-            echo "=== Reiniciando serviços ==="
-            sudo systemctl restart nginx
-            pm2 restart tudu-api --update-env
-
-            echo "=== Limpando cache do Nginx ==="
-            sudo rm -rf /var/cache/nginx/*
-            sudo nginx -t
+            # Reinicia o backend específico se necessário
+            if [ "${{ steps.project.outputs.type }}" == "main" ]; then
+              pm2 restart tudu-api || echo "PM2 não configurado para main (ignorando)"
+            elif [ "${{ steps.project.outputs.type }}" == "professional" ]; then
+              pm2 restart tudu-professional-api || echo "PM2 não configurado para professional (ignorando)"
+            fi
