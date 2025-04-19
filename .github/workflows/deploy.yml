@@ -65,3 +65,15 @@ jobs:
             elif [ "${{ steps.project.outputs.type }}" == "professional" ]; then
               pm2 restart tudu-professional-api || echo "PM2 não configurado para professional (ignorando)"
             fi
+      - name: Limpar Cache no Servidor
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: 89.116.73.70
+          username: deployer
+          key: ${{ secrets.TUDU_SERVER_SSH_KEY }}
+          script: |
+            echo "Limpando caches..."
+            sudo rm -rf /var/cache/nginx/*
+            sudo find /var/www/tudu/ -type f -exec chmod 644 {} \;
+            sudo find /var/www/tudu/ -type d -exec chmod 755 {} \;
+            sudo systemctl reload nginx  
