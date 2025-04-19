@@ -48,3 +48,8 @@ jobs:
       - name: Enviar arquivos via SCP
         run: |
           scp -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -r dist/tudu/* deployer@89.116.73.70:${{ steps.project.outputs.dest_dir }}
+
+      - name: Enviar arquivos para o servidor
+        run: |
+          # Envia o conteúdo DE DENTRO da pasta tudu/
+          scp -i ~/.ssh/deploy_key -rp dist/tudu/* deployer@89.116.73.70:/var/www/tudu/
