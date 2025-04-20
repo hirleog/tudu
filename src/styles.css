@@ -320,9 +320,9 @@ hr {
   gap: 8px;
   padding: 8px 16px;
   background-color: white;
-  border: 2px solid rgb(69, 128, 255);;
+  border: 2px solid rgb(69, 128, 255);
   border-radius: 50px;
-  color: rgb(69, 128, 255);;
+  color: rgb(69, 128, 255);
   text-decoration: none;
   transition: background-color 0.3s, color 0.3s;
   gap: 8px;
@@ -494,6 +494,23 @@ hr {
   width: 100%;
   margin-right: 0;
   backface-visibility: hidden;
+}
+
+.truncate-text {
+  white-space: nowrap;
+  /* Não permite que o texto quebre a linha */
+  overflow: hidden;
+  /* Esconde o texto que ultrapassa o limite do contêiner */
+  text-overflow: ellipsis;
+  /* Adiciona as reticências (...) ao final do texto */
+}
+.request-card-description {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 @media (max-width: 500px) {
