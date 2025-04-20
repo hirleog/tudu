@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
 
     // Inicializa o formulário de registro
     this.registerForm = this.fb.group({
-      // telefone: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]],
+      telefone: ['', [Validators.required, Validators.pattern(/^\d{10,11}$/)]],
       nome: ['', [Validators.required]],
       sobrenome: ['', [Validators.required]],
       // cpf: [
@@ -85,11 +85,14 @@ export class LoginComponent implements OnInit {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password, this.userType).subscribe({
         next: (response) => {
-          const indicatorFlow = response.prestador;
+          const indicatorFlow = response.role;
+          console.log('faddssfdsf', indicatorFlow);
 
-          indicatorFlow === true
-            ? this.router.navigate(['/tudu-professional/home'])
-            : this.router.navigate(['/']);
+          if (indicatorFlow === 'prestador') {
+            this.router.navigate(['/tudu-professional/home']);
+          } else {
+            this.router.navigate(['/']);
+          }
         },
         error: (error) => {
           console.error('Erro no login:', error);
@@ -109,7 +112,7 @@ export class LoginComponent implements OnInit {
         this.userType === 'cliente'
           ? {
               // telefone: formValue.telefone,
-              telefone: '11974109625',
+              telefone: formValue.telefone,
               nome: formValue.nome,
               sobrenome: formValue.sobrenome,
               cpf: formValue.cpf,
@@ -124,7 +127,7 @@ export class LoginComponent implements OnInit {
             }
           : {
               // telefone: formValue.telefone,
-              telefone: '11974109625',
+              telefone: formValue.telefone,
               nome: formValue.nome,
               sobrenome: formValue.sobrenome,
               cpf: formValue.cpf,
