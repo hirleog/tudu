@@ -43,3 +43,6 @@ p {
   pointer-events: none !important;
   cursor: none;
 }
+.inactive {
+  color: #333;
+}

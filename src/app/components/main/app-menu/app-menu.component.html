@@ -41,7 +41,11 @@
       <p>Pendentes</p>
     </div>
 
-    <div class="menu-item" (click)="goToProfile()">
+    <div
+      [ngClass]="profileActiveColor || isProfileRoute ? 'active' : 'inactive'"
+      class="menu-item"
+      (click)="goToProfile()"
+    >
       <i class="fas fa-user fs-3"></i>
       <p>Perfil</p>
     </div>

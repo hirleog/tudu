@@ -1,7 +1,10 @@
 <section id="profile" class="container menu-perfil">
   <app-nav>
     <div left-content>
-      <a routerLink="/" class="logo">
+      <a
+        [routerLink]="isProfessional ? '/tudu-professional/home' : '/'"
+        class="logo"
+      >
         <img
           src="../../../assets/logo-rosa.webp"
           class="img-fluid"
@@ -55,6 +58,7 @@
         routerLink="/home"
         routerLinkActive="active"
         [routerLinkActiveOptions]="{ exact: true }"
+        *ngIf="!isProfessional"
       >
         <i class="fas fa-ad me-2"></i> Meus Anúncios
       </p>
@@ -67,10 +71,13 @@
     <li class="nav-item">
       <p
         class="nav-link d-flex align-items-center"
-        routerLink="/tudu-professional/home"
+        [routerLink]="
+          isProfessional ? '/' : '/tudu-professional/home'
+        "
         routerLinkActive="active"
       >
-        <i class="fa-solid fa-briefcase me-2"></i>Prestar serviços
+        <i class="fa-solid fa-briefcase me-2"></i
+        >{{ isProfessional ? "Contratar serviços" : "Prestar serviços" }}
       </p>
     </li>
     <li class="nav-item mt-3">

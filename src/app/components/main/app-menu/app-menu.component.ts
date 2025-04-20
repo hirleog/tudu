@@ -23,6 +23,7 @@ export class AppMenuComponent implements OnInit {
   isProfileRoute: boolean = false; // Nova variável para verificar a rota
 
   private subscriptions: Subscription = new Subscription();
+  profileActiveColor: boolean = false;
 
   constructor(private router: Router, public authService: AuthService) {
     this.router.events
@@ -47,6 +48,11 @@ export class AppMenuComponent implements OnInit {
     this.router.events.subscribe(() => {
       this.isProfessional = this.router.url.includes('tudu-professional');
     });
+    
+    this.router.events.subscribe(() => {
+      this.profileActiveColor = this.router.url.includes('/home/profile');
+    });
+  
   }
 
   ngOnInit(): void {

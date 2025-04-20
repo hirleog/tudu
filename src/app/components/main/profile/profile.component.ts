@@ -8,7 +8,13 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  constructor(public authService: AuthService, private router: Router) {}
+  isProfessional: boolean = false;
+
+  constructor(public authService: AuthService, private router: Router) {
+    this.router.events.subscribe(() => {
+      this.isProfessional = this.router.url.includes('professional');
+    });
+  }
 
   ngOnInit(): void {}
 
