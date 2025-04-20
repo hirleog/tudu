@@ -33,6 +33,14 @@ export class ShowcaseComponent implements OnInit {
     this.serviceCards = this.cardService.getServiceCards();
   }
 
+  goToProfessional() {
+    const route = !this.isLogged ? '/login' : '/tudu-professional/home';
+
+    this.route.navigate([route], {
+      queryParams: { param: 'professional' },
+    });
+  }
+
   search() {
     if (this.searchValue.trim()) {
       console.log('Você pesquisou por:', this.searchValue);

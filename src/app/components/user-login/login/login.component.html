@@ -46,7 +46,11 @@
           <div *ngIf="selectedTab === 'login'">
             <h4 class="text-center mb-3">Bem-vindo de volta!</h4>
             <p class="text-center mb-4 text-muted">
-              Faça login para continuar sua jornada conosco.
+              {{
+                userType === "prestador"
+                  ? "Faça login para continuar prestando serviço."
+                  : "Faça login para solicitar novos serviços."
+              }}
             </p>
             <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
               <div class="mb-3">
@@ -86,21 +90,13 @@
           <div *ngIf="selectedTab === 'register'">
             <h4 class="text-center mb-3">Crie sua Conta</h4>
             <p class="text-center mb-4 text-muted">
-              Cadastre-se agora para aproveitar todas as funcionalidades!
+              {{
+                userType === "prestador"
+                  ? "Cadastre-se para começar a oferecer seus serviços."
+                  : "Cadastre-se para solicitar serviços."
+              }}
             </p>
             <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-              <div class="mb-3">
-                <label for="userType" class="form-label">Tipo de Usuário</label>
-                <select
-                  id="userType"
-                  class="form-select"
-                  [(ngModel)]="userType"
-                  required
-                >
-                  <option value="cliente">Cliente</option>
-                  <option value="prestador">Prestador</option>
-                </select>
-              </div>
               <div class="mb-3">
                 <label for="registerName" class="form-label">Nome</label>
                 <input

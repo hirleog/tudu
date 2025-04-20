@@ -2,7 +2,11 @@
   <div class="d-flex align-items-center justify-content-around menu-fixo">
     <div
       class="menu-item"
-      [routerLink]="isProfessional === true ? '/tudu-professional/home' : '/'"
+      [routerLink]="
+        isProfessional === true || isProfileRoute === true
+          ? '/tudu-professional/home'
+          : '/'
+      "
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
     >
@@ -11,7 +15,7 @@
       <p>Serviços</p>
     </div>
     <div
-      *ngIf="isProfessional === false"
+      *ngIf="isProfessional === false && isProfileRoute === false"
       class="menu-item"
       routerLink="/home"
       routerLinkActive="active"
@@ -25,7 +29,7 @@
     <div
       class="menu-item"
       [routerLink]="
-        isProfessional === true
+        isProfessional === true || isProfileRoute === true
           ? '/tudu-professional/progress'
           : '/home/progress'
       "
@@ -36,17 +40,10 @@
       <!-- Ícone de pendentes -->
       <p>Pendentes</p>
     </div>
-    <div
-      class="menu-item"
-      [routerLink]="
-        isProfessional === true ? '/tudu-professional/profile' : '/home/profile'
-      "
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
+
+    <div class="menu-item" (click)="goToProfile()">
       <i class="fas fa-user fs-3"></i>
       <p>Perfil</p>
     </div>
   </div>
 </section>
-]

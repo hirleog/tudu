@@ -20,6 +20,8 @@ export class AppMenuComponent implements OnInit {
   showDiv = true;
   isLogged = false;
   isProfessional: boolean = false;
+  isProfileRoute: boolean = false; // Nova variável para verificar a rota
+
   private subscriptions: Subscription = new Subscription();
 
   constructor(private router: Router, public authService: AuthService) {
@@ -35,6 +37,10 @@ export class AppMenuComponent implements OnInit {
         this.showDiv = !this.hiddenRoutes.some((route) =>
           event.url.startsWith(route)
         );
+        // Verifica se a última palavra da URL é "professional"
+        const urlSegments = event.url.split('=');
+        this.isProfileRoute =
+          urlSegments[urlSegments.length - 1] === 'professional';
       });
 
     // Verifica a rota atual e atualiza a variável showMenu
@@ -52,6 +58,23 @@ export class AppMenuComponent implements OnInit {
     );
   }
 
+  goToProfile() {
+    const currentUrl = this.router.url;
+
+    // Verifica se já está na rota correta com o parâmetro
+    if (currentUrl === '/home/profile?param=professional') {
+      return; // Não navega novamente
+    }
+
+    // Navega para a rota com o parâmetro correto
+    if (this.isProfessional) {
+      this.router.navigate(['/home/profile'], {
+        queryParams: { param: 'professional' },
+      });
+    } else {
+      this.router.navigate(['/home/profile']);
+    }
+  }
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória
     this.subscriptions.unsubscribe();

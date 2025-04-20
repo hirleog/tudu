@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -10,17 +10,24 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginComponent implements OnInit {
   selectedTab: string = 'login';
-  userType: string = 'cliente'; // Define o tipo de usuário (cliente ou prestador)
-
   loginForm!: FormGroup;
   registerForm!: FormGroup;
   isWorker: boolean = false; // Define se a rota é para "tudu-professional"
+  isProfessionalParam: string = '';
+  userType: string = '';
 
   constructor(
+    private route: ActivatedRoute,
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) {
+    this.route.queryParams.subscribe((params) => {
+      this.isProfessionalParam = params['param'] || null;
+      this.userType =
+        this.isProfessionalParam === 'professional' ? 'prestador' : 'cliente';
+    });
+  }
 
   ngOnInit(): void {
     this.isWorker = this.router.url.startsWith('/tudu-professional');

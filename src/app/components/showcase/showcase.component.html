@@ -17,9 +17,8 @@
       <div class="d-flex align-items-center gap-1">
         <a
           class="professional-link"
-          [routerLink]="!isLogged ? '/login' : '/tudu-professional/home' "
-          routerLinkActive="router-link-active"
-          >Seja um profissio anal</a
+          (click)="goToProfessional()"
+          >Seja um profissional</a
         >
         <!-- Botão de login -->
         <a [routerLink]="isLogged ? '/home/profile' :'/login'" [ngClass]="isLogged ? 'login-button2' : 'login-button'" >
