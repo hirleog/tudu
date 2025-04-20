@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   isWorker: boolean = false; // Define se a rota é para "tudu-professional"
   isProfessionalParam: string = '';
   userType: string = '';
+  isProfessional: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -27,10 +28,14 @@ export class LoginComponent implements OnInit {
       this.userType =
         this.isProfessionalParam === 'professional' ? 'prestador' : 'cliente';
     });
+
+    // this.router.events.subscribe(() => {
+    //   this.isProfessional = this.router.url.includes('professional');
+    // });
   }
 
   ngOnInit(): void {
-    this.isWorker = this.router.url.startsWith('/tudu-professional');
+    this.isWorker = this.router.url.includes('professional');
 
     // Inicializa o formulário de login
     this.loginForm = this.fb.group({
@@ -80,7 +85,11 @@ export class LoginComponent implements OnInit {
       const { email, password } = this.loginForm.value;
       this.authService.login(email, password, this.userType).subscribe({
         next: (response) => {
-          this.router.navigate(['/']);
+          const indicatorFlow = response.prestador;
+
+          indicatorFlow === true
+            ? this.router.navigate(['/tudu-professional/home'])
+            : this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Erro no login:', error);
@@ -114,7 +123,8 @@ export class LoginComponent implements OnInit {
               endereco_numero: formValue.endereco_numero,
             }
           : {
-              telefone: formValue.telefone,
+              // telefone: formValue.telefone,
+              telefone: '11974109625',
               nome: formValue.nome,
               sobrenome: formValue.sobrenome,
               cpf: formValue.cpf,
