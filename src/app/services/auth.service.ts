@@ -16,34 +16,6 @@ export class AuthService {
   idCliente: string = '';
   constructor(private http: HttpClient) {}
 
-  // Método para cadastro
-  // register(data: {
-  //   nome: string;
-  //   sobrenome: string;
-  //   email: string;
-  //   telefone: string;
-  //   password: string;
-  // }): Observable<any> {
-  //   return this.http.post(`${environment.apiUrl}/auth/register`, data);
-  // }
-
-  // login(email: string, password: string): Observable<any> {
-  //   const payload = { email, password };
-  //   return this.http.post(`${environment.apiUrl}/auth/login`, payload).pipe(
-  //     tap((response: any) => {
-  //       // Salva o token no localStorage
-  //       localStorage.setItem('access_token', response.access_token);
-  //       this.isLoggedInSubject.next(true); // Atualiza o estado de login
-
-  //       // Decodifica o token para obter o id_cliente e atualiza o BehaviorSubject
-  //       const idCliente = this.getIdClienteFromToken();
-  //       if (idCliente) {
-  //         this.setIdCliente(idCliente);
-  //       }
-  //     })
-  //   );
-  // }
-
   login(email: string, password: string, userType: string): Observable<any> {
     const endpoint =
       userType === 'cliente' ? '/auth/login-cliente' : '/auth/login-prestador';

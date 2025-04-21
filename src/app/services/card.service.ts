@@ -63,7 +63,6 @@ export class CardService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'access-control-allow-origin': '*',
     });
 
     return this.http.post(`${this.url}/cards`, card, { headers });
@@ -73,7 +72,6 @@ export class CardService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'access-control-allow-origin': '*',
     });
 
     return this.http.get(`${this.url}/cards/${id}`, { headers });
@@ -82,7 +80,6 @@ export class CardService {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      'access-control-allow-origin': '*',
     });
 
     return this.http.get(`${this.url}/cards`, { headers });

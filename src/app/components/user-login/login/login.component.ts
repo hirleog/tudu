@@ -94,8 +94,14 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/']);
           }
         },
-        error: (error) => {
-          console.error('Erro no login:', error);
+        error: () => {
+          // Preserva a URL atual com os parâmetros de consulta
+          if (this.isWorker) {
+            this.router.navigate([], {
+              queryParams: { param: 'professional' },
+              queryParamsHandling: 'merge', // Garante que os parâmetros sejam mantidos
+            });
+          }
         },
       });
     } else {
