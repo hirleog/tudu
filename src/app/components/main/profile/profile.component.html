@@ -70,10 +70,9 @@
     </li>
     <li class="nav-item">
       <p
+        (click)="changeUserFlow()"
         class="nav-link d-flex align-items-center"
-        [routerLink]="
-          isProfessional ? '/' : '/tudu-professional/home'
-        "
+        [routerLink]="isProfessional ? '/' : '/tudu-professional/home'"
         routerLinkActive="active"
       >
         <i class="fa-solid fa-briefcase me-2"></i

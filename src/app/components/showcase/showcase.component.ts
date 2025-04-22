@@ -4,6 +4,7 @@ import { card } from '../../interfaces/card';
 import { CardService } from 'src/app/services/card.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthHelper } from '../helpers/auth-helper';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-showcase',
@@ -15,14 +16,19 @@ export class ShowcaseComponent implements OnInit {
   searchValue: string = '';
 
   serviceCards: card[] = [];
-  isLogged: boolean = false;
+
+  clienteIsLogged: boolean = false;
+  prestadorIsLogged: boolean = false;
+
+  private subscriptionCliente: Subscription = new Subscription();
+  private subscriptionPrestador: Subscription = new Subscription();
 
   constructor(
     private route: Router,
     public cardService: CardService,
     public authService: AuthService
   ) {
-    this.isLogged = AuthHelper.isLoggedIn(); // Usa o helper diretamente
+    // this.isLogged = AuthHelper.isLoggedIn(); // Usa o helper diretamente
   }
 
   async ngOnInit() {
@@ -31,10 +37,30 @@ export class ShowcaseComponent implements OnInit {
     // });
 
     this.serviceCards = this.cardService.getServiceCards();
+
+    // this.subscriptionPrestador.add(
+    this.authService.isPrestadorLoggedIn$.subscribe((loggedIn) => {
+      this.prestadorIsLogged = loggedIn;
+    });
+    // );
+    // this.subscriptionCliente.add(
+    this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
+      this.clienteIsLogged = loggedIn;
+    });
+    // );
+
+    // this.authService.isClienteLoggedIn$.subscribe((isLoggedIn) => {
+    //   console.log('Cliente logado:', isLoggedIn);
+    // });
+
+    // this.authService.isPrestadorLoggedIn$.subscribe((isLoggedIn) => {
+    //   console.log('Prestador logado:', isLoggedIn);
+    // });
   }
 
   goToProfessional() {
-    const route = !this.isLogged ? '/login' : '/tudu-professional/home';
+    const route =
+      this.prestadorIsLogged === false ? '/login' : '/tudu-professional/home';
 
     this.route.navigate([route], {
       queryParams: { param: 'professional' },
@@ -54,5 +80,11 @@ export class ShowcaseComponent implements OnInit {
     this.route.navigate(['/proposal'], {
       queryParams: { card: card.cardDetail.label },
     });
+  }
+
+  ngOnDestroy(): void {
+    // Cancela as inscrições para evitar vazamentos de memória
+    this.subscriptionCliente.unsubscribe();
+    this.subscriptionPrestador.unsubscribe();
   }
 }

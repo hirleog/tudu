@@ -15,13 +15,20 @@
     <!-- <div central-content></div> -->
     <div right-content style="flex: none !important">
       <div class="d-flex align-items-center gap-1">
-        <a
-          class="professional-link"
-          (click)="goToProfessional()"
-          >{{ isLogged ? 'Prestar serviço' : 'Seja um profissional' }}</a
-        >
+        <a class="professional-link" (click)="goToProfessional()">{{
+          prestadorIsLogged === true ? "Prestar serviço" : "Seja um profissional"
+        }}</a>
         <!-- Botão de login -->
-        <a [routerLink]="isLogged ? '/home/profile' :'/login'" [ngClass]="isLogged ? 'login-button2' : 'login-button'" >
+        <a
+          [routerLink]="
+            prestadorIsLogged || clienteIsLogged ? '/home/profile' : '/login'
+          "
+          [ngClass]="
+            prestadorIsLogged || clienteIsLogged
+              ? 'login-button2'
+              : 'login-button'
+          "
+        >
           <i class="fas fa-bars"></i>
           <i class="fas fa-user fs-3"></i>
         </a>

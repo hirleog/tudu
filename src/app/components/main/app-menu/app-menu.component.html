@@ -1,4 +1,4 @@
-<section *ngIf="showDiv && isLogged">
+<section *ngIf="showDiv && (prestadorIsLogged || clienteIsLogged)">
   <div class="d-flex align-items-center justify-content-around menu-fixo">
     <div
       class="menu-item"

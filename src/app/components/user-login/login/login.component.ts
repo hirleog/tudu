@@ -28,10 +28,6 @@ export class LoginComponent implements OnInit {
       this.userType =
         this.isProfessionalParam === 'professional' ? 'prestador' : 'cliente';
     });
-
-    // this.router.events.subscribe(() => {
-    //   this.isProfessional = this.router.url.includes('professional');
-    // });
   }
 
   ngOnInit(): void {

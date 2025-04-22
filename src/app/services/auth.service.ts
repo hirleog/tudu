@@ -1,20 +1,44 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { jwtDecode } from 'jwt-decode';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private isLoggedInSubject = new BehaviorSubject<boolean>(this.hasToken());
-  private idClienteSubject = new BehaviorSubject<string | null>(
-    this.getIdClienteFromToken()
-  ); // Inicializa com o valor do token
+  private isClienteLoggedInSubject = new BehaviorSubject<boolean>(false);
+  private isPrestadorLoggedInSubject = new BehaviorSubject<boolean>(false);
+  private idClienteSubject = new BehaviorSubject<string | null>(null);
+  private idPrestadorSubject = new BehaviorSubject<string | null>(null);
 
-  idCliente: string = '';
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Atualiza os estados iniciais com base no localStorage
+    this.updateLoginStates();
+  }
+  private updateLoginStates(): void {
+    const clienteToken = localStorage.getItem('access_token_cliente');
+    const prestadorToken = localStorage.getItem('access_token_prestador');
+
+    // Atualiza o estado de cliente
+    if (clienteToken) {
+      this.isClienteLoggedInSubject.next(true);
+      this.idClienteSubject.next(this.getIdFromToken('cliente'));
+    } else {
+      this.isClienteLoggedInSubject.next(false);
+      this.idClienteSubject.next(null);
+    }
+
+    // Atualiza o estado de prestador
+    if (prestadorToken) {
+      this.isPrestadorLoggedInSubject.next(true);
+      this.idPrestadorSubject.next(this.getIdFromToken('prestador'));
+    } else {
+      this.isPrestadorLoggedInSubject.next(false);
+      this.idPrestadorSubject.next(null);
+    }
+  }
 
   login(email: string, password: string, userType: string): Observable<any> {
     const endpoint =
@@ -22,17 +46,16 @@ export class AuthService {
     const payload = { email, password };
     return this.http.post(`${environment.apiUrl}${endpoint}`, payload).pipe(
       tap((response: any) => {
-        // Salva o token no localStorage
-        localStorage.setItem('access_token', response.access_token);
-
-        // Atualiza o estado de login
-        this.isLoggedInSubject.next(true);
-
-        // Decodifica o token para obter o id_cliente e atualiza o BehaviorSubject
-        const idCliente = this.getIdClienteFromToken();
-        if (idCliente) {
-          this.setIdCliente(idCliente);
+        if (userType === 'cliente') {
+          localStorage.setItem('access_token_cliente', response.access_token);
+          localStorage.setItem('role_cliente', response.role);
+        } else if (userType === 'prestador') {
+          localStorage.setItem('access_token_prestador', response.access_token);
+          localStorage.setItem('role_prestador', response.role);
         }
+
+        // Atualiza os estados de login e IDs com base no tipo de usuário
+        this.updateLoginStates();
       })
     );
   }
@@ -42,41 +65,90 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}${endpoint}`, data);
   }
 
-  // Método para obter o token armazenado
-  getToken(): string | null {
-    return localStorage.getItem('access_token');
+  logoutCliente(): void {
+    localStorage.removeItem('access_token_cliente');
+    localStorage.removeItem('role_cliente');
+    this.isClienteLoggedInSubject.next(false);
+    this.idClienteSubject.next(null);
+
+    this.isPrestadorLoggedInSubject.next(false);
+    this.idPrestadorSubject.next(null);
   }
 
-  // Método para remover o token (logout)
-  logout(): void {
-    localStorage.removeItem('access_token');
-    this.isLoggedInSubject.next(false); // Atualiza o estado de login
+  logoutPrestador(): void {
+    localStorage.removeItem('access_token_prestador');
+    localStorage.removeItem('role_prestador');
+    this.isPrestadorLoggedInSubject.next(false);
+    this.idPrestadorSubject.next(null);
+
+    this.isClienteLoggedInSubject.next(false);
+    this.idClienteSubject.next(null);
   }
 
-  private hasToken(): boolean {
-    return !!localStorage.getItem('access_token');
+  isClienteLoggedIn(): boolean {
+    return (
+      !!localStorage.getItem('access_token_cliente') && !!this.getRoleCliente()
+    );
   }
 
-  // Observable para o estado de login
-  get isLoggedIn$(): Observable<boolean> {
-    return this.isLoggedInSubject.asObservable();
+  isPrestadorLoggedIn(): boolean {
+    return (
+      !!localStorage.getItem('access_token_prestador') &&
+      !!this.getRolePrestador()
+    );
+  }
+  // Métodos para verificar se ambos estão logados
+  areBothLoggedIn(): boolean {
+    return this.isClienteLoggedIn() && this.isPrestadorLoggedIn();
   }
 
-  getIdClienteFromToken(): string | null {
-    const token = this.getToken();
-    if (token) {
-      const decoded: any = jwtDecode(token);
-      return decoded.sub; // Supondo que o idCliente esteja no campo "sub"
-    }
-    return null;
+  // Observables para os estados de login
+  get isClienteLoggedIn$(): Observable<boolean> {
+    return this.isClienteLoggedInSubject.asObservable();
   }
 
-  // Métodos para gerenciar o idCliente
+  get isPrestadorLoggedIn$(): Observable<boolean> {
+    return this.isPrestadorLoggedInSubject.asObservable();
+  }
+
+  // Métodos para gerenciar IDs
   setIdCliente(id: string | null): void {
     this.idClienteSubject.next(id);
   }
 
   get idCliente$(): Observable<string | null> {
     return this.idClienteSubject.asObservable();
+  }
+
+  setIdPrestador(id: string | null): void {
+    this.idPrestadorSubject.next(id);
+  }
+
+  get idPrestador$(): Observable<string | null> {
+    return this.idPrestadorSubject.asObservable();
+  }
+
+  // Métodos auxiliares
+  getToken(): string | null {
+    return localStorage.getItem('access_token');
+  }
+
+  getRoleCliente(): string | null {
+    return localStorage.getItem('role_cliente');
+  }
+
+  getRolePrestador(): string | null {
+    return localStorage.getItem('role_prestador');
+  }
+  getIdFromToken(userType: string): string | null {
+    const token =
+      userType === 'cliente'
+        ? localStorage.getItem('access_token_cliente')
+        : localStorage.getItem('access_token_prestador');
+    if (token) {
+      const decoded: any = jwtDecode(token);
+      return userType === 'cliente' ? decoded.idCliente : decoded.idPrestador;
+    }
+    return null;
   }
 }

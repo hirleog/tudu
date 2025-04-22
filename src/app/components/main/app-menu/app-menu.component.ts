@@ -21,9 +21,13 @@ export class AppMenuComponent implements OnInit {
   isLogged = false;
   isProfessional: boolean = false;
   isProfileRoute: boolean = false; // Nova variável para verificar a rota
-
-  private subscriptions: Subscription = new Subscription();
   profileActiveColor: boolean = false;
+
+  private subscriptionCliente: Subscription = new Subscription();
+  private subscriptionPrestador: Subscription = new Subscription();
+
+  clienteIsLogged: boolean = false;
+  prestadorIsLogged: boolean = false;
 
   constructor(private router: Router, public authService: AuthService) {
     this.router.events
@@ -48,18 +52,22 @@ export class AppMenuComponent implements OnInit {
     this.router.events.subscribe(() => {
       this.isProfessional = this.router.url.includes('tudu-professional');
     });
-    
+
     this.router.events.subscribe(() => {
       this.profileActiveColor = this.router.url.includes('/home/profile');
     });
-  
   }
 
   ngOnInit(): void {
     // Inscreve-se no estado de login
-    this.subscriptions.add(
-      this.authService.isLoggedIn$.subscribe((loggedIn) => {
-        this.isLogged = loggedIn;
+    this.subscriptionPrestador.add(
+      this.authService.isPrestadorLoggedIn$.subscribe((loggedIn) => {
+        this.prestadorIsLogged = loggedIn;
+      })
+    );
+    this.subscriptionCliente.add(
+      this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
+        this.clienteIsLogged = loggedIn;
       })
     );
   }
@@ -83,6 +91,7 @@ export class AppMenuComponent implements OnInit {
   }
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória
-    this.subscriptions.unsubscribe();
+    this.subscriptionCliente.unsubscribe();
+    this.subscriptionPrestador.unsubscribe();
   }
 }
