@@ -70,9 +70,6 @@ export class AuthService {
     localStorage.removeItem('role_cliente');
     this.isClienteLoggedInSubject.next(false);
     this.idClienteSubject.next(null);
-
-    this.isPrestadorLoggedInSubject.next(false);
-    this.idPrestadorSubject.next(null);
   }
 
   logoutPrestador(): void {
@@ -80,9 +77,6 @@ export class AuthService {
     localStorage.removeItem('role_prestador');
     this.isPrestadorLoggedInSubject.next(false);
     this.idPrestadorSubject.next(null);
-
-    this.isClienteLoggedInSubject.next(false);
-    this.idClienteSubject.next(null);
   }
 
   isClienteLoggedIn(): boolean {
