@@ -18,7 +18,17 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const token = this.authService.getToken(); // Recupera o token do AuthService
+    // Recupera os tokens do AuthService
+    const clienteToken = localStorage.getItem('access_token_cliente');
+    const prestadorToken = localStorage.getItem('access_token_prestador');
+
+    // Determina qual token usar com base na URL
+    const token = req.url.includes('prestador')
+      ? prestadorToken
+      : clienteToken;
+
+      console.log('Token:', token); // Adicione este log para depuração
+      
 
     if (token) {
       // Clona a requisição e adiciona o cabeçalho Authorization
@@ -30,12 +40,6 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(cloned).pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401 || error.status === 403) {
-            // Exibe o modal de reautenticação
-            // this.dialog.open(ReauthModalComponent, {
-            //   width: '400px',
-            //   disableClose: true,
-            // });
-
             // Redireciona para a rota de login
             this.router.navigate(['/login']);
           }
@@ -44,15 +48,10 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     }
 
+    // Caso nenhum token esteja disponível, continua a requisição original
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
-          // Exibe o modal de reautenticação
-          // this.dialog.open(ReauthModalComponent, {
-          //   width: '400px',
-          //   disableClose: true,
-          // });
-
           // Redireciona para a rota de login
           this.router.navigate(['/login']);
         }
