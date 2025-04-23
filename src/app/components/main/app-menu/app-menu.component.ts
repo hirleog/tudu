@@ -50,7 +50,7 @@ export class AppMenuComponent implements OnInit {
 
     // Verifica a rota atual e atualiza a variável showMenu
     this.router.events.subscribe(() => {
-      this.isProfessional = this.router.url.includes('tudu-professional');
+      this.isProfessional = this.router.url.includes('professional');
     });
 
     this.router.events.subscribe(() => {

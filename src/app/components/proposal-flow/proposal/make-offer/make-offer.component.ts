@@ -77,7 +77,7 @@ export class MakeOfferComponent implements OnInit {
     ).toString();
 
     const payloadCard: CreateCard = {
-      id_cliente: this.id_cliente.toString(), // precisa criar tabela de cliente para pegar o ID auto incrementavel
+      id_cliente: this.id_cliente.toString(), 
       id_prestador: '0', // precisa criar tabela de cliente para pegar o ID auto incrementavel
       categoria: this.cardTitle,
       status_pedido: 'publicado',

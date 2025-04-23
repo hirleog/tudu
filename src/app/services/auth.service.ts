@@ -111,6 +111,7 @@ export class AuthService {
   // Métodos para gerenciar IDs
   setIdCliente(id: string | null): void {
     this.idClienteSubject.next(id);
+
   }
 
   get idCliente$(): Observable<string | null> {
@@ -144,7 +145,9 @@ export class AuthService {
         : localStorage.getItem('access_token_prestador');
     if (token) {
       const decoded: any = jwtDecode(token);
-      return userType === 'cliente' ? decoded.idCliente : decoded.idPrestador;
+      return userType === 'cliente' ? decoded.sub : decoded.sub;
+
+      
     }
     return null;
   }
