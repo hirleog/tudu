@@ -69,12 +69,33 @@ export class ProfileComponent implements OnInit {
   }
 
   logout() {
-    if (this.authService.getRolePrestador() === 'prestador') {
-      this.authService.logoutPrestador();
-      this.router.navigate(['/']);
+    const isClienteLogged = this.authService.isClienteLoggedIn();
+    const isPrestadorLogged = this.authService.isPrestadorLoggedIn();
+
+    if (this.isProfessional) {
+      // Fluxo de prestador
+      if (isPrestadorLogged) {
+        this.authService.logoutPrestador();
+        if (isClienteLogged) {
+          // Se o cliente também estiver logado, redireciona para o fluxo do cliente
+          this.router.navigate(['/']);
+        } else {
+          // Se apenas o prestador estava logado, redireciona para a página inicial
+          this.router.navigate(['/login']);
+        }
+      }
     } else {
-      this.authService.logoutCliente();
-      this.router.navigate(['/']);
+      // Fluxo de cliente
+      if (isClienteLogged) {
+        this.authService.logoutCliente();
+        if (isPrestadorLogged) {
+          // Se o prestador também estiver logado, redireciona para o fluxo do prestador
+          this.router.navigate(['/tudu-professional/home']);
+        } else {
+          // Se apenas o cliente estava logado, redireciona para a página inicial
+          this.router.navigate(['/']);
+        }
+      }
     }
   }
 

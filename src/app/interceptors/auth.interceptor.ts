@@ -12,23 +12,33 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {}
+  isProfessional: boolean = false;
+
+  constructor(private authService: AuthService, private router: Router) {
+    this.router.events.subscribe(() => {
+      this.isProfessional = this.router.url.includes('professional');
+    });
+  }
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // Recupera os tokens do AuthService
-    const clienteToken = localStorage.getItem('access_token_cliente');
-    const prestadorToken = localStorage.getItem('access_token_prestador');
+    // Determina qual token usar com base no estado de login
+    const clienteToken =
+      this.authService.isClienteLoggedIn() &&
+      localStorage.getItem('access_token_cliente');
+    const prestadorToken =
+      this.authService.isPrestadorLoggedIn() &&
+      localStorage.getItem('access_token_prestador');
 
-    // Determina qual token usar com base na URL
-    const token = req.url.includes('prestador')
-      ? prestadorToken
-      : clienteToken;
+    let token: any = null;
 
-      console.log('Token:', token); // Adicione este log para depuração
-      
+    if (this.isProfessional === true && prestadorToken !== null) {
+      token = prestadorToken;
+    } else if (this.isProfessional === false && clienteToken !== null) {
+      token = clienteToken;
+    }
 
     if (token) {
       // Clona a requisição e adiciona o cabeçalho Authorization

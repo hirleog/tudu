@@ -70,6 +70,9 @@ export class AuthService {
     localStorage.removeItem('role_cliente');
     this.isClienteLoggedInSubject.next(false);
     this.idClienteSubject.next(null);
+
+    // this.isPrestadorLoggedInSubject.next(false);
+    // this.idPrestadorSubject.next(null);
   }
 
   logoutPrestador(): void {
