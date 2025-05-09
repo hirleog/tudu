@@ -4,9 +4,28 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'filterByStatus',
 })
 export class StatusFilterPipe implements PipeTransform {
-  transform(cards: any[], selectedIndex: number): any[] {
-    if (!cards || cards.length === 0) return [];
-    const status = selectedIndex === 0 ? 'publicado' : 'em andamento';
-    return cards.filter((card) => card.status_pedido === status);
+  transform(cards: any[], selectedIndex: number, id_prestador: string): any[] {
+    if (!cards || !id_prestador) return [];
+
+    const id = Number(id_prestador);
+
+    switch (selectedIndex) {
+      case 0: // Aba "Publicado"
+        return cards.filter(
+          (card) =>
+            card.status_pedido === 'publicado' &&
+            !card.candidaturas?.some((c: any) => c.prestador_id === id)
+        );
+
+      case 1: // Aba "Em andamento"
+        return cards.filter((card) =>
+          card.candidaturas?.some((c: any) => c.prestador_id === id)
+        );
+      case 2: // Aba "Em andamento"
+        return cards.filter((card) => card.status_pedido === 'publicado');
+
+      default:
+        return cards;
+    }
   }
 }

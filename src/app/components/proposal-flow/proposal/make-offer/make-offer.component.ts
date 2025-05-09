@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { AuthHelper } from 'src/app/components/helpers/auth-helper';
 import { CreateCard } from 'src/app/interfaces/create-card.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -28,14 +28,15 @@ export class MakeOfferComponent implements OnInit {
   isLogged: boolean = false;
   id_cliente: any = '';
 
+  private subscriptionCliente: Subscription = new Subscription();
+  clienteIsLogged: boolean = false;
+
   constructor(
     private routeActive: ActivatedRoute,
     private route: Router,
     public cardService: CardService,
     public authService: AuthService
   ) {
-    this.isLogged = AuthHelper.isLoggedIn(); // Usa o helper diretamente
-
     this.authService.idCliente$.subscribe((id) => {
       this.id_cliente = id;
       console.log('ID do Cliente:', this.id_cliente);
@@ -58,6 +59,10 @@ export class MakeOfferComponent implements OnInit {
 
   ngOnInit(): void {
     this.dateTimeSelected = this.initialDateTime;
+
+    this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
+      this.clienteIsLogged = loggedIn;
+    });
   }
 
   createCard(): Observable<CreateCard> {
@@ -77,7 +82,7 @@ export class MakeOfferComponent implements OnInit {
     ).toString();
 
     const payloadCard: CreateCard = {
-      id_cliente: this.id_cliente.toString(), 
+      id_cliente: this.id_cliente.toString(),
       id_prestador: '0', // precisa criar tabela de cliente para pegar o ID auto incrementavel
       categoria: this.cardTitle,
       status_pedido: 'publicado',
@@ -96,14 +101,28 @@ export class MakeOfferComponent implements OnInit {
       complement: this.addressContent[0].complement,
     };
 
-    if (this.isLogged) {
-      this.cardService.postCard(payloadCard).subscribe((response) => {
+    this.cardService.postCard(payloadCard).subscribe({
+      next: (response) => {
+        console.log('Card created successfully:', response);
         this.route.navigate(['/home']);
-      });
-    } else {
-      this.route.navigate(['/']);
-    }
+      },
+      error: (error) => {
+        console.error('Error creating card:', error);
+      },
+      complete: () => {
+        console.log('Card creation process completed.');
+      },
+    });
     return of();
+
+    // if (this.isLogged) {
+    //   this.cardService.postCard(payloadCard).subscribe((response) => {
+    //     this.route.navigate(['/home']);
+    //   });
+    // } else {
+    // this.route.navigate(['/']);
+    // }
+    // return of();
   }
 
   onPriceClose() {
@@ -138,5 +157,11 @@ export class MakeOfferComponent implements OnInit {
         },
       });
     });
+  }
+
+  ngOnDestroy(): void {
+    // Cancela as inscrições para evitar vazamentos de memória
+    this.subscriptionCliente.unsubscribe();
+    // this.subscriptionPrestador.unsubscribe();
   }
 }

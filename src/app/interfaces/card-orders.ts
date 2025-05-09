@@ -1,3 +1,5 @@
+import { Candidatura } from './candidaturas.model';
+
 export interface CardOrders {
   id?: number;
   id_pedido?: string;
@@ -31,4 +33,6 @@ export interface CardOrders {
   calendarActive?: boolean;
   placeholderDataHora?: string;
   hasQuotes: boolean; // Se há orçamentos disponíveis
+
+  candidaturas?: Candidatura[]; // ✅ Agora com tipo correto
 }

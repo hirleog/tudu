@@ -148,7 +148,17 @@ export class LoginComponent implements OnInit {
 
       this.authService.register(payload, this.userType).subscribe({
         next: (response) => {
-          this.router.navigate(['/']);
+          // Redireciona para a página de login com o parâmetro 'professional' se necessário
+          if (this.userType !== 'cliente') {
+            this.selectedTab = 'login';
+            
+            this.router.navigate(['/login'], {
+              queryParams: { param: 'professional' },
+            });
+          } else {
+            this.selectedTab = 'login';
+            this.router.navigate(['/login']);
+          }
         },
         error: (error) => {
           console.error('Erro no cadastro:', error);

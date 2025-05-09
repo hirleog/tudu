@@ -47,15 +47,6 @@ export class ShowcaseComponent implements OnInit {
     this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
       this.clienteIsLogged = loggedIn;
     });
-    // );
-
-    // this.authService.isClienteLoggedIn$.subscribe((isLoggedIn) => {
-    //   console.log('Cliente logado:', isLoggedIn);
-    // });
-
-    // this.authService.isPrestadorLoggedIn$.subscribe((isLoggedIn) => {
-    //   console.log('Prestador logado:', isLoggedIn);
-    // });
   }
 
   goToProfessional() {

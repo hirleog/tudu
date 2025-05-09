@@ -15,11 +15,7 @@ export class AppHomeComponent implements OnInit {
   @ViewChild('carouselOrders') carousel: any;
   bsCarousel!: Carousel;
 
-  headerPageOptions: string[] = [
-    'Serviços(23)',
-    'Em andamento(3)',
-    'Finalizados(5)',
-  ]; // Lista dinâmica
+  headerPageOptions: string[] = []; // Lista dinâmica
   overlay: boolean = false;
   dateTimeFormatted: string = '';
 
@@ -27,37 +23,6 @@ export class AppHomeComponent implements OnInit {
   placeholderDataHora: string = '';
 
   cards: CardOrders[] = [];
-
-  // cards: CardOrders[] = [
-  //   {
-  //     id: 102,
-  //     icon: 'fas fa-car', // Ícone FontAwesome
-  //     serviceName: 'Lavagem Automotiva',
-  //     description: 'Lavagem completa com polimento para meu carro...',
-  //     address: 'Rua doutor paulo de andrade arantes, 52',
-  //     price: '150,00',
-  //     valor_negociado: '150,00',
-  // renegotiateActive: true,
-  // calendarActive: false,
-  // dateTime: '2025-08-08T10:00:00',
-  // placeholderDataHora: '',
-  //     hasQuotes: false,
-  //   },
-  //   {
-  //     id: 103,
-  //     icon: 'fas fa-paint-roller',
-  //     serviceName: 'Pintura Residencial',
-  //     description: 'Preciso pintar a sala e os quartos do apartamento...',
-  //     address: 'Rua doutor antonio lobo sobrinho, 123',
-  //     price: '150,00',
-  //     valor_negociado: '',
-  //     renegotiateActive: true,
-  //     calendarActive: false,
-  //     dateTime: '2025-10-10T10:00:00',
-  //     placeholderDataHora: '',
-  //     hasQuotes: true,
-  //   },
-  // ];
 
   historicOrders: HistoricModel[] = [
     {
@@ -83,6 +48,12 @@ export class AppHomeComponent implements OnInit {
       dateTime: '2021-08-10T10:00:00',
     },
   ];
+
+  publicados: number = 0;
+  emAndamento: number = 0;
+  finalizados: number = 0;
+  id_prestador: any;
+
   constructor(private route: Router, public cardService: CardService) {
     // moment.locale('pt-br');
     // this.placeholderDataHora =
@@ -105,6 +76,8 @@ export class AppHomeComponent implements OnInit {
         card.valor_negociado = card.valor;
       }
     });
+
+    this.id_prestador = localStorage.getItem('prestador_id');
   }
 
   ngAfterViewInit() {
@@ -129,6 +102,7 @@ export class AppHomeComponent implements OnInit {
           horario_preferencial: card.horario_preferencial, // Usa o valor existente ou um padrão
           placeholderDataHora: '', // Adiciona o campo manualmente
         }));
+        this.updateHeaderCounts(); // ATUALIZA A CONTAGEM
         this.selectItem(0);
       },
       error: (error) => {
@@ -225,6 +199,30 @@ export class AppHomeComponent implements OnInit {
 
       card.placeholderDataHora = `${date} - ${time}`;
     }
+  }
+
+  updateHeaderCounts() {
+    const id = Number(this.id_prestador);
+
+    this.publicados = this.cards.filter(
+      (card) =>
+        card.status_pedido === 'publicado' &&
+        !card.candidaturas?.some((c: any) => c.prestador_id === id)
+    ).length;
+
+    this.emAndamento = this.cards.filter((card) =>
+      card.candidaturas?.some((c: any) => c.prestador_id === id)
+    ).length;
+
+    this.finalizados = this.cards.filter(
+      (card) => card.status_pedido === 'finalizado'
+    ).length;
+
+    this.headerPageOptions = [
+      `Serviços(${this.publicados})`,
+      `Em andamento(${this.emAndamento})`,
+      `Finalizados(${this.finalizados})`,
+    ];
   }
 
   selectItem(index: number): void {

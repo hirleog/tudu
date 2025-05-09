@@ -71,8 +71,8 @@ export class AuthService {
     this.isClienteLoggedInSubject.next(false);
     this.idClienteSubject.next(null);
 
-    // this.isPrestadorLoggedInSubject.next(false);
-    // this.idPrestadorSubject.next(null);
+    this.isPrestadorLoggedInSubject.next(false);
+    this.idPrestadorSubject.next(null);
   }
 
   logoutPrestador(): void {
@@ -144,7 +144,10 @@ export class AuthService {
         ? localStorage.getItem('access_token_cliente')
         : localStorage.getItem('access_token_prestador');
     if (token) {
+
       const decoded: any = jwtDecode(token);
+
+      localStorage.setItem('prestador_id', decoded.sub);
       return userType === 'cliente' ? decoded.sub : decoded.sub;
 
       

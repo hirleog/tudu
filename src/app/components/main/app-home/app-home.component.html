@@ -55,11 +55,13 @@
     <div class="row g-3 m-0 p-0">
       <div
         class="col-12 col-md-6 col-lg-6 m-0 p-2"
-        *ngFor="let card of cards | filterByStatus : selectedIndex"
+        *ngFor="
+          let card of cards | filterByStatus : selectedIndex : id_prestador
+        "
         data-aos="fade-down"
       >
-        <div class="request-card ">
-          <div class="request-card-header card-header  bg-light p-3">
+        <div class="request-card">
+          <div class="request-card-header card-header bg-light p-3">
             <div class="col-1 request-card-icon border-0">
               <i
                 [class]="card.icon"
@@ -440,16 +442,21 @@
 
   <!-- EXPETION PARA QUANDO NAO HOVER PERDIDOS PENDENTES -->
   <div
-    *ngIf="cards.length === 0"
-    class="d-flex align-items-center justify-content-center mt-5"
+    *ngIf="
+      cards.length === 0 ||
+      (selectedIndex === 0 && publicados === 0) ||
+      (selectedIndex === 1 && emAndamento === 0) ||
+      (selectedIndex === 2 && finalizados === 0)
+    "
+    class="d-flex align-items-center justify-content-center"
     style="height: 68vh"
   >
     <div class="d-flex flex-column align-items-center gap-3">
       <i class="fas fa-file-lines" style="font-size: 5em"></i>
-      <p class="fs-3">Você ainda não possui negociações</p>
-      <button class="btn-ui btn-primary mt-3 send-btn" routerLink="/">
+      <p class="fs-3">Ainda não há serviços disponíveis</p>
+      <!-- <button class="btn-ui btn-primary mt-3 send-btn" (click)="goToShowcase()">
         Anúnciar Gratís
-      </button>
+      </button> -->
     </div>
   </div>
 </section>
