@@ -12,9 +12,6 @@ import { CardService } from 'src/app/services/card.service';
   styleUrls: ['./app-home.component.css'],
 })
 export class AppHomeComponent implements OnInit {
-  @ViewChild('carouselOrders') carousel: any;
-  bsCarousel!: Carousel;
-
   headerPageOptions: string[] = []; // Lista dinâmica
   overlay: boolean = false;
   dateTimeFormatted: string = '';
@@ -49,16 +46,10 @@ export class AppHomeComponent implements OnInit {
     },
   ];
 
-  publicados: number = 0;
-  emAndamento: number = 0;
-  finalizados: number = 0;
   id_prestador: any;
+  counts: any;
 
   constructor(private route: Router, public cardService: CardService) {
-    // moment.locale('pt-br');
-    // this.placeholderDataHora =
-    //   moment().add(1, 'days').format('DD/MM/YYYY') + ' - 12:00'; // Data de amanhã às 12:00
-
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
 
@@ -80,37 +71,54 @@ export class AppHomeComponent implements OnInit {
     this.id_prestador = localStorage.getItem('prestador_id');
   }
 
-  ngAfterViewInit() {
-    this.bsCarousel = new Carousel(this.carousel.nativeElement, {
-      interval: false,
-      touch: true, // Habilita o arrasto
-    });
-  }
+  ngAfterViewInit() {}
   ngOnInit(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
-    this.listCards();
+    this.listCards('publicado');
   }
 
-  listCards() {
-    this.cardService.getCards().subscribe({
-      next: (response) => {
-        this.cards = (response as CardOrders[]).map((card) => ({
-          ...card, // Mantém os campos existentes
-          icon: this.cardService.getIconByLabel(card.categoria) || '', // Garante que o ícone nunca seja null
-          renegotiateActive: true, // Adiciona o campo manualmente
-          calendarActive: false, // Adiciona o campo manualmente
-          horario_preferencial: card.horario_preferencial, // Usa o valor existente ou um padrão
-          placeholderDataHora: '', // Adiciona o campo manualmente
-        }));
-        this.updateHeaderCounts(); // ATUALIZA A CONTAGEM
-        this.selectItem(0);
+  listCards(status_pedido: string) {
+    this.cardService.getCards(status_pedido).subscribe({
+      next: (response: { cards: CardOrders[]; counts: any }) => {
+        // Primeiro, acessa os cards corretamente
+        this.cards = response.cards.map((card) => {
+          const horario = card.horario_preferencial
+            ? moment(card.horario_preferencial)
+            : null;
+
+          const placeholderDataHora = horario
+            ? `${horario.format('DD/MM/YYYY')} - ${horario.format('HH:mm')}`
+            : '';
+
+          return {
+            ...card,
+            icon: this.cardService.getIconByLabel(card.categoria) || '',
+            renegotiateActive: !card.valor_negociado,
+            calendarActive: false,
+            placeholderDataHora: [0, 1, 2].includes(this.selectedIndex)
+              ? placeholderDataHora
+              : '',
+            valor_negociado: card.valor_negociado
+              ? card.valor
+              : card.valor_negociado,
+          };
+        });
+
+        // Agora acessa os counts (se necessário)
+        this.counts = response.counts;
+
+        this.updateHeaderCounts(); // aqui pode usar this.counts.publicado, etc.
+
+        console.log(this.cards);
       },
-      error: (error) => {
-        console.error('Erro ao obter os cartões:', error);
-      },
-      complete: () => {
-        console.log('Requisição concluída');
-      },
+      error: (error) => console.error('Erro ao obter os cartões:', error),
+      complete: () => console.log('Requisição concluída'),
+    });
+  }
+
+  goToBudgets(id_pedido: any): void {
+    this.route.navigate(['/home/budgets'], {
+      queryParams: { id: id_pedido },
     });
   }
 
@@ -170,7 +178,7 @@ export class AppHomeComponent implements OnInit {
     }
   }
 
-  onDateSelected(cardId: string, date: string) {
+  onDateSelected(cardId: any, date: string) {
     const card: any = this.cards.find((c) => c.id_pedido === cardId);
     if (card.placeholderDataHora === '') {
       card.placeholderDataHora = card.dateTime;
@@ -187,7 +195,7 @@ export class AppHomeComponent implements OnInit {
     }
   }
 
-  onTimeSelected(cardId: string, time: string) {
+  onTimeSelected(cardId: any, time: string) {
     const card: any = this.cards.find((c) => c.id_pedido === cardId);
     if (card.placeholderDataHora === '') {
       card.placeholderDataHora = card.dateTime;
@@ -202,59 +210,44 @@ export class AppHomeComponent implements OnInit {
   }
 
   updateHeaderCounts() {
-    const id = Number(this.id_prestador);
+    // this.publicados = this.cards.filter(
+    //   (card) =>
+    //     card.status_pedido === 'publicado' &&
+    //     !card.candidaturas?.some((c: any) => c.prestador_id === id)
+    // ).length;
 
-    this.publicados = this.cards.filter(
-      (card) =>
-        card.status_pedido === 'publicado' &&
-        !card.candidaturas?.some((c: any) => c.prestador_id === id)
-    ).length;
+    // this.emAndamento = this.cards.filter((card) =>
+    //   card.candidaturas?.some((c: any) => c.prestador_id === id)
+    // ).length;
 
-    this.emAndamento = this.cards.filter((card) =>
-      card.candidaturas?.some((c: any) => c.prestador_id === id)
-    ).length;
-
-    this.finalizados = this.cards.filter(
-      (card) => card.status_pedido === 'finalizado'
-    ).length;
+    // this.finalizados = this.cards.filter(
+    //   (card) => card.status_pedido === 'finalizado'
+    // ).length;
 
     this.headerPageOptions = [
-      `Serviços(${this.publicados})`,
-      `Em andamento(${this.emAndamento})`,
-      `Finalizados(${this.finalizados})`,
+      `Serviços(${this.counts.publicado})`,
+      // `Em andamento(${this.counts.andamento})`,
+      `Finalizados(${this.counts.finalizado})`,
     ];
   }
 
   selectItem(index: number): void {
-    let dateTimeFormatted: string = '';
+    // Evita reprocessamento se já estiver selecionado
+    if (this.selectedIndex === index) return;
 
-    if (index >= 0 && index <= 2 && index !== this.selectedIndex) {
-      this.selectedIndex = index;
+    this.selectedIndex = index;
+
+    switch (index) {
+      case 0:
+        this.listCards('publicado');
+        break;
+      case 1:
+        this.listCards('andamento');
+        break;
+      case 2:
+        this.listCards('finalizado');
+        break;
     }
-
-    this.cards.forEach((card) => {
-      if (card.horario_preferencial) {
-        const formattedDate = moment(card.horario_preferencial).format(
-          'DD/MM/YYYY'
-        );
-        const formattedTime = moment(card.horario_preferencial).format('HH:mm');
-        dateTimeFormatted = `${formattedDate} - ${formattedTime}`;
-      }
-
-      if (
-        this.selectedIndex === 0 ||
-        this.selectedIndex === 1 ||
-        this.selectedIndex === 2
-      ) {
-        card.placeholderDataHora = dateTimeFormatted;
-        card.calendarActive = false; // desabilita campo de calendario
-      }
-
-      if (card.valor_negociado) {
-        card.valor_negociado = card.valor;
-        card.renegotiateActive = true; // desabilita campo de edição de valor
-      }
-    });
   }
   // Método para quando o carrossel muda via navegação
   onSlideChanged(event: any) {

@@ -3,10 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavModule } from '../components/nav/nav.module';
 import { CurrencyFormatDirective } from '../directives/currency-format.directive';
-import { StatusFilterPipe } from '../components/helpers/status-filter.pipe';
 
 @NgModule({
-  declarations: [CurrencyFormatDirective, StatusFilterPipe],
+  declarations: [CurrencyFormatDirective],
   imports: [
     // CommonModule,
   ],
@@ -16,7 +15,7 @@ import { StatusFilterPipe } from '../components/helpers/status-filter.pipe';
     ReactiveFormsModule,
     NavModule,
     CurrencyFormatDirective,
-    StatusFilterPipe,
+    // StatusFilterPipe,
   ],
 })
 export class SharedModule {}

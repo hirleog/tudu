@@ -33,10 +33,11 @@
     </div>
   </app-nav>
 
-  <div class="container" *ngIf="cards.length > 0">
+  <!-- <div class="container" *ngIf="cards.length > 0"> -->
+  <div class="container">
     <div
       class="header-desktop"
-      class="d-flex justify-content-between mt-3 mb-3"
+      class="d-flex justify-content-around mt-3 mb-3"
     >
       <a
         *ngFor="let item of headerPageOptions; let i = index"
@@ -55,9 +56,7 @@
     <div class="row g-3 m-0 p-0">
       <div
         class="col-12 col-md-6 col-lg-6 m-0 p-2"
-        *ngFor="
-          let card of cards | filterByStatus : selectedIndex : id_prestador
-        "
+        *ngFor="let card of cards"
         data-aos="fade-down"
       >
         <div class="request-card">
@@ -97,7 +96,7 @@
                 [disabled]="!!card.renegotiateActive"
               />
               <button
-                *ngIf="card.status_pedido === 'em andamento'"
+                *ngIf="card.status_pedido === 'andamento'"
                 [ngClass]="{
                   'change-renegotiate-btn': !card.renegotiateActive
                 }"
@@ -128,7 +127,7 @@
                   (click)="openCalendar(card)"
                 />
                 <button
-                  *ngIf="card.status_pedido === 'em andamento'"
+                  *ngIf="card.status_pedido === 'andamento'"
                   [ngClass]="{
                     'change-renegotiate-btn':
                       card.calendarActive && card.placeholderDataHora
@@ -163,17 +162,18 @@
           </div>
 
           <!-- Botões para "publicado" -->
+          <!-- *ngIf="card.status_pedido === 'publicado'" -->
           <div
-            *ngIf="card.status_pedido === 'publicado'"
             class="d-flex justify-content-between card-footer bg-light p-4"
             style="margin-top: -3em"
           >
             <button
               class="request-quote-btn"
-              routerLink="/home/budgets"
               routerLinkActive="active"
-              *ngIf="card.hasQuotes; else semQuotes"
-            >
+              (click)="goToBudgets(card.id_pedido)"
+              
+              *ngIf="card.candidaturas.length > 0; else semQuotes"
+              >
               Oba! Orçamentos disponíveis
             </button>
             <ng-template #semQuotes>
@@ -197,7 +197,7 @@
 
           <!-- Botões para "em andamento" -->
           <div
-            *ngIf="card.status_pedido === 'em andamento'"
+            *ngIf="card.status_pedido === 'andamento'"
             class="request-card-footer bg-light d-flex gap-2 p-4"
             style="margin-top: -3em"
           >
@@ -444,9 +444,9 @@
   <div
     *ngIf="
       cards.length === 0 ||
-      (selectedIndex === 0 && publicados === 0) ||
-      (selectedIndex === 1 && emAndamento === 0) ||
-      (selectedIndex === 2 && finalizados === 0)
+      (selectedIndex === 0 && counts.publicado === 0) ||
+      (selectedIndex === 1 && counts.andamento === 0) ||
+      (selectedIndex === 2 && counts.finalizado === 0)
     "
     class="d-flex align-items-center justify-content-center"
     style="height: 68vh"

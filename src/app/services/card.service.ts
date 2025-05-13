@@ -1,7 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { card } from '../interfaces/card';
+import { CardOrders } from '../interfaces/card-orders';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -68,6 +70,33 @@ export class CardService {
     return this.http.post(`${this.url}/cards`, card, { headers });
   }
 
+  updateCard(
+    id: string,
+    updatedFields: Partial<CardOrders>
+  ): Observable<CardOrders> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'access-control-allow-origin': '*',
+    });
+
+    return this.http.put<CardOrders>(`${this.url}/cards/${id}`, updatedFields, {
+      headers,
+    });
+  }
+
+  getCards(status_pedido: string) {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    });
+    const params = new HttpParams().set('status_pedido', status_pedido);
+
+    return this.http.get<{ cards: CardOrders[]; counts: any }>(
+      `${this.url}/cards`,
+      { headers, params }
+    );
+  }
   getCardById(id: string) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -75,14 +104,6 @@ export class CardService {
     });
 
     return this.http.get(`${this.url}/cards/${id}`, { headers });
-  }
-  getCards() {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    });
-
-    return this.http.get(`${this.url}/cards`, { headers });
   }
 
   // Método para buscar o ícone com base no label

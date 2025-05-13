@@ -17,7 +17,7 @@
     </div>
   </app-nav>
 
-  <div id="budgets" class="container">
+  <div id="budgets" class="container" *ngIf="cards.candidaturas.length > 0">
     <h4 class="text-start">Meus orçamentos</h4>
   </div>
 
@@ -26,7 +26,7 @@
       <!-- Linha Bootstrap com espaçamento -->
       <div
         class="col-12 col-md-6 col-lg-6 m-0 p-0"
-        *ngFor="let card of budgets; let i = index"
+        *ngFor="let candidatura of cards?.candidaturas; let i = index"
         data-aos="fade-down"
       >
         <!-- Colunas responsivas -->
@@ -34,17 +34,17 @@
           <div class="d-flex justify-content-between align-items-center">
             <div class="d-flex">
               <div class="request-card-icon">
-                <img [src]="card.photo" class="img-fluid" />
+                <!-- <img [src]="card.photo" class="img-fluid" /> -->
               </div>
               <div>
                 <div class="d-flex justify-content-between">
                   <div class="d-flex align-items-center gap-2">
-                    <h5 class="m-0">{{ card.name }}</h5>
+                    <!-- <h5 class="m-0">{{ card.name }}</h5> -->
                     <i class="fas fa-star text-warning"></i>
                     <p class="m-0" style="color: var(--secondary)">
-                      {{ card.rate }}
+                      <!-- {{ card.rate }} -->
                     </p>
-                    <p class="mb-0">({{ card.serviceComplete }} serviços)</p>
+                    <!-- <p class="mb-0">({{ card.serviceComplete }} serviços)</p> -->
                   </div>
                 </div>
                 <p style="color: var(--premium) !important">
@@ -55,58 +55,91 @@
 
             <div>
               <p class="m-0" style="color: var(--secondary) !important">
-                {{ card.distanceMinutes }} min
+                <!-- {{ card.distanceMinutes }} min -->
               </p>
               <p style="color: var(--secondary) !important">
-                {{ card.distance }} km
+                <!-- {{ card.distance }} km -->
               </p>
+            </div>
+
+            <!-- *ngIf="selectedIndex === 1" -->
+            <div class="d-flex justify-content-start">
+              <p>Meu lance</p>
+              <p>{{ cards.valor | currency }}</p>
             </div>
           </div>
 
           <div class="custom-input-container container">
             <input
+              [readOnly]="true"
               id="valor"
               type="text"
               maxlength="15"
               appCurrencyFormat
               class="custom-input"
-              [(ngModel)]="card.editedPrice"
-              [placeholder]="card.price | currency : 'BRL' : 'symbol' : '1.2-2'"
+              [placeholder]="
+                candidatura.valor_negociado
+                  | currency : 'BRL' : 'symbol' : '1.2-2'
+              "
             />
           </div>
 
           <div class="request-card-footer d-flex gap-2">
             <button
               style="
-                color: var(--light);
-                background-color: rgb(195 195 195) !important;
+                color: var(--primary);
+                background-color: var(--light) !important;
+                border: 1px solid var(--primary);
               "
               class="request-quote-btn bg-secondary col-6"
+              (click)="updateCard(cards, 'recusar')"
             >
-              Detalhes
+              Recusar
             </button>
 
             <button
               class="request-quote-btn col-6"
+              style="background-color: var(--primary); color: var(--light)"
+              (click)="updateCard(cards, 'contratar')"
+            >
+              Contratar
+            </button>
+            <!-- <button
+              class="request-quote-btn col-6"
               [ngClass]="{
                 'change-button':
-                  card.editedPrice && card.editedPrice !== card.price
+                  candidatura.editedPrice &&
+                  candidatura.editedPrice !== candidatura.price
               }"
               style="background-color: var(--primary); color: var(--light)"
               routerLink="/home/progress"
             >
               {{
-                card.editedPrice && card.editedPrice !== card.price
+                candidatura.editedPrice &&
+                candidatura.editedPrice !== candidatura.price
                   ? "Negociar"
                   : "Contratar"
               }}
-            </button>
+            </button> -->
           </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+<div
+  *ngIf="cards.candidaturas.length === 0"
+  class="d-flex align-items-center justify-content-center"
+  style="height: 68vh"
+>
+  <div class="d-flex flex-column align-items-center gap-3">
+    <i class="fas fa-file-lines" style="font-size: 5em"></i>
+    <p class="fs-3">Sem propostas por aqui :(</p>
+    <!-- <button class="btn-ui btn-primary mt-3 send-btn" (click)="goToShowcase()">
+      Anúnciar Gratís
+    </button> -->
+  </div>
+</div>
 
 <!-- Conteúdo da página -->
 <div class="container mt-5 pt-5"></div>
