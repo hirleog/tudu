@@ -79,25 +79,26 @@ export class LoginComponent implements OnInit {
         : (this.userType = 'cliente');
 
       const { email, password } = this.loginForm.value;
+
       this.authService.login(email, password, this.userType).subscribe({
         next: (response) => {
           const indicatorFlow = response.role;
-          console.log('faddssfdsf', indicatorFlow);
 
+          // 🔐 Salvar o token ANTES de redirecionar
+          const token = response.access_token; // ajuste aqui conforme o nome real da propriedade
           if (indicatorFlow === 'prestador') {
+            localStorage.setItem('access_token_prestador', token);
             this.router.navigate(['/tudu-professional/home']);
           } else {
+            localStorage.setItem('access_token_cliente', token);
             this.router.navigate(['/']);
           }
         },
         error: () => {
-          // Preserva a URL atual com os parâmetros de consulta
-          if (this.isWorker) {
-            this.router.navigate([], {
-              queryParams: { param: 'professional' },
-              queryParamsHandling: 'merge', // Garante que os parâmetros sejam mantidos
-            });
-          }
+          this.router.navigate([], {
+            queryParams: { param: 'professional' },
+            queryParamsHandling: 'merge',
+          });
         },
       });
     } else {
@@ -151,7 +152,7 @@ export class LoginComponent implements OnInit {
           // Redireciona para a página de login com o parâmetro 'professional' se necessário
           if (this.userType !== 'cliente') {
             this.selectedTab = 'login';
-            
+
             this.router.navigate(['/login'], {
               queryParams: { param: 'professional' },
             });

@@ -24,24 +24,24 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    // Determina qual token usar com base no estado de login
-    const clienteToken =
-      this.authService.isClienteLoggedIn() &&
-      localStorage.getItem('access_token_cliente');
-    const prestadorToken =
-      this.authService.isPrestadorLoggedIn() &&
-      localStorage.getItem('access_token_prestador');
+    const clienteToken = localStorage.getItem('access_token_cliente');
+    const prestadorToken = localStorage.getItem('access_token_prestador');
 
-    let token: any = null;
+    let token: string | null = null;
 
-    if (this.isProfessional === true && prestadorToken !== null) {
+    // Verifica pela URL da requisição se é rota de prestador
+    const currentRoute = this.router.url; // ← 🚨 Usa a URL da aplicação
+    const isProfessionalRequest =
+      currentRoute.includes('professional') ||
+      currentRoute.includes('prestador');
+
+    if (isProfessionalRequest && prestadorToken) {
       token = prestadorToken;
-    } else if (this.isProfessional === false && clienteToken !== null) {
+    } else if (!isProfessionalRequest && clienteToken) {
       token = clienteToken;
     }
 
     if (token) {
-      // Clona a requisição e adiciona o cabeçalho Authorization
       const cloned = req.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
@@ -50,7 +50,6 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(cloned).pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401 || error.status === 403) {
-            // Redireciona para a rota de login
             this.router.navigate(['/login']);
           }
           return throwError(() => error);
@@ -58,12 +57,12 @@ export class AuthInterceptor implements HttpInterceptor {
       );
     }
 
-    // Caso nenhum token esteja disponível, continua a requisição original
+    console.log('prestadorToken', prestadorToken);
+    // Se não houver token, continua a requisição original
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401 || error.status === 403) {
-          // Redireciona para a rota de login
-          this.router.navigate(['/login']);
+          // this.router.navigate(['/login']);
         }
         return throwError(() => error);
       })

@@ -95,6 +95,11 @@ export class ProfileComponent implements OnInit {
           // Se apenas o cliente estava logado, redireciona para a página inicial
           this.router.navigate(['/']);
         }
+        
+        //else temporario para forçar deslogar o prestador e cliente
+      } else {
+        this.authService.logoutCliente();
+        this.router.navigate(['/']);
       }
     }
   }
