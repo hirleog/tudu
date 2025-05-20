@@ -41,7 +41,7 @@
     >
       <a
         *ngFor="let item of headerPageOptions; let i = index"
-        class="text-start header-desktop"
+        class="text-start header-desktop "
         [class.a-selected]="selectedIndex === i"
         (click)="selectItem(i)"
         [attr.aria-current]="selectedIndex === i ? 'page' : null"

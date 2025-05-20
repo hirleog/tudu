@@ -116,7 +116,7 @@ export class BudgetsComponent implements OnInit {
     // const statusPedido =
     //   valorNegociado !== card.valor ||
     //   (horario_negociado_formatted &&
-    //     horario_negociado_formatted !== card.horario_preferencial)
+    //     horario_negociado_formatted !== card.horario_preferencial)   
     //     ? 'publicado'
     //     : 'pendente';
 

@@ -50,7 +50,11 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(cloned).pipe(
         catchError((error: HttpErrorResponse) => {
           if (error.status === 401 || error.status === 403) {
-            this.router.navigate(['/login']);
+            if (isProfessionalRequest && prestadorToken) {
+              this.router.navigate(['/login?param=professional']);
+            } else {
+              this.router.navigate(['/login']);
+            }
           }
           return throwError(() => error);
         })

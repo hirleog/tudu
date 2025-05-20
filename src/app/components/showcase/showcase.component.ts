@@ -51,7 +51,7 @@ export class ShowcaseComponent implements OnInit {
 
   goToProfessional() {
     const route =
-      this.prestadorIsLogged === false ? '/login' : '/tudu-professional/home';
+      this.prestadorIsLogged === false ? '/login?param=professional' : '/tudu-professional/home';
 
     this.route.navigate([route], {
       queryParams: { param: 'professional' },
