@@ -8,10 +8,10 @@ import { ProposalComponent } from './proposal.component';
 import { CategoryFilterComponent } from '../../category-filter/category-filter.component';
 import { CalendarComponent } from '../../calendar/calendar.component';
 import { CalendarModule } from '../../calendar/calendar.module';
+import { AddressModule } from '../../address/address.module';
 
 const routes: Routes = [
   { path: '', component: ProposalComponent },
-  { path: 'address', component: AddressComponent },
   { path: 'offer', component: MakeOfferComponent },
   { path: 'categories', component: MakeOfferComponent },
 ];
@@ -19,7 +19,6 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     ProposalComponent,
-    AddressComponent,
     MakeOfferComponent,
     CategoryFilterComponent,
   ],
@@ -27,6 +26,7 @@ const routes: Routes = [
     MultiSelectModule,
     SharedModule,
     CalendarModule,
+    AddressModule,
     RouterModule.forChild(routes), // Importante: Use forChild() aqui
   ],
   exports: [

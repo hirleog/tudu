@@ -1,35 +1,34 @@
-<section>
-  <app-nav>
-    <div left-content>
-      <a (click)="goBack()" class="text-decoration-none text-dark">
-        <i class="fas fa-arrow-left"></i>
-      </a>
-    </div>
-    <div central-content>
-      <a routerLink="/" class="logo">
-        <img
-          src="../../../assets/logo-rosa.webp"
-          class="img-fluid"
-          style="width: 4em"
-          alt="error"
-        />
-      </a>
-    </div>
-    <div right-content>
-      <!-- Botão de login -->
-      <a routerLink="/login" class="login-button">
-        <i class="fas fa-bars"></i>
-        <i class="fas fa-user fs-3"></i>
-      </a>
-    </div>
-  </app-nav>
-
+<app-nav>
+  <div left-content>
+    <a (click)="goBack()" class="text-decoration-none text-dark">
+      <i class="fas fa-arrow-left"></i>
+    </a>
+  </div>
+  <div central-content>
+    <a routerLink="/" class="logo">
+      <img
+        src="../../../assets/logo-rosa.webp"
+        class="img-fluid"
+        style="width: 4em"
+        alt="error"
+      />
+    </a>
+  </div>
+  <div right-content>
+    <!-- Botão de login -->
+    <a routerLink="/login" class="login-button">
+      <i class="fas fa-bars"></i>
+      <i class="fas fa-user fs-3"></i>
+    </a>
+  </div>
+</app-nav>
+<section [ngClass]="{ spacement: optionSelected === 0 }">
   <div id="address" data-aos="fade-down" class="mt-4">
     <div class="container">
       <div class="container">
         <h4 class="text-start mb-3">Onde o serviço vai ser realizado?</h4>
       </div>
-      <div class="container d-flex justify-content-center">
+      <div class="d-flex justify-content-center">
         <ul class="col-12" (click)="$event.stopPropagation()">
           <li *ngFor="let option of options; let i = index">
             <label class="form-check w-100 ms-2 d-flex align-items-center">
@@ -48,7 +47,7 @@
 
       <div
         *ngIf="optionSelected !== undefined && optionSelected === 0"
-        class="container mt-5"
+        class="mt-5"
         data-aos="fade-down"
       >
         <hr class="mb-5" />
@@ -140,7 +139,7 @@
               />
             </div>
           </div>
-          <div class="container send-btn-fixed mt-5">
+          <div class="send-btn-fixed mt-5" *ngIf="showBtns">
             <button (click)="goBack()" class="btn-ui btn-primary mt-3">
               Voltar
             </button>
@@ -158,10 +157,10 @@
       <!-- Botão de envio -->
     </div>
   </div>
-  <div class="container fixed-buttons mt-5">
+  <div class="fixed-buttons mt-5" *ngIf="showBtns">
     <button
       *ngIf="optionSelected === undefined"
-     (click)="goBack()"
+      (click)="goBack()"
       class="btn-ui btn-primary mt-3"
     >
       Voltar

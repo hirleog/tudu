@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 
 @Component({
   selector: 'app-profile',
@@ -16,8 +17,16 @@ export class ProfileComponent implements OnInit {
 
   clienteIsLogged: boolean = false;
   prestadorIsLogged: boolean = false;
+  id_cliente!: string | null;
+  prestadorId!: string | null;
+  userId!: number;
+  profileData: any;
 
-  constructor(public authService: AuthService, private router: Router) {
+  constructor(
+    public authService: AuthService,
+    private router: Router,
+    private profileDetailService: ProfileDetailService
+  ) {
     this.router.events.subscribe(() => {
       this.isProfessional = this.router.url.includes('professional');
     });
@@ -32,9 +41,37 @@ export class ProfileComponent implements OnInit {
         this.clienteIsLogged = loggedIn;
       })
     );
+
+    this.authService.idCliente$.subscribe((id) => {
+      this.id_cliente = id;
+    });
+
+    this.authService.idPrestador$.subscribe((id) => {
+      this.prestadorId = id;
+    });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadUser();
+  }
+
+  loadUser(): void {
+    let getFn: any;
+
+    if (this.isProfessional === true) {
+      this.userId = Number(this.prestadorId);
+      getFn = this.profileDetailService.getPrestadorById;
+    } else {
+      this.userId = Number(this.id_cliente);
+      getFn = this.profileDetailService.getClienteById;
+    }
+
+    getFn
+      .call(this.profileDetailService, this.userId)
+      .subscribe((data: any) => {
+        this.profileData = data;
+      });
+  }
 
   changeUserFlow(): void {
     // const role = this.authService.getRole();
@@ -95,12 +132,30 @@ export class ProfileComponent implements OnInit {
           // Se apenas o cliente estava logado, redireciona para a página inicial
           this.router.navigate(['/']);
         }
-        
+
         //else temporario para forçar deslogar o prestador e cliente
       } else {
         this.authService.logoutCliente();
         this.router.navigate(['/']);
       }
+    }
+  }
+
+  goToProfileDetail() {
+    const currentUrl = this.router.url;
+
+    // Verifica se já está na rota correta com o parâmetro
+    // if (currentUrl === '/home/profile?param=professional') {
+    //   return; // Não navega novamente
+    // }
+
+    // Navega para a rota com o parâmetro correto
+    if (this.isProfessional) {
+      this.router.navigate(['/home/profile-detail'], {
+        queryParams: { param: 'professional' },
+      });
+    } else {
+      this.router.navigate(['/home/profile-detail']);
     }
   }
 

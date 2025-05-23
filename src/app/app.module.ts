@@ -26,7 +26,7 @@ import { ModalComponent } from './components/modal/modal.component';
     ClientReviewsComponent,
     AppMenuComponent,
     SignUpComponent,
-    ModalComponent
+    ModalComponent,
   ],
   imports: [
     CommonModule,

@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { Budget } from 'src/app/interfaces/budgets';
 import { CardOrders } from 'src/app/interfaces/card-orders';
+import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
 
 @Component({
@@ -55,13 +56,16 @@ export class BudgetsComponent implements OnInit {
   constructor(
     public cardService: CardService,
     private routeActive: ActivatedRoute,
-    private route: Router
+    private route: Router,
+    private authService: AuthService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
     });
 
-    this.id_prestador = localStorage.getItem('prestador_id');
+    this.authService.idPrestador$.subscribe((id) => {
+      this.id_prestador = id;
+    });
   }
 
   ngOnInit(): void {
@@ -93,98 +97,78 @@ export class BudgetsComponent implements OnInit {
     // ).format('YYYY-MM-DD HH:mm');
 
     // Obtém a candidatura do prestador atual (se existir)
-    const candidaturaAtual = card.candidaturas?.find(
-      (c) => c.prestador_id === Number(this.id_prestador)
-    );
+    // const candidaturaAtual = card.candidaturas?.find(
+    //   (c) => c.prestador_id === Number(this.id_prestador)
+    // );
+    let payloadCard: any;
+    card.candidaturas.map((candidato) => {
+      // Determina o valor negociado
+      const valorNegociado = candidato
+        ? candidato.valor_negociado === ''
+          ? card.valor
+          : candidato.valor_negociado ?? card.valor
+        : card.valor_negociado && card.valor_negociado !== card.valor
+        ? card.valor_negociado
+        : card.valor;
 
-    // Determina o valor negociado
-    const valorNegociado = candidaturaAtual
-      ? candidaturaAtual.valor_negociado === ''
-        ? card.valor
-        : candidaturaAtual.valor_negociado ?? card.valor
-      : card.valor_negociado && card.valor_negociado !== card.valor
-      ? card.valor_negociado
-      : card.valor;
+      const horario_negociado = candidato
+        ? candidato.horario_negociado === ''
+          ? card.horario_preferencial
+          : candidato.horario_negociado ?? card.horario_preferencial
+        : card.horario_preferencial;
 
-    const horario_negociado = candidaturaAtual
-      ? candidaturaAtual.horario_negociado === ''
-        ? card.horario_preferencial
-        : candidaturaAtual.horario_negociado ?? card.horario_preferencial
-      : card.horario_preferencial;
+      // Determina o status com base nas negociações
+      // const statusPedido =
+      //   valorNegociado !== card.valor ||
+      //   (horario_negociado_formatted &&
+      //     horario_negociado_formatted !== card.horario_preferencial)
+      //     ? 'publicado'
+      //     : 'pendente';
 
-    // Determina o status com base nas negociações
-    // const statusPedido =
-    //   valorNegociado !== card.valor ||
-    //   (horario_negociado_formatted &&
-    //     horario_negociado_formatted !== card.horario_preferencial)   
-    //     ? 'publicado'
-    //     : 'pendente';
+      const payloadCard: any = {
+        id_cliente: Number(card.id_pedido),
+        id_prestador: step === 'contratar' ? candidato.prestador_id : null,
+        categoria: card.categoria,
+        status_pedido: step === 'contratar' ? 'pendente' : 'publicado', // Usa o status calculado
+        subcategoria: card.subcategoria,
+        valor: card.valor,
+        horario_preferencial: card.horario_preferencial,
 
-    const payloadCard: any = {
-      id_cliente: Number(card.id_pedido),
-      id_prestador: null,
-      categoria: card.categoria,
-      status_pedido: step === 'contratar' ? 'pendente' : 'publicado', // Usa o status calculado
-      subcategoria: card.subcategoria,
-      valor: card.valor,
-      horario_preferencial: card.horario_preferencial,
+        cep: card.address.cep,
+        street: card.address.street,
+        neighborhood: card.address.neighborhood,
+        city: card.address.city,
+        state: card.address.state,
+        number: card.address.number,
+        complement: card.address.complement,
 
-      cep: card.address.cep,
-      street: card.address.street,
-      neighborhood: card.address.neighborhood,
-      city: card.address.city,
-      state: card.address.state,
-      number: card.address.number,
-      complement: card.address.complement,
+        candidaturas: [
+          {
+            prestador_id: candidato.prestador_id,
+            valor_negociado: valorNegociado,
+            horario_negociado: horario_negociado,
+            status: step === 'contratar' ? 'aceito' : 'recusado',
+            data_finalizacao: '',
+          },
+        ],
+      };
 
-      candidaturas: [
-        {
-          prestador_id: Number(this.id_prestador),
-          valor_negociado: valorNegociado,
-          horario_negociado: horario_negociado,
-          status: step === 'contratar' ? 'aceito' : 'recusado',
-          data_finalizacao: '',
+      this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
+        next: (response) => {
+          step === 'contratar'
+            ? this.route.navigate(['/home/progress'])
+            : this.getCardById(); // Atualiza a lista de cartões após a atualização
+          // route === '/home' ? this.selectItem(1) : this.route.navigate([route]); // direciona para tela de em andamento se não vai para tela de progress
         },
-      ],
-    };
-
-    //  status: valorNegociado !== card.valor || (horario_negociado_formatted && horario_negociado_formatted !== card.horario_preferencial)
-    //         ? 'em negociacao' : 'pendente',
-
-    // const flow =
-    //   payloadCard.candidaturas[0].valor_negociado !== payloadCard.valor ||
-    //   payloadCard.candidaturas[0].horario_negociado !==
-    //     payloadCard.horario_preferencial
-    //     ? 'emAndamento'
-    //     : 'pendente';
-
-    // const route: string = flow === 'pendente' ? '/progress' : '/home';
-
-    this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
-      next: (response) => {
-        step === 'contratar'
-          ? this.route.navigate(['/home/progress'])
-          : this.getCardById(); // Atualiza a lista de cartões após a atualização
-        // route === '/home' ? this.selectItem(1) : this.route.navigate([route]); // direciona para tela de em andamento se não vai para tela de progress
-      },
-      error: (error) => {
-        console.error('Erro ao atualizar o cartão:', error);
-      },
-      complete: () => {
-        console.log('Requisição concluída');
-      },
+        error: (error) => {
+          console.error('Erro ao atualizar o cartão:', error);
+        },
+        complete: () => {
+          console.log('Requisição concluída');
+        },
+      });
     });
 
     return of();
-    // // if (this.isLogged) {
-    // this.cardService
-    //   .updateCard(card.id_pedido!, payloadCard) // Use non-null assertion
-    //   .subscribe(() => {
-    //     route === '/home' ? this.selectItem(1) : this.route.navigate([route]); // Atualiza a lista de cartões após a atualização
-    //   });
-    // // } else {
-    // // this.route.navigate(['/']);
-    // return of();
-    // // }
   }
 }

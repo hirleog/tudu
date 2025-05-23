@@ -36,18 +36,24 @@
   <!-- <div class="container" *ngIf="cards.length > 0"> -->
   <div class="container">
     <div
-      class="header-desktop"
-      class="d-flex justify-content-around mt-3 mb-3"
+      class="tab-bar d-flex justify-content-around mt-1 mb-3 position-relative"
     >
       <a
         *ngFor="let item of headerPageOptions; let i = index"
-        class="text-start header-desktop "
-        [class.a-selected]="selectedIndex === i"
+        class="tab-link"
+        [class.active]="selectedIndex === i"
         (click)="selectItem(i)"
         [attr.aria-current]="selectedIndex === i ? 'page' : null"
       >
         {{ item }}
       </a>
+      <div
+        class="tab-indicator"
+        [ngStyle]="{
+          transform: 'translateX(' + selectedIndex * 100 + '%)',
+          width: 100 / headerPageOptions.length + '%'
+        }"
+      ></div>
     </div>
   </div>
 
@@ -171,9 +177,8 @@
               class="request-quote-btn"
               routerLinkActive="active"
               (click)="goToBudgets(card.id_pedido)"
-              
               *ngIf="card.candidaturas.length > 0; else semQuotes"
-              >
+            >
               Oba! Orçamentos disponíveis
             </button>
             <ng-template #semQuotes>

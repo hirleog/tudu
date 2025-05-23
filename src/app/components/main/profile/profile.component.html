@@ -1,17 +1,22 @@
 <section id="profile" class="container menu-perfil">
   <app-nav>
-    <div left-content>
+    <div left-content class="d-flex align-items-center">
       <a
         [routerLink]="isProfessional ? '/tudu-professional/home' : '/'"
         class="logo"
       >
         <img
           src="../../../assets/logo-rosa.webp"
-          class="img-fluid"
           style="width: 4em"
           alt="error"
         />
       </a>
+      <h3
+        *ngIf="isProfessional"
+        style="margin-bottom: 0px; margin-top: 3px; font-size: 17px"
+      >
+        Professional
+      </h3>
     </div>
 
     <div central-content></div>
@@ -25,17 +30,17 @@
     >
       <div class="d-flex">
         <div class="request-card-icon">
-          <img src="../../../../assets/aline.PNG" class="img-fluid" />
+          <img [src]="profileData.foto" class="img-fluid" />
         </div>
         <div>
           <div class="d-flex justify-content-between">
             <div class="d-flex align-items-center gap-2">
-              <h5 class="m-0">Aline</h5>
+              <h5 class="m-0">{{ profileData.nome }}</h5>
               <i class="fas fa-star text-warning"></i>
             </div>
           </div>
 
-          <div class="d-flex gap-1">
+          <div class="d-flex gap-1" (click)="goToProfileDetail()">
             <p style="color: var(--premium) !important">Minha conta</p>
             <!-- <p>{{ card.service }}</p> -->
           </div>
@@ -47,6 +52,15 @@
   <hr />
 
   <ul class="nav flex-column">
+    <!-- <li class="nav-item">
+      <p
+        class="nav-link d-flex align-items-center"
+        (click)="goToProfileDetail()"
+      >
+        <i class="fas fa-circle-check me-2"></i>
+        Finalizar cadastro
+      </p>
+    </li> -->
     <li class="nav-item">
       <p class="nav-link d-flex align-items-center" href="#">
         <i class="fas fa-bell me-2"></i> Notificações
@@ -69,10 +83,7 @@
       </p>
     </li>
     <li class="nav-item">
-      <p
-        (click)="changeUserFlow()"
-        class="nav-link d-flex align-items-center"
-        >
+      <p (click)="changeUserFlow()" class="nav-link d-flex align-items-center">
         <!-- [routerLink]="isProfessional ? '/' : '/tudu-professional/home'" -->
         <!-- routerLinkActive="active" -->
         <i class="fa-solid fa-briefcase me-2"></i

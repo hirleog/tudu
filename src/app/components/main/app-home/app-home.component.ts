@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CardOrders } from 'src/app/interfaces/card-orders';
 import * as moment from 'moment';
+import { CardOrders } from 'src/app/interfaces/card-orders';
 import { HistoricModel } from 'src/app/interfaces/historic.model';
-import { Carousel } from 'bootstrap';
 import { CardService } from 'src/app/services/card.service';
 
 @Component({

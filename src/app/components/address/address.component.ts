@@ -1,6 +1,6 @@
 import { Location } from '@angular/common';
 import { AddressService } from './../../services/address.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -10,6 +10,8 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./address.component.css'],
 })
 export class AddressComponent implements OnInit {
+  @Input() showBtns: boolean = true;
+
   titleFlow: string = 'Onde o serviço vai ser realizado?';
 
   options: string[] = ['Cadastrar novo endereço', 'Usar endereço do cadastro'];

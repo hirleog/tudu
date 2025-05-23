@@ -5,7 +5,7 @@ import { NavModule } from '../components/nav/nav.module';
 import { CurrencyFormatDirective } from '../directives/currency-format.directive';
 
 @NgModule({
-  declarations: [CurrencyFormatDirective],
+  declarations: [ CurrencyFormatDirective, ],
   imports: [
     // CommonModule,
   ],

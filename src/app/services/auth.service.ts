@@ -21,22 +21,28 @@ export class AuthService {
     const clienteToken = localStorage.getItem('access_token_cliente');
     const prestadorToken = localStorage.getItem('access_token_prestador');
 
-    // Atualiza o estado de cliente
     if (clienteToken) {
+      const idCliente = this.getIdFromToken('cliente');
+      if (idCliente) localStorage.setItem('cliente_id', idCliente);
+
       this.isClienteLoggedInSubject.next(true);
-      this.idClienteSubject.next(this.getIdFromToken('cliente'));
+      this.idClienteSubject.next(idCliente);
     } else {
       this.isClienteLoggedInSubject.next(false);
       this.idClienteSubject.next(null);
+      localStorage.removeItem('cliente_id');
     }
 
-    // Atualiza o estado de prestador
     if (prestadorToken) {
+      const idPrestador = this.getIdFromToken('prestador');
+      if (idPrestador) localStorage.setItem('prestador_id', idPrestador);
+
       this.isPrestadorLoggedInSubject.next(true);
-      this.idPrestadorSubject.next(this.getIdFromToken('prestador'));
+      this.idPrestadorSubject.next(idPrestador);
     } else {
       this.isPrestadorLoggedInSubject.next(false);
       this.idPrestadorSubject.next(null);
+      localStorage.removeItem('prestador_id');
     }
   }
 
@@ -71,8 +77,8 @@ export class AuthService {
     this.isClienteLoggedInSubject.next(false);
     this.idClienteSubject.next(null);
 
-    this.isPrestadorLoggedInSubject.next(false);
-    this.idPrestadorSubject.next(null);
+    // this.isPrestadorLoggedInSubject.next(false);
+    // this.idPrestadorSubject.next(null);
   }
 
   logoutPrestador(): void {
@@ -111,7 +117,6 @@ export class AuthService {
   // Métodos para gerenciar IDs
   setIdCliente(id: string | null): void {
     this.idClienteSubject.next(id);
-
   }
 
   get idCliente$(): Observable<string | null> {
@@ -143,15 +148,17 @@ export class AuthService {
       userType === 'cliente'
         ? localStorage.getItem('access_token_cliente')
         : localStorage.getItem('access_token_prestador');
-    if (token) {
 
+    if (token) {
       const decoded: any = jwtDecode(token);
 
-      localStorage.setItem('prestador_id', decoded.sub);
-      return userType === 'cliente' ? decoded.sub : decoded.sub;
+      if (userType === 'prestador') {
+        localStorage.setItem('prestador_id', decoded.sub);
+      }
 
-      
+      return decoded.sub;
     }
+
     return null;
   }
 }
