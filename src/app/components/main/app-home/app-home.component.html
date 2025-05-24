@@ -394,7 +394,7 @@
         *ngFor="let card of cards"
         data-aos="fade-down"
       >
-        <div class="request-card">
+        <div class="request-card" *ngFor="let candidatura of card.candidaturas">
           <div class="request-card-header card-header bg-light p-3">
             <div class="request-card-icon border-0">
               <i
@@ -420,7 +420,7 @@
               <p class="request-card-description truncate-text">
                 {{ card.subcategoria }}
               </p>
-              <p>Concluído ás 14:00 - 02/01/2025</p>
+              <p>Concluído {{ formatarHorario(card) }}</p>
             </div>
           </div>
           <div class="d-flex justify-content-between card-footer bg-light p-3">
@@ -432,7 +432,13 @@
               Detalhes
             </button>
             <div class="container d-flex justify-content-end">
-              <h2>R$ 39,50</h2>
+              <h2>
+                {{
+                  candidatura.valor_negociado !== card.valor
+                    ? (candidatura.valor_negociado | currency : "BRL")
+                    : (card.valor | currency : "BRL")
+                }}
+              </h2>
             </div>
             <!-- <button
               class="request-quote-btn"
