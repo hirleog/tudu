@@ -33,7 +33,9 @@
         <div class="request-card d-flex flex-column gap-4">
           <div class="card-header p-3">
             <p class="fw-bold m-0">Previsão inicio do serviço</p>
-            <h3 class="fw-bold">{{ c.horario_preferencial | formatDateTime }}</h3>
+            <h3 class="fw-bold">
+              {{ c.horario_preferencial | formatDateTime }}
+            </h3>
           </div>
 
           <div
@@ -67,15 +69,10 @@
             <button
               class="request-quote-btn col-6"
               style="color: var(--light)"
-              routerLink="/home/progress-detail"
+              (click)="goToDetails(c.id_pedido)"
             >
               Acompanhar
             </button>
-            <!-- <button class="request-quote-btn col-6"
-              [ngClass]="{'change-button': card.editedPrice && card.editedPrice !== card.price}"
-              style="background-color: var(--primary); color: var(--light);" routerLink="/home/progress">
-              {{ card.editedPrice && card.editedPrice !== card.price ? 'Negociar' : 'Contratar' }}
-            </button> -->
           </div>
         </div>
       </div>

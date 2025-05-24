@@ -85,4 +85,10 @@ export class ProgressComponent implements OnInit {
         this.prestadorInfos = data;
       });
   }
+
+  goToDetails(idPedido: any): void {
+    this.route.navigate(['home/progress-detail'], {
+      queryParams: { id: idPedido },
+    });
+  }
 }

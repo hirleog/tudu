@@ -47,7 +47,7 @@
             <h4 class="text-center mb-3">Bem-vindo de volta!</h4>
             <p class="text-center mb-4 text-muted">
               {{
-                userType === "prestador"
+                isProfessional === true
                   ? "Faça login para continuar prestando serviço."
                   : "Faça login para solicitar novos serviços."
               }}
@@ -91,7 +91,7 @@
             <h4 class="text-center mb-3">Crie sua Conta</h4>
             <p class="text-center mb-4 text-muted">
               {{
-                userType === "prestador"
+                isProfessional === true
                   ? "Cadastre-se para começar a oferecer seus serviços."
                   : "Cadastre-se para solicitar serviços."
               }}
@@ -199,46 +199,7 @@
                   As senhas não coincidem.
                 </div>
               </div>
-              <!-- <div class="mb-3">
-                <label for="registerAddress" class="form-label">Endereço</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="registerAddress"
-                  formControlName="endereco_rua"
-                  placeholder="Digite sua rua"
-                  required
-                />
-              </div> -->
-              <!-- <div
-                class="mb-3"
-                *ngIf="registerForm.value.userType === 'prestador'"
-              >
-                <label for="registerSpecialization" class="form-label"
-                  >Especialização</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="registerSpecialization"
-                  formControlName="especializacao"
-                  placeholder="Digite sua especialização"
-                />
-              </div>
-              <div
-                class="mb-3"
-                *ngIf="registerForm.value.userType === 'prestador'"
-              >
-                <label for="registerDescription" class="form-label"
-                  >Descrição</label
-                >
-                <textarea
-                  class="form-control"
-                  id="registerDescription"
-                  formControlName="descricao"
-                  placeholder="Descreva seus serviços"
-                ></textarea>
-              </div> -->
+
               <button
                 type="submit"
                 style="color: white"

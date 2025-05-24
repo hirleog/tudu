@@ -12,8 +12,6 @@ export class LoginComponent implements OnInit {
   selectedTab: string = 'login';
   loginForm!: FormGroup;
   registerForm!: FormGroup;
-  isWorker: boolean = false; // Define se a rota é para "tudu-professional"
-  isProfessionalParam: string = '';
   userType: string = '';
   isProfessional: boolean = false;
 
@@ -23,16 +21,18 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {
-    this.route.queryParams.subscribe((params) => {
-      this.isProfessionalParam = params['param'] || null;
-      this.userType =
-        this.isProfessionalParam === 'professional' ? 'prestador' : 'cliente';
+    // this.route.queryParams.subscribe((params) => {
+    //   this.isProfessionalParam = params['param'] || null;
+    //   this.userType =
+    //     this.isProfessionalParam === 'professional' ? 'prestador' : 'cliente';
+    // });
+
+    this.router.events.subscribe(() => {
+      this.isProfessional = this.router.url.includes('professional');
     });
   }
 
   ngOnInit(): void {
-    this.isWorker = this.router.url.includes('professional');
-
     // Inicializa o formulário de login
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -74,7 +74,7 @@ export class LoginComponent implements OnInit {
 
   onLogin(): void {
     if (this.loginForm.valid) {
-      this.isWorker === true
+      this.isProfessional === true
         ? (this.userType = 'prestador')
         : (this.userType = 'cliente');
 
@@ -95,10 +95,14 @@ export class LoginComponent implements OnInit {
           }
         },
         error: () => {
-          this.router.navigate([], {
-            queryParams: { param: 'professional' },
-            queryParamsHandling: 'merge',
-          });
+          if (this.isProfessional === true) {
+            this.router.navigate([], {
+              queryParams: { param: 'professional' },
+              queryParamsHandling: 'merge',
+            });
+          } else {
+            this.router.navigate(['/']);
+          }
         },
       });
     } else {

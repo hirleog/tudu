@@ -241,9 +241,6 @@ export class AppHomeComponent implements OnInit {
         this.listCards('publicado');
         break;
       case 1:
-        this.listCards('andamento');
-        break;
-      case 2:
         this.listCards('finalizado');
         break;
     }
