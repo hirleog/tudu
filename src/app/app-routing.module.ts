@@ -61,8 +61,7 @@ const routes: Routes = [
     path: 'tudu-professional',
     loadChildren: () =>
       loadRemoteModule({
-        // remoteEntry: 'http://localhost:4201/remoteEntry.js',
-        remoteEntry: `${environment.mfeUrl}/remoteEntry.js` ,
+        remoteEntry: `${environment.mfeUrl}/remoteEntry.js`,
         remoteName: 'mfeApp',
         exposedModule: './MainAppModule',
       })

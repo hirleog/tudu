@@ -7,6 +7,7 @@ import * as moment from 'moment';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CardSocketService } from 'src/app/services/card-socket.service';
 
 @Component({
   selector: 'app-progress-detail',
@@ -28,7 +29,7 @@ export class ProgressDetailComponent implements OnInit {
     private routeActive: ActivatedRoute,
     public cardService: CardService,
     private sanitizer: DomSanitizer,
-    private fb: FormBuilder
+    public cardSocketService: CardSocketService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
@@ -37,6 +38,16 @@ export class ProgressDetailComponent implements OnInit {
 
   ngOnInit() {
     this.getCardById();
+
+    this.cardSocketService.ouvirAtualizacaoPedido().subscribe((atualizacao) => {
+
+      console.log('atualizacao', atualizacao);
+      
+      // if (atualizacao.id === this.pedido.id) {
+      //   this.pedido.status = atualizacao.status;
+      //   // Pode também chamar o getById novamente se precisar de mais dados atualizados
+      // }
+    });
   }
 
   // listCards() {

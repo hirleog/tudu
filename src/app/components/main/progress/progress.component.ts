@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import * as moment from 'moment';
 import { CardOrders } from 'src/app/interfaces/card-orders';
-import { ProgressCard } from 'src/app/interfaces/progress-card';
 import { CardService } from 'src/app/services/card.service';
 import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 
@@ -84,6 +84,27 @@ export class ProgressComponent implements OnInit {
       .subscribe((data: any) => {
         this.prestadorInfos = data;
       });
+  }
+
+  formatarHorario(pedido: any): string {
+    const candidatura = pedido.candidaturas?.[0];
+    let horario = pedido.horario_preferencial;
+
+    if (
+      candidatura &&
+      candidatura.horario_negociado !== pedido.horario_preferencial
+    ) {
+      horario = candidatura.horario_negociado;
+    }
+
+    const data = moment(horario);
+    const hoje = moment();
+
+    if (data.isSame(hoje, 'day')) {
+      return `Hoje, ${data.format('HH:mm')}`;
+    }
+
+    return data.format('DD/MM/YYYY - HH:mm');
   }
 
   goToDetails(idPedido: any): void {

@@ -18,7 +18,7 @@
   </app-nav>
 
   <div id="my-budgets" style="margin-top: -2em" class="container">
-    <div class="row g-3 m-0 p-0" *ngFor="let c of card">
+    <div class="row g-3 m-0 p-0 pt-2" *ngFor="let c of card">
       <div *ngFor="let candidatura of c.candidaturas">
         <div class="d-flex flex-column gap-3">
           <div>
@@ -128,32 +128,18 @@
               <input
                 [ngClass]="{ 'is-invalid': codigoInvalido }"
                 type="text"
+                readonly="true"
                 class="form-control"
                 aria-label="Username"
-                placeholder="Digite"
-                [(ngModel)]="finalizeCode"
+                [placeholder]="c.codigo_confirmacao"
                 name="codigo"
                 aria-describedby="addon-wrapping"
                 maxlength="6"
               />
-
-              <button
-                class="btn btn-outline-secondary"
-                type="button"
-                id="button-addon2"
-                [disabled]="finalizeCode.length < 6"
-                (click)="updateCard(c)"
-              >
-                Confirmar
-              </button>
-            </div>
-
-            <div class="form-text text-danger mt-1" *ngIf="codigoInvalido">
-              Código inválido
             </div>
 
             <div class="form-text" id="basic-addon4" *ngIf="!codigoInvalido">
-              Código gerado pelo prestador
+              Ao termino do serviço, passe o código para o prestador
             </div>
           </div>
         </div>

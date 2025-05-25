@@ -387,7 +387,7 @@ hr {
   transition: background-color 0.8s ease-in-out;
   background-color: transparent;
 }
-
+/* 
 .request-card-icon {
   width: 40px;
   height: 40px;
@@ -398,7 +398,7 @@ hr {
   border: 3px solid var(--premium);
   border-radius: 50%;
   overflow: hidden;
-}
+} */
 
 .request-card-icon img {
   width: 100%;
