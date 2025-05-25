@@ -10,7 +10,8 @@ export class CardSocketService {
   private socket: Socket;
 
   constructor() {
-    this.socket = io(environment.apiUrl); // Ajuste a URL do seu backend
+    // this.socket = io(environment.apiUrl); // Ajuste a URL do seu backend
+    this.socket = io('http://localhost:3001'); // Ajuste a URL do seu backend
   }
 
   ouvirAtualizacaoPedido(): Observable<any> {

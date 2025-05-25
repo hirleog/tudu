@@ -28,6 +28,7 @@ export class AppMenuComponent implements OnInit {
 
   clienteIsLogged: boolean = false;
   prestadorIsLogged: boolean = false;
+  isEndFlow: boolean = false;
 
   constructor(private router: Router, public authService: AuthService) {
     this.router.events
@@ -46,6 +47,8 @@ export class AppMenuComponent implements OnInit {
         const urlSegments = event.url.split('=');
         this.isProfileRoute =
           urlSegments[urlSegments.length - 1] === 'professional';
+
+        this.isEndFlow = event.url.includes('end');
       });
 
     // Verifica a rota atual e atualiza a variável showMenu

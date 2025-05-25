@@ -1,60 +1,62 @@
 <!-- <section *ngIf="showDiv && (prestadorIsLogged || clienteIsLogged && isProfessional === false)"> -->
-<section
-  *ngIf="
-    showDiv &&
-    ((prestadorIsLogged && isProfessional === true) ||
-      (clienteIsLogged === true && isProfessional === false))
-  "
->
-  <div class="d-flex align-items-center justify-content-around menu-fixo">
-    <div
-      class="menu-item"
-      [routerLink]="
-        isProfessional === true || isProfileRoute === true
-          ? '/tudu-professional/home'
-          : '/'
-      "
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
-      <i class="fas fa-search"></i>
-      <!-- Ícone de pedidos -->
-      <p>Serviços</p>
-    </div>
-    <div
-      *ngIf="isProfessional === false && isProfileRoute === false"
-      class="menu-item"
-      routerLink="/home"
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
-      <i class="fas fa-tasks"></i>
-      <!-- Ícone de pedidos -->
-      <p>Pedidos</p>
-    </div>
+<section>
+  <div
+    *ngIf="
+      showDiv &&
+      ((prestadorIsLogged && isProfessional === true && !isEndFlow) ||
+        (clienteIsLogged === true && isProfessional === false && !isEndFlow))
+    "
+  >
+    <div class="d-flex align-items-center justify-content-around menu-fixo">
+      <div
+        class="menu-item"
+        [routerLink]="
+          isProfessional === true || isProfileRoute === true
+            ? '/tudu-professional/home'
+            : '/'
+        "
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-search"></i>
+        <!-- Ícone de pedidos -->
+        <p>Serviços</p>
+      </div>
+      <div
+        *ngIf="isProfessional === false && isProfileRoute === false"
+        class="menu-item"
+        routerLink="/home"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-tasks"></i>
+        <!-- Ícone de pedidos -->
+        <p>Pedidos</p>
+      </div>
 
-    <div
-      class="menu-item"
-      [routerLink]="
-        isProfessional === true || isProfileRoute === true
-          ? '/tudu-professional/progress'
-          : '/home/progress'
-      "
-      routerLinkActive="active"
-      [routerLinkActiveOptions]="{ exact: true }"
-    >
-      <i class="fas fa-clock"></i>
-      <!-- Ícone de pendentes -->
-      <p>Pendentes</p>
-    </div>
+      <div
+        class="menu-item"
+        [routerLink]="
+          isProfessional === true || isProfileRoute === true
+            ? '/tudu-professional/progress'
+            : '/home/progress'
+        "
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <i class="fas fa-clock"></i>
+        <!-- Ícone de pendentes -->
+        <p>Pendentes</p>
+      </div>
 
-    <div
-      [ngClass]="profileActiveColor || isProfileRoute ? 'active' : 'inactive'"
-      class="menu-item"
-      (click)="goToProfile()"
-    >
-      <i class="fas fa-user fs-3"></i>
-      <p>Perfil</p>
+      <div
+        [ngClass]="profileActiveColor || isProfileRoute ? 'active' : 'inactive'"
+        class="menu-item"
+        (click)="goToProfile()"
+      >
+        <i class="fas fa-user fs-3"></i>
+        <p>Perfil</p>
+      </div>
     </div>
   </div>
 </section>
