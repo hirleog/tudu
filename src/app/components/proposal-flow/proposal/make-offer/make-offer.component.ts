@@ -78,7 +78,7 @@ export class MakeOfferComponent implements OnInit {
       .join(', ');
 
     const codigoConfirmacao = Math.floor(
-      100000 + Math.random() * 900000
+      1000 + Math.random() * 9000
     ).toString();
 
     const payloadCard: CreateCard = {
