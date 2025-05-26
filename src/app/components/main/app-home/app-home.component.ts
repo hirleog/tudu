@@ -94,6 +94,7 @@ export class AppHomeComponent implements OnInit {
                 temNovaCandidatura: true, // Marca como novo
               };
             }
+            console.log('Card atualizado:', c);
             return c;
           });
 

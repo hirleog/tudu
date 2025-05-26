@@ -76,7 +76,7 @@
         <!-- [routerLink]="isProfessional ? '/' : '/tudu-professional/home'" -->
         <!-- routerLinkActive="active" -->
         <i class="fa-solid fa-briefcase me-2"></i
-        >{{ isProfessional ? "Contratar serviços" : "Prestar serviços" }}
+        >{{ isProfessional || prestadorIsLogged ? "Contratar serviços" : "Prestar serviços" }}
       </p>
     </li>
     <li class="nav-item mt-3">
