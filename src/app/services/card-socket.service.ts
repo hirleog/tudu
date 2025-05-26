@@ -11,7 +11,7 @@ export class CardSocketService {
 
   constructor() {
     // this.socket = io(environment.apiUrl); // Ajuste a URL do seu backend
-    this.socket = io(environment.apiUrl); // Ajuste a URL do seu backend
+    this.socket = io('https://api.use-tudu.com.br'); // Ajuste a URL do seu backend
   }
 
   ouvirAtualizacaoPedido(): Observable<any> {
