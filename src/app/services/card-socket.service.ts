@@ -10,11 +10,14 @@ export class CardSocketService {
   private socket: Socket;
 
   constructor() {
-    // this.socket = io(environment.apiUrl); // Ajuste a URL do seu backend
-    this.socket = io('https://api.use-tudu.com.br'); // Ajuste a URL do seu backend
+    this.socket = io(environment.apiUrl, {
+      transports: ['websocket'], // força WebSocket (opcional)
+      secure: environment.production, // só força HTTPS em produção
+    });
   }
-
   ouvirAtualizacaoPedido(): Observable<any> {
+    console.log('lalallalalalalalalal', this.socket);
+
     return new Observable((subscriber) => {
       this.socket.on('atualizacao-pedido', (dados) => {
         subscriber.next(dados);
