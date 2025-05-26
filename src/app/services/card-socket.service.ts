@@ -18,10 +18,17 @@ export class CardSocketService {
     });
   }
   ouvirAtualizacaoPedido(): Observable<any> {
-
     return new Observable((subscriber) => {
       this.socket.on('atualizacao-pedido', (dados) => {
         subscriber.next(dados);
+      });
+    });
+  }
+
+  ouvirAlertaNovaCandidatura(): Observable<any> {
+    return new Observable((observer) => {
+      this.socket.on('alerta-nova-candidatura', (data) => {
+        observer.next(data);
       });
     });
   }

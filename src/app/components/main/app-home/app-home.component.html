@@ -35,9 +35,7 @@
 
   <!-- <div class="container" *ngIf="cards.length > 0"> -->
   <div class="container">
-    <div
-      class="tab-bar d-flex justify-content-around mt-1 mb-3 position-relative"
-    >
+    <div class="tab-bar d-flex justify-content-around mb-3 position-relative">
       <a
         *ngFor="let item of headerPageOptions; let i = index"
         class="tab-link"
@@ -170,7 +168,7 @@
           <!-- Botões para "publicado" -->
           <!-- *ngIf="card.status_pedido === 'publicado'" -->
           <div
-            class="d-flex justify-content-between card-footer bg-light p-4"
+            class="d-flex justify-content-between card-footer bg-light p-3"
             style="margin-top: -3em"
           >
             <button
@@ -179,7 +177,13 @@
               (click)="goToBudgets(card.id_pedido)"
               *ngIf="card.candidaturas.length > 0; else semQuotes"
             >
-              Oba! Orçamentos disponíveis
+              Oba! Orçamentos disponíveis ({{ card.candidaturas.length }})
+              <span
+                *ngIf="card.temNovaCandidatura"
+                class="badge-novo"
+                (click)="card.temNovaCandidatura = false"
+                >Novo</span
+              >
             </button>
             <ng-template #semQuotes>
               <span class="request-quote-btn disabled-card bg-secondary">

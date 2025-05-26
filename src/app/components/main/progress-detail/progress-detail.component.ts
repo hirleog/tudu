@@ -40,12 +40,8 @@ export class ProgressDetailComponent implements OnInit {
     this.getCardById();
 
     this.cardSocketService.ouvirAtualizacaoPedido().subscribe((atualizacao) => {
-      console.log('1 - Atualização recebida:', atualizacao);
-
       if (atualizacao.pedidoId === this.id_pedido) {
-        console.log('2 - Atualização recebida:', atualizacao);
         if (atualizacao.newStatus === 'finalizado') {
-          console.log('3 - finalizado:', atualizacao.newStatus);
           this.route.navigate(['/home/end']);
         }
       }

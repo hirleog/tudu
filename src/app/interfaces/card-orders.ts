@@ -34,4 +34,5 @@ export interface CardOrders {
   hasQuotes: boolean; // Se há orçamentos disponíveis
 
   candidaturas: Candidatura[]; // ✅ Agora com tipo correto
+  temNovaCandidatura?: boolean; // Indica se há uma nova candidatura
 }

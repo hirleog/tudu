@@ -65,7 +65,7 @@ i {
   border-radius: 5px;
 }
 
-.request-quote-btn {
+/* .request-quote-btn {
   background: var(--primary);
   color: white;
   padding: 8px 15px;
@@ -75,11 +75,11 @@ i {
   border-radius: 30px;
   cursor: pointer;
   transition: background 0.3s ease;
-}
+} */
 
-.request-quote-btn:hover {
+/* .request-quote-btn:hover {
   background: var(--primary-dark);
-}
+} */
 
 .disabled-card {
   pointer-events: none;
@@ -122,6 +122,21 @@ i {
   border-radius: 4px 4px 0 0;
 }
 
+.badge-novo {
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  z-index: 1;
+}
+.botao-candidaturas {
+  position: relative;
+}
+
 @media (min-width: 762px) {
   .truncate-text {
     max-width: 79%;
@@ -136,11 +151,11 @@ i {
     width: 89%;
   }
 
-  .request-quote-btn {
+  /* .request-quote-btn {
     padding: 7px 10px;
     font-size: 12px;
     font-weight: 600;
-  }
+  } */
 
   .truncate-text {
     max-width: 70%;

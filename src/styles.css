@@ -377,16 +377,20 @@ hr {
 }
 
 .request-quote-btn {
-  /* color: var(--primary) !important; */
-  padding: 10px 15px;
   font-size: 17px;
   font-weight: 600;
+  transition: background-color 0.8s ease-in-out;
+  background: var(--primary);
+  color: white;
+  padding: 8px 15px;
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  transition: background-color 0.8s ease-in-out;
-  background-color: transparent;
 }
+.request-quote-btn:hover {
+  background: var(--primary-dark);
+}
+
 /* 
 .request-card-icon {
   width: 40px;
@@ -519,13 +523,20 @@ hr {
   }
 
   .request-quote-btn {
-    padding: 7px 10px;
-    font-size: 12px;
+    padding: 12px 15px;
+    font-size: 15px;
     font-weight: 600;
   }
 
   .truncate-text {
     max-width: 70%;
+  }
+}
+@media (max-width: 392px) {
+  .request-quote-btn {
+    padding: 12px 15px;
+    font-size: 12px;
+    font-weight: 600;
   }
 }
 

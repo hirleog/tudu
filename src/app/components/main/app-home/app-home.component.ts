@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import * as moment from 'moment';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { HistoricModel } from 'src/app/interfaces/historic.model';
+import { CardSocketService } from 'src/app/services/card-socket.service';
 import { CardService } from 'src/app/services/card.service';
 
 @Component({
@@ -48,7 +49,11 @@ export class AppHomeComponent implements OnInit {
   id_prestador: any;
   counts: any;
 
-  constructor(private route: Router, public cardService: CardService) {
+  constructor(
+    private route: Router,
+    public cardService: CardService,
+    public cardSocketService: CardSocketService
+  ) {
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
 
@@ -72,6 +77,40 @@ export class AppHomeComponent implements OnInit {
 
   ngAfterViewInit() {}
   ngOnInit(): void {
+    this.cardSocketService.ouvirAlertaNovaCandidatura().subscribe((data) => {
+      // this.listCards('publicado');
+      const id = data.id_pedido;
+
+      this.cardService.getCardById(id).subscribe({
+        next: (data) => {
+          const card: any = data;
+
+          // Atualiza o card específico com a nova candidatura
+          this.cards = this.cards.map((c) => {
+            if (c.id_pedido === id) {
+              return {
+                ...c,
+                candidaturas: [...(c.candidaturas || []), ...card.candidaturas],
+                temNovaCandidatura: true, // Marca como novo
+              };
+            }
+            return c;
+          });
+
+          // Marca o card como "novo"
+          // this.cards = this.cards.map((card) => {
+          //   if (card.id_pedido === id) {
+          //     return { ...card, temNovaCandidatura: true };
+          //   }
+          //   return card;
+          // });
+        },
+        error: (error) => {
+          console.error('Erro ao obter o card:', error);
+        },
+      });
+    });
+
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
     this.listCards('publicado');
   }
