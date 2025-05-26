@@ -18,7 +18,6 @@ export class CardSocketService {
     });
   }
   ouvirAtualizacaoPedido(): Observable<any> {
-    console.log('lalallalalalalalalal', this.socket);
 
     return new Observable((subscriber) => {
       this.socket.on('atualizacao-pedido', (dados) => {
