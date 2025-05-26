@@ -8,6 +8,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CardSocketService } from 'src/app/services/card-socket.service';
+import { log } from 'console';
 
 @Component({
   selector: 'app-progress-detail',
@@ -40,8 +41,12 @@ export class ProgressDetailComponent implements OnInit {
     this.getCardById();
 
     this.cardSocketService.ouvirAtualizacaoPedido().subscribe((atualizacao) => {
+      log('1 - Atualização recebida:', atualizacao);
+
       if (atualizacao.pedidoId === this.id_pedido) {
+        log('2 - Atualização recebida:', atualizacao);
         if (atualizacao.newStatus === 'finalizado') {
+          log('3 - finalizado:', atualizacao.newStatus);
           this.route.navigate(['/home/end']);
         }
       }
