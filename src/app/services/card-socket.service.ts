@@ -11,8 +11,10 @@ export class CardSocketService {
 
   constructor() {
     this.socket = io(environment.apiUrl, {
-      transports: ['websocket'], // força WebSocket (opcional)
-      // secure: environment.production, // só força HTTPS em produção
+      path: '/socket.io', // garante que Nginx roteie corretamente
+      transports: ['websocket'],
+      secure: true,
+      withCredentials: true,
     });
   }
   ouvirAtualizacaoPedido(): Observable<any> {
