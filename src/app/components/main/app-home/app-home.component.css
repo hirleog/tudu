@@ -129,8 +129,8 @@ i {
   padding: 2px 6px;
   border-radius: 12px;
   position: absolute;
-  top: -5px;
-  right: -10px;
+  top: 9px;
+  right: -3px;
   z-index: 1;
 }
 .botao-candidaturas {

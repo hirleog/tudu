@@ -17,7 +17,12 @@
     </div>
   </app-nav>
 
-  <div id="my-budgets" style="margin-top: -2em" class="container">
+  <div
+    id="my-budgets"
+    style="margin-top: -2em"
+    class="container"
+    data-aos="fade-right"
+  >
     <div class="row g-3 m-0 p-0 pt-2" *ngFor="let c of card">
       <div *ngFor="let candidatura of c.candidaturas">
         <div class="d-flex flex-column gap-3">
@@ -81,7 +86,15 @@
             <div class="d-flex justify-content-between">
               <div class="d-flex">
                 <div class="request-card-icon">
-                  <img [src]="prestadorInfos?.foto" alt="" class="img-fluid" />
+                  <img
+                    [src]="
+                      !prestadorInfos?.fotofoto
+                        ? '../../../assets/img-default.webp'
+                        : prestadorInfos?.foto
+                    "
+                    alt=""
+                    class="img-fluid"
+                  />
                 </div>
                 <div>
                   <div class="d-flex justify-content-between">

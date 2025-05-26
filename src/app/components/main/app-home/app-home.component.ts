@@ -77,7 +77,11 @@ export class AppHomeComponent implements OnInit {
 
   ngAfterViewInit() {}
   ngOnInit(): void {
+    console.log('chammou o init');
+
     this.cardSocketService.ouvirAlertaNovaCandidatura().subscribe((data) => {
+      console.log(`Nova candidatura recebida:`, data);
+
       // this.listCards('publicado');
       const id = data.id_pedido;
 

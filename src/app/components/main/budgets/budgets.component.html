@@ -30,8 +30,10 @@
         data-aos="fade-down"
       >
         <!-- Colunas responsivas -->
-        <div class="request-card d-flex flex-column p-4 gap-5">
-          <div class="d-flex justify-content-between align-items-center">
+        <div class="request-card d-flex flex-column gap-5">
+          <div
+            class="d-flex justify-content-between align-items-center card-header bg-light p-3"
+          >
             <div class="d-flex">
               <div class="request-card-icon">
                 <!-- <img [src]="card.photo" class="img-fluid" /> -->
@@ -63,9 +65,9 @@
             </div>
 
             <!-- *ngIf="selectedIndex === 1" -->
-            <div class="d-flex justify-content-start">
-              <p>Meu lance</p>
-              <p>{{ cards.valor | currency }}</p>
+            <div class="d-flex justify-content-start align-items-center gap-2">
+              <h3 class="fs-6">Valor inicial</h3>
+              <h3 class="fs-4" style="color: var(--premium);">{{ cards.valor | currency }}</h3>
             </div>
           </div>
 
@@ -84,7 +86,7 @@
             />
           </div>
 
-          <div class="request-card-footer d-flex gap-2">
+          <div class="request-card-footer d-flex gap-2 p-3">
             <button
               style="
                 color: var(--primary);

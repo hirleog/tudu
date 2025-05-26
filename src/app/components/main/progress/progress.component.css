@@ -31,8 +31,8 @@ p {
     padding: 10px 15px;
     font-size: 17px;
     font-weight: 600;
-    border: none;
-    border-radius: 10px;
+    border: 1px solid var(--primary);
+    border-radius: 0px;
     cursor: pointer;
     transition: background-color 0.8s ease-in-out;
     background-color: transparent;

@@ -30,6 +30,7 @@ export class CardSocketService {
       this.socket.on('alerta-nova-candidatura', (data) => {
         observer.next(data);
       });
+      console.log('Conectado ao socket de candidatura');
     });
   }
 }
