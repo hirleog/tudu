@@ -87,13 +87,14 @@
             </div>
           </div>
 
-          <div class="request-card-footer d-flex card-footer p-1">
+          <div
+            class="request-card-footer d-flex justify-content-center card-footer p-3 gap-2"
+          >
             <button
               style="
-                color: var(--light);
-                background-color: var(--light);
-                border-bottom-left-radius: 10px;
-                margin-right: 1px;
+                color: var(--primary);
+                background-color: var(--light) !important;
+                border: 1px solid var(--primary);
               "
               class="request-quote-btn col-6"
             >
@@ -103,10 +104,10 @@
             <button
               class="request-quote-btn col-6"
               style="
-                color: var(--light) !important;
-                background-color: var(--primary);
-                border-bottom-right-radius: 10px;
+                background-color: var(--primary) !important;
+                color: var(--light);
               "
+              class="request-quote-btn bg-secondary col-6"
               (click)="goToDetails(c.id_pedido)"
             >
               Acompanhar

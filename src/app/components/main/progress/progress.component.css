@@ -5,77 +5,63 @@
 } */
 
 section {
-    margin-top: -3em;
+  margin-top: -3em;
 }
 
 h5,
 p {
-    font-size: 16px !important;
+  font-size: 16px !important;
 }
 
 .request-card {
-    background: #ffffff;
-    border-radius: 10px;
-    margin: 15px 0;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background: #ffffff;
+  border-radius: 10px;
+  margin: 15px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .request-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-}
-
-.request-quote-btn {
-    color: var(--primary) !important;
-    padding: 10px 15px;
-    font-size: 17px;
-    font-weight: 600;
-    border: 1px solid var(--primary);
-    border-radius: 0px;
-    cursor: pointer;
-    transition: background-color 0.8s ease-in-out;
-    background-color: transparent;
-    /* Tempo aumentado para 0.8s */
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
 .request-card-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 15px;
-    border: 3px solid var(--premium);
-    /* Borda rosa */
-    border-radius: 50%;
-    /* Garante que a borda seja circular */
-    overflow: hidden;
-    /* Garante que a imagem se encaixe dentro do círculo */
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  border: 3px solid var(--premium);
+  /* Borda rosa */
+  border-radius: 50%;
+  /* Garante que a borda seja circular */
+  overflow: hidden;
+  /* Garante que a imagem se encaixe dentro do círculo */
 }
 
 .request-card-icon img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Faz com que a imagem se ajuste ao contêiner sem distorcer */
-    border-radius: 50%;
-    /* Certifique-se de que a imagem tenha bordas arredondadas */
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Faz com que a imagem se ajuste ao contêiner sem distorcer */
+  border-radius: 50%;
+  /* Certifique-se de que a imagem tenha bordas arredondadas */
 }
 
 .card-footer {
-    background-color: transparent;
+  background-color: transparent;
 }
 
-
 @media (max-width: 350px) {
-    .request-card h3 {
-        font-size: 20px;
-    }
+  .request-card h3 {
+    font-size: 20px;
+  }
 }
 
 @media (max-width: 998px) {
-    .request-card h3 {
-        font-size: 21px;
-    }
+  .request-card h3 {
+    font-size: 21px;
+  }
 }
