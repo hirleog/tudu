@@ -1,8 +1,3 @@
-p {
-  color: var(--tag-p-grey) !important;
-  font-weight: 500;
-}
-
 i {
   color: var(--tag-p-grey) !important;
 }
@@ -21,13 +16,6 @@ i {
 .request-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
-}
-
-.request-card-title h5 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin: 0;
-  color: #333;
 }
 
 .request-card-title p {
@@ -143,14 +131,6 @@ i {
   }
 }
 @media (max-width: 500px) {
-  .request-card-title h5 {
-    font-size: 1.2rem;
-    font-weight: 500;
-    margin: 0;
-    color: #333;
-    width: 89%;
-  }
-
   /* .request-quote-btn {
     padding: 7px 10px;
     font-size: 12px;
