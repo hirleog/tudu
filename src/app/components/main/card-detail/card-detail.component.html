@@ -1,87 +1,127 @@
-<section style="margin-bottom: 6em; margin-top:-2em;">
-    <app-nav>
-        <div left-content>
-            <a routerLink="/home" class="text-decoration-none text-dark">
-                <i class="fas fa-arrow-left me-2" style="font-size: 1.5em; color: var(--primary)"></i>
-            </a>
-        </div>
-        <div central-content>
-            <h3 class="title-page m-0">Detalhes</h3>
-        </div>
-        <div right-content>
-            <i class="fas fa-question-circle" style="font-size: 1.5em; color: var(--primary)"
-            title="Clique para mais informações" (click)="openModal()"></i>
-        </div>
-      </app-nav>
-
-
-
-    <div  class="container mt-4">
-        <!-- Header da tela -->
-        <div class="d-flex align-items-center mb-4">
-            <i class="fas fa-tools me-2" style="font-size: 2em; color: var(--primary);"></i>
-            <h4 class="m-0">Reparo Hidráulico</h4>
-        </div>
-
-        <!-- Body da tela -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <p class="card-text"><strong>Número do Pedido:</strong> #12345</p>
-                <p class="card-text"><strong>Data e Hora:</strong> 05/02/2025 - 14:30</p>
-            </div>
-        </div>
-
-        <!-- Sessão de Resumo do Pedido -->
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5 class="card-title mb-3">Resumo do Pedido</h5>
-                <p class="card-text"><strong>Serviços:</strong> Montagem e Desmontagem</p>
-                <p class="card-text"><strong>Descrição:</strong>Preciso montar e desmontar um movel</p>
-                <p class="card-text"><strong>Endereço:</strong> Rua Exemplo, 123 - São Paulo, SP</p>
-
-                <!-- Vitrine de Imagens -->
-                <div class="row mb-3">
-                    <div class="col-12">
-                        <h5 class="mb-2">Imagens Adicionadas:</h5>
-                        <div class="d-flex flex-wrap gap-2">
-                            <img *ngFor="let imagem of imagens" [src]="imagem" alt="Imagem do pedido"
-                                class="img-thumbnail" style="width: 100px; height: 100px;">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Componente reutilizável de pagamento -->
-        <div>
-            <app-payments></app-payments>
-        </div>
+<section style="margin-bottom: 6em; margin-top: -2em">
+  <app-nav>
+    <div left-content>
+      <a routerLink="/home" class="text-decoration-none text-dark">
+        <i
+          class="fas fa-arrow-left me-2"
+          style="font-size: 1.5em; color: var(--primary)"
+        ></i>
+      </a>
     </div>
+    <div central-content>
+      <h3 class="title-page m-0">Detalhes</h3>
+    </div>
+    <div right-content>
+      <i
+        class="fas fa-question-circle"
+        style="font-size: 1.5em; color: var(--primary)"
+        title="Clique para mais informações"
+        (click)="openModal()"
+      ></i>
+    </div>
+  </app-nav>
+
+  <div class="container mt-4 pt-2" *ngFor="let card of cards">
+    <!-- Header da tela -->
+    <div class="d-flex align-items-center mb-4">
+      <i
+        [class]="card.icon"
+        class="me-2 fs-1"
+        style="color: var(--primary) !important"
+      ></i>
+      <h4 class="m-0">{{ card.categoria }}</h4>
+    </div>
+
+    <!-- Body da tela -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <p class="card-text">
+          <strong>Número do Pedido:</strong> #{{ card.id_pedido }}
+        </p>
+        <p class="card-text">
+          <strong>Feito em:</strong>
+          {{ card.createdAt | date : "dd/MM/yyyy - hh:mm" }}
+        </p>
+      </div>
+    </div>
+
+    <!-- Sessão de Resumo do Pedido -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <h5 class="card-title mb-3">Resumo do Pedido</h5>
+        <p class="card-text"><strong>Serviços:</strong> {{ card.categoria }}</p>
+        <p class="card-text">
+          <strong>Descrição: </strong>{{ card.subcategoria }}
+        </p>
+        <p class="card-text">
+          <strong>Endereço: </strong> {{ card.address.street }},
+          {{ card.address.number }} - {{ card.address.city }} -
+          {{ card.address.state }}
+        </p>
+
+        <!-- Vitrine de Imagens -->
+        <!-- <div class="row mb-3">
+          <div class="col-12">
+            <h5 class="mb-2">Imagens Adicionadas:</h5>
+            <div class="d-flex flex-wrap gap-2">
+              <img
+                *ngFor="let imagem of imagens"
+                [src]="imagem"
+                alt="Imagem do pedido"
+                class="img-thumbnail"
+                style="width: 100px; height: 100px"
+              />
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+
+    <!-- Componente reutilizável de pagamento -->
+    <div>
+      <!-- <app-payments></app-payments> -->
+    </div>
+  </div>
 </section>
 
-
 <!-- modal -->
-<div [ngClass]="{'modal-backdrop': isModalVisible}"></div>
+<div [ngClass]="{ 'modal-backdrop': isModalVisible }"></div>
 
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"
-    *ngIf="isModalVisible" [ngClass]="{'show': isModalVisible}" style="display: block;">
-    <div class="modal-dialog modal-dialog-bottom">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Escolha uma opção</h5>
-                <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
-            </div>
-            <div class="modal-body d-flex flex-column gap-2">
-                <button class="btn-ui btn-secondary w-100 mb-2" (click)="editarAnuncio()">
-                    <i class="fas fa-edit"></i> Editar anúncio
-                </button>
-                <button class="btn-ui btn-danger w-100 mb-2" (click)="cancelarPedido()">
-                    <i class="fas fa-times-circle"></i> Cancelar pedido
-                </button>
-                <button class="btn-ui btn-info w-100" (click)="falarComAtendente()">
-                    <i class="fas fa-comment-dots"></i> Falar com atendente
-                </button>
-            </div>
-        </div>
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+  *ngIf="isModalVisible"
+  [ngClass]="{ show: isModalVisible }"
+  style="display: block"
+>
+  <div class="modal-dialog modal-dialog-bottom">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Escolha uma opção</h5>
+        <button
+          type="button"
+          class="btn-close"
+          aria-label="Close"
+          (click)="closeModal()"
+        ></button>
+      </div>
+      <div class="modal-body d-flex flex-column gap-2">
+        <button
+          class="btn-ui btn-secondary w-100 mb-2"
+          (click)="editarAnuncio()"
+        >
+          <i class="fas fa-edit"></i> Editar anúncio
+        </button>
+        <button class="btn-ui btn-danger w-100 mb-2" (click)="cancelarPedido()">
+          <i class="fas fa-times-circle"></i> Cancelar pedido
+        </button>
+        <button class="btn-ui btn-info w-100" (click)="falarComAtendente()">
+          <i class="fas fa-comment-dots"></i> Falar com atendente
+        </button>
+      </div>
     </div>
+  </div>
 </div>

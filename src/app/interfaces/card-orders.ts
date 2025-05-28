@@ -35,4 +35,7 @@ export interface CardOrders {
 
   candidaturas: Candidatura[]; // ✅ Agora com tipo correto
   temNovaCandidatura?: boolean; // Indica se há uma nova candidatura
+
+  createdAt: string;
+  updatedAt: string;
 }

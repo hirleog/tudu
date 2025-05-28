@@ -164,6 +164,11 @@ export class AppHomeComponent implements OnInit {
       queryParams: { id: id_pedido },
     });
   }
+  goToDetails(id_pedido: any): void {
+    this.route.navigate(['/home/detail'], {
+      queryParams: { id: id_pedido },
+    });
+  }
 
   renegotiateActive(card?: any): void {
     // this.renegotiate = !this.renegotiate;

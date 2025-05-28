@@ -193,8 +193,7 @@
 
             <button
               class="request-quote-btn bg-light"
-              routerLink="/home/detail"
-              routerLinkActive="active"
+               (click)="goToDetails(card.id_pedido)"
             >
               <i
                 class="fas fa-search"
