@@ -298,11 +298,15 @@ export class AppHomeComponent implements OnInit {
     const candidatura = pedido.candidaturas?.[0];
     let horario = pedido.horario_preferencial;
 
-    if (
-      candidatura &&
-      candidatura.horario_negociado !== pedido.horario_preferencial
-    ) {
-      horario = candidatura.horario_negociado;
+    if (pedido.data_finalizacao === null) {
+      if (
+        candidatura &&
+        candidatura.horario_negociado !== pedido.horario_preferencial
+      ) {
+        horario = candidatura.horario_negociado;
+      }
+    } else {
+      horario = pedido.data_finalizacao;
     }
 
     const data = moment(horario);
