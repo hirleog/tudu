@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
-import { Observable, of } from 'rxjs';
+import { forkJoin, Observable, of } from 'rxjs';
 import { Budget } from 'src/app/interfaces/budgets';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
+import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 
 @Component({
   selector: 'app-budgets',
@@ -52,12 +53,15 @@ export class BudgetsComponent implements OnInit {
   id_pedido: string = '';
   cards: any;
   id_prestador: any;
+  prestadorInfos: any;
+  prestadoresInfos: Array<any>[] = [];
 
   constructor(
     public cardService: CardService,
     private routeActive: ActivatedRoute,
     private route: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private profileDetailService: ProfileDetailService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
@@ -75,16 +79,36 @@ export class BudgetsComponent implements OnInit {
 
   getCardById(): void {
     this.cardService.getCardById(this.id_pedido).subscribe({
-      next: (data) => {
-        this.cards = data;
+      next: (data: any) => {
+        const candidaturas = data.candidaturas || [];
 
-        console.log(this.cards);
+        // Primeiro monta o card com ícone e candidaturas
+        this.cards = {
+          ...data,
+          icon: this.cardService.getIconByLabel(data.categoria) || '',
+          candidaturas: candidaturas.map((candidatura: any) => ({
+            ...candidatura,
+            icon: this.cardService.getIconByLabel(data.categoria) || '',
+          })),
+        };
 
-        // this.isLoading = false;
+        // Prepara as chamadas para os prestadores
+        const chamadasPrestadores = this.cards.candidaturas
+          .filter((c: any) => c.prestador_id)
+          .map((c: any) =>
+            this.profileDetailService.getPrestadorById(c.prestador_id)
+          );
+
+        // Aguarda todas as chamadas e insere as infos
+        forkJoin(chamadasPrestadores).subscribe((prestadoresInfos: any) => {
+          this.cards.candidaturas.forEach((candidatura: any, index: any) => {
+            candidatura.prestador_info = prestadoresInfos[index];
+          });
+
+          console.log('Cards com informações dos prestadores:', this.cards);
+        });
       },
       error: (err) => {
-        // this.error = 'Erro ao buscar o pedido';
-        // this.isLoading = false;
         console.error(err);
       },
     });
