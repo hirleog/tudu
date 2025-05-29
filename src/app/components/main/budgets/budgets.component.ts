@@ -172,7 +172,6 @@ export class BudgetsComponent implements OnInit {
             valor_negociado: valorNegociado,
             horario_negociado: horario_negociado,
             status: step === 'contratar' ? 'aceito' : 'recusado',
-            data_finalizacao: '',
           },
         ],
       };
