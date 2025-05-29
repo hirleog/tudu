@@ -21,7 +21,7 @@
         <!-- Botão de login -->
         <a
           [routerLink]="
-            prestadorIsLogged || clienteIsLogged ? '/home/profile' : '/login'
+            prestadorIsLogged || clienteIsLogged ? '/profile' : '/login'
           "
           [ngClass]="
             prestadorIsLogged || clienteIsLogged

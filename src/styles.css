@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~bootstrap/dist/css/bootstrap.min.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* @import "~bootstrap/dist/css/bootstrap.min.css"; */
 
 ::-webkit-scrollbar {
   width: 12px;
@@ -139,7 +142,7 @@ p {
 }
 
 hr {
-  background-color: rgba(0, 0, 0, 0.187);
+  opacity: 0.1;
 }
 
 .request-card-title h5 {

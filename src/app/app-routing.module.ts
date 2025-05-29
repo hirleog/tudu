@@ -2,6 +2,7 @@ import { loadRemoteModule } from '@angular-architects/module-federation';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { environment } from 'src/environments/environment';
+import { AuthGuard } from './guards/auth.guard';
 
 // AppRoutingModule
 // |
@@ -47,6 +48,7 @@ const routes: Routes = [
   },
   {
     path: 'proposal',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./components/proposal-flow/proposal/proposal.module').then(
         (m) => m.ProposalModule
@@ -54,11 +56,21 @@ const routes: Routes = [
   },
   {
     path: 'home',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       import('./components/main/main-app.module').then((m) => m.MainAppModule),
   },
   {
+    path: 'profile',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./components/main/profile/profile.module').then(
+        (m) => m.ProfileModule
+      ),
+  },
+  {
     path: 'tudu-professional',
+    canActivate: [AuthGuard],
     loadChildren: () =>
       loadRemoteModule({
         remoteEntry: `${environment.mfeUrl}/remoteEntry.js`,

@@ -1,31 +1,31 @@
-<section id="profile" class="container menu-perfil">
-  <app-nav>
-    <div left-content class="d-flex align-items-center">
-      <a
-        [routerLink]="isProfessional ? '/tudu-professional/home' : '/'"
-        class="logo"
-      >
-        <img
-          src="../../../assets/logo-rosa.webp"
-          style="width: 4em"
-          alt="error"
-        />
-      </a>
-      <h3
-        *ngIf="isProfessional"
-        style="margin-bottom: 0px; margin-top: 3px; font-size: 17px"
-      >
-        Professional
-      </h3>
-    </div>
+<app-nav>
+  <div left-content class="d-flex align-items-center">
+    <a
+      [routerLink]="isProfessional ? '/tudu-professional/home' : '/'"
+      class="logo"
+    >
+      <img
+        src="../../../assets/logo-rosa.webp"
+        style="width: 4em"
+        alt="error"
+      />
+    </a>
+    <h3
+      *ngIf="isProfessional"
+      style="margin-bottom: 0px; margin-top: 3px; font-size: 17px"
+    >
+      Professional
+    </h3>
+  </div>
 
-    <div central-content></div>
-    <!-- <div central-content></div> -->
-    <div right-content></div>
-  </app-nav>
+  <div central-content></div>
+  <!-- <div central-content></div> -->
+  <div right-content></div>
+</app-nav>
 
+<section id="profile" class="container menu-perfil d-flex flex-column gap-4">
   <div
-    class="d-flex justify-content-between align-items-center card-body p-1 pt-4"
+    class="d-flex justify-content-between align-items-center card-body p-1 pt-2"
   >
     <div class="d-flex">
       <div class="request-card-icon">
@@ -54,14 +54,20 @@
     </div>
   </div>
 
-  <hr />
+  <div class="finance" (click)="goToFinancial()" *ngIf="isProfessional">
+    <h3>Financeiro</h3>
+    <i class="fas fa-wallet"></i>
+  </div>
 
-  <ul class="nav flex-column">
-    <li class="nav-item">
+  <ul class="nav d-flex flex-column gap-3">
+    <hr />
+
+    <!-- <li class="nav-item">
       <p class="nav-link d-flex align-items-center" href="#">
         <i class="fas fa-bell me-2"></i> Notificações
       </p>
-    </li>
+    </li> -->
+  
     <li class="nav-item">
       <p
         class="nav-link d-flex align-items-center"
@@ -73,11 +79,7 @@
         <i class="fas fa-ad me-2"></i> Meus Anúncios
       </p>
     </li>
-    <li class="nav-item">
-      <p class="nav-link d-flex align-items-center" href="#">
-        <i class="fas fa-question-circle me-2"></i> Central de Ajuda
-      </p>
-    </li>
+
     <li class="nav-item">
       <p (click)="changeUserFlow()" class="nav-link d-flex align-items-center">
         <!-- [routerLink]="isProfessional ? '/' : '/tudu-professional/home'" -->
@@ -90,7 +92,22 @@
         }}
       </p>
     </li>
-    <li class="nav-item mt-3">
+
+      <li class="nav-item">
+      <p class="nav-link d-flex align-items-center" href="#">
+        <i class="fas fa-question-circle me-2"></i>Notificações
+      </p>
+    </li>
+
+    <li class="nav-item">
+      <p class="nav-link d-flex align-items-center" href="#">
+        <i class="fas fa-question-circle me-2"></i> Central de Ajuda
+      </p>
+    </li>
+
+    <hr />
+
+    <li class="nav-item">
       <p class="nav-link d-flex align-items-center" (click)="logout()" href="#">
         <i class="fas fa-sign-out-alt me-2"></i> Sair
       </p>

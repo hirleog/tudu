@@ -14,6 +14,7 @@ import { ProgressDetailComponent } from './progress-detail/progress-detail.compo
 import { ProgressComponent } from './progress/progress.component';
 import { AddressModule } from '../address/address.module';
 import { FormatDateTimePipe } from '../helpers/format-date-time.pipe';
+import { FinancialComponent } from '../financial/financial.component';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -23,8 +24,9 @@ const routes: Routes = [
   { path: 'progress-detail', component: ProgressDetailComponent },
   { path: 'detail', component: CardDetailComponent },
 
-  { path: 'profile', component: ProfileComponent },
-  { path: 'profile-detail', component: ProfileDetailComponent },
+  // { path: 'profile', component: ProfileComponent },
+  // { path: 'profile-detail', component: ProfileDetailComponent },
+  { path: 'financial', component: FinancialComponent },
 
   { path: 'end', component: FlowEndComponent },
 ];
@@ -36,9 +38,9 @@ const routes: Routes = [
     CardDetailComponent,
     ProgressComponent,
     ProgressDetailComponent,
-    ProfileComponent,
     FlowEndComponent,
-    ProfileDetailComponent,
+    // ProfileComponent,
+    // ProfileDetailComponent,
 
     FormatDateTimePipe,
   ],

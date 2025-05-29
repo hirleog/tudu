@@ -118,7 +118,7 @@ export class ProfileComponent implements OnInit {
           this.router.navigate(['/']);
         } else {
           // Se apenas o prestador estava logado, redireciona para a página inicial
-          this.router.navigate(['/login']);
+          this.router.navigate(['/']);
         }
       }
     } else {
@@ -127,36 +127,42 @@ export class ProfileComponent implements OnInit {
         this.authService.logoutCliente();
         if (isPrestadorLogged) {
           // Se o prestador também estiver logado, redireciona para o fluxo do prestador
-          this.router.navigate(['/tudu-professional/home']);
+          this.router.navigate(['/']);
         } else {
           // Se apenas o cliente estava logado, redireciona para a página inicial
           this.router.navigate(['/']);
         }
-
-        //else temporario para forçar deslogar o prestador e cliente
-      } else {
-        this.authService.logoutCliente();
-        this.router.navigate(['/']);
       }
+      //else temporario para forçar deslogar o prestador e cliente
+      // else {
+      //   this.authService.logoutCliente();
+      //   this.router.navigate(['/']);
+      // }
     }
   }
 
   goToProfileDetail() {
     const currentUrl = this.router.url;
 
-    // Verifica se já está na rota correta com o parâmetro
-    // if (currentUrl === '/home/profile?param=professional') {
-    //   return; // Não navega novamente
-    // }
-
     // Navega para a rota com o parâmetro correto
     if (this.isProfessional) {
-      this.router.navigate(['/home/profile-detail'], {
+      this.router.navigate(['/profile/profile-detail'], {
         queryParams: { param: 'professional' },
       });
     } else {
-      this.router.navigate(['/home/profile-detail']);
+      this.router.navigate(['/profile/profile-detail']);
     }
+  }
+
+  goToFinancial() {
+    if (this.isProfessional) {
+      this.router.navigate(['/profile/financial'], {
+        queryParams: { param: 'professional' },
+      });
+    }
+    // else {
+    //   this.router.navigate(['/financial']);
+    // }
   }
 
   ngOnDestroy(): void {

@@ -57,7 +57,7 @@ export class AppMenuComponent implements OnInit {
     });
 
     this.router.events.subscribe(() => {
-      this.profileActiveColor = this.router.url.includes('/home/profile');
+      this.profileActiveColor = this.router.url.includes('/profile');
     });
   }
 
@@ -79,17 +79,17 @@ export class AppMenuComponent implements OnInit {
     const currentUrl = this.router.url;
 
     // Verifica se já está na rota correta com o parâmetro
-    if (currentUrl === '/home/profile?param=professional') {
+    if (currentUrl === '/profile?param=professional') {
       return; // Não navega novamente
     }
 
     // Navega para a rota com o parâmetro correto
     if (this.isProfessional) {
-      this.router.navigate(['/home/profile'], {
+      this.router.navigate(['/profile'], {
         queryParams: { param: 'professional' },
       });
     } else {
-      this.router.navigate(['/home/profile']);
+      this.router.navigate(['/profile']);
     }
   }
   ngOnDestroy(): void {
