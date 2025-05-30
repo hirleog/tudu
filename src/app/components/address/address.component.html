@@ -28,7 +28,7 @@
       <div class="container">
         <h4 class="text-start mb-3">Onde o serviço vai ser realizado?</h4>
       </div>
-      <div class="d-flex justify-content-center">
+      <!-- <div class="d-flex justify-content-center">
         <ul class="col-12" (click)="$event.stopPropagation()">
           <li *ngFor="let option of options; let i = index">
             <label class="form-check w-100 ms-2 d-flex align-items-center">
@@ -43,14 +43,11 @@
             </label>
           </li>
         </ul>
-      </div>
+      </div> -->
 
-      <div
-        *ngIf="optionSelected !== undefined && optionSelected === 0"
-        class="mt-5"
-        data-aos="fade-down"
-      >
-        <hr class="mb-5" />
+      <!-- *ngIf="optionSelected !== undefined && optionSelected === 0" -->
+      <div class="mt-4" data-aos="fade-down">
+        <hr class="mb-3" />
 
         <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
           <div class="row mb-3">
@@ -157,7 +154,7 @@
       <!-- Botão de envio -->
     </div>
   </div>
-  <div class="fixed-buttons mt-5" *ngIf="showBtns">
+  <!-- <div class="fixed-buttons mt-5" *ngIf="showBtns">
     <button
       *ngIf="optionSelected === undefined"
       (click)="goBack()"
@@ -165,7 +162,7 @@
     >
       Voltar
     </button>
-  </div>
+  </div> -->
 </section>
 
 <!-- <app-footer></app-footer> -->
