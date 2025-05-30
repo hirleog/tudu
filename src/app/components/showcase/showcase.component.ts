@@ -32,9 +32,7 @@ export class ShowcaseComponent implements OnInit {
   }
 
   async ngOnInit() {
-    // this.authService.isLoggedIn$.subscribe((loggedIn) => {
-    //   this.isLogged = loggedIn;
-    // });
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
 
     this.serviceCards = this.cardService.getServiceCards();
 

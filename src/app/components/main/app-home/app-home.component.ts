@@ -94,6 +94,7 @@ export class AppHomeComponent implements OnInit {
 
     this.location.subscribe(() => {
       this.flowNavigate(); // chama seu método back() quando clicar em voltar do navegador
+      this.cleanActualRoute();
     });
     this.flowNavigate();
   }
