@@ -108,6 +108,11 @@ export class ProgressComponent implements OnInit {
   }
 
   goToDetails(idPedido: any): void {
+    this.route.navigate(['home/detail'], {
+      queryParams: { id: idPedido, flow: 'progress' },
+    });
+  }
+  startCard(idPedido: any): void {
     this.route.navigate(['home/progress-detail'], {
       queryParams: { id: idPedido },
     });

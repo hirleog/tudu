@@ -1,8 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { CardService } from 'src/app/services/card.service';
-import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 
 @Component({
   selector: 'app-card-detail',
@@ -11,32 +11,36 @@ import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 })
 export class CardDetailComponent implements OnInit {
   isModalVisible: boolean = false;
+  currentImageIndex?: number;
 
   valorNegociado: any = 250;
   servicoMontagemDesmontagem: any =
     'Desejo uma montagem e desmontagem do movel';
-  imagens: any = [
-    '../../../../assets/tradicional1.webp',
-    '../../../../assets/tradicional2.webp',
-  ];
 
   @Output() messageEvent = new EventEmitter<any>();
   id_pedido: string = '';
   cards: CardOrders[] = [];
+  flow: string = '';
 
   constructor(
     public cardService: CardService,
     private routeActive: ActivatedRoute,
-    private profileDetailService: ProfileDetailService
+    private route: Router,
+    private location: Location
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
+      this.flow = params['flow'];
     });
   }
 
   ngOnInit(): void {
     this.sendMessage();
     this.getCardById();
+
+    this.location.subscribe(() => {
+      this.back(); // chama seu método back() quando clicar em voltar do navegador
+    });
   }
 
   getCardById(): void {
@@ -53,27 +57,46 @@ export class CardDetailComponent implements OnInit {
             icon: this.cardService.getIconByLabel(data.categoria) || '',
           })),
         });
-
-        // Prepara as chamadas para os prestadores
-        // const chamadasPrestadores = this.cards.candidaturas
-        //   .filter((c: any) => c.prestador_id)
-        //   .map((c: any) =>
-        //     this.profileDetailService.getPrestadorById(c.prestador_id)
-        //   );
-
-        // // Aguarda todas as chamadas e insere as infos
-        // forkJoin(chamadasPrestadores).subscribe((prestadoresInfos: any) => {
-        //   this.cards.candidaturas.forEach((candidatura: any, index: any) => {
-        //     candidatura.prestador_info = prestadoresInfos[index];
-        //   });
-
-        //   console.log('Cards com informações dos prestadores:', this.cards);
-        // });
       },
       error: (err) => {
         console.error(err);
       },
     });
+  }
+
+  // Método para selecionar uma imagem específica na galeria
+  selectImage(card: CardOrders, index: number): void {
+    if (card.imagens && index >= 0 && index < card.imagens.length) {
+      card.currentImageIndex = index;
+    }
+  }
+
+  // Método para navegar entre as imagens (próxima/anterior)
+  navigateImages(card: CardOrders, direction: number): void {
+    if (card.imagens && card.imagens.length > 0) {
+      let newIndex = (card.currentImageIndex || 0) + direction;
+      if (newIndex < 0) {
+        newIndex = card.imagens.length - 1; // Volta para a última imagem
+      } else if (newIndex >= card.imagens.length) {
+        newIndex = 0; // Volta para a primeira imagem
+      }
+      card.currentImageIndex = newIndex;
+    }
+  }
+
+  back(): void {
+    const route =
+      this.flow === 'progress'
+        ? '/home/progress'
+        : '/home';
+
+    if (this.flow === 'progress') {
+      this.route.navigate([route]);
+    } else {
+      this.route.navigate([route], {
+        queryParams: { homeFlow: this.flow },
+      });
+    }
   }
 
   openModal() {

@@ -61,13 +61,18 @@ export class CardService {
 
   constructor(private http: HttpClient) {}
 
-  postCard(card: any) {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
+  postCardWithImages(cardData: any, files: File[]) {
+    const formData = new FormData();
+
+    // ✅ 1. Envia o objeto cardData como JSON string no campo 'cardData'
+    formData.append('cardData', JSON.stringify(cardData));
+
+    // ✅ 2. Envia as imagens com o campo 'imagens'
+    files.forEach((file) => {
+      formData.append('imagens', file, file.name);
     });
 
-    return this.http.post(`${this.url}/cards`, card, { headers });
+    return this.http.post(`${environment.apiUrl}/cards`, formData);
   }
 
   updateCard(

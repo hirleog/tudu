@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { HistoricModel } from 'src/app/interfaces/historic.model';
 import { CardSocketService } from 'src/app/services/card-socket.service';
 import { CardService } from 'src/app/services/card.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -21,38 +22,17 @@ export class AppHomeComponent implements OnInit {
 
   cards: CardOrders[] = [];
 
-  historicOrders: HistoricModel[] = [
-    {
-      id: 102,
-      icon: 'fas fa-car', // Ícone FontAwesome
-      serviceName: 'Lavagem Automotiva',
-      description: 'Lavagem completa com polimento para meu carro...',
-      price: '150,00',
-      clientName: 'Guilherme',
-      clientPhoto: '../../../../assets/GUI.PNG',
-      clientAddress: 'Rua doutor paulo de andrade arantes, 52',
-      dateTime: '2021-08-10T10:00:00',
-    },
-    {
-      id: 103,
-      icon: 'fas fa-paint-roller',
-      serviceName: 'Pintura Residencial',
-      description: 'Preciso pintar a sala e os quartos do apartamento...',
-      price: '150,00',
-      clientName: 'Matheus',
-      clientPhoto: '../../../../assets/matheus.PNG',
-      clientAddress: 'Rua doutor antonio lobo sobrinho, 123',
-      dateTime: '2021-08-10T10:00:00',
-    },
-  ];
-
   id_prestador: any;
   counts: any;
+  flow: string = '';
+  homeFlow: string = '';
 
   constructor(
     private route: Router,
+    private activeRoute: ActivatedRoute,
     public cardService: CardService,
-    public cardSocketService: CardSocketService
+    public cardSocketService: CardSocketService,
+    private location: Location
   ) {
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
@@ -72,12 +52,16 @@ export class AppHomeComponent implements OnInit {
       }
     });
 
+    this.activeRoute.queryParams.subscribe((params) => {
+      this.homeFlow = params['homeFlow'];
+    });
+
     this.id_prestador = localStorage.getItem('prestador_id');
   }
 
   ngAfterViewInit() {}
   ngOnInit(): void {
-    console.log('chammou o init');
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
 
     this.cardSocketService.ouvirAlertaNovaCandidatura().subscribe((data) => {
       console.log(`Nova candidatura recebida:`, data);
@@ -101,14 +85,6 @@ export class AppHomeComponent implements OnInit {
             console.log('Card atualizado:', c);
             return c;
           });
-
-          // Marca o card como "novo"
-          // this.cards = this.cards.map((card) => {
-          //   if (card.id_pedido === id) {
-          //     return { ...card, temNovaCandidatura: true };
-          //   }
-          //   return card;
-          // });
         },
         error: (error) => {
           console.error('Erro ao obter o card:', error);
@@ -116,8 +92,10 @@ export class AppHomeComponent implements OnInit {
       });
     });
 
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
-    this.listCards('publicado');
+    this.location.subscribe(() => {
+      this.flowNavigate(); // chama seu método back() quando clicar em voltar do navegador
+    });
+    this.flowNavigate();
   }
 
   listCards(status_pedido: string) {
@@ -156,17 +134,6 @@ export class AppHomeComponent implements OnInit {
       },
       error: (error) => console.error('Erro ao obter os cartões:', error),
       complete: () => console.log('Requisição concluída'),
-    });
-  }
-
-  goToBudgets(id_pedido: any): void {
-    this.route.navigate(['/home/budgets'], {
-      queryParams: { id: id_pedido },
-    });
-  }
-  goToDetails(id_pedido: any): void {
-    this.route.navigate(['/home/detail'], {
-      queryParams: { id: id_pedido },
     });
   }
 
@@ -258,20 +225,6 @@ export class AppHomeComponent implements OnInit {
   }
 
   updateHeaderCounts() {
-    // this.publicados = this.cards.filter(
-    //   (card) =>
-    //     card.status_pedido === 'publicado' &&
-    //     !card.candidaturas?.some((c: any) => c.prestador_id === id)
-    // ).length;
-
-    // this.emAndamento = this.cards.filter((card) =>
-    //   card.candidaturas?.some((c: any) => c.prestador_id === id)
-    // ).length;
-
-    // this.finalizados = this.cards.filter(
-    //   (card) => card.status_pedido === 'finalizado'
-    // ).length;
-
     this.headerPageOptions = [
       `Serviços(${this.counts.publicado})`,
       // `Em andamento(${this.counts.andamento})`,
@@ -279,21 +232,88 @@ export class AppHomeComponent implements OnInit {
     ];
   }
 
+  // selectItem(index: number): void {
+  //   // Evita reprocessamento se já estiver selecionado
+  //   if (this.selectedIndex === index) return;
+
+  //   this.selectedIndex = index;
+
+  //   switch (index) {
+  //     case 0:
+  //       this.listCards('publicado');
+  //       break;
+  //     case 1:
+  //       this.listCards('finalizado');
+  //       break;
+  //   }
+  // }
+
+  goToBudgets(id_pedido: any): void {
+    this.route.navigate(['/home/budgets'], {
+      queryParams: { id: id_pedido },
+    });
+  }
+  goToDetails(id_pedido: any): void {
+    this.route.navigate(['/home/detail'], {
+      queryParams: { id: id_pedido, flow: this.flow },
+    });
+  }
+
+  // recebe o parametro 'flow' de volta para guardar qual fluxo estava (publicado, andamento ou finalizado)
+  flowNavigate(): void {
+    let routeSelected: number = 0;
+    if (this.homeFlow) {
+      switch (this.homeFlow) {
+        case 'publicado':
+          routeSelected = 0;
+          break;
+        case 'finalizado':
+          routeSelected = 1;
+          break;
+        default:
+          routeSelected = 0;
+          break;
+      }
+      this.selectItem(routeSelected);
+      //  remove o parâmetro da URL
+      this.cleanActualRoute();
+    } else {
+      this.selectItem(routeSelected);
+    }
+  }
+
   selectItem(index: number): void {
-    // Evita reprocessamento se já estiver selecionado
-    if (this.selectedIndex === index) return;
+    // if (this.selectedIndex === index) return;
 
     this.selectedIndex = index;
 
     switch (index) {
       case 0:
         this.listCards('publicado');
+        this.flow = 'publicado';
+        this.cleanActualRoute();
         break;
       case 1:
         this.listCards('finalizado');
+        this.flow = 'finalizado';
+        this.cleanActualRoute();
+        break;
+      case 3:
+        this.route.navigate(['/tudu-professional/progress']);
         break;
     }
   }
+
+  cleanActualRoute(): void {
+    this.route.navigate([], {
+      relativeTo: this.activeRoute,
+      queryParams: {
+        homeFlow: null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
   formatarHorario(pedido: any): string {
     const candidatura = pedido.candidaturas?.[0];
     let horario = pedido.horario_preferencial;

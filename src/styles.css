@@ -4,35 +4,6 @@
 @tailwind utilities;
 /* @import "~bootstrap/dist/css/bootstrap.min.css"; */
 
-::-webkit-scrollbar {
-  width: 12px;
-  /* largura da barra vertical */
-  height: 12px;
-  /* altura da barra horizontal */
-}
-
-/* Estiliza o fundo da barra de rolagem */
-::-webkit-scrollbar-track {
-  background-color: #f1f1f1;
-  /* cor do fundo */
-  /* border-radius: 10px; */
-  /* bordas arredondadas */
-}
-
-/* Estiliza o polegar da barra de rolagem */
-::-webkit-scrollbar-thumb {
-  background-color: var(--primary);
-  /* cor do polegar */
-  border-radius: 10px;
-  /* bordas arredondadas */
-}
-
-/* Estiliza o polegar ao passar o mouse */
-::-webkit-scrollbar-thumb:hover {
-  background-color: #555;
-  /* cor ao passar o mouse */
-}
-
 :root {
   /* --primary: #ff3d24; */
   /* --primary: #ffc739; */

@@ -206,7 +206,7 @@
           <!-- Botões para "em andamento" -->
           <div
             *ngIf="card.status_pedido === 'andamento'"
-            class="request-card-footer bg-light d-flex gap-2 p-4"
+            class="request-card-footer bg-light d-flex gap-3 p-4"
             style="margin-top: -3em"
           >
             <button
@@ -435,9 +435,23 @@
               </p>
             </div>
           </div>
+
+
+           <!-- <button
+              style="
+                color: var(--primary) !important;
+                background-color: var(--light) !important;
+                border: 1px solid var(--primary) !important;
+              "
+              class="request-quote-btn bg-secondary col-6"
+            >
+              Detalhes
+            </button> -->
+
+
           <div class="d-flex justify-content-between card-footer bg-light p-3">
             <button
-              class="request-quote-btn"
+              class="request-quote-btn col-6"
               (click)="goToDetails(card.id_pedido)"
             >
               Detalhes

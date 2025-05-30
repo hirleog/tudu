@@ -27,6 +27,10 @@ export class MakeOfferComponent implements OnInit {
   initialDateTime: string = '';
   isLogged: boolean = false;
   id_cliente: any = '';
+  selectedFiles: File[] = [];
+
+  // mudar para o proposalcomponente
+  selectedPreviews: string[] = [];
 
   private subscriptionCliente: Subscription = new Subscription();
   clienteIsLogged: boolean = false;
@@ -58,6 +62,8 @@ export class MakeOfferComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
+
     this.dateTimeSelected = this.initialDateTime;
 
     this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
@@ -65,7 +71,7 @@ export class MakeOfferComponent implements OnInit {
     });
   }
 
-  createCard(): Observable<CreateCard> {
+  createCard(): Observable<void> {
     const dateTimeFormat = moment(
       this.dateTimeSelected,
       'DD/MM/YYYY - HH:mm'
@@ -83,47 +89,73 @@ export class MakeOfferComponent implements OnInit {
 
     const payloadCard: CreateCard = {
       id_cliente: this.id_cliente.toString(),
-      id_prestador: '0', // precisa criar tabela de cliente para pegar o ID auto incrementavel
+      id_prestador: '0',
       categoria: this.cardTitle,
       status_pedido: 'publicado',
       subcategoria: filtersConcat,
       valor: this.price,
       horario_preferencial: dateTimeFormat,
-
       codigo_confirmacao: codigoConfirmacao,
-
-      cep: this.addressContent[0].cep, // CEP do endereço
+      cep: this.addressContent[0].cep,
       street: this.addressContent[0].street,
       neighborhood: this.addressContent[0].neighborhood,
       city: this.addressContent[0].city,
       state: this.addressContent[0].state,
       number: this.addressContent[0].number,
-      complement: this.addressContent[0].complement,
+      complement: this.addressContent[0].complement || '',
     };
 
-    this.cardService.postCard(payloadCard).subscribe({
-      next: (response) => {
-        console.log('Card created successfully:', response);
-        this.route.navigate(['/home']);
-      },
-      error: (error) => {
-        console.error('Error creating card:', error);
-      },
-      complete: () => {
-        console.log('Card creation process completed.');
-      },
-    });
-    return of();
+    // Verifica se há arquivos selecionados
+    if (this.selectedFiles.length > 0) {
+      this.cardService
+        .postCardWithImages(payloadCard, this.selectedFiles)
+        .subscribe({
+          next: (response) => {
+            this.route.navigate(['/home']);
+          },
+          error: (error) => {
+            console.error('Erro ao criar card:', error);
+          },
+        });
+    } else {
+      this.cardService.postCardWithImages(payloadCard, []).subscribe({
+        next: (response) => {
+          this.route.navigate(['/home']);
+        },
+        error: (error) => {
+          console.error('Erro ao criar card:', error);
+        },
+      });
+    }
 
-    // if (this.isLogged) {
-    //   this.cardService.postCard(payloadCard).subscribe((response) => {
-    //     this.route.navigate(['/home']);
-    //   });
-    // } else {
-    // this.route.navigate(['/']);
-    // }
-    // return of();
+    return of();
   }
+  // mudar para o proposal
+  onFilesSelected(event: any) {
+    const files = event.target.files;
+    this.selectedFiles = [];
+    this.selectedPreviews = [];
+
+    if (files) {
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // Guarda o arquivo
+        this.selectedFiles.push(file);
+
+        // Cria preview (data URL)
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.selectedPreviews.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  }
+
+  // onFileSelected(event: any) {
+  //   this.selectedFile = event.target.files[0];
+  // }
 
   onPriceClose() {
     this.renegotiateActive = !this.renegotiateActive;

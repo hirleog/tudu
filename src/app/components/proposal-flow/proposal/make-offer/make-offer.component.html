@@ -131,6 +131,38 @@
         </div>
       </div>
 
+      <!-- mudar para o proposalcomponente -->
+      <form (ngSubmit)="createCard()" #cardForm="ngForm">
+        <!-- Outros campos do formulário aqui, ex: título, preço, etc -->
+        <input
+          type="text"
+          [(ngModel)]="cardTitle"
+          name="cardTitle"
+          placeholder="Título do Card"
+          required
+        />
+
+        <!-- Input para selecionar uma ou mais imagens -->
+        <input
+          type="file"
+          (change)="onFilesSelected($event)"
+          multiple
+          accept="image/*"
+        />
+
+        <!-- Preview das imagens selecionadas -->
+        <div class="preview-images" *ngIf="selectedFiles.length > 0">
+          <div
+            *ngFor="let img of selectedPreviews; let i = index"
+            class="preview-item"
+          >
+            <img [src]="img" alt="Imagem selecionada {{ i + 1 }}" width="100" />
+          </div>
+        </div>
+
+        <button type="submit">Enviar Card</button>
+      </form>
+
       <div>
         <p class="text-start text-md-center">
           Esse não é o valor final, você pode negociar diretamente com o
@@ -139,20 +171,19 @@
       </div>
     </div>
   </div>
+
   <!-- Botão de envio -->
   <div class="container d-flex justify-content-center mt-5 gap-2 mb-5">
     <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
 
-    <button (click)="goBack()" class="btn-ui btn-primary mt-3">
-      Voltar
-    </button>
+    <button (click)="goBack()" class="btn-ui btn-primary mt-3">Voltar</button>
 
-    <button
+    <!-- <button
       class="btn-ui btn-primary mt-3 send-btn"
       (click)="createCard()"
       style="background-color: var(--primary); color: white"
     >
       Avançar
-    </button>
+    </button> -->
   </div>
 </section>

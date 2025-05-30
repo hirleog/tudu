@@ -96,9 +96,10 @@
                 background-color: var(--light) !important;
                 border: 1px solid var(--primary);
               "
+              (click)="goToDetails(c.id_pedido)"
               class="request-quote-btn col-6"
             >
-              Ajuda
+              Detalhes
             </button>
 
             <button
@@ -108,7 +109,7 @@
                 color: var(--light);
               "
               class="request-quote-btn bg-secondary col-6"
-              (click)="goToDetails(c.id_pedido)"
+              (click)="startCard(c.id_pedido)"
             >
               Acompanhar
             </button>
