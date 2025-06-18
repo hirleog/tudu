@@ -26,6 +26,7 @@ export class AppHomeComponent implements OnInit {
   counts: any;
   flow: string = '';
   homeFlow: string = '';
+  isLoading: boolean = true;
 
   constructor(
     private route: Router,
@@ -100,6 +101,8 @@ export class AppHomeComponent implements OnInit {
   }
 
   listCards(status_pedido: string) {
+    this.isLoading = true;
+
     this.cardService.getCards(status_pedido).subscribe({
       next: (response: { cards: CardOrders[]; counts: any }) => {
         // Primeiro, acessa os cards corretamente
@@ -131,10 +134,16 @@ export class AppHomeComponent implements OnInit {
 
         this.updateHeaderCounts(); // aqui pode usar this.counts.publicado, etc.
 
-        console.log(this.cards);
+        this.isLoading = false; // Define isLoading como false após a conclusão
       },
-      error: (error) => console.error('Erro ao obter os cartões:', error),
-      complete: () => console.log('Requisição concluída'),
+      error: (error) => {
+        console.error('Erro ao obter os cartões:', error);
+        this.isLoading = false;
+      },
+      complete: () => {
+        console.log('Requisição concluída');
+        this.isLoading = false;
+      },
     });
   }
 

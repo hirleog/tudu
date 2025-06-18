@@ -12,10 +12,14 @@ export class ProposalComponent implements OnInit {
   selectedOptions: any[] = [];
   paramCategory: any;
 
+  isLoading: boolean = false;
+
   filterCategories: FilterCategory[] = [
     {
       title: '1. Local do Serviço',
-      isSingleSelect: true, // Marca como seleção única
+      isSingleSelect: true,
+      expanded: true,
+      otherText: '',
       options: [
         { label: 'Apartamento', value: 'apartment', selected: false },
         { label: 'Casa', value: 'house', selected: false },
@@ -25,6 +29,8 @@ export class ProposalComponent implements OnInit {
     },
     {
       title: '2. Tipo de Pintura',
+      expanded: true,
+      otherText: '',
       options: [
         { label: 'Pintura interna', value: 'internal', selected: false },
         { label: 'Pintura externa', value: 'external', selected: false },
@@ -33,20 +39,22 @@ export class ProposalComponent implements OnInit {
           value: 'facade',
           selected: false,
         },
-        { label: 'Pintura de teto', value: 'ceiling_paint', selected: false }, // Alterado
+        { label: 'Pintura de teto', value: 'ceiling_paint', selected: false },
         {
           label: 'Pintura de portas/portões',
           value: 'doors_paint',
           selected: false,
-        }, // Alterado
+        },
         { label: 'Pintura de móveis', value: 'furniture', selected: false },
       ],
     },
     {
       title: '3. Área a Ser Pintada',
+      expanded: true,
+      otherText: '',
       options: [
         { label: 'Parede(s)', value: 'walls', selected: false },
-        { label: 'Teto', value: 'ceiling_area', selected: false }, // Alterado
+        { label: 'Teto', value: 'ceiling_area', selected: false },
         { label: 'Portas/Janelas', value: 'doors_windows', selected: false },
         {
           label: 'Móveis embutidos',
@@ -58,6 +66,8 @@ export class ProposalComponent implements OnInit {
     },
     {
       title: '4. Tipo de Superfície',
+      expanded: true,
+      otherText: '',
       options: [
         {
           label: 'Alvenaria (tijolo, concreto)',
@@ -72,6 +82,8 @@ export class ProposalComponent implements OnInit {
     },
     {
       title: '5. Condição da Superfície',
+      expanded: true,
+      otherText: '',
       options: [
         { label: 'Nova (primeira pintura)', value: 'new', selected: false },
         {
@@ -89,6 +101,8 @@ export class ProposalComponent implements OnInit {
     },
     {
       title: '6. Serviços Adicionais',
+      expanded: true,
+      otherText: '',
       options: [
         {
           label: 'Preparação da superfície (lixamento, massa)',

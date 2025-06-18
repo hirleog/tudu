@@ -1,4 +1,4 @@
-<section>
+<section class="bg-gray-50 min-h-screen">
   <app-nav>
     <div left-content>
       <a (click)="goBack()" class="text-decoration-none text-dark">
@@ -27,15 +27,18 @@
     <app-category-filter
       [serviceTitle]="'Pintura Residencial'"
       [filterCategories]="filterCategories"
+      (filtersSubmitted)="onSubmit()"
     ></app-category-filter>
   </div>
 
-  <div class="container d-flex justify-content-center align-items-center gap-2 mt-5 pt-2">
-    <button routerLink="/" class="btn-ui btn-primary mt-3">Voltar</button>
+  <div class="container d-flex justify-content-center align-items-center pb-3">
+    <!-- <button routerLink="/" class="col-6 btn btn-outline-primary mt-3">
+      Voltar
+    </button> -->
 
-    <button class="btn-ui btn-primary mt-3 send-btn" (click)="onSubmit()">
+    <!-- <button class="col-12 col-md-6 btn btn-primary mt-3" (click)="onSubmit()">
       Avançar
-    </button>
+    </button> -->
   </div>
 </section>
 

@@ -74,12 +74,16 @@
                   placeholder="Digite sua senha"
                   required
                 />
+                <div *ngIf="loginErrorMessage" class="text-danger mt-1">
+                  {{ errorMessage }}
+                </div>
               </div>
 
               <button
+                [disabled]="loginForm.invalid"
                 type="submit"
+                class="col-12 btn btn-primary mt-3"
                 style="color: white"
-                class="btn-ui btn-primary w-100"
               >
                 Entrar
               </button>
@@ -213,4 +217,12 @@
       </div>
     </div>
   </div>
+
+  <!-- modais -->
+
+  <app-custom-modal
+    modalId="alertModal"
+    title="Erro"
+    [message]="errorMessage"
+  ></app-custom-modal>
 </section>

@@ -1,31 +1,31 @@
-import { Component, Input, OnInit } from '@angular/core';
-// import { initMercadoPago, PaymentOptions } from '@mercadopago/sdk-js';
+import { Component } from '@angular/core';
+import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
-  selector: 'app-payments',
+  selector: 'app-payment',
   templateUrl: './payments.component.html',
-  styleUrls: ['./payments.component.css']
 })
-export class PaymentsComponent implements OnInit {
+export class PaymentsComponent {
+  constructor(private paymentService: PaymentService) {}
 
-  @Input() amount!: number; // Valor do pagamento
-  @Input() description!: string; // Descrição do serviço
+  pagar() {
+    const payload = {
+      amount: 1000,
+      order_id: 'pedido001',
+      customer_id: 'cliente001',
+      first_name: 'Fulano',
+      last_name: 'Silva',
+      card_number: '5155901222280001',
+      cardholder_name: 'Fulano de Tal',
+      expiration_month: '12',
+      expiration_year: '28',
+      security_code: '123',
+      brand: 'mastercard',
+    };
 
-  // mercadoPago: PaymentOptions | null = null;
-
-  ngOnInit(): void {
-    // Inicializando o Mercado Pago com a chave pública
-    // this.mercadoPago = initMercadoPago('SUA_PUBLIC_KEY'); // Substitua pela sua chave pública
-  }
-
-  checkout(): void {
-    // if (!this.mercadoPago) return;
-
-    // // Criando um botão de checkout do Mercado Pago
-    // this.mercadoPago.bricks().create("wallet", "button-container", {
-    //   initialization: {
-    //     preferenceId: "PREFERENCE_ID", // Substitua pelo ID da preferência
-    //   }
-    // });
+    this.paymentService.pagarComCartao(payload).subscribe({
+      next: (res) => console.log('Pagamento autorizado:', res),
+      error: (err) => console.error('Erro no pagamento:', err),
+    });
   }
 }

@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { AddressComponent } from '../../address/address.component';
+import { AddressModule } from '../../address/address.module';
+import { CalendarModule } from '../../calendar/calendar.module';
+import { CategoryFilterComponent } from '../../category-filter/category-filter.component';
+import { PaymentsModule } from '../../payments/payments.module';
 import { MultiSelectModule } from '../../ui/multi-select/multi-select.module';
 import { MakeOfferComponent } from './make-offer/make-offer.component';
 import { ProposalComponent } from './proposal.component';
-import { CategoryFilterComponent } from '../../category-filter/category-filter.component';
-import { CalendarComponent } from '../../calendar/calendar.component';
-import { CalendarModule } from '../../calendar/calendar.module';
-import { AddressModule } from '../../address/address.module';
+import { CardSkeletonModule } from '../../templates/card-skeleton/card-skeleton.module';
 
 const routes: Routes = [
   { path: '', component: ProposalComponent },
@@ -27,6 +27,8 @@ const routes: Routes = [
     SharedModule,
     CalendarModule,
     AddressModule,
+    PaymentsModule,
+    CardSkeletonModule,
     RouterModule.forChild(routes), // Importante: Use forChild() aqui
   ],
   exports: [

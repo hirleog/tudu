@@ -55,11 +55,15 @@
     </div>
   </div>
 
+  <div class="container" *ngIf="isLoading">
+    <app-card-skeleton *ngFor="let i of [1, 2, 3, 4]"></app-card-skeleton>
+  </div>
+
   <!-- My Orders -->
-  <div class="container" *ngIf="cards.length > 0 && selectedIndex === 0">
+  <div class="container" *ngIf="(cards.length > 0 && selectedIndex === 0) || isLoading">
     <div class="row g-3 m-0 p-0">
       <div
-        class="col-12 col-md-6 col-lg-6 m-0 p-2"
+        class="col-12 m-0 p-2"
         *ngFor="let card of cards"
         data-aos="fade-down"
       >
@@ -436,8 +440,7 @@
             </div>
           </div>
 
-
-           <!-- <button
+          <!-- <button
               style="
                 color: var(--primary) !important;
                 background-color: var(--light) !important;
@@ -447,7 +450,6 @@
             >
               Detalhes
             </button> -->
-
 
           <div class="d-flex justify-content-between card-footer bg-light p-3">
             <button

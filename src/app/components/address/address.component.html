@@ -137,13 +137,16 @@
             </div>
           </div>
           <div class="send-btn-fixed mt-5" *ngIf="showBtns">
-            <button (click)="goBack()" class="btn-ui btn-primary mt-3">
+            <button
+              (click)="goBack()"
+              class="col-6 btn btn-outline-primary mt-3"
+            >
               Voltar
             </button>
             <button
               type="submit"
               [disabled]="addressForm.invalid"
-              class="btn-ui btn-primary mt-3 send-btn"
+              class="col-6 btn btn-primary mt-3 send-btn"
             >
               Proxímo
             </button>

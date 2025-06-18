@@ -1,39 +1,135 @@
-<!-- service-filter.component.html -->
-<div class="service-filter mt-3 mb-3 container">
-  <h2 class="text-md-start" style="margin-left: 11px">{{ serviceTitle }}</h2>
-  <!-- Título do serviço (ex: "Pintura Residencial") -->
-  <hr />
+<div class="bg-gray-50 min-h-screen mb-0">
+  <div class="container mx-auto px-4 py-8">
+    <div class="service-filter max-w-3xl mx-auto">
+      <!-- Título principal -->
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-2xl font-bold text-gray-800">{{ serviceTitle }}</h2>
+      </div>
 
-  <div
-    *ngFor="let category of filterCategories"
-    class="category d-flex flex-column align-items-start gap-2"
-  >
-    <h3>{{ category.title }}</h3>
-    <!-- Título da seção (ex: "1. Local do Serviço") -->
+      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+        <!-- Categorias de filtro dinâmicas -->
+        <div class="divide-y divide-gray-100">
+          <div
+            *ngFor="let category of filterCategories"
+            class="filter-category p-5 hover:bg-pink-50/50"
+          >
+            <div
+              class="flex items-center justify-between cursor-pointer"
+              (click)="toggleCategory(category)"
+            >
+              <h3
+                class="text-lg font-semibold text-gray-800 flex items-center gap-2"
+              >
+                <i
+                  [class]="getCategoryIcon(category.title) + ' text-pink-500'"
+                ></i>
+                {{ category.title }}
+              </h3>
+              <i
+                class="fas fa-chevron-down text-gray-400 transition-transform duration-300"
+                [class.rotate-180]="category.expanded"
+              ></i>
+            </div>
 
-    <div
-      *ngFor="let option of category.options"
-      class="option d-flex align-items-center flex gap-1"
-    >
-      <input
-        style="width: 20px; height: 20px"
-        type="checkbox"
-        [id]="option.value"
-        [checked]="option.selected"
-        [(ngModel)]="option.selected"
-        (change)="onOptionSelected(category, option)"
+            <div
+              class="options-container mt-3 space-y-3"
+              [class.hidden]="!category.expanded"
+            >
+              <div
+                *ngFor="let option of category.options"
+                class="flex items-center gap-3 py-1"
+              >
+                <input
+                  [type]="category.isSingleSelect ? 'radio' : 'checkbox'"
+                  [name]="category.isSingleSelect ? category.title : ''"
+                  [id]="option.value"
+                  class="custom-checkbox"
+                  [(ngModel)]="option.selected"
+                  (change)="onOptionSelected(category, option)"
+                />
+                <label
+                  [for]="option.value"
+                  class="text-gray-700 cursor-pointer flex-1"
+                >
+                  {{ option.label }}
+                </label>
+              </div>
 
-      />
-      <label [for]="option.value">{{ option.label }}</label>
+              <!-- Campo de texto para 'Outros' -->
+              <div *ngIf="hasOtherSelected(category)" class="mt-2">
+                <input
+                  type="text"
+                  placeholder="Especifique..."
+                  class="other-input visible w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                  [(ngModel)]="category.otherText"
+                />
+              </div>
+            </div>
+          </div>
+          <!-- Upload de imagens -->
+          <form
+            #cardForm="ngForm"
+            class="bg-white rounded-xl shadow-sm overflow-hidden p-5"
+          >
+            <h3
+              class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
+            >
+              <i class="fas fa-images text-pink-500"></i>
+              7. Adicionar Imagens
+            </h3>
 
-      <input
-        *ngIf="option.value === 'other'"
-        type="text"
-        name=""
-        placeholder="Digite"
-        id=""
-      />
-      <!-- <p *ngIf="">dasdasd</p> -->
+            <!-- Input de upload -->
+            <label class="block">
+              <span class="block font-medium text-gray-700 mb-1"
+                >Escolher imagens</span
+              >
+              <input
+                type="file"
+                (change)="onFilesSelected($event)"
+                multiple
+                accept="image/*"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-600 hover:file:bg-pink-100"
+              />
+            </label>
+
+            <!-- Preview das imagens -->
+            <div
+              *ngIf="selectedFiles.length > 0"
+              class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4"
+            >
+              <div
+                *ngFor="let img of selectedPreviews; let i = index"
+                class="relative group border rounded-lg overflow-hidden shadow-sm"
+              >
+                <img
+                  [src]="img"
+                  [alt]="'Imagem selecionada ' + (i + 1)"
+                  class="object-cover w-full h-32"
+                />
+
+                <!-- Botão de remover -->
+                <button
+                  type="button"
+                  (click)="removeImage(i)"
+                  class="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow-sm opacity-100 transition hover:bg-red-50"
+                  title="Remover imagem"
+                >
+                  <i class="fas fa-times text-sm"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Rodapé do filtro -->
+        <div
+          class="p-4 bg-gray-50 border-t border-gray-100 flex justify-cneter"
+        >
+          <button class="col-12 btn btn-primary mt-3" (click)="submitFilters()">
+            Avançar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

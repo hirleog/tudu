@@ -1,8 +1,8 @@
-export interface FilterCategory {
-  title: string;
-  options: FilterOption[];
-  isSingleSelect?: boolean; // Flag para indicar se é seleção única
-}
+// export interface FilterCategory {
+//   title: string;
+//   options: FilterOption[];
+//   isSingleSelect?: boolean; // Flag para indicar se é seleção única
+// }
 
 export interface AddressContent {
   cep: string; // CEP do endereço
@@ -14,10 +14,24 @@ export interface AddressContent {
   complement?: string; // Complemento (opcional)
 }
 
+// export interface FilterOption {
+//   label: string; // Ex: "Apartamento"
+//   value: string; // Ex: "apartment" (para lógica interna)
+//   selected: boolean; // Estado do checkbox
+// }
+
+
+
 export interface FilterOption {
-  label: string; // Ex: "Apartamento"
-  value: string; // Ex: "apartment" (para lógica interna)
-  selected: boolean; // Estado do checkbox
+  value: string;
+  label: string;
+  selected: boolean;
 }
 
-
+export interface FilterCategory {
+  title: string;
+  isSingleSelect?: boolean;
+  options: FilterOption[];
+  expanded?: boolean;
+  otherText?: string;
+}

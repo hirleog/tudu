@@ -2,10 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { Observable, of, Subscription } from 'rxjs';
-import { AuthHelper } from 'src/app/components/helpers/auth-helper';
 import { CreateCard } from 'src/app/interfaces/create-card.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
+import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
   selector: 'app-make-offer',
@@ -30,16 +30,17 @@ export class MakeOfferComponent implements OnInit {
   selectedFiles: File[] = [];
 
   // mudar para o proposalcomponente
-  selectedPreviews: string[] = [];
+  isLoading: boolean = false;
+  clienteIsLogged: boolean = false;
 
   private subscriptionCliente: Subscription = new Subscription();
-  clienteIsLogged: boolean = false;
 
   constructor(
     private routeActive: ActivatedRoute,
     private route: Router,
     public cardService: CardService,
-    public authService: AuthService
+    public authService: AuthService,
+    public sharedService: SharedService
   ) {
     this.authService.idCliente$.subscribe((id) => {
       this.id_cliente = id;
@@ -65,6 +66,7 @@ export class MakeOfferComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
 
     this.dateTimeSelected = this.initialDateTime;
+    this.selectedFiles = this.sharedService.getFiles();
 
     this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
       this.clienteIsLogged = loggedIn;
@@ -72,6 +74,8 @@ export class MakeOfferComponent implements OnInit {
   }
 
   createCard(): Observable<void> {
+    this.isLoading = true;
+
     const dateTimeFormat = moment(
       this.dateTimeSelected,
       'DD/MM/YYYY - HH:mm'
@@ -106,56 +110,21 @@ export class MakeOfferComponent implements OnInit {
     };
 
     // Verifica se há arquivos selecionados
-    if (this.selectedFiles.length > 0) {
-      this.cardService
-        .postCardWithImages(payloadCard, this.selectedFiles)
-        .subscribe({
-          next: (response) => {
-            this.route.navigate(['/home']);
-          },
-          error: (error) => {
-            console.error('Erro ao criar card:', error);
-          },
-        });
-    } else {
-      this.cardService.postCardWithImages(payloadCard, []).subscribe({
+    this.cardService
+      .postCardWithImages(payloadCard, this.selectedFiles || [])
+      .subscribe({
         next: (response) => {
+          this.isLoading = false;
           this.route.navigate(['/home']);
         },
         error: (error) => {
+          this.isLoading = false;
           console.error('Erro ao criar card:', error);
         },
       });
-    }
 
     return of();
   }
-  // mudar para o proposal
-  onFilesSelected(event: any) {
-    const files = event.target.files;
-    this.selectedFiles = [];
-    this.selectedPreviews = [];
-
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-
-        // Guarda o arquivo
-        this.selectedFiles.push(file);
-
-        // Cria preview (data URL)
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.selectedPreviews.push(e.target.result);
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  }
-
-  // onFileSelected(event: any) {
-  //   this.selectedFile = event.target.files[0];
-  // }
 
   onPriceClose() {
     this.renegotiateActive = !this.renegotiateActive;
