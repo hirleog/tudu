@@ -1,31 +1,37 @@
 <section class="bg-gray-50 min-h-screen">
   <app-nav>
     <div left-content>
-      <a (click)="goBack()" class="text-decoration-none text-dark">
-        <i class="fas fa-arrow-left"></i> {{ titleCard }}
+      <a
+        (click)="goBack()"
+        class="text-decoration-none text-dark d-flex align-items-center"
+      >
+        <i class="fas fa-arrow-left pr-4"></i>
+        <h2 style="color: var(--primary);" class="fs-3 font-bold text-gray-700 m-0 text-nowrap">
+          {{ paramCategory }}
+        </h2>
       </a>
     </div>
     <div central-content>
-      <a routerLink="/" class="logo">
+      <!-- <a routerLink="/" class="logo">
         <img
           src="../../../assets/logo-rosa.webp"
           class="img-fluid"
           style="width: 4em"
           alt="error"
         />
-      </a>
+      </a> -->
     </div>
     <div right-content>
-      <a routerLink="/login" class="login-button">
+      <!-- <a routerLink="/login" class="login-button">
         <i class="fas fa-bars"></i>
         <i class="fas fa-user fs-3"></i>
-      </a>
+      </a> -->
     </div>
   </app-nav>
 
   <div>
     <app-category-filter
-      [serviceTitle]="'Pintura Residencial'"
+      [serviceTitle]="paramCategory"
       [filterCategories]="filterCategories"
       (filtersSubmitted)="onSubmit()"
     ></app-category-filter>
