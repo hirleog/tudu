@@ -10,17 +10,18 @@ export class PaymentsComponent {
 
   pagar() {
     const payload = {
-      amount: 1000,
-      order_id: 'pedido001',
-      customer_id: 'cliente001',
-      first_name: 'Fulano',
-      last_name: 'Silva',
       card_number: '5155901222280001',
-      cardholder_name: 'Fulano de Tal',
+      customer_id: 'customer_123',
+      amount: 1000,
+      order_id: 'order_123',
+      cardholder_name: 'JOAO DA SILVA',
       expiration_month: '12',
-      expiration_year: '28',
+      expiration_year: '25',
       security_code: '123',
-      brand: 'mastercard',
+      brand: 'Mastercard',
+      first_name: 'Joao',
+      last_name: 'Silva',
+      email: 'joao@example.com',
     };
 
     this.paymentService.pagarComCartao(payload).subscribe({

@@ -149,7 +149,6 @@ export class MakeOfferComponent implements OnInit {
     const date = this.dateSelected || moment().format('DD/MM/YYYY');
     this.dateTimeSelected = `${date} - ${time}`;
   }
- 
 
   goBack(): void {
     this.routeActive.queryParams.subscribe((params) => {
@@ -163,11 +162,7 @@ export class MakeOfferComponent implements OnInit {
     });
   }
 
-  // onDateTimeSelected(event:any): void {
-  //   // Atualiza a data e hora selecionadas
-  //   this.dateTimeSelected = event;
-  //   console.log('Data e hora selecionadas:', this.dateTimeSelected);
-  // }
+  
 
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória
