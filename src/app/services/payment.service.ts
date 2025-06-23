@@ -11,6 +11,6 @@ export class PaymentService {
   constructor(private http: HttpClient) {}
 
   pagarComCartao(dados: any) {
-    return this.http.post(`${environment.apiUrl}/credit`, dados);
+    return this.http.post(`${environment.apiUrl}/payments/credit`, dados);
   }
 }
