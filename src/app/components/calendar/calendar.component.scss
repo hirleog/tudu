@@ -165,7 +165,6 @@
     color: #202124;
     margin-top: 4px;
   }
-  
 }
 
 .first-day {
@@ -229,6 +228,33 @@
   pointer-events: none;
   cursor: not-allowed;
   text-decoration: line-through;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}
+
+.text-gray-400 {
+  color: #9ca3af;
+}
+
+.hover\:bg-gray-100:hover {
+  background-color: #f3f4f6;
+}
+
+.calendar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  // background-color: rgba(0, 0, 0, 0.2);
+  z-index: 999; /* Ajuste conforme necessário */
+}
+
+.calendar-container-ajust {
+  position: relative;
+  z-index: 1000; /* Deve ser maior que o overlay */
 }
 
 @media (min-width: 992px) {

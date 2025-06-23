@@ -1,41 +1,40 @@
-<section id="hero">
-  <app-nav>
-    <div left-content>
-      <a routerLink="/" class="logo">
-        <img
-          src="../../../assets/logo-rosa.webp"
-          class="img-fluid"
-          style="width: 4em"
-          alt="error"
-        />
+<app-nav>
+  <div left-content>
+    <a routerLink="/" class="logo">
+      <img
+        src="../../../assets/logo-rosa.webp"
+        class="img-fluid"
+        style="width: 4em"
+        alt="error"
+      />
+    </a>
+  </div>
+
+  <div central-content></div>
+  <!-- <div central-content></div> -->
+  <div right-content style="flex: none !important">
+    <div class="d-flex align-items-center gap-1">
+      <a class="professional-link" (click)="goToProfessional()">{{
+        prestadorIsLogged === true ? "Prestar serviço" : "Seja um profissional"
+      }}</a>
+      <!-- Botão de login -->
+      <a
+        [routerLink]="
+          prestadorIsLogged || clienteIsLogged ? '/profile' : '/login'
+        "
+        [ngClass]="
+          prestadorIsLogged || clienteIsLogged
+            ? 'login-button2'
+            : 'login-button'
+        "
+      >
+        <i class="fas fa-bars"></i>
+        <i class="fas fa-user fs-3"></i>
       </a>
     </div>
-
-    <div central-content></div>
-    <!-- <div central-content></div> -->
-    <div right-content style="flex: none !important">
-      <div class="d-flex align-items-center gap-1">
-        <a class="professional-link" (click)="goToProfessional()">{{
-          prestadorIsLogged === true ? "Prestar serviço" : "Seja um profissional"
-        }}</a>
-        <!-- Botão de login -->
-        <a
-          [routerLink]="
-            prestadorIsLogged || clienteIsLogged ? '/profile' : '/login'
-          "
-          [ngClass]="
-            prestadorIsLogged || clienteIsLogged
-              ? 'login-button2'
-              : 'login-button'
-          "
-        >
-          <i class="fas fa-bars"></i>
-          <i class="fas fa-user fs-3"></i>
-        </a>
-      </div>
-    </div>
-  </app-nav>
-
+  </div>
+</app-nav>
+<section id="hero" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
   <ng-container #mfeContainer></ng-container>
 
   <div class="container">

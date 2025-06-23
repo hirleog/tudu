@@ -18,6 +18,8 @@ export class AddressComponent implements OnInit {
   optionSelected!: number;
 
   addressForm: FormGroup;
+  filters: any;
+  cardTitle: any;
 
   constructor(
     private fb: FormBuilder,
@@ -36,7 +38,6 @@ export class AddressComponent implements OnInit {
       complement: [''],
     });
 
-    // Fallback: Recupera os dados dos query parameters
     this.routeActive.queryParams.subscribe((params) => {
       const addressContent = params['addressContent']
         ? JSON.parse(params['addressContent'])
@@ -46,52 +47,13 @@ export class AddressComponent implements OnInit {
         this.addressForm.patchValue(addressContent[0]);
       }
 
-      // const cardTitle = params['cardTitle']
-      // const filters = params['filters'];
-      //   // ? JSON.parse(params['filters'])
-      //   // : null;
-
-      // if (cardTitle && filters) {
-      //   // this.titleFlow = proposalContent.cardTitle;
-
-      //   //   addressContent: JSON.stringify([this.addressForm.value]),
-      //   //   cardTitle: params['cardTitle'],
-      //   //   filters: JSON.stringify(params['filters']),
-      // }
+      this.cardTitle = params['cardTitle'];
+      this.filters = params['filters'];
     });
-
-    // this.routeActive.queryParams.subscribe((params) => {
-    //   this.route.navigate(['/proposal/address'], {
-    //     queryParams: {
-    //       addressContent: params['addressContent'], // Reenvia os parâmetros
-    //       proposalContent: params['proposalContent'],
-    //     },
-    //   });
-    // });
   }
 
   ngOnInit(): void {
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
-
-    // Recupera os dados do estado da navegação
-    // const navigation = this.route.getCurrentNavigation();
-    // const state = navigation?.extras.state as { addressData: any };
-
-    // if (state?.addressData) {
-    //   // Preenche o formulário com os dados recuperados do estado
-    //   this.addressForm.patchValue(state.addressData);
-    // } else {
-    //   // Fallback: Recupera os dados dos query parameters
-    //   this.routeActive.queryParams.subscribe((params) => {
-    //     const addressContent = params['addressContent']
-    //       ? JSON.parse(params['addressContent'])
-    //       : null;
-
-    //     if (addressContent && addressContent.length > 0) {
-    //       this.addressForm.patchValue(addressContent[0]);
-    //     }
-    //   });
-    // }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   selectItem(index: number): void {
@@ -102,14 +64,19 @@ export class AddressComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     let cep = input.value;
 
-    // Remove o caractere '-' do CEP
-    cep = cep.replace(/-/g, '');
+    // Formata o CEP com máscara
+    cep = cep.replace(/\D/g, '');
+    if (cep.length > 5) {
+      cep = cep.substring(0, 5) + '-' + cep.substring(5, 8);
+    }
+    input.value = cep;
 
-    // Atualiza o valor do campo de entrada e do formulário
-    this.addressForm.get('cep')?.setValue(cep, { emitEvent: false });
+    // Remove o caractere '-' para validação
+    const cleanCep = cep.replace(/-/g, '');
+    this.addressForm.get('cep')?.setValue(cleanCep, { emitEvent: false });
 
-    if (cep && cep.length === 8) {
-      this.addressService.getAddressByCep(cep).subscribe(
+    if (cleanCep && cleanCep.length === 8) {
+      this.addressService.getAddressByCep(cleanCep).subscribe(
         (data) => {
           if (data && !data.erro) {
             this.addressForm.patchValue({
@@ -119,7 +86,7 @@ export class AddressComponent implements OnInit {
               state: data.uf,
             });
           } else {
-            alert('CEP não encontrado!');
+            console.log('CEP não encontrado!');
           }
         },
         (error) => {
@@ -147,8 +114,8 @@ export class AddressComponent implements OnInit {
     this.routeActive.queryParams.subscribe((params) => {
       this.route.navigate(['/proposal'], {
         queryParams: {
-          cardTitle: params['cardTitle'], // Reenvia os parâmetros
-          filters: params['filters'],
+          cardTitle: this.cardTitle,
+          filters: this.filters,
         },
       });
     });

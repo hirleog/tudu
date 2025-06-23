@@ -127,43 +127,41 @@ export class ProposalComponent implements OnInit {
       ],
     },
   ];
+  filters: any;
 
   constructor(private routeActive: ActivatedRoute, private route: Router) {
     // let filtersFormat: any; // Inicializa a variável filtersFormatted como null
     // let filtersFormatted: any;
 
     this.routeActive.queryParams.subscribe((params) => {
-      const filters = params['filters'] ? JSON.parse(params['filters']) : null;
-      // filtersFormatted = filters;
+      this.filters = params['filters'] ? JSON.parse(params['filters']) : null;
+      this.paramCategory = params['cardTitle'] || null; // Obtém o título do card dos parâmetros da rota
+      // this.titleCard = this.paramCategory;
+ 
 
-      // if (typeof filters === 'string') {
-      //   filtersFormat = JSON.parse(filters);
-      //   filtersFormatted = filtersFormatted;
+      // if (this.filters) {
+      //   // Atualiza os checkboxes com base nos filtros selecionados
+      //   this.filterCategories.forEach((category) => {
+      //     // Encontra a categoria correspondente no JSON retornado
+      //     const matchingCategory = filters.find(
+      //       (filter: any) => filter.title === category.title
+      //     );
+
+      //     if (matchingCategory) {
+      //       // Atualiza as opções da categoria com base nos filtros selecionados
+      //       category.options.forEach((option) => {
+      //         const selectedFilter = matchingCategory.filters.find(
+      //           (filter: any) => filter.value === option.value
+      //         );
+      //         option.selected = !!selectedFilter; // Marca como selecionado se encontrado
+      //       });
+      //     }
+      //   });
       // }
-
-      if (filters) {
-        // Atualiza os checkboxes com base nos filtros selecionados
-        this.filterCategories.forEach((category) => {
-          // Encontra a categoria correspondente no JSON retornado
-          const matchingCategory = filters.find(
-            (filter: any) => filter.title === category.title
-          );
-
-          if (matchingCategory) {
-            // Atualiza as opções da categoria com base nos filtros selecionados
-            category.options.forEach((option) => {
-              const selectedFilter = matchingCategory.filters.find(
-                (filter: any) => filter.value === option.value
-              );
-              option.selected = !!selectedFilter; // Marca como selecionado se encontrado
-            });
-          }
-        });
-      }
     });
 
     this.routeActive.queryParams.subscribe((params) => {
-      this.paramCategory = params['card'];
+      this.paramCategory = params['cardTitle'] || null; // Obtém o título do card dos parâmetros da rota
     });
   }
 

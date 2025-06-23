@@ -1,49 +1,23 @@
-p {
-    color: var(--tag-p-grey);
-    font-weight: 700;
+/* Calendar styles */
+.min-w-max {
+  min-width: max-content;
 }
 
-#main-price {
-    font-size: 100px;
-    font-weight: 700;
-    color: #000;
-    display: flex;
-    justify-content: center;
-    padding: 0.5em;
+/* Scrollbar styling for calendar */
+.overflow-x-auto::-webkit-scrollbar {
+  height: 4px;
 }
 
-.fixed-buttons {
-    position: fixed;
-    bottom: 2%;
-    /* Distância do rodapé */
-    left: 50%;
-    /* Centraliza horizontalmente */
-    transform: translateX(-50%);
-    /* Ajusta para alinhar ao centro */
-    z-index: 1050;
-    /* Garante que fique acima dos outros elementos */
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    /* Espaçamento entre os botões */
+.overflow-x-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
 }
 
-.input-group input {
-    outline: none !important;
-    box-shadow: none !important;
-    border-color: #ced4da !important; /* Mantém a borda normal */
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
 }
-/* .input-group {
-    width: 100%;
-} */
 
-/* @media (min-width: 768px) {
-    .input-group {
-        width: 90%;
-    }
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
-@media (min-width: 992px) {
-    .input-group {
-        width: 55%;
-    }
-} */

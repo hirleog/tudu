@@ -1,123 +1,113 @@
-<div class="container mt-2 pt-5">
-  <div
-    class="align-calendar d-md-flex justify-content-md-center d-lg-flex justify-content-lg-center"
+<!-- Date picker -->
+<div class="w-full calendar-container-ajust" #calendarContainer>
+  <label for="date" class="block text-sm font-medium text-gray-700 mb-1"
+    >Data e horário</label
   >
+  <div class="relative">
     <div
-      *ngIf="showWeekView && weekDays.length > 0"
-      class="week-view-container mt-3 mb-3"
+      class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
     >
-      <div class="week-days">
-        <div
-          *ngFor="let day of weekDays"
-          class="day"
-          [class.first-day]="day.isFirst"
-          [class.marked-day]="isMarked(day.date)"
-          (click)="selectDate(day.date, $event)"
-        >
-          <div class="day-name">{{ getDayName(day.date) }}</div>
-          <div class="day-number">{{ day.date.date() }}</div>
-        </div>
-      </div>
+      <span class="text-gray-500 sm:text-sm">
+        <i class="far fa-calendar"></i>
+      </span>
+    </div>
+    <input
+      type="text"
+      id="date"
+      [(ngModel)]="dateTimeSelected"
+      name="dateTimeSelected"
+      class="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 custom-focus cursor-pointer"
+      placeholder="Selecione data e horário"
+      readonly
+      (click)="calendarActive = !calendarActive"
+    />
+    <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+      <button
+        type="button"
+        class="text-gray-500 hover:text-pink-600"
+        (click)="calendarActive = !calendarActive"
+      >
+        <i class="fas fa-chevron-down"></i>
+      </button>
     </div>
   </div>
 
-  <div class="container d-flex justify-content-center">
-    <div class="d-flex flex-column mt-1">
-      <div class="d-flex justify-content-center mb-2" *ngIf="!hasTime">
-        <button
-          *ngIf="showChangeDateBtn"
-          class="calendar-toggle-btn"
-          (click)="toggleCalendar()"
-        >
-          <i class="fas fa-calendar-alt"></i>
-        </button>
-      </div>
-
-      <!-- Fundo escurecido -->
-      <div
-        *ngIf="openCalendar === true && hasTime === false"
-        class="overlay"
-        (click)="toggleCalendar()"
-      ></div>
-
-      <!-- Calendário flutuante -->
-      <div
-        *ngIf="openCalendar || calendarActive"
-        class="calendar-container bg-white rounded-3 shadow-sm mt-2"
+  <!-- Calendar dropdown -->
+  <div
+    *ngIf="calendarActive"
+    class="mt-2 w-full bg-white border border-gray-200 rounded-lg shadow-lg p-4 z-50"
+  >
+    <div class="flex justify-between items-center mb-4">
+      <button
+        class="text-gray-500 hover:text-pink-600"
+        (click)="previousMonth()"
       >
+        <i class="fas fa-chevron-left"></i>
+      </button>
+      <span class="font-medium">{{ currentMonth }} {{ currentYear }}</span>
+      <button class="text-gray-500 hover:text-pink-600" (click)="nextMonth()">
+        <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Days of week -->
+    <div class="grid grid-cols-7 gap-2 text-center mb-2">
+      <div *ngFor="let day of daysOfWeek" class="text-xs text-gray-500 py-1">
+        {{ day }}
+      </div>
+    </div>
+
+    <!-- Days grid with horizontal scroll -->
+    <div class="overflow-x-auto">
+      <div class="grid grid-cols-7 gap-2 text-center min-w-max">
+        <!-- Empty cells for days from previous month -->
+        <div *ngFor="let empty of emptyDays" class="py-1 text-gray-400">
+          {{ empty }}
+        </div>
+
+        <!-- Days of current month -->
         <div
-          class="calendar-header d-flex justify-content-between align-items-center p-3 border-bottom"
+          *ngFor="let day of daysInMonth"
+          (click)="isDayDisabled(day) ? null : selectDate(day)"
+          [class.bg-pink-100]="isSelected(day)"
+          [class.text-pink-600]="isSelected(day)"
+          [class.font-bold]="isSelected(day)"
+          [class.text-gray-400]="isDayDisabled(day)"
+          [class.cursor-not-allowed]="isDayDisabled(day)"
+          [class.bg-gray-100]="isDayDisabled(day)"
+          [class.opacity-70]="isDayDisabled(day)"
+          class="py-1 rounded transition-colors duration-200"
+          [ngClass]="{
+            'hover:bg-pink-50': !isDayDisabled(day),
+            'hover:bg-gray-100': isDayDisabled(day)
+          }"
         >
-          <button
-            class="btn btn-sm btn-outline-secondary"
-            (click)="prevMonth()"
-          >
-            <i class="fa-solid fa-arrow-left"></i>
-          </button>
-          <h5 class="mb-0 fw-normal" style="color: var(--primary)">
-            {{ getMonthYear() }}
-          </h5>
-          <button
-            class="btn btn-sm btn-outline-secondary"
-            (click)="nextMonth()"
-          >
-            <i class="fa-solid fa-arrow-right"></i>
-          </button>
+          {{ day }}
         </div>
+      </div>
+    </div>
 
-        <div class="calendar-grid">
-          <!-- Cabeçalho dos dias da semana -->
-          <div class="calendar-weekdays row g-0">
-            <div
-              *ngFor="let day of weekdays"
-              class="col p-2 text-center text-muted small fw-normal"
-            >
-              {{ day }}
-            </div>
-          </div>
-
-          <!-- Dias do calendário -->
-          <div class="calendar-days row g-0">
-            <div
-              *ngFor="let day of days"
-              class="col calendar-day position-relative"
-              [class.disabled]="isDateDisabled(day)"
-              [class.calendar-day-marked]="isMarked(day)"
-              [class.calendar-day-outside]="!isCurrentMonth(day)"
-              [class.calendar-day-selected]="isSelected(day)"
-              (click)="selectDate(day, $event)"
-            >
-              <div class="day-number">{{ day.date() }}</div>
-              <div *ngIf="isMarked(day)" class="day-marker"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="mb-2 mt-3" *ngIf="hasTime">
-          <div class="col-12">
-            <label for="inputTime" class="form-label">Escolha um horário</label>
-            <input
-              type="time"
-              class="form-control"
-              id="inputTime"
-              [value]="selectedTime"
-              (change)="onTimeChange($event)"
-              placeholder="12:00"
-              required
-            />
-          </div>
-          <div class="mt-1">
-            <button
-              style="border-radius: 5px"
-              class="col-12 check-button d-flex align-items-center justify-content-center gap-2 p-2"
-              (click)="closeCalendarActive()"
-            >
-              Salvar
-              <i class="far fa-check-circle"></i>
-            </button>
-          </div>
-        </div>
+    <!-- Time picker -->
+    <div class="mt-4 pt-4 border-t border-gray-200">
+      <h4 class="text-sm font-medium text-gray-700 mb-2">Horário</h4>
+      <div class="grid grid-cols-4 gap-2">
+        <button
+          *ngFor="let time of availableTimes"
+          (click)="selectTime(time)"
+          [class.bg-pink-600]="time === timeSelected"
+          [class.text-white]="time === timeSelected"
+          [class.border-pink-200]="time === timeSelected"
+          class="py-2 text-sm rounded border border-gray-200 hover:bg-pink-50 hover:border-pink-200"
+        >
+          {{ time }}
+        </button>
       </div>
     </div>
   </div>
 </div>
+<!-- Overlay que escurece o fundo -->
+<div
+  *ngIf="calendarActive"
+  class="calendar-overlay"
+  (click)="this.calendarActive = false"
+></div>

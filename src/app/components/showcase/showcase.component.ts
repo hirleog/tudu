@@ -68,7 +68,7 @@ export class ShowcaseComponent implements OnInit {
     this.selectedCard = card;
 
     this.route.navigate(['/proposal'], {
-      queryParams: { card: card.cardDetail.label },
+      queryParams: { cardTitle: card.cardDetail.label },
     });
   }
 

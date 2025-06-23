@@ -1,4 +1,4 @@
-<app-nav *ngIf="false">
+<app-nav>
   <div left-content>
     <a (click)="goBack()" class="text-decoration-none text-dark">
       <i class="fas fa-arrow-left"></i>
@@ -22,140 +22,103 @@
     </a>
   </div>
 </app-nav>
-<section *ngIf="!isLoading">
+
+<section class="bg-gray-50 min-h-screen p-4">
   <div
-    id="make-offer"
-    class="d-flex flex-column justify-content-center"
-    data-aos="fade-right"
+    class="py-6 px-0 md:px-6 lg:px-8 max-w-4xl mx-auto w-full max-w-2xl bg-white rounded-xl shadow-lg transition-smooth"
   >
-    <div class="container d-flex flex-column gap-4">
-      <!-- Seta para voltar -->
-      <div id="proposal-header" class="mb-3" style="cursor: pointer"></div>
-
-      <div class="d-flex align-items-center justify-content-center mb-5">
-        <h2 class="mb-0 fw-bold">Faça sua oferta</h2>
-        <i
-          class="fas fa-credit-card"
-          style="color: #f80e6e; font-size: 24px; margin-left: 10px"
-        ></i>
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="p-8">
+      <div class="animate-pulse space-y-6">
+        <div class="h-8 bg-gray-200 rounded w-3/4"></div>
+        <div class="h-4 bg-gray-200 rounded w-full"></div>
+        <div class="h-4 bg-gray-200 rounded w-5/6"></div>
+        <div class="h-12 bg-gray-200 rounded mt-8"></div>
+        <div class="h-12 bg-gray-200 rounded"></div>
       </div>
-      <div class="d-flex flex-column gap-2">
-        <h2 class="mb-0 fw-bold text-start text-md-center">
-          Defina um preço para esse serviço
-        </h2>
-        <p class="text-start text-md-center">
-          Dica: O preço para montar custa entre 15% e 30% do valor do móvel
-        </p>
-      </div>
+    </div>
 
-      <div>
-        <div
-          class="col-12 col-md-8 col-lg-5 p-0 custom-input-container container"
-        >
-          <div class="input-group mb-3">
-            <span class="input-group-text">$</span>
-            <input
-              type="text"
-              class="form-control"
-              [(ngModel)]="price"
-              placeholder="0,00"
-              [disabled]="!!renegotiateActive"
-            />
-            <span class="input-group-text">.00</span>
-
-            <!-- <button
-            [ngClass]="{
-              'change-renegotiate-btn': renegotiateActive
-            }"
-            class="btn btn-outline-secondary"
-            type="button"
-            id="btn-renegotiate"
-            (click)="onPriceClose()"
-          >
-            <i
-              class="fa"
-              [ngClass]="!renegotiateActive ? 'fa-pencil' : 'fa-undo'"
-            ></i>
-          </button> -->
-          </div>
+    <!-- Content state -->
+    <div *ngIf="!isLoading" class="p-6 md:p-8">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <div class="flex flex-column items-center justify-center gap-3 mb-2">
+          <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
+            Faça sua oferta
+          </h2>
         </div>
+        <div class="space-y-2">
+          <h3 class="text-lg md:text-xl font-semibold text-gray-800">
+            Defina um preço para esse serviço
+          </h3>
+          <p class="text-gray-500 text-sm md:text-base">
+            Dica: O preço para montar custa entre 15% e 30% do valor do móvel
+          </p>
+          <i class="fas fa-credit-card text-pink-600 text-2xl"></i>
+        </div>
+      </div>
 
-        <div class="col-12 col-md-8 col-lg-5 p-0 container" #calendarContainer>
-          <div class="custom-input-container">
-            <div class="input-group mb-3">
-              <span class="input-group-text">#</span>
-              <input
-                [readonly]="true"
-                type="datetime"
-                class="form-control"
-                aria-label="Amount (to the nearest dollar)"
-                [(ngModel)]="dateTimeSelected"
-                (click)="onCalendarClose()"
-              />
-              <span
-                class="input-group-text"
-                (click)="onCalendarClose()"
-                style="width: 46.72px"
-                ><i class="fas fa-calendar-alt"></i
-              ></span>
-
-              <!-- <button
-              [ngClass]="{
-                'change-renegotiate-btn': calendarActive
-              }"
-              class="btn btn-outline-secondary"
-              type="button"
-              id="btn-renegotiate"
-              (click)="onCalendarClose()"
+      <!-- Form -->
+      <div class="space-y-6 flex flex-column gap-2">
+        <!-- Price input -->
+        <div class="w-full">
+          <label
+            for="price"
+            class="block text-sm font-medium text-gray-700 mb-1"
+            >Valor da oferta</label
+          >
+          <div class="relative rounded-md shadow-sm">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
             >
-              <i
-                class="fas"
-                [ngClass]="!calendarActive ? 'fa-calendar-alt' : 'fa-undo'"
-              ></i>
-            </button> -->
+              <span class="text-gray-500 sm:text-sm">R$</span>
+            </div>
+            <input
+              type="number"
+              id="price"
+              [(ngModel)]="price"
+              name="price"
+              class="price-input block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 custom-focus"
+              placeholder="0,00"
+              min="0"
+              step="0.01"
+            />
+            <div
+              class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none"
+            >
+              <span class="text-gray-500 sm:text-sm">.00</span>
             </div>
           </div>
-
-          <div style="z-index: 1001">
-            <app-calendar
-              [initialDateTime]="initialDateTime"
-              [openCalendar]="calendarActive"
-              [hasTime]="true"
-              [showWeekView]="false"
-              (dateSelected)="onDateSelected($event)"
-              (timeSelected)="onTimeSelected($event)"
-            >
-            </app-calendar>
-          </div>
         </div>
-      </div>
 
-      <div>
-        <p class="text-start text-md-center">
+        <app-calendar
+          [hasTime]="true"
+          (dateSelectedChange)="onDateSelected($event)"
+          (timeSelectedChange)="onTimeSelected($event)"
+        >
+        </app-calendar>
+
+        <!-- Info text -->
+        <p class="text-center text-gray-500 text-sm md:text-base">
           Esse não é o valor final, você pode negociar diretamente com o
           prestador.
         </p>
       </div>
+
+      <!-- Buttons -->
+      <div class="mt-8 flex flex-column gap-2">
+        <button
+          (click)="createCard()"
+          class="col-12 btn btn-primary"
+          [disabled]="dateTimeSelected === '' || price === ''"
+        >
+          Avançar
+          <i class="fas fa-paper-plane"></i>
+        </button>
+        <button (click)="goBack()" class="col-12 btn btn-outline-primary">
+          Voltar
+        </button>
+      </div>
     </div>
   </div>
-
-  <!-- Botão de envio -->
-  <div class="container d-flex justify-content-center mt-5 gap-2 mb-5">
-    <!-- <button class="btn btn-primary mt-3" data-bs-target="#formCarousel" data-bs-slide="prev">Voltar</button> -->
-
-    <button (click)="goBack()" class="col-6 btn btn-outline-primary mt-3">
-      Voltar
-    </button>
-
-    <button class="col-6 btn btn-primary mt-3 send-btn" (click)="createCard()">
-      Avançar
-    </button>
-  </div>
-
-  <!-- <div>
-    <app-payment></app-payment>
-  </div> -->
 </section>
-<div class="container" *ngIf="isLoading">
-  <app-card-skeleton [isOffer]="true"></app-card-skeleton>
-</div>

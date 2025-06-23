@@ -65,7 +65,7 @@ export class MakeOfferComponent implements OnInit {
   ngOnInit(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
 
-    this.dateTimeSelected = this.initialDateTime;
+    // this.dateTimeSelected = this.initialDateTime;
     this.selectedFiles = this.sharedService.getFiles();
 
     this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
@@ -97,7 +97,7 @@ export class MakeOfferComponent implements OnInit {
       categoria: this.cardTitle,
       status_pedido: 'publicado',
       subcategoria: filtersConcat,
-      valor: this.price,
+      valor: this.price.toString(),
       horario_preferencial: dateTimeFormat,
       codigo_confirmacao: codigoConfirmacao,
       cep: this.addressContent[0].cep,
@@ -137,16 +137,19 @@ export class MakeOfferComponent implements OnInit {
   }
 
   onDateSelected(date: string) {
-    const time = this.dateTimeSelected.split(' - ')[1]; // Mantém a hora se já existir
+    const time =
+      this.dateTimeSelected?.split(' - ')[1] || this.timeSelected || '00:00';
 
-    this.dateSelected = moment(date).format('DD/MM/YYYY'); // Formata a data selecionada
-    this.dateTimeSelected = `${this.dateSelected} - ${time}`;
+    this.dateSelected = date;
+    this.dateTimeSelected = `${date} - ${time}`;
   }
 
   onTimeSelected(time: string) {
     this.timeSelected = time;
-    this.dateTimeSelected = `${this.dateSelected} - ${this.timeSelected}`;
+    const date = this.dateSelected || moment().format('DD/MM/YYYY');
+    this.dateTimeSelected = `${date} - ${time}`;
   }
+ 
 
   goBack(): void {
     this.routeActive.queryParams.subscribe((params) => {
@@ -159,6 +162,12 @@ export class MakeOfferComponent implements OnInit {
       });
     });
   }
+
+  // onDateTimeSelected(event:any): void {
+  //   // Atualiza a data e hora selecionadas
+  //   this.dateTimeSelected = event;
+  //   console.log('Data e hora selecionadas:', this.dateTimeSelected);
+  // }
 
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória

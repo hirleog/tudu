@@ -222,6 +222,16 @@ hr {
   border: 1px solid var(--primary);
   background-color: var(--primary-dark);
 }
+
+.btn-outline-primary:disabled,
+.btn-outline-primary[disabled] {
+  background-color: var(--light);
+  border-color: var(--primary);
+  color: var(--primary); /* ou outra cor que desejar */
+  opacity: 0.65; /* para dar aparência de desabilitado */
+  box-shadow: none;
+  cursor: not-allowed;
+}
 .btn-outline-primary {
   border: 1px solid var(--primary);
   color: var(--primary);

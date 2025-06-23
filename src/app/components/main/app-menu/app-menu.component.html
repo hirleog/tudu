@@ -1,4 +1,3 @@
-<!-- <section *ngIf="showDiv && (prestadorIsLogged || clienteIsLogged && isProfessional === false)"> -->
 <section>
   <div
     *ngIf="
@@ -8,47 +7,56 @@
     "
   >
     <div class="d-flex align-items-center justify-content-around menu-fixo">
+      <!-- Serviços -->
       <div
         class="menu-item"
-        [routerLink]="
-          isProfessional === true || isProfileRoute === true
-            ? '/tudu-professional/home'
-            : '/'
+        [class.active]="
+          router.url ===
+          (isProfessional || isProfileRoute ? '/tudu-professional/home' : '/')
         "
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="
+          switchRoute(
+            isProfessional || isProfileRoute ? '/tudu-professional/home' : '/'
+          )
+        "
       >
         <i class="fas fa-search"></i>
-        <!-- Ícone de pedidos -->
         <p>Serviços</p>
       </div>
+
+      <!-- Pedidos -->
       <div
         *ngIf="isProfessional === false && isProfileRoute === false"
         class="menu-item"
-        routerLink="/home"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
+        [class.active]="router.url === '/home'"
+        (click)="switchRoute('/home')"
       >
         <i class="fas fa-tasks"></i>
-        <!-- Ícone de pedidos -->
         <p>Pedidos</p>
       </div>
 
+      <!-- Pendentes -->
       <div
         class="menu-item"
-        [routerLink]="
-          isProfessional === true || isProfileRoute === true
+        [class.active]="
+          router.url ===
+          (isProfessional || isProfileRoute
             ? '/tudu-professional/progress'
-            : '/home/progress'
+            : '/home/progress')
         "
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="
+          switchRoute(
+            isProfessional || isProfileRoute
+              ? '/tudu-professional/progress'
+              : '/home/progress'
+          )
+        "
       >
         <i class="fas fa-clock"></i>
-        <!-- Ícone de pendentes -->
         <p>Pendentes</p>
       </div>
 
+      <!-- Perfil -->
       <div
         [ngClass]="profileActiveColor || isProfileRoute ? 'active' : 'inactive'"
         class="menu-item"

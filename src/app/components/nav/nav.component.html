@@ -1,29 +1,28 @@
+<!-- Overlay -->
 <div
-  *ngIf="openClose === true"
+  *ngIf="openClose"
   (click)="openClose = false"
-  class="overlay"
+  class="fixed inset-0 bg-black bg-opacity-40 z-40"
 ></div>
 
-<nav class="navbar navbar-expand-lg fixed-top">
+<!-- Navbar -->
+<nav class="bg-white shadow-md w-full z-50 relative">
   <div
-    class="container-fluid d-flex justify-content-between align-items-center"
+    class="max-w-screen-md mx-auto px-4 px-md-2 h-16 flex items-center justify-between"
   >
     <!-- Slot esquerdo -->
-    <div class="navbar-left">
+    <div class="flex items-center">
       <ng-content select="[left-content]"></ng-content>
     </div>
 
     <!-- Slot central -->
-    <div class="navbar-center">
+    <div class="flex items-center justify-center">
       <ng-content select="[central-content]"></ng-content>
     </div>
 
     <!-- Slot direito -->
-    <div class="navbar-right">
+    <div class="flex items-center justify-end">
       <ng-content select="[right-content]"></ng-content>
     </div>
   </div>
 </nav>
-
-<!-- Conteúdo da página -->
-<div class="container mt-3 pt-3"></div>

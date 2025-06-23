@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthHelper } from '../../helpers/auth-helper';
 import { Subscription } from 'rxjs';
+import { StateManagementService } from 'src/app/services/state-management.service';
 
 @Component({
   selector: 'app-menu',
@@ -30,7 +31,11 @@ export class AppMenuComponent implements OnInit {
   prestadorIsLogged: boolean = false;
   isEndFlow: boolean = false;
 
-  constructor(private router: Router, public authService: AuthService) {
+  constructor(
+    public router: Router,
+    public authService: AuthService,
+    public stateManagementService: StateManagementService
+  ) {
     this.router.events
       .pipe(
         filter(
@@ -77,6 +82,7 @@ export class AppMenuComponent implements OnInit {
 
   goToProfile() {
     const currentUrl = this.router.url;
+    this.stateManagementService.clearState();
 
     // Verifica se já está na rota correta com o parâmetro
     if (currentUrl === '/profile?param=professional') {
@@ -92,6 +98,22 @@ export class AppMenuComponent implements OnInit {
       this.router.navigate(['/profile']);
     }
   }
+
+  switchRoute(route: string) {
+    // Evita navegação redundante
+    const currentRoute = this.router.url.replace('/', '');
+    const cleanRoute = route.replace('/', '');
+
+    if (currentRoute === cleanRoute) return;
+
+    // Se não for a rota home, limpa o cache
+    if (cleanRoute !== 'home') {
+      this.stateManagementService.clearState();
+    }
+
+    this.router.navigate([route]);
+  }
+
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória
     this.subscriptionCliente.unsubscribe();

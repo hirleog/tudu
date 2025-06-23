@@ -16,12 +16,15 @@ import * as moment from 'moment';
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit {
-  currentDate = moment();
+  // currentDate = moment();
   days: moment.Moment[] = [];
   weekdays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   selectedDate: moment.Moment | null = null;
   selectedTime: string = '';
+
+  // timeSelected: string = '';
+  dateSelected: string = '';
 
   @Input() openCalendar: boolean = false; // Array de datas no formato 'YYYY-MM-DD'
   @Input() showChangeDateBtn: boolean = true; // Array de datas no formato 'YYYY-MM-DD'
@@ -32,187 +35,162 @@ export class CalendarComponent implements OnInit {
   @Input() initialTime: string = ''; // Adicione isso junto com os outros @Input()
   @Input() initialDateTime: any; // Adicione isso junto com os outros @Input()
 
-  @Output() dateSelected = new EventEmitter<string>();
-  @Output() timeSelected = new EventEmitter<string>();
+  // @Output() dateSelected = new EventEmitter<string>();
+  // @Output() timeSelected = new EventEmitter<string>();
   @Output() closeCalendar = new EventEmitter<void>();
+  @Output() dateSelectedChange = new EventEmitter<string>(); // Emite a data no formato 'DD/MM/YYYY'
+  @Output() timeSelectedChange = new EventEmitter<string>(); // Emite o horário no formato 'HH:mm'
+  @Output() dateTimeSelectedChange = new EventEmitter<string>(); // Emite a data e hora no formato 'DD/MM/YYYY - HH:mm'
 
   @Input() showWeekView: boolean = false;
   weekDays: { date: moment.Moment; isFirst: boolean }[] = [];
   calendarActive: boolean = false;
 
+  private today = moment();
+  private maxSelectableDate = moment().add(15, 'days');
+
+  dateTimeSelected: string = '';
+  currentDate: moment.Moment = moment();
+  daysOfWeek: string[] = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+  daysInMonth: number[] = [];
+  emptyDays: number[] = [];
+  currentMonth: string = '';
+  currentYear: string = '';
+  timeSelected: string = '';
+  availableTimes: string[] = [
+    '08:00',
+    '10:00',
+    '12:00',
+    '14:00',
+    '16:00',
+    '18:00',
+    '20:00',
+    '21:00',
+  ];
   constructor(private elementRef: ElementRef) {
     this.generateCalendar();
   }
-  
+
   ngOnInit() {
-    this.processInitialDateTime();
-  }
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['initialDateTime']) {
-      this.processInitialDateTime();
-    }
-
-    if (changes['markedDates'] || changes['showWeekView']) {
-      if (this.showWeekView && this.markedDates?.length > 0) {
-        this.generateWeekDays();
-      }
-    }
-
-    if (changes['openCalendar']) {
-      this.openCalendar = changes['openCalendar'].currentValue;
-      this.calendarActive = this.openCalendar;
-      console.log('Calendar state changed:', this.openCalendar);
-      // Aqui você pode executar lógica adicional quando o valor mudar
-    }
+    this.generateCalendar();
+    this.timeSelected = this.dateTimeSelected.split(' - ')[1] || '12:00';
   }
 
-  private processInitialDateTime() {
-    if (!this.initialDateTime) return;
+  generateCalendar(): void {
+    // Limpa os arrays
+    this.daysInMonth = [];
+    this.emptyDays = [];
 
-    // Separa a data e hora (formato "DD/MM/YYYY - HH:mm")
-    const [datePart, timePart] = this.initialDateTime.split(' - ');
+    // Obtém o primeiro dia do mês
+    const firstDay = moment(this.currentDate).startOf('month');
+    // Obtém o número de dias no mês
+    const daysInMonth = this.currentDate.daysInMonth();
 
-    // Processa a data
-    if (datePart) {
-      const parsedDate = moment(datePart, 'DD/MM/YYYY');
-      if (parsedDate.isValid()) {
-        this.selectedDate = parsedDate;
-        this.currentDate = parsedDate.clone();
+    // Preenche os dias vazios no início (dias do mês anterior)
+    const startDay = firstDay.day();
+    for (let i = 0; i < startDay; i++) {
+      const prevMonth = moment(this.currentDate).subtract(1, 'month');
+      const daysInPrevMonth = prevMonth.daysInMonth();
+      this.emptyDays.push(daysInPrevMonth - (startDay - i - 1));
+    }
+
+    // Preenche os dias do mês atual
+    for (let i = 1; i <= daysInMonth; i++) {
+      this.daysInMonth.push(i);
+    }
+
+    // Atualiza o mês e ano exibidos
+    this.currentMonth = this.currentDate.format('MMMM');
+    this.currentYear = this.currentDate.format('YYYY');
+  }
+
+  isDayDisabled(day: number): boolean {
+    const currentDate = moment(this.currentDate).date(day);
+
+    // Verifica se a data é anterior ao dia atual
+    const isBeforeToday = currentDate.isBefore(this.today, 'day');
+
+    // Verifica se a data é mais de 15 dias no futuro
+    const isAfterMaxDate = currentDate.isAfter(this.maxSelectableDate, 'day');
+
+    return isBeforeToday || isAfterMaxDate;
+  }
+
+  previousMonth(): void {
+    const prevMonth = moment(this.currentDate).subtract(1, 'month');
+
+    // Verifica se o mês anterior contém dias selecionáveis
+    const lastDayOfPrevMonth = prevMonth.endOf('month');
+    if (lastDayOfPrevMonth.isAfter(this.today)) {
+      this.currentDate = prevMonth;
+      this.generateCalendar();
+    } else {
+      // Se o mês anterior estiver parcialmente no passado, verifique se há dias válidos
+      const firstDayOfPrevMonth = prevMonth.startOf('month');
+      if (firstDayOfPrevMonth.isBefore(this.today)) {
+        this.currentDate = prevMonth;
         this.generateCalendar();
       }
     }
-
-    // Processa a hora
-    if (timePart) {
-      // Garante que o formato é HH:mm (24 horas)
-      this.selectedTime = timePart.length === 5 ? timePart : '';
-    }
   }
 
-  toggleCalendar(param?: string): void {
-    this.openCalendar = !this.openCalendar;
-  }
+  // Atualize o método nextMonth para não permitir navegar para meses com datas inválidas
+  nextMonth(): void {
+    const nextMonth = moment(this.currentDate).add(1, 'month');
 
-  generateWeekDays() {
-    const firstDate = moment(this.markedDates[0]);
-    this.weekDays = [];
-
-    // Gerar os 7 dias a partir da primeira data marcada
-    for (let i = 0; i < 7; i++) {
-      const currentDate = firstDate.clone().add(i, 'days');
-      this.weekDays.push({
-        date: currentDate,
-        isFirst: i === 0,
-      });
-    }
-  }
-
-  getDisplayedDays() {
-  const screenWidth = window.innerWidth;
-    // Se a tela for menor que 380px, mostra 6 dias, senão mostra todos os 7
-    return screenWidth < 380 ? this.weekDays.slice(0, 6) : this.weekDays;
-  }
-
-  getDayName(date: moment.Moment): string {
-    return date.format('ddd');
-  }
-
-  generateCalendar() {
-    this.days = [];
-
-    // Primeiro dia do mês
-    const startOfMonth = this.currentDate.clone().startOf('month');
-    // Último dia do mês
-    const endOfMonth = this.currentDate.clone().endOf('month');
-
-    // Dia da semana do primeiro dia (0-6)
-    const startDay = startOfMonth.day();
-
-    // Dia da semana do último dia (0-6)
-    const endDay = endOfMonth.day();
-
-    // Data inicial (pode ser do mês anterior)
-    const startDate = startOfMonth.clone().subtract(startDay, 'days');
-
-    // Data final (pode ser do próximo mês)
-    const endDate = endOfMonth.clone().add(6 - endDay, 'days');
-
-    // Gerar todos os dias do calendário
-    let date = startDate.clone();
-    while (date.isBefore(endDate)) {
-      this.days.push(date.clone());
-      date.add(1, 'day');
-    }
-  }
-
-  prevMonth() {
-    this.currentDate.subtract(1, 'month');
-    this.generateCalendar();
-  }
-
-  nextMonth() {
-    this.currentDate.add(1, 'month');
-    this.generateCalendar();
-  }
-
-  isMarked(date: moment.Moment): boolean {
-    const dateStr = date.format('YYYY-MM-DD');
-    return this.markedDates.includes(dateStr);
-  }
-  isSelected(date: moment.Moment): boolean {
-    return !!this.selectedDate && date.isSame(this.selectedDate, 'day');
-  }
-
-  selectDate(date: moment.Moment, event: MouseEvent) {
-    if (this.isDateDisabled(date)) {
-      event.stopPropagation();
-      return; // Impede seleção de datas desabilitadas
-    }
-  
-    event.stopPropagation();
-    this.selectedDate = date;
-    this.dateSelected.emit(date.format('YYYY-MM-DD'));
-  
-    if (this.hasTime) {
-      this.openCalendar = true;
-    }
-  }
-  onTimeChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    this.timeSelected.emit(inputElement.value); // Emite o valor para o pai
-  }
-  isCurrentMonth(date: moment.Moment): boolean {
-    return date.month() === this.currentDate.month();
-  }
-
-  getMonthYear(): string {
-    return this.currentDate.format('MMMM YYYY');
-  }
-
-  closeCalendarActive() {
-    this.openCalendar = false;
-    this.calendarActive = false;
-  }
-
-  isDateDisabled(date: moment.Moment): boolean {
-    const tomorrowNoon = moment().add(1, 'day').startOf('day').add(12, 'hours');
-    return date.isBefore(tomorrowNoon, 'day');
-  }
-
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-    if (this.openCalendar) {
-      const calendarContainer = this.elementRef.nativeElement.querySelector(
-        '.calendar-container'
-      );
-      const clickedInside =
-        this.elementRef.nativeElement.contains(event.target) ||
-        (calendarContainer && calendarContainer.contains(event.target));
-
-      if (!clickedInside) {
-        this.openCalendar = false;
-        this.closeCalendar.emit();
+    // Verifica se o próximo mês contém dias selecionáveis
+    const lastDayOfNextMonth = nextMonth.endOf('month');
+    if (lastDayOfNextMonth.isBefore(this.maxSelectableDate)) {
+      this.currentDate = nextMonth;
+      this.generateCalendar();
+    } else {
+      // Se o próximo mês estiver totalmente no futuro, não navegue
+      const firstDayOfNextMonth = nextMonth.startOf('month');
+      if (firstDayOfNextMonth.isBefore(this.maxSelectableDate)) {
+        this.currentDate = nextMonth;
+        this.generateCalendar();
       }
+    }
+  }
+
+  selectDate(day: number): void {
+    if (this.isDayDisabled(day)) return;
+
+    const selectedDate = moment(this.currentDate).date(day);
+    this.dateSelected = selectedDate.format('DD/MM/YYYY');
+    this.dateSelectedChange.emit(this.dateSelected);
+    this.updateDateTime();
+  }
+  selectTime(time: string): void {
+    this.timeSelected = time;
+    this.timeSelectedChange.emit(this.timeSelected); // Emite o horário selecionado
+    this.updateDateTime();
+  }
+
+  updateDateTime(): void {
+    if (this.dateSelected && this.timeSelected) {
+      this.dateTimeSelected = `${this.dateSelected} - ${this.timeSelected}`;
+      this.dateTimeSelectedChange.emit(this.dateTimeSelected); // Emite data e hora juntos
+    }
+  }
+
+  isSelected(day: number): boolean {
+    if (!this.dateSelected) return false;
+    const selectedDay = moment(this.dateSelected, 'DD/MM/YYYY').date();
+    const selectedMonth = moment(this.dateSelected, 'DD/MM/YYYY').month();
+    const selectedYear = moment(this.dateSelected, 'DD/MM/YYYY').year();
+
+    return (
+      day === selectedDay &&
+      this.currentDate.month() === selectedMonth &&
+      this.currentDate.year() === selectedYear
+    );
+  }
+
+    @HostListener('document:click', ['$event'])
+  onClickOutside(event: MouseEvent) {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.calendarActive = false;
     }
   }
 }

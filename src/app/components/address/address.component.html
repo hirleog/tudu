@@ -22,150 +22,203 @@
     </a>
   </div>
 </app-nav>
-<section [ngClass]="{ spacement: optionSelected === 0 }">
-  <div id="address" data-aos="fade-down" class="mt-4">
-    <div class="container">
-      <div class="container">
-        <h4 class="text-start mb-3">Onde o serviço vai ser realizado?</h4>
-      </div>
-      <!-- <div class="d-flex justify-content-center">
-        <ul class="col-12" (click)="$event.stopPropagation()">
-          <li *ngFor="let option of options; let i = index">
-            <label class="form-check w-100 ms-2 d-flex align-items-center">
-              <input
-                class="form-check-input me-2"
-                type="radio"
-                [(ngModel)]="optionSelected"
-                (click)="selectItem(i)"
-                [value]="option"
-              />
-              {{ option }}
-            </label>
-          </li>
-        </ul>
-      </div> -->
 
-      <!-- *ngIf="optionSelected !== undefined && optionSelected === 0" -->
-      <div class="mt-4" data-aos="fade-down">
-        <hr class="mb-3" />
+<section class="bg-gray-50 min-h-screen">
+  <div class="py-8 px-4 md:px-6 lg:px-8 max-w-4xl mx-auto">
+    <div id="address" [class.animate-fade-in]="true">
+      <div class="bg-white rounded-xl shadow-sm p-6 md:p-8">
+        <div class="mb-6">
+          <h2 class="text-2xl font-bold text-gray-800 flex items-center">
+            <i
+              style="color: var(--primary)"
+              class="fas fa-map-marker-alt mr-3"
+            ></i>
+            {{ titleFlow }}
+          </h2>
+          <p class="text-gray-500 mt-1">
+            Preencha os dados do local onde o serviço será executado
+          </p>
+        </div>
 
-        <form [formGroup]="addressForm" (ngSubmit)="onSubmit()">
-          <div class="row mb-3">
-            <div class="col-md-4">
-              <label for="cep" class="form-label">CEP:</label>
-              <input
-                id="cep"
-                formControlName="cep"
-                class="form-control"
-                (input)="onCepChange($event)"
-                maxlength="9"
-                placeholder="Digite o CEP"
-              />
-              <div
+        <hr class="my-6 border-gray-200" />
+
+        <form
+          [formGroup]="addressForm"
+          class="space-y-6"
+          (ngSubmit)="onSubmit()"
+        >
+          <!-- CEP Field -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="md:col-span-2">
+              <label
+                for="cep"
+                class="block text-sm font-medium text-gray-700 mb-1"
+              >
+                CEP <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <input
+                  id="cep"
+                  type="text"
+                  maxlength="9"
+                  placeholder="00000-000"
+                  formControlName="cep"
+                  (input)="onCepChange($event)"
+                  class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary shadow-sm transition duration-200"
+                />
+                <button
+                  type="button"
+                  class="absolute right-3 top-1/2 transform -translate-y-1/2 text-primary"
+                  (click)="onCepChange($event)"
+                >
+                  <i style="color: var(--primary)" class="fas fa-search"></i>
+                </button>
+              </div>
+              <p
                 *ngIf="
                   addressForm.get('cep')?.invalid &&
                   addressForm.get('cep')?.touched
                 "
-                class="form-text text-danger"
+                class="mt-1 text-sm text-red-500"
               >
-                CEP inválido.
-              </div>
+                CEP inválido
+              </p>
             </div>
           </div>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="street" class="form-label">Rua:</label>
+
+          <!-- Street and Neighborhood -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label
+                for="street"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Rua</label
+              >
               <input
                 id="street"
-                formControlName="street"
-                class="form-control"
+                type="text"
                 readonly
-                placeholder="Rua"
+                placeholder="Nome da rua"
+                formControlName="street"
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-gray-50 input-readonly"
               />
             </div>
-            <div class="col-md-6">
-              <label for="neighborhood" class="form-label">Bairro:</label>
+            <div>
+              <label
+                for="neighborhood"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Bairro</label
+              >
               <input
                 id="neighborhood"
-                formControlName="neighborhood"
-                class="form-control"
+                type="text"
                 readonly
-                placeholder="Bairro"
+                placeholder="Nome do bairro"
+                formControlName="neighborhood"
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-gray-50 input-readonly"
               />
             </div>
           </div>
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label for="city" class="form-label">Cidade:</label>
+
+          <!-- City and State -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label
+                for="city"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Cidade</label
+              >
               <input
                 id="city"
-                formControlName="city"
-                class="form-control"
+                type="text"
                 readonly
-                placeholder="Cidade"
+                placeholder="Nome da cidade"
+                formControlName="city"
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-gray-50 input-readonly"
               />
             </div>
-            <div class="col-md-6">
-              <label for="state" class="form-label">Estado:</label>
+            <div>
+              <label
+                for="state"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Estado</label
+              >
               <input
                 id="state"
-                formControlName="state"
-                class="form-control"
+                type="text"
                 readonly
-                placeholder="Estado"
+                placeholder="UF"
+                formControlName="state"
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 bg-gray-50 input-readonly"
               />
             </div>
           </div>
-          <div class="row mb-3">
-            <div class="col-md-4">
-              <label for="number" class="form-label">Número:</label>
+
+          <!-- Number and Complement -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label
+                for="number"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Número <span class="text-red-500">*</span></label
+              >
               <input
                 id="number"
-                formControlName="number"
-                class="form-control"
+                type="text"
                 placeholder="Número"
+                formControlName="number"
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary shadow-sm transition duration-200"
               />
+              <p
+                *ngIf="
+                  addressForm.get('number')?.invalid &&
+                  addressForm.get('number')?.touched
+                "
+                class="mt-1 text-sm text-red-500"
+              >
+                Número é obrigatório
+              </p>
             </div>
-            <div class="col-md-8">
-              <label for="complement" class="form-label">Complemento:</label>
+            <div class="md:col-span-2">
+              <label
+                for="complement"
+                class="block text-sm font-medium text-gray-700 mb-1"
+                >Complemento</label
+              >
               <input
                 id="complement"
+                type="text"
+                placeholder="Complemento (opcional)"
                 formControlName="complement"
-                class="form-control"
-                placeholder="Complemento"
+                class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary shadow-sm transition duration-200"
               />
             </div>
           </div>
-          <div class="send-btn-fixed mt-5" *ngIf="showBtns">
-            <button
+
+          <!-- Buttons -->
+          <div
+            *ngIf="showBtns"
+            class="flex flex-col-reverse md:flex-row justify-between gap-4 pt-6"
+          >
+            <!-- <button
+              type="button"
+              class="px-6 py-3 w-full md:w-auto rounded-lg border border-primary text-primary font-medium hover:bg-gray-50 transition duration-200 flex items-center justify-center"
               (click)="goBack()"
-              class="col-6 btn btn-outline-primary mt-3"
             >
+              <i class="fas fa-arrow-left mr-2"></i>
               Voltar
-            </button>
+            </button> -->
             <button
               type="submit"
-              [disabled]="addressForm.invalid"
-              class="col-6 btn btn-primary mt-3 send-btn"
+              class="col-12 btn btn-outline-primary disabled:opacity-50"
+              [disabled]="!addressForm.valid"
             >
-              Proxímo
+              Próximo
+              <i class="fas fa-arrow-right ml-2"></i>
             </button>
           </div>
         </form>
       </div>
-
-      <!-- Botão de envio -->
     </div>
   </div>
-  <!-- <div class="fixed-buttons mt-5" *ngIf="showBtns">
-    <button
-      *ngIf="optionSelected === undefined"
-      (click)="goBack()"
-      class="btn-ui btn-primary mt-3"
-    >
-      Voltar
-    </button>
-  </div> -->
 </section>
-
-<!-- <app-footer></app-footer> -->
