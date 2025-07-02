@@ -82,7 +82,8 @@ export class AppMenuComponent implements OnInit {
 
   goToProfile() {
     const currentUrl = this.router.url;
-    this.stateManagementService.clearState();
+    this.stateManagementService.clearState('publicado');
+    this.stateManagementService.clearState('finalizado');
 
     // Verifica se já está na rota correta com o parâmetro
     if (currentUrl === '/profile?param=professional') {
@@ -108,7 +109,8 @@ export class AppMenuComponent implements OnInit {
 
     // Se não for a rota home, limpa o cache
     if (cleanRoute !== 'home') {
-      this.stateManagementService.clearState();
+      this.stateManagementService.clearState('publicado');
+      this.stateManagementService.clearState('finalizado');
     }
 
     this.router.navigate([route]);

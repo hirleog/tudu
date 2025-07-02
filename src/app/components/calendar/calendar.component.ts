@@ -187,9 +187,10 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-    @HostListener('document:click', ['$event'])
+  @HostListener('document:click', ['$event'])
   onClickOutside(event: MouseEvent) {
     if (!this.elementRef.nativeElement.contains(event.target)) {
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
       this.calendarActive = false;
     }
   }

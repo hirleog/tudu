@@ -23,12 +23,12 @@
   </div>
 </app-nav>
 
-<section class="bg-gray-50 min-h-screen p-4">
+<section class="bg-gray-50 min-h-screen p-4" *ngIf="!isLoading">
   <div
     class="py-6 px-0 md:px-6 lg:px-8 max-w-4xl mx-auto w-full max-w-2xl bg-white rounded-xl shadow-lg transition-smooth"
   >
     <!-- Loading state -->
-    <div *ngIf="isLoading" class="p-8">
+    <!-- <div class="p-8">
       <div class="animate-pulse space-y-6">
         <div class="h-8 bg-gray-200 rounded w-3/4"></div>
         <div class="h-4 bg-gray-200 rounded w-full"></div>
@@ -36,10 +36,10 @@
         <div class="h-12 bg-gray-200 rounded mt-8"></div>
         <div class="h-12 bg-gray-200 rounded"></div>
       </div>
-    </div>
+    </div> -->
 
     <!-- Content state -->
-    <div *ngIf="!isLoading" class="p-6 md:p-8">
+    <div class="p-6 md:p-8">
       <!-- Header -->
       <div class="text-center mb-8">
         <div class="flex flex-column items-center justify-center gap-3 mb-2">
@@ -124,3 +124,22 @@
 
   <!-- <app-payment></app-payment> -->
 </section>
+
+<!-- ----------------- LOADER MAKE-OFFER ------------------ -->
+<div
+  *ngIf="isLoading"
+  class="flex flex-col items-center justify-center min-h-screen space-y-8 bg-white"
+>
+  <div
+    class="text-5xl font-bold animate-pulse"
+    style="color: #f80e6e; font-family: 'Roboto', sans-serif"
+  >
+    Tudü
+  </div>
+  <div class="text-gray-700 text-center text-xl px-6 leading-relaxed">
+    Estamos finalizando a criação do seu pedido...
+  </div>
+  <div
+    class="w-20 h-20 border-4 border-[#f80e6e] border-t-transparent rounded-full animate-spin"
+  ></div>
+</div>

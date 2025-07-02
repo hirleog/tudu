@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { CardOrders } from 'src/app/interfaces/card-orders';
@@ -23,7 +23,13 @@ export class AppHomeComponent implements OnInit {
   counts: any;
   flow: string = '';
   homeFlow: string = '';
-  isLoading: boolean = true;
+  isLoading: boolean = false;
+
+  // para paginação
+  paginaAtual = 0;
+  limitePorPagina = 10;
+  carregandoMais = false;
+  finalDaLista = false;
 
   constructor(
     private route: Router,
@@ -91,66 +97,114 @@ export class AppHomeComponent implements OnInit {
   }
 
   listCards(status_pedido: string) {
-    if (
-      this.stateManagement.cards &&
-      this.stateManagement.counts &&
-      status_pedido === 'publicado'
-    ) {
-      this.cards = this.stateManagement.cards;
-      this.counts = this.stateManagement.counts;
-      this.updateHeaderCounts();
-      this.isLoading = false;
-
-      setTimeout(() => {
-        window.scrollTo({
-          top: this.stateManagement.scrollY,
-          behavior: 'auto',
-        });
-      }, 0);
+    if (this.carregandoMais || this.finalDaLista) {
+      return;
     }
-
     this.isLoading = true;
 
-    this.cardService.getCards(status_pedido).subscribe({
-      next: (response: { cards: CardOrders[]; counts: any }) => {
-        this.cards = response.cards.map((card) => {
-          const horario = card.horario_preferencial
-            ? moment(card.horario_preferencial)
-            : null;
+    const offset = this.paginaAtual * this.limitePorPagina;
+    const currentState = this.stateManagement.getState(status_pedido);
 
-          const placeholderDataHora = horario
-            ? `${horario.format('DD/MM/YYYY')} - ${horario.format('HH:mm')}`
-            : '';
+    // Restaurar do cache na primeira chamada
+    if (offset === 0 && currentState.cards.length > 0) {
+      this.cards = currentState.cards;
+      this.paginaAtual = currentState.pagina;
+      this.finalDaLista = currentState.finalDaLista;
+      this.counts = currentState.counts;
+      this.updateHeaderCounts();
 
-          return {
-            ...card,
-            icon: this.cardService.getIconByLabel(card.categoria) || '',
-            renegotiateActive: !card.valor_negociado,
-            calendarActive: false,
-            placeholderDataHora: [0, 1, 2].includes(this.selectedIndex)
-              ? placeholderDataHora
-              : '',
-            valor_negociado: card.valor_negociado
-              ? card.valor
-              : card.valor_negociado,
-          };
-        });
+      // Aplica scroll sem animação
+      setTimeout(() => {
+        document.documentElement.style.scrollBehavior = 'auto';
+        window.scrollTo(0, currentState.scrollY);
+        document.documentElement.style.scrollBehavior = '';
+      }, 0);
 
-        this.counts = response.counts;
-        this.stateManagement.cards = this.cards;
-        this.stateManagement.counts = this.counts;
-        this.updateHeaderCounts();
-        this.isLoading = false;
-      },
-      error: (error) => {
-        console.error('Erro ao obter os cartões:', error);
-        this.isLoading = false;
-      },
-      complete: () => {
-        console.log('Requisição concluída');
-        this.isLoading = false;
-      },
-    });
+      this.isLoading = false;
+      return;
+    }
+
+    this.carregandoMais = true;
+
+    this.cardService
+      .getCards(status_pedido, offset, this.limitePorPagina)
+      .subscribe({
+        next: (response: { cards: CardOrders[]; counts: any }) => {
+          const novosCards = response.cards.map((card) => {
+            const horario = card.horario_preferencial
+              ? moment(card.horario_preferencial)
+              : null;
+
+            const placeholderDataHora = horario
+              ? `${horario.format('DD/MM/YYYY')} - ${horario.format('HH:mm')}`
+              : '';
+
+            return {
+              ...card,
+              icon: this.cardService.getIconByLabel(card.categoria) || '',
+              renegotiateActive: !card.valor_negociado,
+              calendarActive: false,
+              placeholderDataHora: [0, 1, 2].includes(this.selectedIndex)
+                ? placeholderDataHora
+                : '',
+              valor_negociado: card.valor_negociado
+                ? card.valor
+                : card.valor_negociado,
+            };
+          });
+
+          if (
+            novosCards.length === 0 ||
+            novosCards.length < this.limitePorPagina
+          ) {
+            this.finalDaLista = true;
+            currentState.finalDaLista = true;
+            this.carregandoMais = false;
+
+            if (offset === 0) {
+              // Só limpa se realmente não vieram cards
+              if (novosCards.length === 0) {
+                this.cards = [];
+                currentState.cards = [];
+              } else {
+                // Se vieram alguns cards, adiciona eles
+                this.cards = novosCards;
+                currentState.cards = novosCards;
+              }
+
+              this.counts = response.counts;
+              currentState.counts = this.counts;
+              this.updateHeaderCounts();
+            }
+            return;
+          }
+
+          this.cards = [...this.cards, ...novosCards];
+          this.paginaAtual++;
+
+          // Atualiza o estado específico do status
+          currentState.cards = this.cards;
+          currentState.pagina = this.paginaAtual;
+          currentState.finalDaLista = this.finalDaLista;
+          currentState.scrollY = window.scrollY;
+
+          this.counts = response.counts;
+          if (offset === 0) {
+            currentState.counts = this.counts;
+            this.updateHeaderCounts();
+          }
+
+          this.isLoading = false;
+        },
+        error: (error) => {
+          this.carregandoMais = false;
+          this.isLoading = false;
+        },
+        complete: () => {
+          this.isLoading = false;
+          this.carregandoMais = false;
+        },
+      });
   }
 
   renegotiateActive(card?: any): void {
@@ -235,17 +289,33 @@ export class AppHomeComponent implements OnInit {
   }
 
   goToBudgets(id_pedido: any): void {
-    this.stateManagement.scrollY = window.scrollY;
+    const currentStatus = 'publicado'; // Ou obtenha o status atual de alguma forma
+    const currentState = this.stateManagement.getState(currentStatus);
+    currentState.scrollY = window.scrollY;
     this.route.navigate(['/home/budgets'], {
       queryParams: { id: id_pedido },
     });
   }
 
   goToDetails(id_pedido: any): void {
-    this.stateManagement.scrollY = window.scrollY;
+    const currentStatus = 'publicado'; // Ou obtenha o status atual de alguma forma
+    const currentState = this.stateManagement.getState(currentStatus);
+    currentState.scrollY = window.scrollY;
+    currentState.counts = this.counts;
+
     this.route.navigate(['/home/detail'], {
       queryParams: { id: id_pedido, flow: this.flow },
     });
+  }
+
+  changeStatus(newStatus: string) {
+    // Limpa os estados atuais antes de carregar um novo status
+    this.cards = [];
+    this.paginaAtual = 0;
+    this.finalDaLista = false;
+
+    // Carrega os cards do novo status
+    this.listCards(newStatus);
   }
 
   flowNavigate(): void {
@@ -270,6 +340,13 @@ export class AppHomeComponent implements OnInit {
   }
 
   selectItem(index: number): void {
+    // Limpa os estados antes de trocar de aba, se necessário
+    if (this.selectedIndex !== index) {
+      this.cards = []; // Limpa a lista atual
+      this.paginaAtual = 0; // Reseta a paginação
+      this.finalDaLista = false; // Reseta o flag de final da lista
+    }
+
     this.selectedIndex = index;
 
     switch (index) {
@@ -284,6 +361,11 @@ export class AppHomeComponent implements OnInit {
         this.cleanActualRoute();
         break;
       case 3:
+        // Salva o estado atual antes de navegar
+        if (this.flow === 'publicado' || this.flow === 'finalizado') {
+          const currentState = this.stateManagement.getState(this.flow);
+          currentState.scrollY = window.scrollY;
+        }
         this.route.navigate(['/tudu-professional/progress']);
         break;
     }
@@ -328,7 +410,13 @@ export class AppHomeComponent implements OnInit {
     this.route.navigate(['/']);
   }
 
-  goToProgress() {
-    // Implementação do método goToProgress
+  @HostListener('window:scroll', [])
+  onScroll(): void {
+    const posicao = window.innerHeight + window.scrollY;
+    const alturaMaxima = document.body.offsetHeight;
+
+    if (posicao >= alturaMaxima - 200) {
+      this.listCards(this.flow); // ou o status atual selecionado
+    }
   }
 }
