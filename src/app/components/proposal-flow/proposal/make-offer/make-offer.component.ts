@@ -34,6 +34,7 @@ export class MakeOfferComponent implements OnInit {
   clienteIsLogged: boolean = false;
 
   private subscriptionCliente: Subscription = new Subscription();
+  serviceDescription: any;
 
   constructor(
     private routeActive: ActivatedRoute,
@@ -55,6 +56,7 @@ export class MakeOfferComponent implements OnInit {
     this.routeActive.queryParams.subscribe((params) => {
       this.filters = params['filters'] ? JSON.parse(params['filters']) : [];
       this.cardTitle = params['cardTitle'];
+      this.serviceDescription = params['serviceDescription'] || '';
 
       this.addressContent = params['addressContent']
         ? JSON.parse(params['addressContent'])
@@ -97,6 +99,7 @@ export class MakeOfferComponent implements OnInit {
       categoria: this.cardTitle,
       status_pedido: 'publicado',
       subcategoria: filtersConcat,
+      serviceDescription: this.serviceDescription,
       valor: this.price.toString(),
       horario_preferencial: dateTimeFormat,
       codigo_confirmacao: codigoConfirmacao,
@@ -157,6 +160,7 @@ export class MakeOfferComponent implements OnInit {
           addressContent: params['addressContent'], // Reenvia os parâmetros
           cardTitle: params['cardTitle'], // Reenvia os parâmetros
           filters: params['filters'],
+          serviceDescription: params['serviceDescription'] || '', // Reenvia a descrição do serviço
         },
       });
     });

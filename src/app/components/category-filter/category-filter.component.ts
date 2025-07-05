@@ -10,6 +10,7 @@ import { SharedService } from 'src/app/shared/shared.service';
 export class CategoryFilterComponent implements OnInit {
   @Input() serviceTitle!: string; // Título dinâmico ("Pintura Residencial")
   @Input() filterCategories!: FilterCategory[]; // Estrutura dos filtros
+  @Input() serviceDescription!: string; // Estrutura dos filtros
   @Output() filtersSubmitted = new EventEmitter<any>();
 
   showOtherInput: boolean = false;
@@ -24,6 +25,7 @@ export class CategoryFilterComponent implements OnInit {
 
   ngOnInit() {
     this.updateSelectedCount();
+    
   }
 
   getCategoryIcon(title: string): string {
@@ -108,9 +110,6 @@ export class CategoryFilterComponent implements OnInit {
         selectedFilters[category.title] = selectedOptions;
       }
     });
-
-    console.log('Filtros aplicados:', selectedFilters);
-    // Aqui você pode emitir os filtros ou chamar um serviço
   }
 
   // mudar para o proposal
@@ -142,6 +141,6 @@ export class CategoryFilterComponent implements OnInit {
   }
 
   submitFilters(): void {
-    this.filtersSubmitted.emit();
+    this.filtersSubmitted.emit(this.serviceDescription);
   }
 }

@@ -33,7 +33,8 @@
     <app-category-filter
       [serviceTitle]="paramCategory"
       [filterCategories]="filterCategories"
-      (filtersSubmitted)="onSubmit()"
+      [serviceDescription]="serviceDescription"
+      (filtersSubmitted)="onSubmit($event)"
     ></app-category-filter>
   </div>
 </section>

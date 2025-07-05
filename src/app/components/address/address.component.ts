@@ -20,6 +20,7 @@ export class AddressComponent implements OnInit {
   addressForm: FormGroup;
   filters: any;
   cardTitle: any;
+  serviceDescription: any;
 
   constructor(
     private fb: FormBuilder,
@@ -49,6 +50,7 @@ export class AddressComponent implements OnInit {
 
       this.cardTitle = params['cardTitle'];
       this.filters = params['filters'];
+      this.serviceDescription = params['serviceDescription'] || '';
     });
   }
 
@@ -104,6 +106,7 @@ export class AddressComponent implements OnInit {
             addressContent: JSON.stringify([this.addressForm.value]),
             cardTitle: params['cardTitle'],
             filters: params['filters'],
+            serviceDescription: params['serviceDescription'] || '',
           },
         });
       });
@@ -116,6 +119,7 @@ export class AddressComponent implements OnInit {
         queryParams: {
           cardTitle: this.cardTitle,
           filters: this.filters,
+          serviceDescription: this.serviceDescription,
         },
       });
     });

@@ -11,6 +11,7 @@ export class ProposalComponent implements OnInit {
   titleCard: string | null = null;
   selectedOptions: any[] = [];
   paramCategory: any;
+  serviceDescription!: string;
 
   isLoading: boolean = false;
 
@@ -136,28 +137,7 @@ export class ProposalComponent implements OnInit {
     this.routeActive.queryParams.subscribe((params) => {
       this.filters = params['filters'] ? JSON.parse(params['filters']) : null;
       this.paramCategory = params['cardTitle'] || null; // Obtém o título do card dos parâmetros da rota
-      // this.titleCard = this.paramCategory;
- 
-
-      // if (this.filters) {
-      //   // Atualiza os checkboxes com base nos filtros selecionados
-      //   this.filterCategories.forEach((category) => {
-      //     // Encontra a categoria correspondente no JSON retornado
-      //     const matchingCategory = filters.find(
-      //       (filter: any) => filter.title === category.title
-      //     );
-
-      //     if (matchingCategory) {
-      //       // Atualiza as opções da categoria com base nos filtros selecionados
-      //       category.options.forEach((option) => {
-      //         const selectedFilter = matchingCategory.filters.find(
-      //           (filter: any) => filter.value === option.value
-      //         );
-      //         option.selected = !!selectedFilter; // Marca como selecionado se encontrado
-      //       });
-      //     }
-      //   });
-      // }
+      this.serviceDescription = params['serviceDescription'] || ''; // Obtém a descrição do serviço dos parâmetros da rota});
     });
 
     this.routeActive.queryParams.subscribe((params) => {
@@ -169,7 +149,7 @@ export class ProposalComponent implements OnInit {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
   }
 
-  onSubmit(): void {
+  onSubmit(serviceDescription: string): void {
     const groupedOptions: { [key: string]: any } = {}; // Objeto para agrupar os filtros por título
 
     this.filterCategories.forEach((category) => {
@@ -197,12 +177,14 @@ export class ProposalComponent implements OnInit {
       queryParams: {
         cardTitle: this.paramCategory,
         filters: JSON.stringify(this.selectedOptions),
+        serviceDescription: serviceDescription,
       },
     });
     this.route.navigate(['/proposal/address'], {
       queryParams: {
         cardTitle: this.paramCategory,
         filters: JSON.stringify(this.selectedOptions),
+        serviceDescription: serviceDescription,
       },
     });
   }

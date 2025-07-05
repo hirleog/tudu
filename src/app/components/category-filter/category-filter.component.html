@@ -66,7 +66,39 @@
               </div>
             </div>
           </div>
-          <!-- Upload de imagens -->
+
+          <!-- Campo de descrição do serviço (novo campo obrigatório) -->
+          <div class="bg-white rounded-xl shadow-sm overflow-hidden p-5">
+            <h3
+              class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
+            >
+              <i class="fas fa-align-left text-pink-500"></i>
+              7. Descrição do Serviço
+            </h3>
+
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-1">
+                Descreva detalhadamente o serviço que você está solicitando
+                <span class="text-red-500">*</span>
+              </label>
+              <textarea
+                required
+                [(ngModel)]="serviceDescription"
+                name="serviceDescription"
+                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                rows="4"
+                placeholder="Por favor, forneça todos os detalhes necessários sobre o serviço que você precisa..."
+              ></textarea>
+              <small
+                class="text-red-500"
+                *ngIf="cardForm.submitted && !serviceDescription"
+              >
+                Este campo é obrigatório
+              </small>
+            </div>
+          </div>
+
+          <!-- Upload de imagens (agora será o número 8) -->
           <form
             #cardForm="ngForm"
             class="bg-white rounded-xl shadow-sm overflow-hidden p-5"
@@ -75,7 +107,7 @@
               class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
             >
               <i class="fas fa-images text-pink-500"></i>
-              7. Adicionar Imagens
+              8. Adicionar Imagens
             </h3>
 
             <!-- Input de upload -->
