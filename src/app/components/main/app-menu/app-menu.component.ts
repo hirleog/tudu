@@ -30,7 +30,8 @@ export class AppMenuComponent implements OnInit {
   clienteIsLogged: boolean = false;
   prestadorIsLogged: boolean = false;
   isEndFlow: boolean = false;
-
+  isMenuExpanded: boolean = false;
+  isHovered: boolean = false;
   constructor(
     public router: Router,
     public authService: AuthService,
@@ -114,6 +115,14 @@ export class AppMenuComponent implements OnInit {
     }
 
     this.router.navigate([route]);
+  }
+
+  toggleMenu(): void {
+    this.isMenuExpanded = !this.isMenuExpanded;
+  }
+
+  hoverMenu(isHovered: boolean): void {
+    this.isHovered = isHovered;
   }
 
   ngOnDestroy(): void {

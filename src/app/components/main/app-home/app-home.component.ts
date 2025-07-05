@@ -410,6 +410,15 @@ export class AppHomeComponent implements OnInit {
     this.route.navigate(['/']);
   }
 
+  scrollUp() {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+
+    this.stateManagement.clearState(this.flow); // Limpa o estado ao subir
+  }
+
   @HostListener('window:scroll', [])
   onScroll(): void {
     const posicao = window.innerHeight + window.scrollY;

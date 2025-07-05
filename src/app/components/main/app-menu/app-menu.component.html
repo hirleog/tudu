@@ -6,65 +6,170 @@
         (clienteIsLogged === true && isProfessional === false && !isEndFlow))
     "
   >
-    <div class="d-flex align-items-center justify-content-around menu-fixo">
-      <!-- Serviços -->
-      <div
-        class="menu-item"
-        [class.active]="
-          router.url ===
-          (isProfessional || isProfileRoute ? '/tudu-professional/home' : '/')
-        "
-        (click)="
-          switchRoute(
-            isProfessional || isProfileRoute ? '/tudu-professional/home' : '/'
-          )
-        "
-      >
-        <i class="fas fa-search"></i>
-        <p>Serviços</p>
-      </div>
+    <!-- Menu Mobile (aparece apenas em telas pequenas) -->
+    <div class="md:hidden bg-white shadow-lg border-t border-gray-200">
+      <div class="flex justify-around items-center py-2">
+        <!-- Serviços -->
+        <div
+          class="menu-item flex flex-col items-center p-2"
+          [class.active]="
+            router.url ===
+            (isProfessional || isProfileRoute ? '/tudu-professional/home' : '/')
+          "
+          (click)="
+            switchRoute(
+              isProfessional || isProfileRoute ? '/tudu-professional/home' : '/'
+            )
+          "
+        >
+          <i class="fas fa-search text-lg"></i>
+          <p class="text-xs mt-1">Serviços</p>
+        </div>
 
-      <!-- Pedidos -->
-      <div
-        *ngIf="isProfessional === false && isProfileRoute === false"
-        class="menu-item"
-        [class.active]="router.url === '/home'"
-        (click)="switchRoute('/home')"
-      >
-        <i class="fas fa-tasks"></i>
-        <p>Pedidos</p>
-      </div>
+        <!-- Pedidos -->
+        <div
+          *ngIf="isProfessional === false && isProfileRoute === false"
+          class="menu-item flex flex-col items-center p-2"
+          [class.active]="router.url === '/home'"
+          (click)="switchRoute('/home')"
+        >
+          <i class="fas fa-tasks text-lg"></i>
+          <p class="text-xs mt-1">Pedidos</p>
+        </div>
 
-      <!-- Pendentes -->
-      <div
-        class="menu-item"
-        [class.active]="
-          router.url ===
-          (isProfessional || isProfileRoute
-            ? '/tudu-professional/progress'
-            : '/home/progress')
-        "
-        (click)="
-          switchRoute(
-            isProfessional || isProfileRoute
+        <!-- Pendentes -->
+        <div
+          class="menu-item flex flex-col items-center p-2"
+          [class.active]="
+            router.url ===
+            (isProfessional || isProfileRoute
               ? '/tudu-professional/progress'
-              : '/home/progress'
-          )
-        "
-      >
-        <i class="fas fa-clock"></i>
-        <p>Pendentes</p>
-      </div>
+              : '/home/progress')
+          "
+          (click)="
+            switchRoute(
+              isProfessional || isProfileRoute
+                ? '/tudu-professional/progress'
+                : '/home/progress'
+            )
+          "
+        >
+          <i class="fas fa-clock text-lg"></i>
+          <p class="text-xs mt-1">Pendentes</p>
+        </div>
 
-      <!-- Perfil -->
-      <div
-        [ngClass]="profileActiveColor || isProfileRoute ? 'active' : 'inactive'"
-        class="menu-item"
-        (click)="goToProfile()"
-      >
-        <i class="fas fa-user fs-3"></i>
-        <p>Perfil</p>
+        <!-- Perfil -->
+        <div
+          class="menu-item flex flex-col items-center p-2"
+          [class.active]="profileActiveColor || isProfileRoute"
+          (click)="goToProfile()"
+        >
+          <i class="fas fa-user text-lg"></i>
+          <p class="text-xs mt-1">Perfil</p>
+        </div>
       </div>
     </div>
   </div>
 </section>
+
+<!-- Menu Desktop (aparece apenas em telas médias/grandes) -->
+<div
+  class="hidden desktop-menu md:block flex-shrink-0 bg-white h-full  transition-all duration-300 ease-in-out"
+  style="height: 100%"
+  [class.w-64]="isMenuExpanded || isHovered"
+  [class.w-20]="!isMenuExpanded && !isHovered"
+  (mouseenter)="isHovered = true"
+  (mouseleave)="isHovered = false"
+>
+  <div class="flex flex-col w-full py-3 h-full">
+    <!-- Conteúdo do menu desktop (mesmo do seu código original) -->
+    <div class="flex flex-col h-full justify-between">
+      <div>
+        <!-- Serviços -->
+        <div
+          class="flex items-center px-4 py-3 menu-item-desktop"
+          [class.active]="
+            router.url ===
+            (isProfessional || isProfileRoute ? '/tudu-professional/home' : '/')
+          "
+          (click)="
+            switchRoute(
+              isProfessional || isProfileRoute ? '/tudu-professional/home' : '/'
+            )
+          "
+        >
+          <i class="fas fa-search text-lg mr-4"></i>
+          <span class="whitespace-nowrap" *ngIf="isMenuExpanded || isHovered"
+            >Serviços</span
+          >
+        </div>
+
+        <!-- Pedidos -->
+        <div
+          *ngIf="isProfessional === false && isProfileRoute === false"
+          class="flex items-center px-4 py-3 menu-item-desktop"
+          [class.active]="router.url === '/home'"
+          (click)="switchRoute('/home')"
+        >
+          <i class="fas fa-tasks text-lg mr-4"></i>
+          <span class="whitespace-nowrap" *ngIf="isMenuExpanded || isHovered"
+            >Pedidos</span
+          >
+        </div>
+
+        <!-- Pendentes -->
+        <div
+          class="flex items-center px-4 py-3 menu-item-desktop"
+          [class.active]="
+            router.url ===
+            (isProfessional || isProfileRoute
+              ? '/tudu-professional/progress'
+              : '/home/progress')
+          "
+          (click)="
+            switchRoute(
+              isProfessional || isProfileRoute
+                ? '/tudu-professional/progress'
+                : '/home/progress'
+            )
+          "
+        >
+          <i class="fas fa-clock text-lg mr-4"></i>
+          <span class="whitespace-nowrap" *ngIf="isMenuExpanded || isHovered"
+            >Pendentes</span
+          >
+        </div>
+
+        <!-- Perfil -->
+        <div
+          class="flex items-center px-4 py-3 menu-item-desktop"
+          [class.active]="profileActiveColor || isProfileRoute"
+          (click)="goToProfile()"
+        >
+          <i class="fas fa-user text-lg mr-4"></i>
+          <span class="whitespace-nowrap" *ngIf="isMenuExpanded || isHovered"
+            >Perfil</span
+          >
+        </div>
+        <!-- Botão de expandir/recolher -->
+        <div class="px-4 mb-4 mt-10">
+          <button
+            class="flex items-center text-gray-600 hover:text-primary focus:outline-none w-full"
+            (click)="toggleMenu()"
+          >
+            <i
+              class="fas text-lg"
+              [class.fa-chevron-left]="isMenuExpanded"
+              [class.fa-chevron-right]="!isMenuExpanded"
+            ></i>
+            <span
+              class="ml-3 whitespace-nowrap"
+              *ngIf="isMenuExpanded || isHovered"
+              >{{ isMenuExpanded ? "Recolher menu" : "Expandir menu" }}</span
+            >
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

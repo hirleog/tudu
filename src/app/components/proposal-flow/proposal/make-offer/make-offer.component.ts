@@ -28,8 +28,8 @@ export class MakeOfferComponent implements OnInit {
   isLogged: boolean = false;
   id_cliente: any = '';
   selectedFiles: File[] = [];
+  paymentStep: boolean = false;
 
-  // mudar para o proposalcomponente
   isLoading: boolean = false;
   clienteIsLogged: boolean = false;
 
@@ -162,7 +162,12 @@ export class MakeOfferComponent implements OnInit {
     });
   }
 
-  
+  payAndCreateCard(): void {
+    this.createCard();
+  }
+  backToOffer(indicator: any): void {
+    this.paymentStep = indicator;
+  }
 
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória

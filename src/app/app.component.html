@@ -1,25 +1,25 @@
-<!-- <app-hero id="home"></app-hero>
-<app-about></app-about>
-<app-client-reviews></app-client-reviews> -->
+<div class="flex flex-col md:flex-row min-h-screen relative">
+  <!-- Menu Desktop -->
+  <app-menu class="hidden md:block" style="margin-top: 4em"></app-menu>
 
-<!-- <router-outlet></router-outlet> -->
-<div [@routeAnimations]="prepareRoute(outlet)">
-  <router-outlet #outlet="outlet"></router-outlet>
-</div>
+  <!-- Conteúdo principal com padding para o menu mobile -->
+  <main
+    class="flex-1 overflow-auto transition-all duration-300 ease-in-out md:pb-0"
+  >
+    <div [@routeAnimations]="prepareRoute(outlet)">
+      <router-outlet #outlet="outlet"></router-outlet>
+    </div>
+  </main>
 
-<!-- <lib-tudu-ui-calendar></lib-tudu-ui-calendar> -->
-
-<!-- <app-menu></app-menu> -->
-<!-- <app-services></app-services> -->
-<!-- <app-footer></app-footer> -->
-
-<div id="home-mobile" class="d-block d-md-none" *ngIf="showHomeMobile">
-  <app-menu></app-menu>
+  <!-- Menu Mobile (fixo na parte inferior) -->
+  <div class="md:hidden fixed bottom-0 left-0 right-0 z-50">
+    <app-menu></app-menu>
+  </div>
 </div>
 <!-- <button id="setup_button"  onclick="installApp()">Installer</button> -->
 
-<!-- <a href="#home" class="btn-topo"> &#x2191; </a>
-<a href="https://wa.me/5511973752898?text=Olá, tudo bem? Gostaria de esclarecer algumas duvidas e saber mais sobre os serviços!"
+<!-- <a style="background-color: var(--primary);" href="#home" class="btn-topo"> &#x2191; </a> -->
+<!-- <a href="https://wa.me/5511973752898?text=Olá, tudo bem? Gostaria de esclarecer algumas duvidas e saber mais sobre os serviços!"
     class="btn-whatsapp" target="_blank" style="position: fixed; right: 15px; bottom: 15px">
     <img src="https://i.ibb.co/VgSspjY/whatsapp-button.png" alt="botão whatsapp" />
 </a> -->

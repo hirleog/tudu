@@ -25,7 +25,8 @@
 
 <section class="bg-gray-50 min-h-screen p-4" *ngIf="!isLoading">
   <div
-    class="py-6 px-0 md:px-6 lg:px-8 max-w-4xl mx-auto w-full max-w-2xl bg-white rounded-xl shadow-lg transition-smooth"
+    class="px-4 py-2 lg:px-8 max-w-4xl mx-auto w-full max-w-2xl bg-white rounded-xl shadow-lg transition-smooth"
+    *ngIf="!paymentStep"
   >
     <!-- Loading state -->
     <!-- <div class="p-8">
@@ -108,7 +109,7 @@
       <!-- Buttons -->
       <div class="mt-8 flex flex-column gap-2">
         <button
-          (click)="createCard()"
+          (click)="paymentStep = true"
           class="col-12 btn btn-primary"
           [disabled]="dateTimeSelected === '' || price === ''"
         >
@@ -122,7 +123,13 @@
     </div>
   </div>
 
-  <!-- <app-payment></app-payment> -->
+  <div>
+    <app-payment
+      *ngIf="paymentStep"
+      (payAndCreateCard)="payAndCreateCard()"
+      (backToOffer)="backToOffer($event)"
+    ></app-payment>
+  </div>
 </section>
 
 <!-- ----------------- LOADER MAKE-OFFER ------------------ -->

@@ -1,3 +1,4 @@
+/* Estilos para o menu mobile */
 .menu-fixo {
   position: fixed;
   bottom: -8px;
@@ -16,33 +17,41 @@
   color: #333;
 }
 
-.menu-fixo .menu-item-central {
-  position: relative;
-  top: -15px;
-  background: var(--primary);
-  color: white;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+/* Estilos para o menu desktop */
+.menu-item-desktop {
+  color: #333;
+  transition: all 0.2s ease;
+  cursor: pointer;
 }
 
-p {
-  font-size: 12px;
+.menu-item-desktop:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
-/* i {
-    color: grey;
-} */
+
+.menu-item-desktop.active {
+  color: var(--primary);
+  background-color: rgba(var(--primary-rgb), 0.1);
+}
 
 .active {
   color: var(--primary) !important;
   pointer-events: none !important;
   cursor: none;
 }
+
 .inactive {
   color: #333;
 }
+
+p {
+  font-size: 12px;
+}
+
+.desktop-menu {
+ /* background-color: rgb(137, 74, 255) !important; */
+}
+/* @media (max-width: 768px) {
+  .desktop-menu {
+    display: none !important;
+  }
+} */
