@@ -48,10 +48,8 @@ p {
 }
 
 .desktop-menu {
- /* background-color: rgb(137, 74, 255) !important; */
+  position: fixed !important;
+  top: 4rem !important; /* Ajuste conforme a altura do seu header */
+  align-self: flex-start !important; /* Mantém o alinhamento correto */
+  z-index: 30 !important; /* Garante que fique acima do conteúdo */
 }
-/* @media (max-width: 768px) {
-  .desktop-menu {
-    display: none !important;
-  }
-} */

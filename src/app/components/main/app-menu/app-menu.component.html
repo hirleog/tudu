@@ -74,16 +74,18 @@
 
 <!-- Menu Desktop (aparece apenas em telas médias/grandes) -->
 <div
-  class="hidden desktop-menu md:block flex-shrink-0 bg-white h-full  transition-all duration-300 ease-in-out"
-  style="height: 100%"
+  class="flex-shrink-0 bg-white top-16 overflow-y-auto transition-all duration-300 ease-in-out shadow-md"
   [class.w-64]="isMenuExpanded || isHovered"
   [class.w-20]="!isMenuExpanded && !isHovered"
   (mouseenter)="isHovered = true"
   (mouseleave)="isHovered = false"
 >
-  <div class="flex flex-col w-full py-3 h-full">
+  <div
+    class="flex flex-col w-full py-3 h-full hidden md:block"
+    style="height: 10000vw"
+  >
     <!-- Conteúdo do menu desktop (mesmo do seu código original) -->
-    <div class="flex flex-col h-full justify-between">
+    <div class="flex flex-col h-full justify-between fixed">
       <div>
         <!-- Serviços -->
         <div

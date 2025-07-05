@@ -29,6 +29,7 @@
 html {
   scroll-behavior: smooth;
   overflow: auto;
+  height: 100%;
 }
 
 .calendar-container {

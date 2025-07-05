@@ -1,15 +1,24 @@
-<div class="flex flex-col md:flex-row min-h-screen relative">
-  <!-- Menu Desktop -->
-  <app-menu class="hidden md:block" style="margin-top: 4em"></app-menu>
+<div class="flex flex-col min-h-screen">
+  <!-- Navbar Fixo no Topo -->
+  <app-nav class="fixed top-0 left-0 right-0 z-50">
+    <!-- Seus slots de conteúdo do nav aqui se necessário -->
+  </app-nav>
 
-  <!-- Conteúdo principal com padding para o menu mobile -->
-  <main
-    class="flex-1 overflow-auto transition-all duration-300 ease-in-out md:pb-0"
-  >
-    <div [@routeAnimations]="prepareRoute(outlet)">
-      <router-outlet #outlet="outlet"></router-outlet>
-    </div>
-  </main>
+  <!-- Container Principal (com margin-top para o navbar) -->
+  <div class="flex flex-col md:flex-row mt-16 flex-1">
+    <!-- mt-16 = altura do navbar -->
+    <!-- Menu Lateral Desktop -->
+    <app-menu
+      class="hidden md:block sticky top-16 h-[calc(100vh-4rem)]"
+    ></app-menu>
+
+    <!-- Conteúdo Dinâmico Principal -->
+    <main class="flex-1 overflow-auto transition-all duration-300">
+      <div [@routeAnimations]="prepareRoute(outlet)">
+        <router-outlet #outlet="outlet"></router-outlet>
+      </div>
+    </main>
+  </div>
 
   <!-- Menu Mobile (fixo na parte inferior) -->
   <div class="md:hidden fixed bottom-0 left-0 right-0 z-50">
