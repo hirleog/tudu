@@ -85,6 +85,7 @@ export class AppMenuComponent implements OnInit {
     const currentUrl = this.router.url;
     this.stateManagementService.clearState('publicado');
     this.stateManagementService.clearState('finalizado');
+    // this.stateManagementService.clearState('andamento');
 
     // Verifica se já está na rota correta com o parâmetro
     if (currentUrl === '/profile?param=professional') {

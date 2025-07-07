@@ -44,4 +44,11 @@ export class StateManagementService {
       finalDaLista: false,
     };
   }
+  clearAllState() {
+    const statuses = ['andamento', 'finalizado', 'publicado'];
+
+    statuses.forEach((status) => {
+      this.clearState(status);
+    });
+  }
 }

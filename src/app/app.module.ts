@@ -10,14 +10,13 @@ import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ClientReviewsComponent } from './components/client-reviews/client-reviews.component';
-import { FinancialComponent } from './components/financial/financial.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { AppMenuModule } from './components/main/app-menu/app-menu.module';
 import { ModalComponent } from './components/modal/modal.component';
 import { ServicesComponent } from './components/services/services.component';
 import { SignUpComponent } from './components/user-login/sign-up/sign-up.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
-import { AppMenuModule } from './components/main/app-menu/app-menu.module';
 
 @NgModule({
   declarations: [
@@ -28,7 +27,6 @@ import { AppMenuModule } from './components/main/app-menu/app-menu.module';
     // AppMenuComponent,
     SignUpComponent,
     ModalComponent,
-    FinancialComponent,
   ],
   imports: [
     CommonModule,

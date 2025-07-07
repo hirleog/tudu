@@ -156,7 +156,7 @@ export class ProfileComponent implements OnInit {
 
   goToFinancial() {
     if (this.isProfessional) {
-      this.router.navigate(['/profile/financial'], {
+      this.router.navigate(['/tudu-professional/finances'], {
         queryParams: { param: 'professional' },
       });
     }
