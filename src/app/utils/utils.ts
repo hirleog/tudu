@@ -20,3 +20,7 @@ export function calculateDistance(
 
   return parseFloat(d.toFixed(2));
 }
+
+export function formatDecimal(value: number): number {
+  return parseFloat(value.toFixed(2)); // Garante 2 casas decimais
+}

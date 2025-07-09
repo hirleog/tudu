@@ -6,7 +6,7 @@ export interface CreateCard {
   categoria: string;
   subcategoria: string;
   serviceDescription: string; // Descrição do serviço
-  valor: string;
+  valor: number;
   horario_preferencial: string;
 
   codigo_confirmacao?: string;

@@ -6,6 +6,7 @@ import { CreateCard } from 'src/app/interfaces/create-card.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
 import { SharedService } from 'src/app/shared/shared.service';
+import { formatDecimal } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-make-offer',
@@ -21,7 +22,7 @@ export class MakeOfferComponent implements OnInit {
   addressContent: any;
   filters: any;
 
-  price: string = '';
+  price: any;
   renegotiateActive: boolean = false;
   calendarActive: boolean = false;
   initialDateTime: string = '';
@@ -93,6 +94,8 @@ export class MakeOfferComponent implements OnInit {
       1000 + Math.random() * 9000
     ).toString();
 
+    const valorFormatado = formatDecimal(this.price);
+
     const payloadCard: CreateCard = {
       id_cliente: this.id_cliente.toString(),
       id_prestador: '0',
@@ -100,7 +103,7 @@ export class MakeOfferComponent implements OnInit {
       status_pedido: 'publicado',
       subcategoria: filtersConcat,
       serviceDescription: this.serviceDescription,
-      valor: this.price.toString(),
+      valor: valorFormatado,
       horario_preferencial: dateTimeFormat,
       codigo_confirmacao: codigoConfirmacao,
       cep: this.addressContent[0].cep,
