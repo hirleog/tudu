@@ -9,6 +9,7 @@ export interface CardOrders {
 
   categoria: string;
   subcategoria: string;
+  serviceDescription: string;
   valor: string;
   valor_negociado: string;
   horario_preferencial: string;
@@ -38,7 +39,7 @@ export interface CardOrders {
   candidaturas: Candidatura[]; // ✅ Agora com tipo correto
   temNovaCandidatura?: boolean; // Indica se há uma nova candidatura
   currentImageIndex: any;
-  
+
   createdAt: string;
   updatedAt: string;
 }
