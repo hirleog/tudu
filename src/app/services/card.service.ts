@@ -16,46 +16,55 @@ export class CardService {
       id: 1,
       icon: 'fas fa-tools',
       cardDetail: {
-        label: 'Serviços de Manutenção',
-        value: 'manutencao',
+        label: 'Reparos e Manutenção',
+        value: 'reparos',
       },
       disabled: false,
     },
     {
       id: 2,
-      icon: 'fas fa-paint-roller',
+      icon: 'fas fa-broom',
       cardDetail: {
-        label: 'Pintura Residencial',
-        value: 'pintura',
-      },
-      disabled: false,
-    },
-    {
-      id: 2,
-      icon: 'fas fa-home',
-      cardDetail: {
-        label: 'Limpeza e Conservação',
+        label: 'Limpeza e Higienização',
         value: 'limpeza',
       },
-      disabled: true,
+      disabled: false,
     },
     {
       id: 3,
-      icon: 'fas fa-wrench',
+      icon: 'fas fa-hard-hat',
       cardDetail: {
-        label: 'Reformas e Reparos',
-        value: 'reformas',
+        label: 'Reformas e Construção',
+        value: 'construcao',
       },
-      disabled: true,
+      disabled: false,
     },
     {
       id: 4,
-      icon: 'fas fa-briefcase',
+      icon: 'fas fa-cogs',
       cardDetail: {
-        label: 'Consultoria',
-        value: 'consultoria',
+        label: 'Montagem e Instalação',
+        value: 'montagem',
       },
-      disabled: true,
+      disabled: false,
+    },
+    {
+      id: 5,
+      icon: 'fas fa-seedling',
+      cardDetail: {
+        label: 'Jardim e Piscina',
+        value: 'jardim',
+      },
+      disabled: false,
+    },
+    {
+      id: 6,
+      icon: 'fas fa-ellipsis-h',
+      cardDetail: {
+        label: 'Outros serviços',
+        value: 'outros',
+      },
+      disabled: false,
     },
   ];
 
