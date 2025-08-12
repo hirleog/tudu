@@ -14,6 +14,7 @@ export class ProposalComponent implements OnInit {
   serviceDescription!: string;
 
   isLoading: boolean = false;
+  serviceType: string = 'reparos-manutencao'; // Define o tipo de serviço como 'painting'
 
   filterCategories: FilterCategory[] = [
     {

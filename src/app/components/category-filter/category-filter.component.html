@@ -1,11 +1,6 @@
 <div class="bg-gray-50 min-h-screen mb-0">
   <div class="container mx-auto px-4 py-2">
     <div class="service-filter max-w-4xl mx-auto">
-      <!-- Título principal -->
-      <!-- <div class="flex items-center justify-between mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">{{ serviceTitle }}</h2>
-      </div> -->
-
       <div class="bg-white rounded-xl shadow-sm overflow-hidden">
         <!-- Categorias de filtro dinâmicas -->
         <div class="divide-y divide-gray-100">
@@ -67,13 +62,13 @@
             </div>
           </div>
 
-          <!-- Campo de descrição do serviço (novo campo obrigatório) -->
+          <!-- Campo de descrição do serviço -->
           <div class="bg-white rounded-xl shadow-sm overflow-hidden p-5">
             <h3
               class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
             >
               <i class="fas fa-align-left text-pink-500"></i>
-              7. Descrição do Serviço
+              {{ filterCategories.length + 1 }}. Descrição do Serviço
             </h3>
 
             <div class="mb-4">
@@ -98,7 +93,7 @@
             </div>
           </div>
 
-          <!-- Upload de imagens (agora será o número 8) -->
+          <!-- Upload de imagens -->
           <form
             #cardForm="ngForm"
             class="bg-white rounded-xl shadow-sm overflow-hidden p-5"
@@ -107,7 +102,7 @@
               class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
             >
               <i class="fas fa-images text-pink-500"></i>
-              8. Adicionar Imagens
+              {{ filterCategories.length + 2 }}. Adicionar Imagens
             </h3>
 
             <!-- Input de upload -->

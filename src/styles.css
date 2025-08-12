@@ -71,13 +71,13 @@ body {
   max-width: 100%;
 
   background: var(--light);
-  -ms-overflow-style: none;
+  /* -ms-overflow-style: none;
   scrollbar-width: none;
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  -webkit-touch-callout: none; /* Impede o menu de tradução no celular */
+  -webkit-touch-callout: none; */
 }
 
 .container {
