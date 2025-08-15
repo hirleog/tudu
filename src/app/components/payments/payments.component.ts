@@ -8,7 +8,7 @@ import { PaymentService } from 'src/app/services/payment.service';
 })
 export class PaymentsComponent {
   @Output() backToOffer = new EventEmitter<string>(); // Emite a data no formato 'DD/MM/YYYY'
-  @Output() payAndCreateCard = new EventEmitter<string>(); // Emite a data no formato 'DD/MM/YYYY'
+  @Output() payHiredCard = new EventEmitter<string>(); 
 
   // Dados do pagamento
   paymentMethod: string = 'pix';
@@ -164,14 +164,11 @@ export class PaymentsComponent {
     // Aqui você pode adicionar redirecionamento ou outras ações pós-pagamento
   }
 
-  payAndCreate(): void {
-    this.payAndCreateCard.emit();
-  }
   goBack(indicator: any): void {
     this.backToOffer.emit(indicator);
   }
 
-    pagar() {
+  pagar() {
     const payload = {
       card_number: '5155901222280001',
       customer_id: 'customer_123',
@@ -188,8 +185,16 @@ export class PaymentsComponent {
     };
 
     this.paymentService.pagarComCartao(payload).subscribe({
-      next: (res) => console.log('Pagamento autorizado:', res),
-      error: (err) => console.error('Erro no pagamento:', err),
+      next: (res) => {
+        this.payCard('success');
+      },
+      error: (err) => {
+        this.payCard('error');
+        console.error('Erro no pagamento:', err);
+      },
     });
+  }
+  payCard(paymentIndicator: string): void {
+    this.payHiredCard.emit(paymentIndicator);
   }
 }

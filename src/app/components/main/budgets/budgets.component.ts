@@ -55,6 +55,8 @@ export class BudgetsComponent implements OnInit {
   id_prestador: any;
   prestadorInfos: any;
   prestadoresInfos: Array<any>[] = [];
+  paymentStep: boolean = false;
+  hiredCardInfo!: CardOrders;
 
   constructor(
     public cardService: CardService,
@@ -112,6 +114,19 @@ export class BudgetsComponent implements OnInit {
         console.error(err);
       },
     });
+  }
+
+  goToPayment(card: any): void {
+    this.hiredCardInfo = card;
+    this.paymentStep = true;
+  }
+
+  payHiredCard(paymentIndicator: any): void {
+    if (paymentIndicator === 'success') {
+      this.updateCard(this.hiredCardInfo, 'contratar');
+    } else {
+      console.log('pagamento negado');
+    }
   }
 
   updateCard(card: CardOrders, step: string): Observable<CardOrders> {
@@ -193,5 +208,9 @@ export class BudgetsComponent implements OnInit {
     });
 
     return of();
+  }
+
+  backToOffer(indicator: any): void {
+    this.paymentStep = indicator;
   }
 }

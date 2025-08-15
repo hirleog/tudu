@@ -39,7 +39,7 @@
                   [name]="category.isSingleSelect ? category.title : ''"
                   [id]="option.value"
                   class="custom-checkbox"
-                  [(ngModel)]="option.selected"
+                  [checked]="option.selected"
                   (change)="onOptionSelected(category, option)"
                 />
                 <label

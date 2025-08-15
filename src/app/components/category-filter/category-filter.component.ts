@@ -412,13 +412,18 @@ export class CategoryFilterComponent implements OnInit {
   }
 
   onOptionSelected(category: FilterCategory, option: FilterOption): void {
-    if (category.isSingleSelect) {
+    // Inverte o estado de seleção
+    option.selected = !option.selected;
+
+    if (category.isSingleSelect && option.selected) {
+      // Desmarca todas as outras opções se for single select
       category.options.forEach((opt) => {
         if (opt.value !== option.value) {
           opt.selected = false;
         }
       });
     }
+
     this.updateSelectedCount();
   }
 

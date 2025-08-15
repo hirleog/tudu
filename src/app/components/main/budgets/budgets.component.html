@@ -21,7 +21,11 @@
     <h4 class="text-start">Meus orçamentos</h4>
   </div> -->
 
-  <div id="my-budgets" class="container mt-2 max-w-4xl mx-auto lg:px-8">
+  <div
+    id="my-budgets"
+    class="container mt-2 max-w-4xl mx-auto lg:px-8"
+    *ngIf="!paymentStep"
+  >
     <div class="row g-3 m-0 p-0">
       <!-- Linha Bootstrap com espaçamento -->
       <div
@@ -150,10 +154,11 @@
               Recusar
             </button>
 
+            <!-- (click)="updateCard(cards, 'contratar')" -->
             <button
               class="request-quote-btn col-6"
               style="background-color: var(--primary); color: var(--light)"
-              (click)="updateCard(cards, 'contratar')"
+              (click)="goToPayment(cards)"
             >
               Contratar
             </button>
@@ -178,6 +183,14 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div>
+    <app-payment
+      *ngIf="paymentStep"
+      (payHiredCard)="payHiredCard($event)"
+      (backToOffer)="backToOffer($event)"
+    ></app-payment>
   </div>
 </section>
 <div
