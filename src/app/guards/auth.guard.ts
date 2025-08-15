@@ -18,10 +18,22 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot
   ): boolean {
     const url = state.url;
+    const isPrestador = this.authService.isPrestadorLoggedIn();
+    const isCliente = this.authService.isClienteLoggedIn();
+
+    // Redirecionamento baseado no tipo de usuário logado
+    if (url === '/') {
+      if (isPrestador && !isCliente) {
+        this.router.navigate(['/tudu-professional/home']);
+        return false;
+      }
+      // Para outros casos (apenas cliente ou ambos), mantém na rota '/'
+      return true;
+    }
 
     if (url.startsWith('/tudu-professional')) {
       // Fluxo exclusivo de prestador
-      if (this.authService.isPrestadorLoggedIn()) {
+      if (isPrestador) {
         return true;
       } else {
         this.router.navigate(['/login']);
@@ -31,10 +43,7 @@ export class AuthGuard implements CanActivate {
 
     if (url.startsWith('/profile')) {
       // Fluxo compartilhado: cliente ou prestador pode acessar
-      if (
-        this.authService.isClienteLoggedIn() ||
-        this.authService.isPrestadorLoggedIn()
-      ) {
+      if (isCliente || isPrestador) {
         return true;
       } else {
         this.router.navigate(['/login']);
@@ -43,7 +52,7 @@ export class AuthGuard implements CanActivate {
     }
 
     // Fluxo padrão do cliente
-    if (this.authService.isClienteLoggedIn()) {
+    if (isCliente) {
       return true;
     } else {
       this.router.navigate(['/login']);

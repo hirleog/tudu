@@ -1,17 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { card } from '../../interfaces/card';
 import { CardService } from 'src/app/services/card.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { AuthHelper } from '../helpers/auth-helper';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-showcase',
   templateUrl: './showcase.component.html',
   styleUrls: ['./showcase.component.css'],
 })
-export class ShowcaseComponent implements OnInit {
+export class ShowcaseComponent implements OnInit, OnDestroy {
   selectedCard: number | null = null;
   searchValue: string = '';
 
@@ -20,30 +19,31 @@ export class ShowcaseComponent implements OnInit {
   clienteIsLogged: boolean = false;
   prestadorIsLogged: boolean = false;
 
-  private subscriptionCliente: Subscription = new Subscription();
-  private subscriptionPrestador: Subscription = new Subscription();
+  private authSubscription: Subscription = new Subscription();
 
   constructor(
     private route: Router,
     public cardService: CardService,
     public authService: AuthService
-  ) {
-    // this.isLogged = AuthHelper.isLoggedIn(); // Usa o helper diretamente
-  }
+  ) {}
 
   async ngOnInit() {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
 
     this.serviceCards = this.cardService.getServiceCards();
 
-    // this.subscriptionPrestador.add(
-    this.authService.isPrestadorLoggedIn$.subscribe((loggedIn) => {
-      this.prestadorIsLogged = loggedIn;
-    });
-    // );
-    // this.subscriptionCliente.add(
-    this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
-      this.clienteIsLogged = loggedIn;
+    this.authSubscription = combineLatest([
+      this.authService.isPrestadorLoggedIn$,
+      this.authService.isClienteLoggedIn$,
+    ]).subscribe(([prestadorLoggedIn, clienteLoggedIn]) => {
+      this.prestadorIsLogged = prestadorLoggedIn;
+      this.clienteIsLogged = clienteLoggedIn;
+
+      // Lógica de redirecionamento
+      if (prestadorLoggedIn && !clienteLoggedIn) {
+        this.route.navigate(['/tudu-professional/home']);
+      }
+      // Nos outros casos (apenas cliente ou ambos), mantém na rota atual
     });
   }
 
@@ -73,8 +73,7 @@ export class ShowcaseComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    // Cancela as inscrições para evitar vazamentos de memória
-    this.subscriptionCliente.unsubscribe();
-    this.subscriptionPrestador.unsubscribe();
+    // Cancela a inscrição para evitar vazamentos de memória
+    this.authSubscription.unsubscribe();
   }
 }
