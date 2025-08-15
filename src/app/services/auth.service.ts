@@ -88,6 +88,14 @@ export class AuthService {
     this.idPrestadorSubject.next(null);
   }
 
+  logout(): void {
+    // Limpa qualquer estado interno de autenticação
+    this.isClienteLoggedInSubject.next(false);
+    this.isPrestadorLoggedInSubject.next(false);
+
+    
+  }
+
   isClienteLoggedIn(): boolean {
     return (
       !!localStorage.getItem('access_token_cliente') && !!this.getRoleCliente()

@@ -12,13 +12,7 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  isProfessional: boolean = false;
-
-  constructor(private authService: AuthService, private router: Router) {
-    this.router.events.subscribe(() => {
-      this.isProfessional = this.router.url.includes('professional');
-    });
-  }
+  constructor(private authService: AuthService, private router: Router) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -27,49 +21,54 @@ export class AuthInterceptor implements HttpInterceptor {
     const clienteToken = localStorage.getItem('access_token_cliente');
     const prestadorToken = localStorage.getItem('access_token_prestador');
 
-    let token: string | null = null;
+    // Determina o tipo de usuário baseado na rota atual
+    const currentRoute = this.router.url;
+    const isProfessionalRoute = currentRoute.includes('/tudu-professional');
 
-    // Verifica pela URL da requisição se é rota de prestador
-    const currentRoute = this.router.url; // ← 🚨 Usa a URL da aplicação
-    const isProfessionalRequest =
-      currentRoute.includes('professional') ||
-      currentRoute.includes('prestador');
-
-    if (isProfessionalRequest && prestadorToken) {
-      token = prestadorToken;
-    } else if (!isProfessionalRequest && clienteToken) {
-      token = clienteToken;
+    // Clona a requisição com o token apropriado
+    let authReq = req;
+    if (isProfessionalRoute && prestadorToken) {
+      authReq = this.addTokenHeader(req, prestadorToken);
+    } else if (!isProfessionalRoute && clienteToken) {
+      authReq = this.addTokenHeader(req, clienteToken);
     }
 
-    if (token) {
-      const cloned = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return next.handle(cloned).pipe(
-        catchError((error: HttpErrorResponse) => {
-          if (error.status === 401 || error.status === 403) {
-            if (isProfessionalRequest && prestadorToken) {
-              this.router.navigate(['/login?param=professional']);
-            } else {
-              this.router.navigate(['/login']);
-            }
-          }
-          return throwError(() => error);
-        })
-      );
-    }
-
-    console.log('prestadorToken', prestadorToken);
-    // Se não houver token, continua a requisição original
-    return next.handle(req).pipe(
+    return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        if (error.status === 401 || error.status === 403) {
-          // this.router.navigate(['/login']);
+        if (error.status === 401) {
+          this.handleUnauthorizedError(isProfessionalRoute);
         }
         return throwError(() => error);
       })
     );
+  }
+
+  private addTokenHeader(
+    req: HttpRequest<any>,
+    token: string
+  ): HttpRequest<any> {
+    return req.clone({
+      setHeaders: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
+
+  private handleUnauthorizedError(isProfessionalRoute: boolean): void {
+    // Limpa os tokens e estados de autenticação
+    this.authService.logout(); // Implemente este método no AuthService se não existir
+
+    // Remove os tokens do localStorage
+    localStorage.removeItem('access_token_cliente');
+    localStorage.removeItem('access_token_prestador');
+
+    // Redireciona para a tela de login apropriada
+    if (isProfessionalRoute) {
+      this.router.navigate(['/login'], {
+        queryParams: { param: 'professional' },
+      });
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 }
