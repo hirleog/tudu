@@ -36,6 +36,9 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.userType =
+      this.isProfessional ? 'prestador' : 'cliente';
+
     // Inicializa o formulário de login
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
