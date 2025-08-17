@@ -25,3 +25,16 @@
   display: flex;
   justify-content: center;
 }
+:host {
+  display: block;
+}
+
+.-translate-y-full {
+  transform: translateY(calc(-100% - 1px));
+}
+
+@media (max-width: 767px) {
+  .-translate-y-full {
+    transform: translateY(calc(-100% - 1px));
+  }
+}

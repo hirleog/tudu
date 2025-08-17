@@ -6,48 +6,22 @@
 ></div>
 
 <!-- Navbar Container -->
-<div class="fixed top-0 left-0 right-0 z-50">
-  <!-- Navbar -->
-  <nav class="bg-white shadow-md w-full">
-    <div
-      class="mx-auto px-4 h-16 flex items-center justify-between"
-    >
-      <!-- Slot esquerdo -->
-      <div class="flex items-center">
-        <ng-content select="[left-content]"></ng-content>
-      </div>
-
-      <!-- Slot central -->
-      <div class="flex items-center justify-center">
-        <ng-content select="[central-content]"></ng-content>
-      </div>
-
-      <!-- Slot direito -->
-      <div class="flex items-center justify-end">
-        <ng-content select="[right-content]"></ng-content>
-      </div>
-    </div>
-  </nav>
-
-</div>
-
-
-
-<!-- Navbar -->
-<!-- <nav class="bg-white shadow-md w-full">
-  <div
-    class="max-w-screen-md mx-auto px-4 h-16 flex items-center justify-between"
-  >
-    <div class="flex items-center">
+<div
+  class="fixed top-0 left-0 right-0 z-50 bg-white shadow-none transition-transform duration-300 ease-out"
+  [class.-translate-y-full]="!isHeaderVisible"
+>
+  <!-- Main Navbar -->
+  <div class="w-full">
+    <div class="mx-auto px-4 h-16 flex items-center justify-between">
+      <!-- Conteúdo principal -->
       <ng-content select="[left-content]"></ng-content>
-    </div>
-
-    <div class="flex items-center justify-center">
       <ng-content select="[central-content]"></ng-content>
-    </div>
-
-    <div class="flex items-center justify-end">
       <ng-content select="[right-content]"></ng-content>
     </div>
   </div>
-</nav> -->
+
+  <!-- Header Menu (Submenu) -->
+  <div header-menu class="w-full bg-white border-t border-gray-200">
+    <ng-content select="[header-menu]"></ng-content>
+  </div>
+</div>
