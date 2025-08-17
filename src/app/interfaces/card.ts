@@ -1,6 +1,11 @@
 export interface card {
   id: number;
   icon: string;
-  cardDetail: { label: string; value: string };
+  cardDetail: CardDetail;
   disabled: boolean;
+}
+
+export interface CardDetail {
+  label: string;
+  value: string;
 }

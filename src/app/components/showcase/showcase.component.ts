@@ -14,7 +14,7 @@ export class ShowcaseComponent implements OnInit, OnDestroy {
   selectedCard: number | null = null;
   searchValue: string = '';
 
-  serviceCards: card[] = [];
+  serviceCards: any[] = [];
 
   clienteIsLogged: boolean = false;
   prestadorIsLogged: boolean = false;
@@ -25,12 +25,19 @@ export class ShowcaseComponent implements OnInit, OnDestroy {
     private route: Router,
     public cardService: CardService,
     public authService: AuthService
-  ) {}
+  ) {
+    this.cardService.getShowcaseCards().subscribe({
+      next: (res) => {
+        this.serviceCards = res.cards;
+      },
+      error: (err) => {
+        console.error('Error fetching showcase cards:', err);
+      },
+    });
+  }
 
   async ngOnInit() {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
-
-    this.serviceCards = this.cardService.getServiceCards();
 
     this.authSubscription = combineLatest([
       this.authService.isPrestadorLoggedIn$,

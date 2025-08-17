@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class CardService {
   url: string = environment.apiUrl;
 
-  public serviceCards: card[] = [
+    public cardsMock: card[] = [
     {
       id: 1,
       icon: 'fas fa-tools',
@@ -67,6 +67,8 @@ export class CardService {
       disabled: false,
     },
   ];
+
+  public serviceCards: card[] = [];
 
   constructor(private http: HttpClient) {}
 
@@ -126,12 +128,22 @@ export class CardService {
 
   // Método para buscar o ícone com base no label
   getIconByLabel(label: string): string | null {
-    const card = this.serviceCards.find(
+    const card = this.cardsMock.find(
       (card) => card.cardDetail.label === label
     );
     return card ? card.icon : null; // Retorna o ícone ou null se não encontrado
   }
-  getServiceCards(): card[] {
-    return this.serviceCards;
+
+  getShowcaseCards() {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    });
+
+    return this.http.get<{ cards: CardOrders[]; counts: any }>(
+      `${this.url}/cards/list/showcase`,
+      { headers }
+    );
   }
 }
