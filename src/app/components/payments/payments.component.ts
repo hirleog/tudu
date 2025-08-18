@@ -242,9 +242,7 @@ export class PaymentsComponent {
           this.showSuccessModal = true;
         },
         error: (err) => {
-          console.error('Erro no pagamento:', err);
           this.processingPayment = false;
-          // Adicione tratamento de erro na UI conforme necessário
         },
       });
     } else if (this.paymentMethod === 'pix') {
@@ -259,17 +257,14 @@ export class PaymentsComponent {
     }
   }
 
-  closeModal(): void {
+  closeModal(paymentIndicator: string): void {
     this.showSuccessModal = false;
     this.route.navigate(['/home/progress']);
+    this.payHiredCard.emit(paymentIndicator);
   }
 
   goBack(indicator: any): void {
     this.backToOffer.emit(indicator);
-  }
-
-  payCard(paymentIndicator: string): void {
-    this.payHiredCard.emit(paymentIndicator);
   }
 
   validateCardNumber(control: AbstractControl): ValidationErrors | null {
