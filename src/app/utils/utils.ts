@@ -24,3 +24,25 @@ export function calculateDistance(
 export function formatDecimal(value: number): number {
   return parseFloat(value.toFixed(2)); // Garante 2 casas decimais
 }
+
+export function convertRealToCents(value: string | number): number {
+  // Se já for número, assume que está em reais e converte
+  if (typeof value === 'number') {
+    return Math.round(value * 100);
+  }
+
+  // Remove caracteres não numéricos e trata separador decimal
+  const numericString = value
+    .replace(/[^\d,-]/g, '') // Remove tudo exceto dígitos, vírgula e hífen
+    .replace(',', '.') // Substitui vírgula por ponto (padrão internacional)
+    .replace(/[^0-9.-]/g, ''); // Remove qualquer outro caractere não numérico
+
+  const amount = parseFloat(numericString);
+
+  if (isNaN(amount)) {
+    console.error('Valor inválido para conversão:', value);
+    return 0; // Ou lance um erro se preferir
+  }
+
+  return Math.round(amount * 100); // Converte reais para centavos
+}

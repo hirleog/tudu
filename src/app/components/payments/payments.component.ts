@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PaymentService } from 'src/app/services/payment.service';
+import { convertRealToCents } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-payment',
@@ -38,7 +39,11 @@ export class PaymentsComponent {
   );
   years: string[];
 
-  constructor(private paymentService: PaymentService, private fb: FormBuilder, private route: Router) {
+  constructor(
+    private paymentService: PaymentService,
+    private fb: FormBuilder,
+    private route: Router
+  ) {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (_, i) =>
       (currentYear + i).toString()
@@ -182,7 +187,9 @@ export class PaymentsComponent {
       // Este é um exemplo - substitua pela sua lógica real de tokenização
 
       const requestData = {
-        amount: Number(this.hiredCardInfo.candidaturas[0].valor_negociado), // Valor em centavos (R$ 100,00)
+        amount: convertRealToCents(
+          this.hiredCardInfo.candidaturas[0].valor_negociado
+        ),
         currency: 'BRL',
         order: {
           order_id: 'ORDER-' + Date.now(), // ID único baseado no timestamp
