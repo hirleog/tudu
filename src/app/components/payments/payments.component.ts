@@ -1,16 +1,26 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  AbstractControl,
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
+import { Router } from '@angular/router';
 import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
   selector: 'app-payment',
   templateUrl: './payments.component.html',
-  styleUrls: ['./payments.component.css'], // Adicione o arquivo CSS se necessário
+  styleUrls: ['./payments.component.css'],
 })
 export class PaymentsComponent {
-  @Output() backToOffer = new EventEmitter<string>(); // Emite a data no formato 'DD/MM/YYYY'
-  @Output() payHiredCard = new EventEmitter<string>(); 
+  @Input() clientData!: any;
+  @Input() hiredCardInfo!: any;
+  @Input() hiredCard!: any;
+  @Output() backToOffer = new EventEmitter<string>();
+  @Output() payHiredCard = new EventEmitter<string>();
 
-  // Dados do pagamento
   paymentMethod: string = 'pix';
   pixGenerated: boolean = false;
   cardFlipped: boolean = false;
@@ -21,31 +31,52 @@ export class PaymentsComponent {
   saveCard: boolean = false;
   installments: string = '1';
 
-  // Dados do cartão
-  cardData = {
-    cardNumber: '',
-    cardHolder: '',
-    expiryMonth: '',
-    expiryYear: '',
-    cvv: '',
-    cardType: '',
-  };
+  paymentForm: FormGroup;
 
-  // Opções para validade
   months = Array.from({ length: 12 }, (_, i) =>
     (i + 1).toString().padStart(2, '0')
   );
   years: string[];
 
-  constructor(private paymentService: PaymentService) {
+  constructor(private paymentService: PaymentService, private fb: FormBuilder, private route: Router) {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (_, i) =>
       (currentYear + i).toString()
     );
+
+    this.paymentForm = this.fb.group({
+      cardNumber: [
+        '',
+        [
+          Validators.required,
+          Validators.pattern(/^[0-9]{13,19}$/), // Cartões têm entre 13 e 19 dígitos
+          this.validateCardNumber.bind(this),
+        ],
+      ],
+      cardHolder: ['', [Validators.required, Validators.minLength(3)]],
+      expiryMonth: ['', Validators.required],
+      expiryYear: ['', Validators.required],
+      cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]],
+      cardType: [''],
+      installments: ['1'],
+      acceptedTerms: [false, Validators.requiredTrue],
+    });
+
+    this.selectPaymentMethod('credit');
+  }
+
+  get f() {
+    return this.paymentForm.controls;
   }
 
   selectPaymentMethod(method: string): void {
     this.paymentMethod = method;
+    if (method === 'pix') {
+      this.paymentForm.reset({
+        installments: '1',
+        acceptedTerms: false,
+      });
+    }
   }
 
   generatePix(): void {
@@ -53,35 +84,48 @@ export class PaymentsComponent {
   }
 
   detectCardType(): void {
-    const num = this.cardData.cardNumber.replace(/\D/g, '');
+    const num = this.paymentForm.value.cardNumber.replace(/\D/g, '');
+    let cardType = '';
 
-    if (/^4/.test(num)) {
-      this.cardData.cardType = 'visa';
-    } else if (/^5[1-5]/.test(num)) {
-      this.cardData.cardType = 'mastercard';
-    } else if (/^3[47]/.test(num)) {
-      this.cardData.cardType = 'amex';
-    } else if (/^3(?:0[0-5]|[68][0-9])/.test(num)) {
-      this.cardData.cardType = 'diners';
-    } else if (/^6(?:011|5[0-9]{2})/.test(num)) {
-      this.cardData.cardType = 'discover';
-    } else if (/^(?:2131|1800|35\d{3})/.test(num)) {
-      this.cardData.cardType = 'jcb';
-    } else if (/^(606282\d{10}(\d{3})?)|(3841\d{15})$/.test(num)) {
-      this.cardData.cardType = 'hipercard';
-    } else if (
-      /^((((636368)|(438935)|(504175)|(451416)|(636297))\d{0,10})|((5067)|(4576)|(4011))\d{0,12})$/.test(
-        num
-      )
-    ) {
-      this.cardData.cardType = 'elo';
-    } else {
-      this.cardData.cardType = '';
+    // Expressões regulares atualizadas para detectar bandeiras
+    const cardPatterns = [
+      { type: 'visa', pattern: /^4/ },
+      {
+        type: 'mastercard',
+        pattern:
+          /^(5[1-5]|222[1-9]|22[3-9][0-9]|2[3-6][0-9]{2}|27[01][0-9]|2720)/,
+      },
+      { type: 'amex', pattern: /^3[47]/ },
+      { type: 'diners', pattern: /^3(?:0[0-5]|[68][0-9])/ },
+      {
+        type: 'discover',
+        pattern:
+          /^6(?:011|5[0-9]{2}|4[4-9][0-9]|22(?:1(?:2[6-9]|[3-9][0-9])|[2-8][0-9]{2}|9(?:[01][0-9]|2[0-5])))/,
+      },
+      { type: 'jcb', pattern: /^(?:2131|1800|35\d{3})/ },
+      { type: 'hipercard', pattern: /^(606282\d{10}(\d{3})?|3841\d{15})$/ },
+      {
+        type: 'elo',
+        pattern:
+          /^((((636368)|(438935)|(504175)|(451416)|(636297))\d{0,10})|((5067)|(4576)|(4011))\d{0,12})$/,
+      },
+      { type: 'aura', pattern: /^50[0-9]/ },
+      { type: 'hiper', pattern: /^637(095|568|599|612|609)/ },
+    ];
+
+    for (const { type, pattern } of cardPatterns) {
+      if (pattern.test(num)) {
+        cardType = type;
+        break;
+      }
     }
+
+    this.paymentForm.patchValue({ cardType });
   }
 
   getCardLogo(): string {
-    if (!this.cardData.cardType) return '';
+    const cardType = this.paymentForm.value.cardType;
+    if (!cardType) return '';
 
     const logos: { [key: string]: string } = {
       visa: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg',
@@ -96,15 +140,19 @@ export class PaymentsComponent {
       hipercard:
         'https://upload.wikimedia.org/wikipedia/commons/6/67/Hipercard_logo.svg',
       elo: 'https://upload.wikimedia.org/wikipedia/commons/9/9d/Elo_logo.svg',
+      aura: 'https://upload.wikimedia.org/wikipedia/commons/0/0a/Aura_-_logo.png',
+      hiper:
+        'https://upload.wikimedia.org/wikipedia/commons/5/5a/Hiper_logo.svg',
     };
 
-    return logos[this.cardData.cardType] || '';
+    return logos[cardType] || '';
   }
 
   formatCardNumberDisplay(): string {
-    if (!this.cardData.cardNumber) return '';
+    const cardNumber = this.paymentForm.value.cardNumber;
+    if (!cardNumber) return '';
 
-    const num = this.cardData.cardNumber.replace(/\D/g, '');
+    const num = cardNumber.replace(/\D/g, '');
     let formatted = '';
 
     for (let i = 0; i < num.length; i++) {
@@ -116,28 +164,71 @@ export class PaymentsComponent {
   }
 
   submitPayment(): void {
-    this.processingPayment = true;
-
     if (this.paymentMethod === 'credit') {
-      const payload = {
-        card_number: this.cardData.cardNumber.replace(/\D/g, ''),
-        customer_id: 'customer_' + Math.random().toString(36).substr(2, 9),
-        amount: 1000, // Valor em centavos
-        order_id: 'order_' + Math.random().toString(36).substr(2, 9),
-        cardholder_name: this.cardData.cardHolder,
-        expiration_month: this.cardData.expiryMonth,
-        expiration_year: this.cardData.expiryYear,
-        security_code: this.cardData.cvv,
-        brand:
-          this.cardData.cardType.charAt(0).toUpperCase() +
-          this.cardData.cardType.slice(1),
-        first_name: this.cardData.cardHolder.split(' ')[0],
-        last_name: this.cardData.cardHolder.split(' ').slice(1).join(' '),
-        email: 'user@example.com', // Você pode injetar um serviço de usuário para pegar esses dados
-        installments: parseInt(this.installments),
+      if (this.paymentForm.invalid) {
+        this.paymentForm.markAllAsTouched();
+        return;
+      }
+
+      this.processingPayment = true;
+
+      const formValue = this.paymentForm.value;
+      const cardHolderName = formValue.cardHolder.toUpperCase();
+      const nameParts = cardHolderName.split(' ');
+      // const firstName = nameParts[0];
+      // const lastName = nameParts.slice(1).join(' ');
+
+      // Você precisará implementar a geração do number_token ou obtê-lo de um serviço
+      // Este é um exemplo - substitua pela sua lógica real de tokenização
+
+      const requestData = {
+        amount: Number(this.hiredCardInfo.candidaturas[0].valor_negociado), // Valor em centavos (R$ 100,00)
+        currency: 'BRL',
+        order: {
+          order_id: 'ORDER-' + Date.now(), // ID único baseado no timestamp
+          product_type: 'service',
+        },
+        customer: {
+          customer_id: this.clientData.id_cliente, // Ou gere um ID único se necessário
+          first_name: this.clientData.nome,
+          last_name: this.clientData.sobrenome,
+          document_type: 'CPF',
+          // document_number: this.clientData.cpf, // Substitua pelo CPF real ou obtenha do formulário
+          document_number: '49306837852', // Substitua pelo CPF real ou obtenha do formulário
+          email: this.clientData.email, // Substitua pelo email real ou obtenha do formulário
+          phone_number: this.clientData.telefone, // Substitua pelo telefone real
+          billing_address: {
+            street: this.hiredCard.address.street,
+            number: this.hiredCard.address.number,
+            district: this.hiredCard.address.neighborhood,
+            city: this.hiredCard.address.city,
+            state: this.hiredCard.address.state,
+            country: this.hiredCard.address.country,
+            postal_code: this.hiredCard.address.cep.replace(/\D/g, ''),
+          },
+        },
+        device: {
+          ip_address: '127.0.0.1', // Implemente esta função ou use um valor fixo para testes
+        },
+        credit: {
+          delayed: false,
+          save_card_data: false, // Usando o campo saveCard que você já tem
+          transaction_type: 'FULL',
+          number_installments: parseInt(formValue.installments),
+          soft_descriptor: 'TUDU',
+          dynamic_mcc: 7299,
+          card: {
+            number_token: formValue.cardNumber.replace(/\D/g, ''), // Gerado anteriormente
+            brand: formValue.cardType.toUpperCase(), // Já ajustado para MASTERCARD, VISA, etc.
+            security_code: formValue.cvv,
+            expiration_month: formValue.expiryMonth,
+            expiration_year: formValue.expiryYear.slice(-2), // Pega apenas os últimos 2 dígitos
+            cardholder_name: formValue.cardHolder.toUpperCase(),
+          },
+        },
       };
 
-      this.paymentService.pagarComCartao(payload).subscribe({
+      this.paymentService.pagarComCartao(requestData).subscribe({
         next: (res) => {
           console.log('Pagamento autorizado:', res);
           this.processingPayment = false;
@@ -146,11 +237,13 @@ export class PaymentsComponent {
         error: (err) => {
           console.error('Erro no pagamento:', err);
           this.processingPayment = false;
-          // Aqui você pode adicionar tratamento de erro na UI
+          // Adicione tratamento de erro na UI conforme necessário
         },
       });
     } else if (this.paymentMethod === 'pix') {
-      // Lógica para processar Pix
+      if (!this.acceptedTerms) return;
+
+      this.processingPayment = true;
       setTimeout(() => {
         this.processingPayment = false;
         this.showSuccessModal = true;
@@ -161,40 +254,38 @@ export class PaymentsComponent {
 
   closeModal(): void {
     this.showSuccessModal = false;
-    // Aqui você pode adicionar redirecionamento ou outras ações pós-pagamento
+    this.route.navigate(['/home/progress']);
   }
 
   goBack(indicator: any): void {
     this.backToOffer.emit(indicator);
   }
 
-  pagar() {
-    const payload = {
-      card_number: '5155901222280001',
-      customer_id: 'customer_123',
-      amount: 1000,
-      order_id: 'order_123',
-      cardholder_name: 'JOAO DA SILVA',
-      expiration_month: '12',
-      expiration_year: '25',
-      security_code: '123',
-      brand: 'Mastercard',
-      first_name: 'Joao',
-      last_name: 'Silva',
-      email: 'joao@example.com',
-    };
-
-    this.paymentService.pagarComCartao(payload).subscribe({
-      next: (res) => {
-        this.payCard('success');
-      },
-      error: (err) => {
-        this.payCard('error');
-        console.error('Erro no pagamento:', err);
-      },
-    });
-  }
   payCard(paymentIndicator: string): void {
     this.payHiredCard.emit(paymentIndicator);
+  }
+
+  validateCardNumber(control: AbstractControl): ValidationErrors | null {
+    const num = control.value.replace(/\D/g, '');
+
+    // Verifica o algoritmo de Luhn (módulo 10)
+    let sum = 0;
+    let shouldDouble = false;
+
+    for (let i = num.length - 1; i >= 0; i--) {
+      let digit = parseInt(num.charAt(i));
+
+      if (shouldDouble) {
+        digit *= 2;
+        if (digit > 9) digit -= 9;
+      }
+
+      sum += digit;
+      shouldDouble = !shouldDouble;
+    }
+
+    const isValid = sum % 10 === 0;
+
+    return isValid ? null : { invalidCardNumber: true };
   }
 }

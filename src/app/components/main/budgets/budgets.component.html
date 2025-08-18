@@ -30,7 +30,7 @@
       <!-- Linha Bootstrap com espaçamento -->
       <div
         class="col-12 m-0 p-0"
-        *ngFor="let candidatura of cards?.candidaturas; let i = index"
+        *ngFor="let candidatura of card?.candidaturas; let i = index"
         data-aos="fade-down"
       >
         <!-- Colunas responsivas -->
@@ -41,13 +41,13 @@
             <div class="d-flex align-items-center">
               <div class="request-card-icon border-0">
                 <i
-                  [class]="cards.icon"
+                  [class]="card.icon"
                   style="color: var(--primary) !important"
                 ></i>
               </div>
               <div class="request-card-title">
                 <div class="d-flex align-items-center">
-                  <h5>{{ cards.categoria }}</h5>
+                  <h5>{{ card.categoria }}</h5>
                   <!-- <div>&nbsp;•&nbsp;</div> -->
                 </div>
                 <!-- <p class="request-card-description truncate-text">
@@ -59,7 +59,7 @@
 
             <!-- <div class="d-flex justify-content-start align-items-center">
               <h3 class="fs-4" style="color: var(--premium)">
-                {{ cards.valor | currency }}
+                {{ card.valor | currency }}
               </h3>
             </div> -->
           </div>
@@ -149,16 +149,16 @@
                 border: 1px solid var(--primary);
               "
               class="request-quote-btn col-6"
-              (click)="updateCard(cards, 'recusar')"
+              (click)="updateCard(card, 'recusar')"
             >
               Recusar
             </button>
 
-            <!-- (click)="updateCard(cards, 'contratar')" -->
+            <!-- (click)="updateCard(card, 'contratar')" -->
             <button
               class="request-quote-btn col-6"
               style="background-color: var(--primary); color: var(--light)"
-              (click)="goToPayment(cards)"
+              (click)="goToPayment(card)"
             >
               Contratar
             </button>
@@ -188,13 +188,16 @@
   <div>
     <app-payment
       *ngIf="paymentStep"
+      [clientData]="clientData"
+      [hiredCardInfo]="hiredCardInfo"
+      [hiredCard]="card"
       (payHiredCard)="payHiredCard($event)"
       (backToOffer)="backToOffer($event)"
     ></app-payment>
   </div>
 </section>
 <div
-  *ngIf="cards?.candidaturas?.length === 0"
+  *ngIf="card?.candidaturas?.length === 0"
   class="d-flex align-items-center justify-content-center"
   style="height: 68vh"
 >

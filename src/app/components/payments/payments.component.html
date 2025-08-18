@@ -179,294 +179,263 @@
                 </div>
               </div>
 
-              <!-- Cartão de Crédito -->
-              <div *ngIf="paymentMethod === 'credit'" class="animate-fade-in">
-                <div class="mb-6">
-                  <div class="flip-card" [class.flipped]="cardFlipped">
-                    <div class="flip-card-inner hidden md:block">
-                      <!-- Frente do Cartão -->
-                      <div
-                        class="flip-card-front bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg p-6 text-white shadow-lg"
-                      >
-                        <div class="flex justify-between items-start mb-8">
-                          <div>
-                            <p class="text-xs opacity-80">NOME DO TITULAR</p>
-                            <p class="font-medium text-lg tracking-wider">
-                              {{ cardData.cardHolder || "SEU NOME" }}
-                            </p>
-                          </div>
-                          <img
-                            [src]="getCardLogo()"
-                            alt="Card Logo"
-                            class="h-8"
-                          />
-                        </div>
-                        <div class="mb-4">
-                          <p class="text-xs opacity-80">NÚMERO DO CARTÃO</p>
-                          <p class="font-mono text-xl tracking-wider">
-                            {{
-                              formatCardNumberDisplay() || "•••• •••• •••• ••••"
-                            }}
-                          </p>
-                        </div>
-                        <div class="flex justify-between">
-                          <div>
-                            <p class="text-xs opacity-80">VALIDADE</p>
-                            <p class="font-medium">
-                              {{
-                                cardData.expiryMonth && cardData.expiryYear
-                                  ? cardData.expiryMonth +
-                                    "/" +
-                                    cardData.expiryYear.slice(-2)
-                                  : "MM/AA"
-                              }}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- Verso do Cartão -->
-                      <div
-                        class="flip-card-back bg-gradient-to-r from-blue-700 to-blue-900 rounded-lg p-6 text-white shadow-lg"
-                        style="margin-top: -10em"
-                      >
-                        <div class="h-8 bg-black mb-6"></div>
-                        <div
-                          class="bg-gray-200 h-8 rounded flex items-center px-2 mb-4"
-                        >
-                          <p class="text-black font-mono text-sm">
-                            {{ cardData.cvv ? "•••" : "CVV" }}
-                          </p>
-                        </div>
-                        <div class="text-right">
-                          <img
-                            [src]="getCardLogo()"
-                            alt="Card Logo"
-                            class="h-8 inline-block"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <form #creditCardForm="ngForm">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <!-- Número do Cartão -->
-                      <div class="md:col-span-2">
-                        <label
-                          for="cardNumber"
-                          class="block text-sm font-medium text-gray-700 mb-1"
-                          >Número do Cartão</label
-                        >
-                        <div class="relative">
-                          <input
-                            type="text"
-                            id="cardNumber"
-                            [(ngModel)]="cardData.cardNumber"
-                            (ngModelChange)="detectCardType()"
-                            name="cardNumber"
-                            pattern="^[0-9]{13,16}$"
-                            required
-                            class="card-input w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="1234 5678 9012 3456"
-                          />
-                          <div
-                            class="card-type absolute right-3 top-1/2 transform -translate-y-1/2 border border-gray-200 rounded p-1 bg-white"
-                          >
-                            <img
-                              [src]="getCardLogo()"
-                              alt="Card Type"
-                              class="h-6"
-                              *ngIf="cardData.cardType"
-                            />
-                          </div>
-                        </div>
-                        <!-- *ngIf="
-                            creditCardForm.controls['cardNumber']?.errors
-                              && creditCardForm.controls['cardNumber']?.errors['pattern'] &&
-                            creditCardForm.controls['cardNumber']?.dirty
-                          " -->
-                        <p class="mt-1 text-sm text-red-600">
-                          Número de cartão inválido
-                        </p>
-                      </div>
-
-                      <!-- Nome do Titular -->
-                      <div class="md:col-span-2">
-                        <label
-                          for="cardHolder"
-                          class="block text-sm font-medium text-gray-700 mb-1"
-                          >Nome do Titular</label
-                        >
-                        <input
-                          type="text"
-                          id="cardHolder"
-                          [(ngModel)]="cardData.cardHolder"
-                          name="cardHolder"
-                          required
-                          class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          placeholder="Como no cartão"
-                        />
-                      </div>
-
-                      <!-- Validade -->
-                      <div>
-                        <label
-                          for="expiryDate"
-                          class="block text-sm font-medium text-gray-700 mb-1"
-                          >Validade</label
-                        >
-                        <div class="grid grid-cols-2 gap-2">
-                          <select
-                            id="expiryMonth"
-                            [(ngModel)]="cardData.expiryMonth"
-                            name="expiryMonth"
-                            required
-                            class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          >
-                            <option value="" disabled selected>Mês</option>
-                            <option
-                              *ngFor="let month of months"
-                              [value]="month"
-                            >
-                              {{ month }}
-                            </option>
-                          </select>
-                          <select
-                            id="expiryYear"
-                            [(ngModel)]="cardData.expiryYear"
-                            name="expiryYear"
-                            required
-                            class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          >
-                            <option value="" disabled selected>Ano</option>
-                            <option *ngFor="let year of years" [value]="year">
-                              {{ year }}
-                            </option>
-                          </select>
-                        </div>
-                      </div>
-
-                      <!-- CVV -->
-                      <div>
-                        <label
-                          for="cvv"
-                          class="block text-sm font-medium text-gray-700 mb-1"
-                          >Código de Segurança</label
-                        >
-                        <div class="relative">
-                          <input
-                            type="text"
-                            id="cvv"
-                            [(ngModel)]="cardData.cvv"
-                            (focus)="cardFlipped = true"
-                            (blur)="cardFlipped = false"
-                            name="cvv"
-                            pattern="^[0-9]{3,4}$"
-                            required
-                            class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            placeholder="123"
-                          />
-                          <button
-                            type="button"
-                            class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                            (click)="showCvvHelp = !showCvvHelp"
-                          >
-                            <i class="far fa-question-circle"></i>
-                          </button>
-                        </div>
-                        <!-- *ngIf="
-                            creditCardForm.controls['cvv']?.errors &&
-                            creditCardForm.controls['cvv']?.errors['pattern'] &&
-                            creditCardForm.controls['cvv']?.dirty
-                          " -->
-                        <p class="mt-1 text-sm text-red-600">CVV inválido</p>
-                        <div
-                          *ngIf="showCvvHelp"
-                          class="mt-2 p-2 bg-gray-100 rounded text-sm text-gray-600"
-                        >
-                          O CVV é o código de 3 ou 4 dígitos localizado na parte
-                          de trás do seu cartão.
-                        </div>
-                      </div>
-                    </div>
-
-                    <!-- Salvar Cartão -->
-                    <div class="mt-4 flex items-center">
+              <!-- Substitua a seção do formulário de cartão de crédito por este código -->
+              <form
+                *ngIf="paymentMethod === 'credit'"
+                [formGroup]="paymentForm"
+              >
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <!-- Número do Cartão -->
+                  <div class="md:col-span-2">
+                    <label
+                      for="cardNumber"
+                      class="block text-sm font-medium text-gray-700 mb-1"
+                      >Número do Cartão</label
+                    >
+                    <div class="relative">
                       <input
-                        type="checkbox"
-                        id="saveCard"
-                        [(ngModel)]="saveCard"
-                        name="saveCard"
-                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        type="text"
+                        id="cardNumber"
+                        formControlName="cardNumber"
+                        (input)="detectCardType()"
+                        class="card-input w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="1234 5678 9012 3456"
                       />
-                      <label
-                        for="saveCard"
-                        class="ml-2 block text-sm text-gray-700"
-                        >Salvar este cartão para pagamentos futuros</label
+                      <div
+                        class="card-type absolute right-3 top-1/2 transform -translate-y-1/2 border border-gray-200 rounded p-1 bg-white"
                       >
-                    </div>
-
-                    <!-- Parcelamento -->
-                    <div class="mt-6">
-                      <label
-                        class="block text-sm font-medium text-gray-700 mb-1"
-                        >Parcelamento</label
-                      >
-                      <select
-                        [(ngModel)]="installments"
-                        name="installments"
-                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      >
-                        <option value="1">1x de R$ 99,90 (sem juros)</option>
-                        <option value="2">2x de R$ 49,95 (sem juros)</option>
-                        <option value="3">3x de R$ 33,30 (sem juros)</option>
-                        <option value="4">4x de R$ 24,98 (sem juros)</option>
-                        <option value="5">5x de R$ 19,98 (sem juros)</option>
-                      </select>
-                    </div>
-
-                    <!-- Termos -->
-                    <div class="mt-6 flex items-start">
-                      <div class="flex items-center h-5">
-                        <input
-                          id="terms"
-                          [(ngModel)]="acceptedTerms"
-                          name="acceptedTerms"
-                          type="checkbox"
-                          required
-                          class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                        <img
+                          [src]="getCardLogo()"
+                          alt="Card Type"
+                          class="h-6"
+                          *ngIf="paymentForm.value.cardType"
                         />
                       </div>
-                      <div class="ml-3 text-sm">
-                        <label for="terms" class="font-medium text-gray-700"
-                          >Concordo com os termos de serviço</label
-                        >
-                        <p class="text-gray-500">
-                          Ao continuar, você concorda que será cobrado o valor
-                          total e autoriza futuras cobranças de acordo com os
-                          <a href="#" class="text-blue-600 hover:text-blue-500"
-                            >Termos de Serviço</a
-                          >.
-                        </p>
-                      </div>
                     </div>
-                  </form>
-                </div>
-
-                <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
-                  <div class="flex">
-                    <div class="flex-shrink-0">
-                      <i class="fas fa-lock text-blue-500"></i>
-                    </div>
-                    <div class="ml-3">
-                      <p class="text-sm text-blue-700">
-                        Suas informações estão seguras. Todos os dados são
-                        criptografados e processados pela GetNet, nossa
-                        plataforma de pagamentos certificada.
+                    <div
+                      *ngIf="f['cardNumber'].touched && f['cardNumber'].errors"
+                    >
+                      <p
+                        *ngIf="f['cardNumber'].errors['required']"
+                        class="mt-1 text-sm text-red-600"
+                      >
+                        Número do cartão é obrigatório
+                      </p>
+                      <p
+                        *ngIf="f['cardNumber'].errors['pattern']"
+                        class="mt-1 text-sm text-red-600"
+                      >
+                        Número de cartão inválido (deve ter entre 13 e 19
+                        dígitos)
+                      </p>
+                      <p
+                        *ngIf="f['cardNumber'].errors['invalidCardNumber']"
+                        class="mt-1 text-sm text-red-600"
+                      >
+                        Número de cartão inválido (falha na verificação)
                       </p>
                     </div>
                   </div>
+
+                  <!-- Nome do Titular -->
+                  <div class="md:col-span-2">
+                    <label
+                      for="cardHolder"
+                      class="block text-sm font-medium text-gray-700 mb-1"
+                      >Nome do Titular</label
+                    >
+                    <input
+                      type="text"
+                      id="cardHolder"
+                      formControlName="cardHolder"
+                      class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Como no cartão"
+                    />
+                    <div
+                      *ngIf="f['cardHolder'].touched && f['cardHolder'].errors"
+                    >
+                      <p
+                        *ngIf="f['cardHolder'].errors['required']"
+                        class="mt-1 text-sm text-red-600"
+                      >
+                        Nome do titular é obrigatório
+                      </p>
+                      <p
+                        *ngIf="f['cardHolder'].errors['minlength']"
+                        class="mt-1 text-sm text-red-600"
+                      >
+                        Nome muito curto
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- Validade -->
+                  <div>
+                    <label
+                      for="expiryDate"
+                      class="block text-sm font-medium text-gray-700 mb-1"
+                      >Validade</label
+                    >
+                    <div class="grid grid-cols-2 gap-2">
+                      <select
+                        id="expiryMonth"
+                        formControlName="expiryMonth"
+                        class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="" disabled selected>Mês</option>
+                        <option *ngFor="let month of months" [value]="month">
+                          {{ month }}
+                        </option>
+                      </select>
+                      <select
+                        id="expiryYear"
+                        formControlName="expiryYear"
+                        class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      >
+                        <option value="" disabled selected>Ano</option>
+                        <option *ngFor="let year of years" [value]="year">
+                          {{ year }}
+                        </option>
+                      </select>
+                    </div>
+                    <div
+                      *ngIf="
+                        (f['expiryMonth'].touched || f['expiryYear'].touched) &&
+                        (f['expiryMonth'].errors || f['expiryYear'].errors)
+                      "
+                    >
+                      <p class="mt-1 text-sm text-red-600">
+                        Validade é obrigatória
+                      </p>
+                    </div>
+                  </div>
+
+                  <!-- CVV -->
+                  <div>
+                    <label
+                      for="cvv"
+                      class="block text-sm font-medium text-gray-700 mb-1"
+                      >Código de Segurança</label
+                    >
+                    <div class="relative">
+                      <input
+                        type="text"
+                        id="cvv"
+                        formControlName="cvv"
+                        (focus)="cardFlipped = true"
+                        (blur)="cardFlipped = false"
+                        class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        placeholder="123"
+                      />
+                      <button
+                        type="button"
+                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                        (click)="showCvvHelp = !showCvvHelp"
+                      >
+                        <i class="far fa-question-circle"></i>
+                      </button>
+                    </div>
+                    <div *ngIf="f['cvv'].touched && f['cvv'].errors">
+                      <p
+                        *ngIf="f['cvv'].errors['required']"
+                        class="mt-1 text-sm text-red-600"
+                      >
+                        CVV é obrigatório
+                      </p>
+                      <p
+                        *ngIf="f['cvv'].errors['pattern']"
+                        class="mt-1 text-sm text-red-600"
+                      >
+                        CVV inválido
+                      </p>
+                    </div>
+                    <div
+                      *ngIf="showCvvHelp"
+                      class="mt-2 p-2 bg-gray-100 rounded text-sm text-gray-600"
+                    >
+                      O CVV é o código de 3 ou 4 dígitos localizado na parte de
+                      trás do seu cartão.
+                    </div>
+                  </div>
                 </div>
+
+                <!-- Parcelamento -->
+                <!-- <div class="mt-6">
+                  <label class="block text-sm font-medium text-gray-700 mb-1"
+                    >Parcelamento</label
+                  >
+                  <select
+                    formControlName="installments"
+                    class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="1">1x de R$ 99,90 (sem juros)</option>
+                    <option value="2">2x de R$ 49,95 (sem juros)</option>
+                    <option value="3">3x de R$ 33,30 (sem juros)</option>
+                    <option value="4">4x de R$ 24,98 (sem juros)</option>
+                    <option value="5">5x de R$ 19,98 (sem juros)</option>
+                  </select>
+                </div> -->
+
+                <!-- Termos -->
+                <div class="mt-6 flex items-start">
+                  <div class="flex items-center h-5">
+                    <input
+                      id="terms"
+                      formControlName="acceptedTerms"
+                      type="checkbox"
+                      class="focus:ring-blue-500 h-4 w-4 text-blue-600 border-gray-300 rounded"
+                    />
+                  </div>
+                  <div class="ml-3 text-sm">
+                    <label for="terms" class="font-medium text-gray-700"
+                      >Concordo com os termos de serviço</label
+                    >
+                    <p class="text-gray-500">
+                      Ao continuar, você concorda que será cobrado o valor total
+                      e autoriza futuras cobranças de acordo com os
+                      <a href="#" class="text-blue-600 hover:text-blue-500"
+                        >Termos de Serviço</a
+                      >.
+                    </p>
+                    <p
+                      *ngIf="
+                        f['acceptedTerms'].touched && f['acceptedTerms'].errors
+                      "
+                      class="text-red-600"
+                    >
+                      Você deve aceitar os termos para continuar
+                    </p>
+                  </div>
+                </div>
+              </form>
+
+              <div class="mt-8 flex flex-column gap-2 p-3">
+                <button
+                  class="col-12 btn btn-primary"
+                  style="font-size: 17px"
+                  (click)="submitPayment()"
+                  [disabled]="
+                    paymentMethod === 'credit'
+                      ? paymentForm.invalid
+                      : !acceptedTerms
+                  "
+                >
+                  <span *ngIf="!processingPayment">Finalizar Pagamento</span>
+                  <span
+                    *ngIf="processingPayment"
+                    class="flex items-center justify-center"
+                  >
+                    <i class="fas fa-circle-notch fa-spin mr-2"></i>
+                    Processando...
+                  </span>
+                  <i class="fas fa-lock ml-2"></i>
+                </button>
+                <button
+                  class="col-12 btn btn-outline-primary"
+                  (click)="goBack(false)"
+                >
+                  Voltar
+                </button>
               </div>
             </div>
 
@@ -494,7 +463,7 @@
               </button>
             </div> -->
 
-            <div class="mt-8 flex flex-column gap-2 p-3">
+            <!-- <div class="mt-8 flex flex-column gap-2 p-3">
               <button
                 class="col-12 btn btn-primary"
                 style="font-size: 17px"
@@ -509,7 +478,7 @@
               >
                 Voltar
               </button>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as moment from 'moment';
 import { forkJoin, Observable, of } from 'rxjs';
 import { Budget } from 'src/app/interfaces/budgets';
 import { CardOrders } from 'src/app/interfaces/card-orders';
@@ -51,12 +50,14 @@ export class BudgetsComponent implements OnInit {
     },
   ];
   id_pedido: string = '';
-  cards: any;
+  card: any;
   id_prestador: any;
   prestadorInfos: any;
   prestadoresInfos: Array<any>[] = [];
   paymentStep: boolean = false;
   hiredCardInfo!: CardOrders;
+  id_cliente: any;
+  clientData: any;
 
   constructor(
     public cardService: CardService,
@@ -69,8 +70,8 @@ export class BudgetsComponent implements OnInit {
       this.id_pedido = params['id'];
     });
 
-    this.authService.idPrestador$.subscribe((id) => {
-      this.id_prestador = id;
+    this.authService.idPrestador$.subscribe((id_prestador) => {
+      this.id_prestador = id_prestador;
     });
   }
 
@@ -85,7 +86,7 @@ export class BudgetsComponent implements OnInit {
         const candidaturas = data.candidaturas || [];
 
         // Primeiro monta o card com ícone e candidaturas
-        this.cards = {
+        this.card = {
           ...data,
           icon: this.cardService.getIconByLabel(data.categoria) || '',
           candidaturas: candidaturas.map((candidatura: any) => ({
@@ -95,7 +96,7 @@ export class BudgetsComponent implements OnInit {
         };
 
         // Prepara as chamadas para os prestadores
-        const chamadasPrestadores = this.cards.candidaturas
+        const chamadasPrestadores = this.card.candidaturas
           .filter((c: any) => c.prestador_id)
           .map((c: any) =>
             this.profileDetailService.getPrestadorById(c.prestador_id)
@@ -103,11 +104,11 @@ export class BudgetsComponent implements OnInit {
 
         // Aguarda todas as chamadas e insere as infos
         forkJoin(chamadasPrestadores).subscribe((prestadoresInfos: any) => {
-          this.cards.candidaturas.forEach((candidatura: any, index: any) => {
+          this.card.candidaturas.forEach((candidatura: any, index: any) => {
             candidatura.prestador_info = prestadoresInfos[index];
           });
 
-          console.log('Cards com informações dos prestadores:', this.cards);
+          console.log('Cards com informações dos prestadores:', this.card);
         });
       },
       error: (err) => {
@@ -117,8 +118,20 @@ export class BudgetsComponent implements OnInit {
   }
 
   goToPayment(card: any): void {
-    this.hiredCardInfo = card;
-    this.paymentStep = true;
+    this.authService.idCliente$.subscribe((id) => {
+      const id_cliente = Number(id);
+
+      this.profileDetailService.getClienteById(id_cliente).subscribe({
+        next: (data) => {
+          this.hiredCardInfo = card;
+          this.paymentStep = true;
+          this.clientData = data;
+        },
+        error: (err) => {
+          console.error('Erro ao buscar dados do cliente:', err);
+        },
+      });
+    });
   }
 
   payHiredCard(paymentIndicator: any): void {
