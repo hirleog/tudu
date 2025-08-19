@@ -1,3 +1,5 @@
+import { AbstractControl } from '@angular/forms';
+
 export function calculateDistance(
   lat1: number,
   lon1: number,
@@ -45,4 +47,52 @@ export function convertRealToCents(value: string | number): number {
   }
 
   return Math.round(amount * 100); // Converte reais para centavos
+}
+
+export function cpfValidator(
+  control: AbstractControl
+): { [key: string]: any } | null {
+  const cpf = control.value?.replace(/\D/g, ''); // Remove caracteres não numéricos
+
+  if (!cpf) {
+    return { required: true };
+  }
+
+  if (cpf.length !== 11) {
+    return { invalidLength: true };
+  }
+
+  // Verifica se todos os dígitos são iguais (CPF inválido)
+  if (/^(\d)\1{10}$/.test(cpf)) {
+    return { invalidCpf: true };
+  }
+
+  // Validação dos dígitos verificadores
+  let sum = 0;
+  let remainder;
+
+  // Primeiro dígito verificador
+  for (let i = 1; i <= 9; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+  }
+
+  remainder = (sum * 10) % 11;
+  if (remainder === 10 || remainder === 11) remainder = 0;
+  if (remainder !== parseInt(cpf.substring(9, 10))) {
+    return { invalidCpf: true };
+  }
+
+  // Segundo dígito verificador
+  sum = 0;
+  for (let i = 1; i <= 10; i++) {
+    sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+  }
+
+  remainder = (sum * 10) % 11;
+  if (remainder === 10 || remainder === 11) remainder = 0;
+  if (remainder !== parseInt(cpf.substring(10, 11))) {
+    return { invalidCpf: true };
+  }
+
+  return null; // CPF válido
 }

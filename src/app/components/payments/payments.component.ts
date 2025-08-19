@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PaymentService } from 'src/app/services/payment.service';
-import { convertRealToCents } from 'src/app/utils/utils';
+import { convertRealToCents, cpfValidator } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-payment',
@@ -88,6 +88,7 @@ export class PaymentsComponent {
       expiryMonth: ['', Validators.required],
       expiryYear: ['', Validators.required],
       cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]],
+      cpf: ['', [Validators.required, cpfValidator]],
       cardType: [''],
       installments: ['1'],
       acceptedTerms: [false, Validators.requiredTrue],
@@ -220,7 +221,7 @@ export class PaymentsComponent {
           first_name: this.clientData.nome,
           last_name: this.clientData.sobrenome,
           document_type: 'CPF',
-          document_number: '49306837852',
+          document_number: formValue.cpf,
           email: this.clientData.email,
           phone_number: this.clientData.telefone,
           billing_address: {
@@ -327,5 +328,23 @@ export class PaymentsComponent {
     const isValid = sum % 10 === 0;
 
     return isValid ? null : { invalidCardNumber: true };
+  }
+
+  formatCpf(event: any): void {
+    let value = event.target.value.replace(/\D/g, '');
+
+    if (value.length > 11) {
+      value = value.substring(0, 11);
+    }
+
+    if (value.length > 9) {
+      value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+    } else if (value.length > 6) {
+      value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    } else if (value.length > 3) {
+      value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+    }
+
+    this.paymentForm.get('cpf')?.setValue(value, { emitEvent: false });
   }
 }
