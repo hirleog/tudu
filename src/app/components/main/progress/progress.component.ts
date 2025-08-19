@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { CardService } from 'src/app/services/card.service';
 import { ProfileDetailService } from 'src/app/services/profile-detail.service';
+import { StateManagementService } from 'src/app/services/state-management.service';
 
 @Component({
   selector: 'app-progress',
@@ -45,7 +46,8 @@ export class ProgressComponent implements OnInit {
   constructor(
     private profileDetailService: ProfileDetailService,
     private route: Router,
-    public cardService: CardService
+    public cardService: CardService,
+    public stateManagement: StateManagementService
   ) {}
 
   ngOnInit() {
@@ -53,6 +55,8 @@ export class ProgressComponent implements OnInit {
   }
 
   listCards() {
+    this.stateManagement.clearAllState();
+
     this.cardService.getCards('pendente').subscribe({
       next: (response) => {
         // Primeiro, acessa os cards corretamente

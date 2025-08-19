@@ -27,7 +27,7 @@ export class PaymentsComponent {
   cardFlipped: boolean = false;
   showCvvHelp: boolean = false;
   processingPayment: boolean = false;
-  showSuccessModal: boolean = false;
+  showPaymentModal: boolean = false;
   acceptedTerms: boolean = false;
   saveCard: boolean = false;
   installments: string = '1';
@@ -38,6 +38,32 @@ export class PaymentsComponent {
     (i + 1).toString().padStart(2, '0')
   );
   years: string[];
+  errorMessage: string = '';
+  showErrorModal: boolean = false;
+  messageBody: string = '';
+  messageTitle: string = '';
+
+  modalIcon: string = 'fa-check'; // Ícone padrão (sucesso)
+  modalIconColor: string = 'text-green-600'; // Cor padrão (sucesso)
+  modalBgColor: string = 'bg-green-100'; // Background padrão (sucesso)
+  closeModalIndicator: string = '';
+
+  private configureModal(success: boolean, message: string = '') {
+    if (success) {
+      this.modalIcon = 'fa-check';
+      this.modalIconColor = 'text-green-600';
+      this.modalBgColor = 'bg-green-100';
+      this.messageTitle = 'Pagamento Aprovado!';
+      this.messageBody = message || 'Seu pagamento foi processado com sucesso.';
+    } else {
+      this.modalIcon = 'fa-exclamation-triangle';
+      this.modalIconColor = 'text-red-600';
+      this.modalBgColor = 'bg-red-100';
+      this.messageTitle = 'Erro no Pagamento';
+      this.messageBody =
+        message || 'Ocorreu um erro ao processar seu pagamento.';
+    }
+  }
 
   constructor(
     private paymentService: PaymentService,
@@ -178,10 +204,6 @@ export class PaymentsComponent {
       this.processingPayment = true;
 
       const formValue = this.paymentForm.value;
-      // const cardHolderName = formValue.cardHolder.toUpperCase();
-      // const nameParts = cardHolderName.split(' ');
-      // const firstName = nameParts[0];
-      // const lastName = nameParts.slice(1).join(' ');
 
       const requestData = {
         id_pedido: this.hiredCardInfo.id_pedido,
@@ -190,18 +212,17 @@ export class PaymentsComponent {
         ),
         currency: 'BRL',
         order: {
-          order_id: 'ORDER-' + Date.now(), // ID único baseado no timestamp
+          order_id: 'ORDER-' + Date.now(),
           product_type: 'service',
         },
         customer: {
-          customer_id: this.clientData.id_cliente, // Ou gere um ID único se necessário
+          customer_id: this.clientData.id_cliente,
           first_name: this.clientData.nome,
           last_name: this.clientData.sobrenome,
           document_type: 'CPF',
-          // document_number: this.clientData.cpf, // Substitua pelo CPF real ou obtenha do formulário
-          document_number: '49306837852', // Substitua pelo CPF real ou obtenha do formulário
-          email: this.clientData.email, // Substitua pelo email real ou obtenha do formulário
-          phone_number: this.clientData.telefone, // Substitua pelo telefone real
+          document_number: '49306837852',
+          email: this.clientData.email,
+          phone_number: this.clientData.telefone,
           billing_address: {
             street: this.hiredCard.address.street,
             number: this.hiredCard.address.number,
@@ -213,34 +234,54 @@ export class PaymentsComponent {
           },
         },
         device: {
-          ip_address: '127.0.0.1', // Implemente esta função ou use um valor fixo para testes
+          ip_address: '127.0.0.1',
         },
         credit: {
           delayed: false,
-          save_card_data: false, // Usando o campo saveCard que você já tem
+          save_card_data: false,
           transaction_type: 'FULL',
           number_installments: parseInt(formValue.installments),
           soft_descriptor: 'TUDU Serviços',
           dynamic_mcc: 7299,
           card: {
-            number_token: formValue.cardNumber.replace(/\D/g, ''), // Gerado anteriormente
-            brand: formValue.cardType.toUpperCase(), // Já ajustado para MASTERCARD, VISA, etc.
+            number_token: formValue.cardNumber.replace(/\D/g, ''),
+            brand: formValue.cardType.toUpperCase(),
             security_code: formValue.cvv,
             expiration_month: formValue.expiryMonth,
-            expiration_year: formValue.expiryYear.slice(-2), // Pega apenas os últimos 2 dígitos
+            expiration_year: formValue.expiryYear.slice(-2),
             cardholder_name: formValue.cardHolder.toUpperCase(),
           },
         },
       };
 
       this.paymentService.pagarComCartao(requestData).subscribe({
-        next: (res) => {
-          console.log('Pagamento autorizado:', res);
+        next: (res: any) => {
+          this.closeModalIndicator = res.success ? 'success' : 'error';
+
           this.processingPayment = false;
-          this.showSuccessModal = true;
+
+          if (res.success) {
+            // Pagamento bem-sucedido
+            this.showPaymentModal = true;
+
+            this.configureModal(
+              true,
+              'Seu pagamento foi aprovado com sucesso!'
+            );
+            this.showPaymentModal = true;
+          } else {
+            // Pagamento falhou
+            this.configureModal(
+              false,
+              res.details[0].description || 'Erro ao processar pagamento'
+            );
+            this.showPaymentModal = true;
+          }
         },
         error: (err) => {
           this.processingPayment = false;
+          this.showPaymentModal = true;
+          this.messageBody = 'Erro de conexão ao processar pagamento';
         },
       });
     } else if (this.paymentMethod === 'pix') {
@@ -249,16 +290,15 @@ export class PaymentsComponent {
       this.processingPayment = true;
       setTimeout(() => {
         this.processingPayment = false;
-        this.showSuccessModal = true;
+        this.showPaymentModal = true;
         console.log('Pagamento via Pix simulado com sucesso');
       }, 2000);
     }
   }
 
-  closeModal(paymentIndicator: string): void {
-    this.showSuccessModal = false;
-    this.route.navigate(['/home/progress']);
-    this.payHiredCard.emit(paymentIndicator);
+  closeModal(): void {
+    this.showPaymentModal = false;
+    this.payHiredCard.emit(this.closeModalIndicator);
   }
 
   goBack(indicator: any): void {
