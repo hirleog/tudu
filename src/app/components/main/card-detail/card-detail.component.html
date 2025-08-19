@@ -115,11 +115,17 @@
         </div>
       </div>
     </div>
-
-    <!-- Componente reutilizável de pagamento -->
-    <div>
-      <!-- <app-payments></app-payments> -->
-    </div>
+    <button
+      style="
+        color: var(--primary);
+        background-color: var(--light) !important;
+        border: 1px solid var(--primary);
+      "
+      class="request-quote-btn col-12"
+      (click)="cancelarPedido()"
+    >
+      Cancelar pedido
+    </button>
   </div>
 </section>
 

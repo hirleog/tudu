@@ -3,6 +3,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { CardService } from 'src/app/services/card.service';
+import { PaymentService } from 'src/app/services/payment.service';
 
 @Component({
   selector: 'app-card-detail',
@@ -26,7 +27,8 @@ export class CardDetailComponent implements OnInit {
     public cardService: CardService,
     private routeActive: ActivatedRoute,
     private route: Router,
-    private location: Location
+    private location: Location,
+    private paymentService: PaymentService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
@@ -85,10 +87,7 @@ export class CardDetailComponent implements OnInit {
   }
 
   back(): void {
-    const route =
-      this.flow === 'progress'
-        ? '/home/progress'
-        : '/home';
+    const route = this.flow === 'progress' ? '/home/progress' : '/home';
 
     if (this.flow === 'progress') {
       this.route.navigate([route]);
@@ -113,8 +112,17 @@ export class CardDetailComponent implements OnInit {
   }
 
   cancelarPedido() {
-    console.log('Cancelar pedido clicado');
-    this.closeModal();
+    // Aqui você pode chamar o método de cancelamento
+    this.paymentService
+      .cancelarPagamentoPorIdPagamento(this.id_pedido)
+      .subscribe({
+        next: (cancelResponse) => {
+          console.log('Pedido cancelado com sucesso:', cancelResponse);
+        },
+        error: (cancelError) => {
+          console.error('Erro ao cancelar pedido:', cancelError);
+        },
+      });
   }
 
   falarComAtendente() {

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -12,5 +13,54 @@ export class PaymentService {
 
   pagarComCartao(dados: any) {
     return this.http.post(`${environment.apiUrl}/payments/credit`, dados);
+  }
+
+  getPagamentoPorPedido(idPedido: string): Observable<any> {
+    return this.http
+      .get<any>(`${environment.apiUrl}/payments/pedido/${idPedido}`)
+      .pipe(
+        map((response) => response.data?.[0]) // Pega o primeiro pagamento do array
+      );
+  }
+
+  // Cancelamento por ID do pagamento
+  cancelarPagamentoPorIdPagamento(
+    idPedido: string,
+    amount?: number
+  ): Observable<any> {
+    const body: any = amount ? { amount } : {};
+    return this.http.post<any>(
+      `${environment.apiUrl}/payments/pedido/${idPedido}/cancelar`,
+      body
+    );
+  }
+
+  // Cancelamento completo
+  cancelarPagamento(idPagamento: string, amount?: number): Observable<any> {
+    const body: any = amount ? { amount } : {};
+    return this.http.post<any>(
+      `${environment.apiUrl}/payments/cancelar/${idPagamento}`,
+      body
+    );
+  }
+
+  // Estorno parcial
+  estornarParcialmente(idPagamento: string, amount: number): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}/payments/estornar/${idPagamento}`,
+      { amount }
+    );
+  }
+
+  // Consultar status
+  consultarStatus(idPagamento: string): Observable<any> {
+    return this.http.get(
+      `${environment.apiUrl}/payments/status/${idPagamento}`
+    );
+  }
+
+  // Buscar pagamentos do cliente
+  getPagamentosCliente(idCliente: number): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/payments/cliente/${idCliente}`);
   }
 }

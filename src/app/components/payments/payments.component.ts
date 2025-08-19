@@ -221,7 +221,7 @@ export class PaymentsComponent {
           first_name: this.clientData.nome,
           last_name: this.clientData.sobrenome,
           document_type: 'CPF',
-          document_number: formValue.cpf,
+          document_number: formValue.cpf.replace(/\D/g, ''),
           email: this.clientData.email,
           phone_number: this.clientData.telefone,
           billing_address: {
@@ -296,6 +296,29 @@ export class PaymentsComponent {
       }, 2000);
     }
   }
+
+  // cancelarPagamento(idPagamento: string) {
+  //   this.loading = true;
+  //   this.errorMessage = '';
+  //   this.successMessage = '';
+
+  //   this.paymentService.cancelarPagamento(idPagamento).subscribe({
+  //     next: (response: any) => {
+  //       if (response.success) {
+  //         this.successMessage = 'Pagamento cancelado com sucesso!';
+  //         this.carregarPagamentos(); // Recarrega a lista
+  //       } else {
+  //         this.errorMessage = response.error || 'Erro ao cancelar pagamento';
+  //       }
+  //       this.loading = false;
+  //     },
+  //     error: (error) => {
+  //       this.errorMessage = 'Erro de conexão ao cancelar pagamento';
+  //       this.loading = false;
+  //       console.error('Erro:', error);
+  //     },
+  //   });
+  // }
 
   closeModal(): void {
     this.showPaymentModal = false;
