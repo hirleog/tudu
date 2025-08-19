@@ -178,15 +178,13 @@ export class PaymentsComponent {
       this.processingPayment = true;
 
       const formValue = this.paymentForm.value;
-      const cardHolderName = formValue.cardHolder.toUpperCase();
-      const nameParts = cardHolderName.split(' ');
+      // const cardHolderName = formValue.cardHolder.toUpperCase();
+      // const nameParts = cardHolderName.split(' ');
       // const firstName = nameParts[0];
       // const lastName = nameParts.slice(1).join(' ');
 
-      // Você precisará implementar a geração do number_token ou obtê-lo de um serviço
-      // Este é um exemplo - substitua pela sua lógica real de tokenização
-
       const requestData = {
+        id_pedido: this.hiredCardInfo.id_pedido,
         amount: convertRealToCents(
           this.hiredCardInfo.candidaturas[0].valor_negociado
         ),
@@ -222,7 +220,7 @@ export class PaymentsComponent {
           save_card_data: false, // Usando o campo saveCard que você já tem
           transaction_type: 'FULL',
           number_installments: parseInt(formValue.installments),
-          soft_descriptor: 'TUDU',
+          soft_descriptor: 'TUDU Serviços',
           dynamic_mcc: 7299,
           card: {
             number_token: formValue.cardNumber.replace(/\D/g, ''), // Gerado anteriormente
