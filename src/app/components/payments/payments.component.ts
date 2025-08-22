@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -15,7 +15,7 @@ import { convertRealToCents, cpfValidator } from 'src/app/utils/utils';
   templateUrl: './payments.component.html',
   styleUrls: ['./payments.component.css'],
 })
-export class PaymentsComponent {
+export class PaymentsComponent implements OnInit {
   @Input() clientData!: any;
   @Input() hiredCardInfo!: any;
   @Input() hiredCard!: any;
@@ -47,6 +47,9 @@ export class PaymentsComponent {
   modalIconColor: string = 'text-green-600'; // Cor padrão (sucesso)
   modalBgColor: string = 'bg-green-100'; // Background padrão (sucesso)
   closeModalIndicator: string = '';
+  installmentsTableData: any[] = [];
+  installmentData: any;
+  selectedInstallmentOption: any;
 
   private configureModal(success: boolean, message: string = '') {
     if (success) {
@@ -90,11 +93,15 @@ export class PaymentsComponent {
       cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]],
       cpf: ['', [Validators.required, cpfValidator]],
       cardType: [''],
-      installments: ['1'],
+      installments: ['', [Validators.required]],
       acceptedTerms: [false, Validators.requiredTrue],
     });
 
     this.selectPaymentMethod('credit');
+  }
+
+  ngOnInit(): void {
+    this.calculateInstallments();
   }
 
   get f() {
@@ -208,7 +215,8 @@ export class PaymentsComponent {
 
       const requestData = {
         id_pedido: this.hiredCardInfo.id_pedido,
-        amount: convertRealToCents(
+        totalAmount: this.selectedInstallmentOption.totalValue,
+        originAmount: convertRealToCents(
           this.hiredCardInfo.candidaturas[0].valor_negociado
         ),
         currency: 'BRL',
@@ -241,7 +249,8 @@ export class PaymentsComponent {
           delayed: false,
           save_card_data: false,
           transaction_type: 'FULL',
-          number_installments: parseInt(formValue.installments),
+          number_installments: this.selectedInstallmentOption.installments || 1,
+          amount_installment: this.selectedInstallmentOption.installmentValue,
           soft_descriptor: 'TUDU Serviços',
           dynamic_mcc: 7299,
           card: {
@@ -295,6 +304,63 @@ export class PaymentsComponent {
         console.log('Pagamento via Pix simulado com sucesso');
       }, 2000);
     }
+  }
+  calculateInstallments() {
+    const totalAmount = convertRealToCents(
+      this.hiredCardInfo.candidaturas[0].valor_negociado
+    );
+
+    const payload = {
+      totalValue: totalAmount,
+    };
+
+    this.paymentService.calculateInstallments(payload).subscribe({
+      next: (response) => {
+        this.installmentData = response;
+
+        // SELECIONA A PRIMEIRA OPÇÃO APÓS RECEBER OS DADOS
+        if (
+          this.installmentData.options &&
+          this.installmentData.options.length > 0
+        ) {
+          // Define o valor no formControl
+          this.paymentForm.patchValue({
+            installments:
+              this.installmentData.options[0].installments.toString(),
+          });
+
+          // Atualiza a variável selectedInstallmentOption
+          this.selectedInstallmentOption = this.installmentData.options[0];
+
+          // Opcional: Dispara o change event manualmente
+          this.onInstallmentChange();
+        }
+      },
+      error: (error) => {
+        console.error('Erro ao buscar tabela de parcelas:', error);
+      },
+    });
+  }
+
+  onInstallmentChange() {
+    const selectedValue = this.paymentForm.get('installments')?.value;
+
+    // Encontra a opção completa baseada no valor selecionado
+    this.selectedInstallmentOption = this.installmentData.options.find(
+      (opt: any) => opt.installments.toString() === selectedValue
+    );
+
+    console.log('Parcela selecionada:', this.selectedInstallmentOption);
+  }
+
+  // Método para quando o usuário mudar manualmente a seleção
+  onSelectChange(event: any) {
+    const selectedValue = event.target.value;
+    this.selectedInstallmentOption = this.installmentData.options.find(
+      (opt: any) => opt.installments.toString() === selectedValue
+    );
+
+    console.log('Parcela selecionada:', this.selectedInstallmentOption);
   }
 
   // cancelarPagamento(idPagamento: string) {

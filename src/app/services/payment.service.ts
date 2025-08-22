@@ -63,4 +63,16 @@ export class PaymentService {
   getPagamentosCliente(idCliente: number): Observable<any> {
     return this.http.get(`${environment.apiUrl}/payments/cliente/${idCliente}`);
   }
+
+
+  
+  calculateInstallments(payload: any) {
+    return this.http.post(`${environment.apiUrl}/installments/calculate`, payload);
+  }
+
+
+  // Buscar pagamentos do cliente
+  getInstallmentsTable(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/installments/table`);
+  }
 }
