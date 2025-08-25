@@ -1,29 +1,28 @@
 h4,
 span {
-    color: var(--secondary) !important;
-    font-weight: bold;
-    font-size: 18px;
+  color: var(--secondary) !important;
+  font-weight: bold;
+  font-size: 18px;
 }
 
-
 .modal {
-    display: flex !important;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    padding: 1em;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 1em;
 }
 
 /* Animação para abrir o modal de baixo para cima */
 .modal-dialog-bottom {
-    transform: translateY(100%);
-    transition: transform 0.3s ease-in-out;
+  transform: translateY(100%);
+  transition: transform 0.3s ease-in-out;
 }
 
 .modal.show .modal-dialog-bottom {
-    transform: translateY(0);
+  transform: translateY(0);
 }
 
 .modal-backdrop {
-    background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.7);
 }

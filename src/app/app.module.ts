@@ -17,6 +17,7 @@ import { ServicesComponent } from './components/services/services.component';
 import { SignUpComponent } from './components/user-login/sign-up/sign-up.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { OrderHelpComponent } from './components/main/order-help/order-help.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { SharedModule } from './shared/shared.module';
     // AppMenuComponent,
     SignUpComponent,
     ModalComponent,
+    OrderHelpComponent,
   ],
   imports: [
     CommonModule,

@@ -30,7 +30,7 @@ export class AppMenuComponent implements OnInit {
   clienteIsLogged: boolean = false;
   prestadorIsLogged: boolean = false;
   isEndFlow: boolean = false;
-  isMenuExpanded: boolean = false;
+  isMenuExpanded: boolean = true;
   isHovered: boolean = false;
   constructor(
     public router: Router,
@@ -54,7 +54,15 @@ export class AppMenuComponent implements OnInit {
         this.isProfileRoute =
           urlSegments[urlSegments.length - 1] === 'professional';
 
-        this.isEndFlow = event.url.includes('end');
+        if (
+          event.url.includes('end') ||
+          event.url.includes('detail') ||
+          event.url.includes('help')
+        ) {
+          this.isEndFlow = true;
+        } else {
+          this.isEndFlow = false;
+        }
       });
 
     // Verifica a rota atual e atualiza a variável showMenu

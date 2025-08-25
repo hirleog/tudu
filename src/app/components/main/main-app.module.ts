@@ -13,6 +13,7 @@ import { CardDetailComponent } from './card-detail/card-detail.component';
 import { FlowEndComponent } from './flow-end/flow-end.component';
 import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
 import { ProgressComponent } from './progress/progress.component';
+import { OrderHelpComponent } from './order-help/order-help.component';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -21,6 +22,7 @@ const routes: Routes = [
   { path: 'progress', component: ProgressComponent },
   { path: 'progress-detail', component: ProgressDetailComponent },
   { path: 'detail', component: CardDetailComponent },
+  { path: 'order-help', component: OrderHelpComponent },
 
   // { path: 'profile', component: ProfileComponent },
   // { path: 'profile-detail', component: ProfileDetailComponent },

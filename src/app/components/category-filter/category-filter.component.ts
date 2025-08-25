@@ -505,6 +505,9 @@ export class CategoryFilterComponent implements OnInit {
   }
 
   submitFilters(): void {
-    this.filtersSubmitted.emit(this.serviceDescription);
+    this.filtersSubmitted.emit({
+      filters: this.filterCategories,
+      serviceDescription: this.serviceDescription,
+    });
   }
 }
