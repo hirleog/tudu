@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { CardService } from 'src/app/services/card.service';
 import { PaymentService } from 'src/app/services/payment.service';
+import { StateManagementService } from 'src/app/services/state-management.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 
 @Component({
@@ -28,7 +29,8 @@ export class OrderHelpComponent implements OnInit {
     private routeActive: ActivatedRoute,
     private router: Router,
     private paymentService: PaymentService,
-    private cardService: CardService
+    private cardService: CardService,
+    public stateManagementService: StateManagementService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'] || '';
@@ -150,6 +152,8 @@ export class OrderHelpComponent implements OnInit {
             true,
             response.message || 'Pedido cancelado com sucesso.'
           );
+
+          this.stateManagementService.clearAllState();
         },
         error: (err) => {
           this.showModal = true;
