@@ -1,53 +1,53 @@
-  <app-nav>
-    <div left-content>
-      <a routerLink="/" class="transition-colors mr-3">
-        <i
-          style="color: var(--primary) !important"
-          class="fas fa-arrow-left text-2xl"
-        ></i>
-      </a>
-    </div>
-
-    <div central-content>
-      <a routerLink="/" class="block">
-        <img
-          src="../../../assets/logo-rosa.webp"
-          alt="Logo"
-          class="h-10 w-auto object-contain"
-        />
-      </a>
-    </div>
-
-    <div right-content>
+<app-nav>
+  <div left-content>
+    <a routerLink="/" class="transition-colors mr-3">
       <i
         style="color: var(--primary) !important"
-        class="fas fa-question-circle text-2xl cursor-pointer"
-        title="Clique para mais informações"
+        class="fas fa-arrow-left text-2xl"
       ></i>
-    </div>
+    </a>
+  </div>
 
-    <div header-menu>
-      <div class="tab-bar">
-        <a
-          *ngFor="let item of headerPageOptions; let i = index"
-          class="tab-link"
-          [class.active]="selectedIndex === i"
-          (click)="selectItem(i)"
-        >
-          {{ item }}
-        </a>
-        <div
-          class="tab-indicator"
-          [ngStyle]="{
-            transform: 'translateX(' + selectedIndex * 100 + '%)',
-            width: 100 / headerPageOptions.length + '%'
-          }"
-        ></div>
-      </div>
-    </div>
-  </app-nav>
+  <div central-content>
+    <a routerLink="/" class="block">
+      <img
+        src="../../../assets/logo-rosa.webp"
+        alt="Logo"
+        class="h-10 w-auto object-contain"
+      />
+    </a>
+  </div>
 
-<section class="max-w-4xl mx-auto lg:px-8">
+  <div right-content>
+    <i
+      style="color: var(--primary) !important"
+      class="fas fa-question-circle text-2xl cursor-pointer"
+      title="Clique para mais informações"
+    ></i>
+  </div>
+
+  <div header-menu>
+    <div class="tab-bar">
+      <a
+        *ngFor="let item of headerPageOptions; let i = index"
+        class="tab-link"
+        [class.active]="selectedIndex === i"
+        (click)="selectItem(i)"
+      >
+        {{ item }}
+      </a>
+      <div
+        class="tab-indicator"
+        [ngStyle]="{
+          transform: 'translateX(' + selectedIndex * 100 + '%)',
+          width: 100 / headerPageOptions.length + '%'
+        }"
+      ></div>
+    </div>
+  </div>
+</app-nav>
+
+<section class="max-w-4xl mx-auto lg:px-8 mt-12">
   <div class="container" *ngIf="isLoading">
     <app-card-skeleton *ngFor="let i of [1, 2, 3, 4]"></app-card-skeleton>
   </div>
@@ -72,7 +72,7 @@
               <i
                 [class]="card.icon"
                 class="text-2xl"
-                style="color: #f80e6e !important"
+                style="color: var(--primary) !important"
               ></i>
             </div>
             <div class="request-card-title flex-grow">
@@ -107,7 +107,7 @@
                 <span
                   *ngFor="let filtro of card.subcategoria.split(',')"
                   class="px-3 py-1 rounded-full text-xs font-medium text-white"
-                  style="background-color: #f80e6e"
+                  style="border: 1px solid var(--primary); color: var(--primary) !important"
                 >
                   {{ filtro.trim() }}
                 </span>

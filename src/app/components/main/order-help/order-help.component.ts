@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardOrders } from 'src/app/interfaces/card-orders';
+import { CardService } from 'src/app/services/card.service';
 import { PaymentService } from 'src/app/services/payment.service';
+import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-order-help',
@@ -9,6 +11,8 @@ import { PaymentService } from 'src/app/services/payment.service';
   styleUrls: ['./order-help.component.css'],
 })
 export class OrderHelpComponent implements OnInit {
+  @ViewChild('meuModal') customModal!: CustomModalComponent;
+
   id_pedido: string = '';
   questionTitle: string = '';
   card: CardOrders[] = [];
@@ -17,11 +21,14 @@ export class OrderHelpComponent implements OnInit {
   private whatsappNumber = '5511974109625'; // Seu número com DDD e código do país
   private emailSuporte = 'suporte@empresa.com.br';
   private assuntoEmail = 'Relato de Problema - Sistema TUDU';
+  showModal: boolean = false;
+  reqStatus: string = '';
 
   constructor(
     private routeActive: ActivatedRoute,
     private router: Router,
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private cardService: CardService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'] || '';
@@ -115,11 +122,11 @@ export class OrderHelpComponent implements OnInit {
     return corpo;
   }
 
-  cancelarPedido() {
+  cancelarPagamentoDoPedido() {
     // Aqui você pode chamar o método de cancelamento
 
     const idPedido: string = this.card[0].id_pedido ?? '';
-    
+
     this.paymentService.cancelarPagamentoPorIdPagamento(idPedido).subscribe({
       next: (cancelResponse) => {
         console.log('Pedido cancelado com sucesso:', cancelResponse);
@@ -128,5 +135,43 @@ export class OrderHelpComponent implements OnInit {
         console.error('Erro ao cancelar pedido:', cancelError);
       },
     });
+  }
+
+  cancelarPedido() {
+    const reason = this.message;
+    const idPedido: string = this.card[0].id_pedido ?? '';
+
+    if (reason) {
+      this.cardService.cancelCard(idPedido, reason).subscribe({
+        next: (response) => {
+          this.showModal = true;
+          this.reqStatus = response.status;
+          this.customModal.configureModal(
+            true,
+            response.message || 'Pedido cancelado com sucesso.'
+          );
+        },
+        error: (err) => {
+          this.showModal = true;
+
+          this.customModal.configureModal(
+            true,
+            err.message ||
+              'Erro ao cancelar o pedido. Tente novamente mais tarde.'
+          );
+        },
+      });
+    }
+  }
+
+  closeModal(): void {
+    if (this.reqStatus === 'success') {
+      this.showModal = false;
+      this.router.navigate(['/home']); // Ajuste para sua rota
+    } else {
+      this.showModal = false;
+    }
+
+    // this.payHiredCard.emit(this.closeModalIndicator);
   }
 }

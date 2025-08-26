@@ -64,7 +64,7 @@
           minlength="40"
         ></textarea>
         <div class="text-sm text-gray-500 mt-1">
-          {{ message.length }}/500 caracteres
+          {{ message.length }}/500 caracteres (mínimo 40)
         </div>
       </div>
 
@@ -74,7 +74,7 @@
         <button
           *ngIf="questionTitle !== 'cancelar'"
           (click)="enviarWhatsApp()"
-          [disabled]="!message"
+          [disabled]="!message || message.length < 40"
           class="flex-1 flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-medium py-3 px-4 rounded-lg transition-colors"
         >
           <i class="fab fa-whatsapp"></i>
@@ -83,7 +83,7 @@
         <button
           *ngIf="questionTitle === 'cancelar'"
           (click)="cancelarPedido()"
-          [disabled]="!message"
+          [disabled]="!message || message.length < 40"
           class="flex-1 flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium py-3 px-4 rounded-lg transition-colors"
         >
           <i class="fab fa-whatsapp"></i>
@@ -137,46 +137,10 @@
       Cancelar pedido
     </button> -->
   </div>
+  <!-- Modal  -->
+  <app-custom-modal
+    #meuModal
+    [showModal]="showModal"
+    (modalClosed)="closeModal()"
+  ></app-custom-modal>
 </section>
-
-<!-- modal -->
-<!-- <div [ngClass]="{ 'modal-backdrop': isModalVisible }"></div>
-
-<div
-  class="modal fade"
-  id="exampleModal"
-  tabindex="-1"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
-  *ngIf="isModalVisible"
-  [ngClass]="{ show: isModalVisible }"
-  style="display: block"
->
-  <div class="modal-dialog modal-dialog-bottom">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Escolha uma opção</h5>
-        <button
-          type="button"
-          class="btn-close"
-          aria-label="Close"
-          (click)="closeModal()"
-        ></button>
-      </div>
-      <div class="modal-body d-flex flex-column gap-2">
-        <button
-          class="btn-ui btn-secondary w-100 mb-2"
-          (click)="editarAnuncio()"
-        >
-          <i class="fas fa-edit"></i> Editar anúncio
-        </button>
-        <button class="btn-ui btn-danger w-100 mb-2" (click)="cancelarPedido()">
-          <i class="fas fa-times-circle"></i> Cancelar pedido
-        </button>
-        <button class="btn-ui btn-info w-100" (click)="falarComAtendente()">
-          <i class="fas fa-comment-dots"></i> Falar com atendente
-        </button>
-      </div>
-    </div>
-  </div>
-</div> -->

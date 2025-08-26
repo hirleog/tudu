@@ -4,11 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavModule } from '../components/nav/nav.module';
 import { CurrencyFormatDirective } from '../directives/currency-format.directive';
 import { CustomModalComponent } from './custom-modal/custom-modal.component';
+import { CustomModalModule } from './custom-modal/custom-modal.module';
 
 @NgModule({
-  declarations: [CurrencyFormatDirective, CustomModalComponent],
+  declarations: [CurrencyFormatDirective],
   imports: [
     // CommonModule,
+    CustomModalModule,
   ],
   exports: [
     CommonModule,
@@ -16,7 +18,6 @@ import { CustomModalComponent } from './custom-modal/custom-modal.component';
     ReactiveFormsModule,
     NavModule,
     CurrencyFormatDirective,
-    CustomModalComponent,
     // StatusFilterPipe,
   ],
 })

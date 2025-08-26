@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -8,6 +15,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { PaymentService } from 'src/app/services/payment.service';
+import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { convertRealToCents, cpfValidator } from 'src/app/utils/utils';
 
 @Component({
@@ -16,18 +24,19 @@ import { convertRealToCents, cpfValidator } from 'src/app/utils/utils';
   styleUrls: ['./payments.component.css'],
 })
 export class PaymentsComponent implements OnInit {
+  @ViewChild('meuModal') customModal!: CustomModalComponent;
+
   @Input() clientData!: any;
   @Input() hiredCardInfo!: any;
   @Input() hiredCard!: any;
   @Output() backToOffer = new EventEmitter<string>();
   @Output() payHiredCard = new EventEmitter<string>();
 
-  paymentMethod: string = 'pix';
   pixGenerated: boolean = false;
   cardFlipped: boolean = false;
   showCvvHelp: boolean = false;
   processingPayment: boolean = false;
-  showPaymentModal: boolean = false;
+  showModal: boolean = false;
   acceptedTerms: boolean = false;
   saveCard: boolean = false;
   installments: string = '1';
@@ -38,35 +47,13 @@ export class PaymentsComponent implements OnInit {
     (i + 1).toString().padStart(2, '0')
   );
   years: string[];
-  errorMessage: string = '';
-  showErrorModal: boolean = false;
-  messageBody: string = '';
-  messageTitle: string = '';
 
-  modalIcon: string = 'fa-check'; // Ícone padrão (sucesso)
-  modalIconColor: string = 'text-green-600'; // Cor padrão (sucesso)
-  modalBgColor: string = 'bg-green-100'; // Background padrão (sucesso)
   closeModalIndicator: string = '';
   installmentsTableData: any[] = [];
   installmentData: any;
   selectedInstallmentOption: any;
 
-  private configureModal(success: boolean, message: string = '') {
-    if (success) {
-      this.modalIcon = 'fa-check';
-      this.modalIconColor = 'text-green-600';
-      this.modalBgColor = 'bg-green-100';
-      this.messageTitle = 'Pagamento Aprovado!';
-      this.messageBody = message || 'Seu pagamento foi processado com sucesso.';
-    } else {
-      this.modalIcon = 'fa-exclamation-triangle';
-      this.modalIconColor = 'text-red-600';
-      this.modalBgColor = 'bg-red-100';
-      this.messageTitle = 'Erro no Pagamento';
-      this.messageBody =
-        message || 'Ocorreu um erro ao processar seu pagamento.';
-    }
-  }
+  paymentMethod: 'pix' | 'credit' | null = null;
 
   constructor(
     private paymentService: PaymentService,
@@ -108,7 +95,7 @@ export class PaymentsComponent implements OnInit {
     return this.paymentForm.controls;
   }
 
-  selectPaymentMethod(method: string): void {
+  selectPaymentMethod(method: 'pix' | 'credit'): void {
     this.paymentMethod = method;
     if (method === 'pix') {
       this.paymentForm.reset({
@@ -272,26 +259,27 @@ export class PaymentsComponent implements OnInit {
 
           if (res.success) {
             // Pagamento bem-sucedido
-            this.showPaymentModal = true;
-
-            this.configureModal(
+            this.showModal = true;
+            this.customModal.configureModal(
               true,
-              'Seu pagamento foi aprovado com sucesso!'
+              'Pagamento aprovado com sucesso!'
             );
-            this.showPaymentModal = true;
           } else {
             // Pagamento falhou
-            this.configureModal(
+            this.showModal = true;
+            this.customModal.configureModal(
               false,
-              res.details[0].description || 'Erro ao processar pagamento'
+              res.details[0].description || 'Pagamento não realizado.'
             );
-            this.showPaymentModal = true;
           }
         },
         error: (err) => {
           this.processingPayment = false;
-          this.showPaymentModal = true;
-          this.messageBody = 'Erro de conexão ao processar pagamento';
+          this.showModal = true;
+          this.customModal.configureModal(
+            false,
+            err.details[0].description || 'Pagamento não realizado.'
+          );
         },
       });
     } else if (this.paymentMethod === 'pix') {
@@ -300,7 +288,7 @@ export class PaymentsComponent implements OnInit {
       this.processingPayment = true;
       setTimeout(() => {
         this.processingPayment = false;
-        this.showPaymentModal = true;
+        this.showModal = true;
         console.log('Pagamento via Pix simulado com sucesso');
       }, 2000);
     }
@@ -387,7 +375,7 @@ export class PaymentsComponent implements OnInit {
   // }
 
   closeModal(): void {
-    this.showPaymentModal = false;
+    this.showModal = false;
     this.payHiredCard.emit(this.closeModalIndicator);
   }
 

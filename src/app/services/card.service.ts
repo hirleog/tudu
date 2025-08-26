@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 export class CardService {
   url: string = environment.apiUrl;
 
-    public cardsMock: card[] = [
+  public cardsMock: card[] = [
     {
       id: 1,
       icon: 'fas fa-tools',
@@ -117,6 +117,13 @@ export class CardService {
       { headers, params }
     );
   }
+
+  cancelCard(cardId: string, reason: string): Observable<any> {
+    return this.http.delete(`${environment.apiUrl}/cards/${cardId}/cancel`, {
+      body: { cancellation_reason: reason },
+    });
+  }
+
   getCardById(id: string) {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
@@ -128,9 +135,7 @@ export class CardService {
 
   // Método para buscar o ícone com base no label
   getIconByLabel(label: string): string | null {
-    const card = this.cardsMock.find(
-      (card) => card.cardDetail.label === label
-    );
+    const card = this.cardsMock.find((card) => card.cardDetail.label === label);
     return card ? card.icon : null; // Retorna o ícone ou null se não encontrado
   }
 

@@ -14,6 +14,7 @@ import { FlowEndComponent } from './flow-end/flow-end.component';
 import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
 import { ProgressComponent } from './progress/progress.component';
 import { OrderHelpComponent } from './order-help/order-help.component';
+import { CustomModalModule } from 'src/app/shared/custom-modal/custom-modal.module';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -38,6 +39,7 @@ const routes: Routes = [
     ProgressComponent,
     ProgressDetailComponent,
     FlowEndComponent,
+    OrderHelpComponent,
     // ProfileComponent,
     // ProfileDetailComponent,
 
@@ -49,6 +51,7 @@ const routes: Routes = [
     CalendarModule,
     AddressModule,
     CardSkeletonModule,
+    CustomModalModule,
     RouterModule.forChild(routes),
   ],
   exports: [FormatDateTimePipe],
