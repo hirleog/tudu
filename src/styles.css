@@ -144,7 +144,7 @@ hr {
 }
 
 .request-card-title h5 {
-  font-size: 1.4rem !important;
+  font-size: 1.2rem !important;
   font-weight: 600;
   margin: 0;
   color: var(--secondary) !important;
@@ -565,11 +565,11 @@ hr {
   }
 
   .request-card-title h5 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     /* font-weight: 500;
     margin: 0;
     color: #333; */
-    width: 89%;
+    width: 100%;
   }
 }
 @media (max-width: 392px) {
