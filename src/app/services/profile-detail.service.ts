@@ -13,7 +13,21 @@ export class ProfileDetailService {
     return this.http.get(`${environment.apiUrl}/prestadores/${id}`);
   }
 
-  updatePrestador(id: number, formData: FormData): Observable<any> {
+  updatePrestador(
+    id: number,
+    prestadorData: any, // Dados do formulário
+    file?: File // Arquivo opcional
+  ): Observable<any> {
+    const formData = new FormData();
+
+    // 1. Adiciona os dados do prestador como JSON
+    formData.append('data', JSON.stringify(prestadorData));
+
+    // 2. Adiciona a foto apenas se existir
+    if (file) {
+      formData.append('foto', file, file.name);
+    }
+
     return this.http.patch(`${environment.apiUrl}/prestadores/${id}`, formData);
   }
 

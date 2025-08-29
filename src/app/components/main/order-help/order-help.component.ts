@@ -159,7 +159,7 @@ export class OrderHelpComponent implements OnInit {
           this.showModal = false;
 
           this.customModal.configureModal(
-            true,
+            false,
             err.message ||
               'Erro ao cancelar o pedido. Tente novamente mais tarde.'
           );

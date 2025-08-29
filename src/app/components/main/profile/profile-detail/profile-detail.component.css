@@ -2,3 +2,44 @@
   object-fit: cover;
   border: 3px solid #007bff;
 }
+.portfolio-item {
+  transition: all 0.3s ease;
+}
+.portfolio-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.rating-stars {
+  color: #ffd700;
+}
+.profile-pic-upload {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+.profile-pic-upload:hover .upload-overlay {
+  opacity: 1;
+}
+.upload-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.tab-button {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+.tab-button.active {
+  border-bottom: 3px solid #ec4899;
+  color: #ec4899;
+  font-weight: 600;
+}
