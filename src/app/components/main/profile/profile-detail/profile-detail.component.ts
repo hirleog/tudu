@@ -111,8 +111,14 @@ export class ProfileDetailComponent implements OnInit {
     });
   }
 
-  goBack(): void {
-    window.history.back();
+  goBack() {
+    if (this.isProfessional) {
+      this.router.navigate(['/profile'], {
+        queryParams: { param: 'professional' },
+      });
+    } else {
+      this.router.navigate(['/profile']);
+    }
   }
 
   isPrestador(): boolean {

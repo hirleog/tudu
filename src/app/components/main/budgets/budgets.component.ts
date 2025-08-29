@@ -168,14 +168,18 @@ export class BudgetsComponent implements OnInit {
     };
 
     this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
-      next: (response) => {
+      next: () => {
         this.stateManagementService.clearAllState();
         step === 'contratar'
           ? this.route.navigate(['/home/progress'])
           : this.getCardById(); // Atualiza a lista de cartões após a atualização
       },
       error: (error) => {
-        console.error('Erro ao atualizar o cartão:', error);
+        this.showModal = true;
+        this.customModal.configureModal(
+          true,
+          error.message || 'Erro ao recusar a proposta, tente novamente'
+        );
       },
       complete: () => {
         console.log('Requisição concluída');
