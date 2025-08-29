@@ -18,7 +18,7 @@
   <div right-content></div>
 </app-nav>
 
-<div class="container mx-auto px-4 py-8 max-w-6xl">
+<div class="container mx-auto px-4 py-8 max-w-6xl" style="height: 100%">
   <!-- Cabeçalho do Perfil -->
   <div class="bg-white rounded-xl shadow-md overflow-hidden mb-8">
     <div class="md:flex">
@@ -26,7 +26,10 @@
       <div class="md:w-1/3 p-8 flex flex-col items-center">
         <div class="profile-pic-upload mb-4" (click)="onFileSelected($event)">
           <img
-            [src]="userData.foto || 'https://via.placeholder.com/150'"
+            [src]="
+              userData.foto ||
+              'https://camarablu.sc.gov.br/images/img-indisponivel.jpg'
+            "
             alt="Foto de perfil"
             class="rounded-full w-40 h-40 object-cover border-4 border-pink-100"
           />
@@ -43,19 +46,6 @@
           (change)="onFileSelected($event)"
         />
 
-        <!-- <label class="block">
-              <span class="block font-medium text-gray-700 mb-1"
-                >Escolher imagens</span
-              >
-              <input
-                type="file"
-                
-                multiple
-                accept="image/*"
-                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-600 hover:file:bg-pink-100"
-              />
-            </label> -->
-
         <!-- Avaliação e Serviços (apenas para prestador) -->
         <div class="flex space-x-8 mt-4 text-center">
           <div>
@@ -69,12 +59,21 @@
               >
               </app-star-rating>
             </div>
+
+            <div
+              *ngIf="
+                userData.avaliacao === null || userData.avaliacao === undefined
+              "
+              class="text-gray-700 fontm-small text-center"
+            >
+              Nenhuma avaliação
+            </div>
             <div class="text-gray-700 font-medium text-center">
               {{ userData.avaliacao }}
             </div>
           </div>
 
-          <div>
+          <div *ngIf="isProfessional">
             <div class="text-gray-500 text-sm">Serviços</div>
             <div class="text-3xl font-bold text-pink-500 mt-1 text-center">
               {{ userData.numero_servicos_feitos }}
@@ -104,17 +103,20 @@
         </div>
 
         <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="flex items-center">
+          <div
+            *ngIf="userData.endereco_cidade && userData.endereco_estado"
+            class="flex items-center"
+          >
             <i class="fas fa-map-marker-alt text-pink-500 mr-3"></i>
             <span class="text-gray-700"
               >{{ userData.endereco_cidade }},
               {{ userData.endereco_estado }}</span
             >
           </div>
-          <div class="flex items-center">
+          <div class="flex items-center" *ngIf="userData.data_nascimento">
             <i class="fas fa-birthday-cake text-pink-500 mr-3"></i>
             <span class="text-gray-700">{{
-              userForm.get("data_nascimento")?.value | date : "dd/MM/yyyy"
+              userData.data_nascimento | date : "dd/MM/yyyy"
             }}</span>
           </div>
         </div>
@@ -123,7 +125,7 @@
   </div>
 
   <!-- Abas de Navegação -->
-  <div class="flex border-b border-gray-200 mb-8">
+  <div class="flex border-b border-gray-200 mb-8 overflow-auto overflow-hidden">
     <button
       class="tab-button px-6 py-3"
       [class.active]="activeTab === 'informacoes'"
@@ -132,6 +134,7 @@
       Informações
     </button>
     <button
+      *ngIf="isProfessional"
       class="tab-button px-6 py-3"
       [class.active]="activeTab === 'portfolio'"
       (click)="selectTab('portfolio')"
@@ -139,19 +142,20 @@
       Portfólio
     </button>
     <button
+      *ngIf="isProfessional"
       class="tab-button px-6 py-3"
       [class.active]="activeTab === 'certificacoes'"
       (click)="selectTab('certificacoes')"
     >
       Certificações
     </button>
-    <button
+    <!-- <button
       class="tab-button px-6 py-3"
       [class.active]="activeTab === 'avaliacoes'"
       (click)="selectTab('avaliacoes')"
     >
       Avaliações
-    </button>
+    </button> -->
   </div>
 
   <!-- Conteúdo das Abas -->
@@ -340,36 +344,150 @@
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-bold text-gray-800">Portfólio</h2>
       <button
+        (click)="experienceModal.openModal()"
         class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition"
       >
-        <i class="fas fa-plus mr-2"></i> Adicionar Projeto
+        <i class="fas fa-plus mr-2"></i>
+        Adicionar Projeto
       </button>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Item de Portfólio -->
       <div
-        *ngFor="let item of portfolioItems"
-        class="portfolio-item bg-white rounded-lg overflow-hidden shadow-md border border-gray-100"
+        *ngFor="let experiencia of portfolioItems; let i = index"
+        class="portfolio-item bg-white rounded-lg overflow-hidden shadow-md border border-gray-100 hover:shadow-lg transition-shadow duration-300"
       >
-        <img
-          [src]="item.imagem"
-          [alt]="item.titulo"
-          class="w-full h-48 object-cover"
-        />
+        <!-- Container da imagem com badge -->
+        <div class="relative">
+          <img
+            [src]="getImageUrl(experiencia)"
+            [alt]="experiencia.titulo"
+            class="w-full h-48 object-cover cursor-pointer"
+            (click)="openImageModal(experiencia)"
+          />
+
+          <!-- Badge com número de imagens -->
+          <div
+            *ngIf="experiencia.imagens && experiencia.imagens.length > 0"
+            class="absolute top-2 right-2 bg-black bg-opacity-60 text-white px-2 py-1 rounded-full text-xs"
+          >
+            <i class="fas fa-images mr-1"></i>
+            {{ experiencia.imagens.length }}
+          </div>
+        </div>
+
         <div class="p-4">
-          <h3 class="font-bold text-lg text-gray-800 mb-1">
-            {{ item.titulo }}
+          <h3 class="font-bold text-lg text-gray-800 mb-1 truncate">
+            {{ experiencia.titulo }}
           </h3>
-          <p class="text-gray-600 text-sm mb-2">{{ item.descricao }}</p>
+          <p class="text-gray-600 text-sm mb-2 line-clamp-2">
+            {{ experiencia.descricao || "Sem descrição" }}
+          </p>
           <div class="flex justify-between items-center">
-            <span class="text-sm text-gray-500">{{ item.data }}</span>
+            <span class="text-sm text-gray-500">
+              {{
+                experiencia.data_fim || experiencia.data_inicio
+                  | date : "MMM yyyy"
+              }}
+            </span>
             <button class="text-pink-500 hover:text-pink-600">
               <i class="fas fa-ellipsis-h"></i>
             </button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal de Visualização de Imagens -->
+  <div
+    *ngIf="isImageModalOpen"
+    class="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+  >
+    <div class="relative w-full max-w-4xl max-h-full">
+      <!-- Botão fechar -->
+      <button
+        (click)="closeImageModal()"
+        class="absolute top-4 right-4 z-50 text-white hover:text-pink-400 transition-colors bg-black bg-opacity-50 rounded-full p-2"
+      >
+        <i class="fas fa-times text-2xl"></i>
+      </button>
+
+      <!-- Container principal da imagem -->
+      <div class="relative w-full h-full flex items-center justify-center">
+        <!-- Botão anterior -->
+        <button
+          *ngIf="currentExperience.imagens?.length > 1"
+          (click)="prevImage()"
+          class="absolute left-4 z-30 text-white hover:text-pink-400 transition-colors bg-black bg-opacity-50 rounded-full p-4"
+        >
+          <i class="fas fa-chevron-left text-2xl"></i>
+        </button>
+
+        <!-- Imagem atual -->
+        <div class="w-full h-full flex items-center justify-center">
+          <img
+            *ngIf="
+              currentExperience.imagens &&
+              currentExperience.imagens[currentImageIndex]
+            "
+            [src]="currentExperience.imagens[currentImageIndex].url"
+            [alt]="currentExperience.titulo"
+            class="max-w-full max-h-[80vh] object-contain rounded-lg"
+            (click)="nextImage()"
+          />
+          <div
+            *ngIf="
+              !currentExperience.imagens ||
+              currentExperience.imagens.length === 0
+            "
+            class="text-white text-center"
+          >
+            <i class="fas fa-image text-4xl mb-2 opacity-50"></i>
+            <p>Nenhuma imagem disponível</p>
+          </div>
+        </div>
+
+        <!-- Botão próximo -->
+        <button
+          *ngIf="currentExperience.imagens?.length > 1"
+          (click)="nextImage()"
+          class="absolute right-4 z-30 text-white hover:text-pink-400 transition-colors bg-black bg-opacity-50 rounded-full p-4"
+        >
+          <i class="fas fa-chevron-right text-2xl"></i>
+        </button>
+      </div>
+
+      <!-- Indicadores (dots) -->
+      <div
+        *ngIf="currentExperience.imagens?.length > 1"
+        class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-30"
+      >
+        <div
+          *ngFor="let img of currentExperience.imagens; let i = index"
+          class="w-3 h-3 rounded-full cursor-pointer transition-all duration-300"
+          [class.bg-white]="i === currentImageIndex"
+          [class.scale-125]="i === currentImageIndex"
+          [class.bg-gray-500]="i !== currentImageIndex"
+          (click)="goToImage(i, $event)"
+        ></div>
+      </div>
+
+      <!-- Informações do projeto -->
+      <!-- <div
+        *ngIf="currentExperience.titulo"
+        class="absolute bottom-4 left-4 z-30 text-white bg-white bg-opacity-50 rounded-lg p-3 max-w-md"
+      >
+        <h3 class="font-bold text-lg mb-1">{{ currentExperience.titulo }}</h3>
+        <p class="text-sm opacity-80">
+          {{ currentImageIndex + 1 }} /
+          {{ currentExperience.imagens?.length || 0 }}
+        </p>
+        <p *ngIf="currentExperience.descricao" class="text-sm opacity-80 mt-1">
+          {{ currentExperience.descricao }}
+        </p>
+      </div> -->
     </div>
   </div>
 
@@ -397,3 +515,5 @@
   [showModal]="showModal"
   (modalClosed)="showModal = false"
 ></app-custom-modal>
+
+<app-experience #experienceModal [prestadorId]="prestadorId"></app-experience>

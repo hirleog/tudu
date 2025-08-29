@@ -2,9 +2,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { StarRatingModule } from '../../templates/star-rating/star-rating.module';
 import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
 import { ProfileComponent } from './profile.component';
-import { StarRatingModule } from '../../templates/star-rating/star-rating.module';
+import { ExperienceModule } from '../../templates/experience/experience.module';
 
 const routes: Routes = [
   { path: '', component: ProfileComponent },
@@ -18,6 +19,7 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
     StarRatingModule,
+    ExperienceModule,
   ],
   exports: [ProfileComponent, ProfileDetailComponent],
   providers: [],

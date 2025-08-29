@@ -43,3 +43,39 @@
   color: #ec4899;
   font-weight: 600;
 }
+/* Limitar texto a 2 linhas */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Transição suave para as imagens no modal */
+img {
+  transition: opacity 0.3s ease;
+}
+
+/* Custom scrollbar para o modal */
+.modal-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+}
+
+/* Efeito hover nos botões de navegação */
+.nav-button {
+  transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+  transform: scale(1.1);
+}

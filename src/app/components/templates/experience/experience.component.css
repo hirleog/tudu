@@ -1,0 +1,12 @@
+:host {
+  display: contents;
+}
+
+/* Animações suaves */
+.fixed {
+  transition: opacity 0.3s ease;
+}
+
+.bg-opacity-50 {
+  backdrop-filter: blur(4px);
+}

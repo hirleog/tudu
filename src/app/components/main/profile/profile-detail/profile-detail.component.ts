@@ -1,7 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ExperienceComponent } from 'src/app/components/templates/experience/experience.component';
+import { PortfolioItemModel } from 'src/app/interfaces/portfolio-item-model';
 import { AuthService } from 'src/app/services/auth.service';
+import { ExperienceService } from 'src/app/services/experience.service';
 import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { SharedService } from 'src/app/shared/shared.service';
@@ -13,6 +16,7 @@ import { SharedService } from 'src/app/shared/shared.service';
 })
 export class ProfileDetailComponent implements OnInit {
   @ViewChild('meuModal') customModal!: CustomModalComponent;
+  @ViewChild('experienceModal') experienceModal!: ExperienceComponent;
 
   userForm!: FormGroup;
   userData: any = {}; // Dados originais para exibição
@@ -27,39 +31,23 @@ export class ProfileDetailComponent implements OnInit {
 
   activeTab: string = 'informacoes';
 
-  portfolioItems = [
-    {
-      titulo: 'Apartamento Moderno',
-      descricao: 'Design de interiores completo para apartamento de 80m²',
-      data: 'Jan 2023',
-      imagem: 'https://via.placeholder.com/400x300?text=Projeto+1',
-    },
-    {
-      titulo: 'Escritório Corporativo',
-      descricao: 'Ambiente de trabalho para empresa de tecnologia',
-      data: 'Out 2022',
-      imagem: 'https://via.placeholder.com/400x300?text=Projeto+2',
-    },
-    {
-      titulo: 'Cozinha Integrada',
-      descricao: 'Reforma completa de cozinha em estilo contemporâneo',
-      data: 'Ago 2022',
-      imagem: 'https://via.placeholder.com/400x300?text=Projeto+3',
-    },
-  ];
+  experiencias: any[] = [];
+  isImageModalOpen = false;
+  currentExperience: any = {};
+  currentImageIndex = 0;
+
+  portfolioItems: PortfolioItemModel[] = [];
   prestadorProfileFile: any;
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private profileDetailService: ProfileDetailService,
     private authService: AuthService,
-    private sharedService: SharedService
+    private experienceService: ExperienceService
   ) {
     this.router.events.subscribe(() => {
       this.isProfessional = this.router.url.includes('professional');
     });
-
-    console.log('User Type:', this.isProfessional);
 
     // this.id_prestador = localStorage.getItem('prestador_id');
     // this.id_cliente = localStorage.getItem('cliente_id');
@@ -95,6 +83,11 @@ export class ProfileDetailComponent implements OnInit {
     });
 
     this.loadUser();
+    this.loadExperiences();
+  }
+
+  isPrestador(): boolean {
+    return this.isProfessional === true;
   }
 
   loadUser(): void {
@@ -128,27 +121,6 @@ export class ProfileDetailComponent implements OnInit {
   //     reader.readAsDataURL(file);
   //   }
   // }
-  triggerFileInput(): void {
-    const fileInput = document.getElementById(
-      'profile-pic-input'
-    ) as HTMLInputElement;
-    fileInput?.click();
-
-    if (fileInput?.files) {
-      const file = fileInput.files[0];
-      if (file) {
-        this.prestadorProfileFile = file;
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          this.imagePreview = reader.result;
-          this.userForm.patchValue({ foto: reader.result });
-        };
-        reader.readAsDataURL(file);
-        console.log('lala', this.userForm);
-      }
-    }
-  }
 
   onFileSelected(event: any): void {
     // const files = event.target.file;
@@ -178,8 +150,19 @@ export class ProfileDetailComponent implements OnInit {
   }
 
   saveProfile(): void {
-    const payload = this.userForm.value;
-    this.userData = { ...this.userData, ...payload };
+    const formData = { ...this.userForm.value };
+
+    // Remove campos específicos do prestador se não for profissional
+    if (!this.isProfessional) {
+      const camposPrestador = [
+        'especializacao',
+        'descricao',
+        'numero_servicos_feitos',
+      ];
+      camposPrestador.forEach((campo) => delete formData[campo]);
+    }
+
+    this.userData = { ...this.userData, ...formData };
 
     const updateFn =
       this.isProfessional === true
@@ -190,17 +173,16 @@ export class ProfileDetailComponent implements OnInit {
       .call(
         this.profileDetailService,
         this.userId,
-        payload,
+        formData, // Usa o formData filtrado
         this.prestadorProfileFile
       )
       .subscribe({
         next: (response) => {
-          this.prestadorProfileFile = null; // Limpa o arquivo após envio
+          this.prestadorProfileFile = null;
           this.showModal = true;
-
           this.customModal.configureModal(
             true,
-            response.message || 'Pedido cancelado com sucesso.'
+            response.message || 'Dados atualizados com sucesso.'
           );
         },
         error: (error) => {
@@ -223,26 +205,6 @@ export class ProfileDetailComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  // onFilesSelected(event: any) {
-  //   const files = event.target.files;
-  //   this.selectedFiles = [];
-  //   this.selectedPreviews = [];
-
-  //   if (files) {
-  //     for (let i = 0; i < files.length; i++) {
-  //       const file = files[i];
-  //       this.selectedFiles.push(file);
-  //       this.sharedService.setFiles(this.selectedFiles);
-
-  //       const reader = new FileReader();
-  //       reader.onload = (e: any) => {
-  //         this.selectedPreviews.push(e.target.result);
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   }
-  // }
-
   goBack() {
     if (this.isProfessional) {
       this.router.navigate(['/profile'], {
@@ -253,7 +215,118 @@ export class ProfileDetailComponent implements OnInit {
     }
   }
 
-  isPrestador(): boolean {
-    return this.isProfessional === true;
+  saveExperience(experienceData: any): void {
+    console.log('Dados da experiência:', experienceData);
+
+    // Aqui você faria o upload das imagens e salvaria no backend
+    // this.uploadImagesAndSave(experienceData);
+  }
+
+  onModalClose(): void {
+    console.log('Modal fechado');
+  }
+
+  loadExperiences(): void {
+    this.experienceService
+      .getExperiencesByPrestador(this.prestadorId)
+      .subscribe({
+        next: (experiences) => {
+          this.portfolioItems = experiences;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar experiências:', error);
+        },
+      });
+  }
+
+  openImageModal(experiencia: any): void {
+    console.log('Abrindo modal para:', experiencia);
+
+    if (experiencia.imagens && experiencia.imagens.length > 0) {
+      this.currentExperience = { ...experiencia }; // Cria uma cópia
+      this.currentImageIndex = 0;
+      this.isImageModalOpen = true;
+
+      // Desabilita scroll
+      document.body.style.overflow = 'hidden';
+    } else {
+      console.log('Esta experiência não tem imagens');
+    }
+  }
+
+  closeImageModal(): void {
+    this.isImageModalOpen = false;
+    this.currentExperience = {};
+    this.currentImageIndex = 0;
+
+    // Reabilita scroll
+    document.body.style.overflow = 'auto';
+  }
+
+  nextImage(event?: Event): void {
+    if (event) {
+      event.stopPropagation(); // Previne que o clique propague para o modal
+    }
+
+    if (this.currentExperience.imagens?.length > 1) {
+      this.currentImageIndex =
+        (this.currentImageIndex + 1) % this.currentExperience.imagens.length;
+    }
+  }
+
+  prevImage(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    if (this.currentExperience.imagens?.length > 1) {
+      this.currentImageIndex =
+        (this.currentImageIndex - 1 + this.currentExperience.imagens.length) %
+        this.currentExperience.imagens.length;
+    }
+  }
+
+  goToImage(index: number, event: Event): void {
+    event.stopPropagation();
+
+    if (
+      this.currentExperience.imagens &&
+      index >= 0 &&
+      index < this.currentExperience.imagens.length
+    ) {
+      this.currentImageIndex = index;
+    }
+  }
+
+  getImageUrl(experiencia: any): string {
+    // Verifica se existem imagens e se a primeira imagem tem URL
+    if (
+      experiencia.imagens &&
+      experiencia.imagens.length > 0 &&
+      experiencia.imagens[0].url
+    ) {
+      return experiencia.imagens[0].url;
+    }
+
+    // Fallback para imagem placeholder
+    return 'https://camarablu.sc.gov.br/images/img-indisponivel.jpg';
+  }
+
+  // Navegação por teclado
+  @HostListener('window:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent) {
+    if (this.isImageModalOpen) {
+      switch (event.key) {
+        case 'ArrowRight':
+          this.nextImage();
+          break;
+        case 'ArrowLeft':
+          this.prevImage();
+          break;
+        case 'Escape':
+          this.closeImageModal();
+          break;
+      }
+    }
   }
 }
