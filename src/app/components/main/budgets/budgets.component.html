@@ -149,7 +149,7 @@
                 border: 1px solid var(--primary);
               "
               class="request-quote-btn col-6"
-              (click)="updateCard(card, 'recusar')"
+              (click)="updateCard(card, 'recusar', candidatura.prestador_id)"
             >
               Recusar
             </button>
@@ -209,6 +209,13 @@
     </button> -->
   </div>
 </div>
+
+<!-- Modal  -->
+<app-custom-modal
+  #meuModal
+  [showModal]="showModal"
+  (modalClosed)="showModal = false"
+></app-custom-modal>
 
 <!-- Conteúdo da página -->
 <div class="container mt-5 pt-5"></div>

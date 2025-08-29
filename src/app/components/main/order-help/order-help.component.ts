@@ -156,7 +156,7 @@ export class OrderHelpComponent implements OnInit {
           this.stateManagementService.clearAllState();
         },
         error: (err) => {
-          this.showModal = true;
+          this.showModal = false;
 
           this.customModal.configureModal(
             true,

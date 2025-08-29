@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { forkJoin, Observable, of } from 'rxjs';
-import { Budget } from 'src/app/interfaces/budgets';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
 import { ProfileDetailService } from 'src/app/services/profile-detail.service';
+import { StateManagementService } from 'src/app/services/state-management.service';
+import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-budgets',
@@ -13,42 +14,10 @@ import { ProfileDetailService } from 'src/app/services/profile-detail.service';
   styleUrls: ['./budgets.component.css'],
 })
 export class BudgetsComponent implements OnInit {
+  @ViewChild('meuModal') customModal!: CustomModalComponent;
+
   cardPrice = '';
-  budgets: Budget[] = [
-    {
-      id: 1,
-      photo: '../../../../assets/aline.PNG', // Ícone FontAwesome
-      name: 'Aline',
-      rate: '4',
-      serviceComplete: '66',
-      distance: '1.5',
-      distanceMinutes: '60',
-      price: '39.45',
-      editedPrice: '', // Adicionamos esta propriedade
-    },
-    {
-      id: 2,
-      photo: '../../../../assets/matheus.PNG', // Ícone FontAwesome
-      name: 'Matheus',
-      rate: '5',
-      serviceComplete: '15',
-      price: '45.54',
-      distance: '1.0',
-      distanceMinutes: '8',
-      editedPrice: '', // Adicionamos esta propriedade
-    },
-    {
-      id: 3,
-      photo: '../../../../assets/GUI.PNG',
-      name: 'Guilherme',
-      rate: '3',
-      serviceComplete: '234',
-      price: '33.00',
-      distance: '4.6',
-      distanceMinutes: '24',
-      editedPrice: '', // Adicionamos esta propriedade
-    },
-  ];
+
   id_pedido: string = '';
   card: any;
   id_prestador: any;
@@ -58,13 +27,15 @@ export class BudgetsComponent implements OnInit {
   hiredCardInfo!: CardOrders;
   id_cliente: any;
   clientData: any;
+  showModal: boolean = false;
 
   constructor(
     public cardService: CardService,
     private routeActive: ActivatedRoute,
     private route: Router,
     private authService: AuthService,
-    private profileDetailService: ProfileDetailService
+    private profileDetailService: ProfileDetailService,
+    public stateManagementService: StateManagementService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
@@ -142,87 +113,77 @@ export class BudgetsComponent implements OnInit {
     }
   }
 
-  updateCard(card: CardOrders, step: string): Observable<CardOrders> {
-    // const horario_negociado_formatted = moment(
-    //   card.placeholderDataHora,
-    //   'DD/MM/YYYY - HH:mm'
-    // ).format('YYYY-MM-DD HH:mm');
-
+  updateCard(
+    card: CardOrders,
+    step: string,
+    candidatoEspecifico?: any
+  ): Observable<CardOrders> {
     // Obtém a candidatura do prestador atual (se existir)
-    // const candidaturaAtual = card.candidaturas?.find(
-    //   (c) => c.prestador_id === Number(this.id_prestador)
-    // );
-    let payloadCard: any;
-    card.candidaturas.map((candidato) => {
-      // Determina o valor negociado
-      const valorNegociado = candidato
-        ? candidato.valor_negociado === ''
-          ? card.valor
-          : candidato.valor_negociado ?? card.valor
-        : card.valor_negociado && card.valor_negociado !== card.valor
-        ? card.valor_negociado
-        : card.valor;
+    const candidaturaAlvo = card.candidaturas?.find(
+      (c) => c.prestador_id === candidatoEspecifico
+    );
 
-      const horario_negociado = candidato
-        ? candidato.horario_negociado === ''
-          ? card.horario_preferencial
-          : candidato.horario_negociado ?? card.horario_preferencial
-        : card.horario_preferencial;
+    if (!candidaturaAlvo) {
+      console.error('Candidatura não encontrada');
+      return of();
+    }
 
-      // Determina o status com base nas negociações
-      // const statusPedido =
-      //   valorNegociado !== card.valor ||
-      //   (horario_negociado_formatted &&
-      //     horario_negociado_formatted !== card.horario_preferencial)
-      //     ? 'publicado'
-      //     : 'pendente';
+    // Determina o valor negociado apenas para a candidatura alvo
+    const valorNegociado =
+      candidaturaAlvo.valor_negociado === ''
+        ? card.valor
+        : candidaturaAlvo.valor_negociado ?? card.valor;
 
-      const payloadCard: any = {
-        id_cliente: Number(card.id_pedido),
-        id_prestador: step === 'contratar' ? candidato.prestador_id : null,
-        categoria: card.categoria,
-        status_pedido: step === 'contratar' ? 'pendente' : 'publicado', // Usa o status calculado
-        subcategoria: card.subcategoria,
-        valor: card.valor,
-        horario_preferencial: card.horario_preferencial,
+    const horario_negociado =
+      candidaturaAlvo.horario_negociado === ''
+        ? card.horario_preferencial
+        : candidaturaAlvo.horario_negociado ?? card.horario_preferencial;
 
-        cep: card.address.cep,
-        street: card.address.street,
-        neighborhood: card.address.neighborhood,
-        city: card.address.city,
-        state: card.address.state,
-        number: card.address.number,
-        complement: card.address.complement,
+    const payloadCard: any = {
+      id_cliente: Number(card.id_pedido),
+      id_prestador: step === 'contratar' ? candidaturaAlvo.prestador_id : null,
+      categoria: card.categoria,
+      status_pedido: step === 'contratar' ? 'pendente' : 'publicado',
+      subcategoria: card.subcategoria,
+      valor: card.valor,
+      horario_preferencial: card.horario_preferencial,
 
-        candidaturas: [
-          {
-            prestador_id: candidato.prestador_id,
-            valor_negociado: valorNegociado,
-            horario_negociado: horario_negociado,
-            status: step === 'contratar' ? 'aceito' : 'recusado',
-          },
-        ],
-      };
+      cep: card.address.cep,
+      street: card.address.street,
+      neighborhood: card.address.neighborhood,
+      city: card.address.city,
+      state: card.address.state,
+      number: card.address.number,
+      complement: card.address.complement,
 
-      this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
-        next: (response) => {
-          step === 'contratar'
-            ? this.route.navigate(['/home/progress'])
-            : this.getCardById(); // Atualiza a lista de cartões após a atualização
-          // route === '/home' ? this.selectItem(1) : this.route.navigate([route]); // direciona para tela de em andamento se não vai para tela de progress
+      // Envia apenas a candidatura específica que está sendo atualizada
+      candidaturas: [
+        {
+          prestador_id: candidaturaAlvo.prestador_id,
+          valor_negociado: valorNegociado,
+          horario_negociado: horario_negociado,
+          status: step === 'contratar' ? 'aceito' : 'recusado',
         },
-        error: (error) => {
-          console.error('Erro ao atualizar o cartão:', error);
-        },
-        complete: () => {
-          console.log('Requisição concluída');
-        },
-      });
+      ],
+    };
+
+    this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
+      next: (response) => {
+        this.stateManagementService.clearAllState();
+        step === 'contratar'
+          ? this.route.navigate(['/home/progress'])
+          : this.getCardById(); // Atualiza a lista de cartões após a atualização
+      },
+      error: (error) => {
+        console.error('Erro ao atualizar o cartão:', error);
+      },
+      complete: () => {
+        console.log('Requisição concluída');
+      },
     });
 
     return of();
   }
-
   backToOffer(indicator: any): void {
     this.paymentStep = indicator;
   }
