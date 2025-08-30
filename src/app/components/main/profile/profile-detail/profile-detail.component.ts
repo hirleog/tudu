@@ -103,6 +103,8 @@ export class ProfileDetailComponent implements OnInit {
       this.selectTab('portfolio');
       this.loadUser();
       this.loadExperiences(this.budgetId);
+    } else {
+      this.loadUser();
     }
 
     console.log(this.portfolioItems);
