@@ -81,6 +81,24 @@ img {
   transform: scale(1.1);
 }
 
+/* Estilo para o modo de visualização */
+.group:hover .bg-gray-50 {
+  background-color: #f9fafb;
+  transition: background-color 0.2s ease;
+}
+
+/* Melhora a aparência do textarea */
+textarea {
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+/* Estilo para o placeholder do textarea */
+textarea::placeholder {
+  color: #9ca3af;
+  font-style: italic;
+}
+
 @media (max-width: 768px) {
   .ajuste-client-view {
     display: flex;

@@ -1,4 +1,10 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExperienceComponent } from 'src/app/components/templates/experience/experience.component';
@@ -16,6 +22,13 @@ import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.c
 export class ProfileDetailComponent implements OnInit {
   @ViewChild('meuModal') customModal!: CustomModalComponent;
   @ViewChild('experienceModal') experienceModal!: ExperienceComponent;
+  @ViewChild('textareaDescricao') textareaDescricao!: ElementRef;
+
+  editandoDescricao = false;
+  descricaoOriginal = '';
+  descricaoLength = 0;
+  isEditMode = true;
+  descricaoTemporaria = ''; // Variável temporária para edição
 
   userForm!: FormGroup;
   userData: any = {}; // Dados originais para exibição
@@ -186,6 +199,10 @@ export class ProfileDetailComponent implements OnInit {
       camposPrestador.forEach((campo) => delete formData[campo]);
     }
 
+    formData.descricao =
+      this.descricaoTemporaria !== ''
+        ? this.descricaoTemporaria
+        : this.userData.descricao;
     this.userData = { ...this.userData, ...formData };
 
     const updateFn =
@@ -203,7 +220,6 @@ export class ProfileDetailComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.prestadorProfileFile = null;
-          // this.showModal = true;
 
           this.customModal.openModal();
           this.customModal.configureModal(
@@ -338,6 +354,43 @@ export class ProfileDetailComponent implements OnInit {
 
     // Fallback para imagem placeholder
     return 'https://camarablu.sc.gov.br/images/img-indisponivel.jpg';
+  }
+
+  // Método para iniciar edição - CORRIGIDO
+  iniciarEdicaoDescricao(): void {
+    console.log('Botão de edição clicado!'); // Debug
+    this.descricaoTemporaria = this.userData.descricao || '';
+    this.editandoDescricao = true;
+    this.descricaoLength = this.descricaoTemporaria.length;
+
+    // Foca no textarea após a renderização
+    setTimeout(() => {
+      if (this.textareaDescricao && this.textareaDescricao.nativeElement) {
+        this.textareaDescricao.nativeElement.focus();
+      }
+    }, 100);
+  }
+
+  // Método para cancelar edição - CORRIGIDO
+  cancelarEdicaoDescricao(): void {
+    this.editandoDescricao = false;
+    this.descricaoTemporaria = '';
+  }
+
+  // Método para salvar descrição - CORRIGIDO
+  salvarDescricao(): void {
+    // if (this.descricaoLength <= 500) {
+    this.userData.descricao = this.descricaoTemporaria;
+    this.editandoDescricao = false;
+
+    // Aqui você chama o método para salvar no backend
+    this.saveProfile();
+    // }
+  }
+
+  // Atualiza contador de caracteres - CORRIGIDO
+  atualizarContadorDescricao(event: any): void {
+    this.descricaoLength = event.target.value.length;
   }
 
   // Navegação por teclado
