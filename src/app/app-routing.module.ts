@@ -75,9 +75,9 @@ const routes: Routes = [
       loadRemoteModule({
         remoteEntry: `${environment.mfeUrl}/remoteEntry.js`,
         remoteName: 'mfeApp',
-        exposedModule: './MainAppModule',
+        exposedModule: './TuduProfessionalModule',
       })
-        .then((m) => m.MainAppModule)
+        .then((m) => m.TuduProfessionalModule)
         .catch((err) => console.error('Error loading remote module', err)),
   },
 ];

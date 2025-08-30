@@ -36,7 +36,6 @@ export class PaymentsComponent implements OnInit {
   cardFlipped: boolean = false;
   showCvvHelp: boolean = false;
   processingPayment: boolean = false;
-  showModal: boolean = false;
   acceptedTerms: boolean = false;
   saveCard: boolean = false;
   installments: string = '1';
@@ -259,14 +258,14 @@ export class PaymentsComponent implements OnInit {
 
           if (res.success) {
             // Pagamento bem-sucedido
-            this.showModal = true;
+            this.customModal.openModal();
             this.customModal.configureModal(
               true,
               'Pagamento aprovado com sucesso!'
             );
           } else {
             // Pagamento falhou
-            this.showModal = true;
+            this.customModal.openModal();
             this.customModal.configureModal(
               false,
               res.details[0].description || 'Pagamento não realizado.'
@@ -275,7 +274,7 @@ export class PaymentsComponent implements OnInit {
         },
         error: (err) => {
           this.processingPayment = false;
-          this.showModal = true;
+          this.customModal.openModal();
           this.customModal.configureModal(
             false,
             err.details[0].description || 'Pagamento não realizado.'
@@ -288,7 +287,7 @@ export class PaymentsComponent implements OnInit {
       this.processingPayment = true;
       setTimeout(() => {
         this.processingPayment = false;
-        this.showModal = true;
+        this.customModal.openModal();
         console.log('Pagamento via Pix simulado com sucesso');
       }, 2000);
     }
@@ -375,7 +374,7 @@ export class PaymentsComponent implements OnInit {
   // }
 
   closeModal(): void {
-    this.showModal = false;
+    this.customModal.closeModal();
     this.payHiredCard.emit(this.closeModalIndicator);
   }
 

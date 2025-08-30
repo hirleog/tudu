@@ -3,6 +3,9 @@
   <div central-content>
     <a routerLink="/" class="logo">
       <img
+        [routerLink]="[
+          isProfessional ? '/tudu-professional/home' : '/tudu-home'
+        ]"
         src="../../../assets/logo-rosa.webp"
         class="img-fluid"
         style="width: 4em"
@@ -220,9 +223,5 @@
 
   <!-- modais -->
 
-  <!-- <app-custom-modal
-    modalId="alertModal"
-    title="Erro"
-    [message]="errorMessage"
-  ></app-custom-modal> -->
+  <app-custom-modal #meuModal (modalClosed)="goToLogin()"></app-custom-modal>
 </section>

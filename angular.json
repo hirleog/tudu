@@ -30,7 +30,8 @@
             "commonChunk": false,
             "extraWebpackConfig": "webpack.config.js",
             "serviceWorker": true,
-            "ngswConfigPath": "ngsw-config.json"
+            "ngswConfigPath": "ngsw-config.json",
+            "allowedCommonJsDependencies": ["aos", "outros-pacotes-commonjs"]
           },
           "configurations": {
             "production": {

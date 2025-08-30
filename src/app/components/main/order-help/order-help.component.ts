@@ -22,7 +22,6 @@ export class OrderHelpComponent implements OnInit {
   private whatsappNumber = '5511974109625'; // Seu número com DDD e código do país
   private emailSuporte = 'suporte@empresa.com.br';
   private assuntoEmail = 'Relato de Problema - Sistema TUDU';
-  showModal: boolean = false;
   reqStatus: string = '';
 
   constructor(
@@ -146,8 +145,9 @@ export class OrderHelpComponent implements OnInit {
     if (reason) {
       this.cardService.cancelCard(idPedido, reason).subscribe({
         next: (response) => {
-          this.showModal = true;
           this.reqStatus = response.status;
+
+          this.customModal.openModal();
           this.customModal.configureModal(
             true,
             response.message || 'Pedido cancelado com sucesso.'
@@ -156,8 +156,8 @@ export class OrderHelpComponent implements OnInit {
           this.stateManagementService.clearAllState();
         },
         error: (err) => {
-          this.showModal = false;
-
+          
+          this.customModal.openModal();
           this.customModal.configureModal(
             false,
             err.message ||
@@ -170,10 +170,10 @@ export class OrderHelpComponent implements OnInit {
 
   closeModal(): void {
     if (this.reqStatus === 'success') {
-      this.showModal = false;
+      this.customModal.closeModal();
       this.router.navigate(['/home']); // Ajuste para sua rota
     } else {
-      this.showModal = false;
+      this.customModal.closeModal();
     }
 
     // this.payHiredCard.emit(this.closeModalIndicator);

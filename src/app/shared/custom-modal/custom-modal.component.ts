@@ -5,18 +5,18 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'app-custom-modal',
   standalone: false, // ← Importante: não standalone para funcionar com modules
   templateUrl: './custom-modal.component.html',
-  styleUrls: ['./custom-modal.component.css'] // opcional
+  styleUrls: ['./custom-modal.component.css'], // opcional
 })
 export class CustomModalComponent {
   @Input() modalId = 'customModal';
   @Input() title = 'Aviso';
   @Input() message = '';
   @Input() closeButtonText = 'Fechar';
-  @Input() showModal = false;
   @Input() paymentMethod: 'pix' | 'credit' | null = null;
   @Input() errorDetails: any = null;
 
   @Output() modalClosed = new EventEmitter<void>();
+  showModal = false;
 
   // Propriedades para configuração dinâmica
   modalIcon: string = 'fa-check';
@@ -24,6 +24,11 @@ export class CustomModalComponent {
   modalBgColor: string = 'bg-green-100';
   messageTitle: string = 'Pagamento Aprovado!';
   messageBody: string = 'Seu pagamento foi processado com sucesso.';
+
+  openModal(): void {
+    this.showModal = true;
+    // this.resetForm();
+  }
 
   configureModal(success: boolean, message: string = ''): void {
     if (success) {
@@ -55,15 +60,15 @@ export class CustomModalComponent {
   }
 
   // Métodos públicos para controle externo
-  open(success: boolean, message: string = '', paymentMethod?: 'pix' | 'credit'): void {
+  open(
+    success: boolean,
+    message: string = '',
+    paymentMethod?: 'pix' | 'credit'
+  ): void {
     this.configureModal(success, message);
     if (paymentMethod) {
       this.paymentMethod = paymentMethod;
     }
     this.showModal = true;
-  }
-
-  close(): void {
-    this.closeModal();
   }
 }

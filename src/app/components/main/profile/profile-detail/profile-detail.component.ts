@@ -7,7 +7,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ExperienceService } from 'src/app/services/experience.service';
 import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
-import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
   selector: 'app-profile-detail',
@@ -29,7 +28,6 @@ export class ProfileDetailComponent implements OnInit {
 
   id_cliente!: string | null;
   prestadorId!: string | null;
-  showModal: boolean = false;
 
   activeTab: string = 'informacoes';
 
@@ -205,14 +203,16 @@ export class ProfileDetailComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.prestadorProfileFile = null;
-          this.showModal = true;
+          // this.showModal = true;
+
+          this.customModal.openModal();
           this.customModal.configureModal(
             true,
             response.message || 'Dados atualizados com sucesso.'
           );
         },
         error: (error) => {
-          this.showModal = true;
+          this.customModal.openModal();
           this.customModal.configureModal(
             false,
             error.message || 'Erro ao atualizar os dados.'
