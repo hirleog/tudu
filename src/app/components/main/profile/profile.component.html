@@ -30,7 +30,7 @@
   <div
     class="d-flex justify-content-between align-items-center card-body p-1 pt-2"
   >
-    <div class="d-flex">
+    <div class="d-flex" (click)="goToProfileDetail()" style="cursor: pointer">
       <div class="request-card-icon">
         <img
           [src]="
@@ -44,12 +44,12 @@
       <div>
         <div class="d-flex justify-content-between">
           <div class="d-flex align-items-center gap-2">
-            <h5 class="m-0">{{ profileData?.nome }}</h5>
+            <h5 class="m-0 capitalize">{{ profileData?.nome }}</h5>
             <i class="fas fa-star text-warning"></i>
           </div>
         </div>
 
-        <div class="d-flex gap-1" (click)="goToProfileDetail()">
+        <div class="d-flex gap-1">
           <p style="color: var(--premium) !important">Minha conta</p>
           <!-- <p>{{ card.service }}</p> -->
         </div>

@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ExperienceComponent } from 'src/app/components/templates/experience/experience.component';
 import { PortfolioItemModel } from 'src/app/interfaces/portfolio-item-model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -24,7 +24,9 @@ export class ProfileDetailComponent implements OnInit {
   userId!: number;
   selectedImage: File | null = null;
   imagePreview: string | ArrayBuffer | null = null;
+
   isProfessional: boolean = false;
+
   id_cliente!: string | null;
   prestadorId!: string | null;
   showModal: boolean = false;
@@ -38,19 +40,31 @@ export class ProfileDetailComponent implements OnInit {
 
   portfolioItems: PortfolioItemModel[] = [];
   prestadorProfileFile: any;
+  budgetId: any;
+  isBudgetConsult: boolean = false;
+  budgetPedido: string = '';
+
   constructor(
     private router: Router,
     private fb: FormBuilder,
     private profileDetailService: ProfileDetailService,
     private authService: AuthService,
-    private experienceService: ExperienceService
+    private experienceService: ExperienceService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.router.events.subscribe(() => {
       this.isProfessional = this.router.url.includes('professional');
+      this.isBudgetConsult = this.router.url.includes('id');
     });
 
-    // this.id_prestador = localStorage.getItem('prestador_id');
-    // this.id_cliente = localStorage.getItem('cliente_id');
+    // id da url, só acontece na hora de consultar o prestador no fluxo de budgets
+    this.activatedRoute.queryParams.subscribe((params) => {
+      if (params['id']) {
+        this.budgetId = params['id'];
+        this.budgetPedido = params['pedido'];
+      }
+    });
+
     this.authService.idCliente$.subscribe((id) => {
       this.id_cliente = id;
     });
@@ -82,8 +96,14 @@ export class ProfileDetailComponent implements OnInit {
       numero_servicos_feitos: [''],
     });
 
-    this.loadUser();
-    this.loadExperiences();
+    if (this.isProfessional && this.isBudgetConsult === false) {
+      this.loadUser();
+      this.loadExperiences(this.prestadorId);
+    } else if (this.budgetId) {
+      this.selectTab('portfolio');
+      this.loadUser();
+      this.loadExperiences(this.budgetId);
+    }
   }
 
   isPrestador(): boolean {
@@ -93,7 +113,15 @@ export class ProfileDetailComponent implements OnInit {
   loadUser(): void {
     let getFn: any;
 
-    if (this.isProfessional === true) {
+    if (
+      this.budgetId !== '' &&
+      this.budgetId !== null &&
+      this.budgetId !== undefined &&
+      this.isBudgetConsult
+    ) {
+      this.userId = Number(this.budgetId);
+      getFn = this.profileDetailService.getPrestadorById;
+    } else if (this.isProfessional === true) {
       this.userId = Number(this.prestadorId);
       getFn = this.profileDetailService.getPrestadorById;
     } else {
@@ -110,21 +138,7 @@ export class ProfileDetailComponent implements OnInit {
       });
   }
 
-  // onImageSelected(event: any): void {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     const reader = new FileReader();
-  //     reader.onload = () => {
-  //       this.imagePreview = reader.result;
-  //       this.userForm.patchValue({ foto: reader.result });
-  //     };
-  //     reader.readAsDataURL(file);
-  //   }
-  // }
-
   onFileSelected(event: any): void {
-    // const files = event.target.file;
-
     const fileInput = document.getElementById(
       'profile-pic-input'
     ) as HTMLInputElement;
@@ -152,6 +166,13 @@ export class ProfileDetailComponent implements OnInit {
   saveProfile(): void {
     const formData = { ...this.userForm.value };
 
+    // Converter todos os valores string para minúsculas
+    Object.keys(formData).forEach((key) => {
+      if (typeof formData[key] === 'string') {
+        formData[key] = formData[key].toLowerCase();
+      }
+    });
+
     // Remove campos específicos do prestador se não for profissional
     if (!this.isProfessional) {
       const camposPrestador = [
@@ -173,7 +194,7 @@ export class ProfileDetailComponent implements OnInit {
       .call(
         this.profileDetailService,
         this.userId,
-        formData, // Usa o formData filtrado
+        formData, // Usa o formData filtrado e convertido para minúsculas
         this.prestadorProfileFile
       )
       .subscribe({
@@ -206,9 +227,13 @@ export class ProfileDetailComponent implements OnInit {
   }
 
   goBack() {
-    if (this.isProfessional) {
+    if (this.isProfessional && !this.isBudgetConsult) {
       this.router.navigate(['/profile'], {
         queryParams: { param: 'professional' },
+      });
+    } else if (this.isBudgetConsult && this.budgetPedido !== '') {
+      this.router.navigate(['/home/budgets'], {
+        queryParams: { id: this.budgetPedido },
       });
     } else {
       this.router.navigate(['/profile']);
@@ -226,17 +251,15 @@ export class ProfileDetailComponent implements OnInit {
     console.log('Modal fechado');
   }
 
-  loadExperiences(): void {
-    this.experienceService
-      .getExperiencesByPrestador(this.prestadorId)
-      .subscribe({
-        next: (experiences) => {
-          this.portfolioItems = experiences;
-        },
-        error: (error) => {
-          console.error('Erro ao carregar experiências:', error);
-        },
-      });
+  loadExperiences(prestadorId: any): void {
+    this.experienceService.getExperiencesByPrestador(prestadorId).subscribe({
+      next: (experiences) => {
+        this.portfolioItems = experiences;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar experiências:', error);
+      },
+    });
   }
 
   openImageModal(experiencia: any): void {

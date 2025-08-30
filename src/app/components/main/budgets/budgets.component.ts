@@ -191,4 +191,15 @@ export class BudgetsComponent implements OnInit {
   backToOffer(indicator: any): void {
     this.paymentStep = indicator;
   }
+
+  goToPrestadorDetail(idPrestador: string, idPedido: string) {
+    // Navega para a rota com o parâmetro correto
+    this.route.navigate(['/profile/profile-detail'], {
+      queryParams: {
+        param: 'professional',
+        id: idPrestador,
+        pedido: idPedido,
+      },
+    });
+  }
 }

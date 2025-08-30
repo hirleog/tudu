@@ -79,3 +79,12 @@ img {
 .nav-button:hover {
   transform: scale(1.1);
 }
+
+@media (max-width: 768px) {
+  .ajuste-client-view {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+  }
+}
