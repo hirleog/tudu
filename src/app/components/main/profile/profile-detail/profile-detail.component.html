@@ -24,7 +24,7 @@
     <div class="md:flex">
       <!-- Seção da Foto -->
       <div class="md:w-1/3 p-8 flex flex-col items-center">
-        <div class="profile-pic-upload mb-4" (click)="onFileSelected($event)">
+        <div class="profile-pic-upload mb-4" (click)="onFileSelected($event)" style="cursor: unset;">
           <img
             [src]="
               userData.foto ||
@@ -33,7 +33,7 @@
             alt="Foto de perfil"
             class="rounded-full w-40 h-40 object-cover border-4 border-pink-100"
           />
-          <div class="upload-overlay">
+          <div [ngClass]="{ 'upload-overlay': !isBudgetConsult }">
             <i class="fas fa-camera text-white text-2xl"></i>
           </div>
         </div>
@@ -76,7 +76,7 @@
           <div *ngIf="isProfessional">
             <div class="text-gray-500 text-sm">Serviços</div>
             <div class="text-3xl font-bold text-pink-500 mt-1 text-center">
-              {{ userData.numero_servicos_feitos }}
+              {{ userData.numero_servicos_feitos || 0 }}
             </div>
           </div>
         </div>
@@ -331,6 +331,7 @@
       <h2 class="text-2xl font-bold text-gray-800 md:mb-0 mb-3">Portfólio</h2>
 
       <button
+        *ngIf="isProfessional && !isBudgetConsult"
         type="submit"
         class="btn btn-outline-primary fs-6"
         (click)="experienceModal.openModal()"
@@ -481,11 +482,17 @@
 
   <!-- Outras abas podem ser implementadas aqui -->
   <div
+    *ngIf="activeTab === 'portfolio' && portfolioItems.length === 0"
+    class="bg-white rounded-xl shadow-md overflow-hidden p-8 mb-8"
+  >
+    <p class="text-gray-600">Sem conteúdo disponível.</p>
+  </div>
+  <div
     *ngIf="activeTab === 'certificacoes'"
     class="bg-white rounded-xl shadow-md overflow-hidden p-8 mb-8"
   >
     <h2 class="text-2xl font-bold text-gray-800 mb-6">Certificações</h2>
-    <p class="text-gray-600">Conteúdo das certificações será exibido aqui.</p>
+    <p class="text-gray-600">Sem conteúdo disponível.</p>
   </div>
 
   <div

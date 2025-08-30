@@ -104,6 +104,8 @@ export class ProfileDetailComponent implements OnInit {
       this.loadUser();
       this.loadExperiences(this.budgetId);
     }
+
+    console.log(this.portfolioItems);
   }
 
   isPrestador(): boolean {
@@ -139,6 +141,7 @@ export class ProfileDetailComponent implements OnInit {
   }
 
   onFileSelected(event: any): void {
+    if (this.isBudgetConsult) return;
     const fileInput = document.getElementById(
       'profile-pic-input'
     ) as HTMLInputElement;
