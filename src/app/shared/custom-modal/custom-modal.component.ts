@@ -16,7 +16,7 @@ export class CustomModalComponent {
   @Input() errorDetails: any = null;
 
   @Output() modalClosed = new EventEmitter<void>();
-  showModal = false;
+  @Input() showModal = false;
 
   // Propriedades para configuração dinâmica
   modalIcon: string = 'fa-check';

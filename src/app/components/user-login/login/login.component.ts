@@ -20,6 +20,9 @@ export class LoginComponent implements OnInit {
   isProfessional: boolean = false;
   loginErrorMessage: boolean = false;
   errorMessage: string = '';
+  token: string = '';
+  successRegisterIndicator: boolean = false;
+  showModalLogin: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -93,20 +96,25 @@ export class LoginComponent implements OnInit {
           const indicatorFlow = response.role;
 
           // 🔐 Salvar o token ANTES de redirecionar
-          this.router.navigate(['/tudu-professional/home']);
-          const token = response.access_token; // ajuste aqui conforme o nome real da propriedade
+          this.token = response.access_token; // ajuste aqui conforme o nome real da propriedade
           if (indicatorFlow === 'prestador') {
-            localStorage.setItem('access_token_prestador', token);
+            localStorage.setItem('access_token_prestador', this.token);
+            window.location.href = '/tudu-professional/home';
+
+            this.router.navigate(['/tudu-professional/home']);
           } else {
-            localStorage.setItem('access_token_cliente', token);
+            localStorage.setItem('access_token_cliente', this.token);
+            window.location.href = '/';
+
             this.router.navigate(['/']);
           }
         },
         error: (error: any) => {
-          this.loginErrorMessage = true;
+          // this.loginErrorMessage = true;
+          // this.errorMessage = error.error.message || 'Erro desconhecido';
 
           if (this.isProfessional === true) {
-            this.router.navigate([], {
+            this.router.navigate(['/login'], {
               queryParams: { param: 'professional' },
               queryParamsHandling: 'merge',
             });
@@ -114,7 +122,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/login']);
           }
 
-          this.customModal.openModal();
+          this.showModalLogin = true;
           this.customModal.configureModal(
             false,
             error.error.message || 'Erro ao realizar login, tente novamente'
@@ -130,66 +138,55 @@ export class LoginComponent implements OnInit {
     if (this.registerForm.valid) {
       const formValue = this.registerForm.value;
 
-      // Função para converter valores para minúsculas
-      const convertToLowerCase = (obj: any): any => {
-        const result: any = {};
-        for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
-            result[key] =
-              typeof obj[key] === 'string' ? obj[key].toLowerCase() : obj[key];
-          }
-        }
-        return result;
-      };
-
-      // Converte todos os valores string para minúsculas
-      const lowerCaseFormValue = convertToLowerCase(formValue);
-
       // Cria o payload com base no tipo de usuário
       const payload =
         this.userType === 'cliente'
           ? {
-              telefone: lowerCaseFormValue.telefone,
-              nome: lowerCaseFormValue.nome,
-              sobrenome: lowerCaseFormValue.sobrenome,
-              cpf: lowerCaseFormValue.cpf,
-              data_nascimento: lowerCaseFormValue.data_nascimento,
-              email: lowerCaseFormValue.email,
+              // telefone: formValue.telefone,
+              telefone: formValue.telefone,
+              nome: formValue.nome,
+              sobrenome: formValue.sobrenome,
+              cpf: formValue.cpf,
+              data_nascimento: formValue.data_nascimento,
+              email: formValue.email,
               password: formValue.password,
-              endereco_estado: lowerCaseFormValue.endereco_estado,
-              endereco_cidade: lowerCaseFormValue.endereco_cidade,
-              endereco_bairro: lowerCaseFormValue.endereco_bairro,
-              endereco_rua: lowerCaseFormValue.endereco_rua,
-              endereco_numero: lowerCaseFormValue.endereco_numero,
+              endereco_estado: formValue.endereco_estado,
+              endereco_cidade: formValue.endereco_cidade,
+              endereco_bairro: formValue.endereco_bairro,
+              endereco_rua: formValue.endereco_rua,
+              endereco_numero: formValue.endereco_numero,
             }
           : {
-              telefone: lowerCaseFormValue.telefone,
-              nome: lowerCaseFormValue.nome,
-              sobrenome: lowerCaseFormValue.sobrenome,
-              cpf: lowerCaseFormValue.cpf,
-              data_nascimento: lowerCaseFormValue.data_nascimento,
-              email: lowerCaseFormValue.email,
+              // telefone: formValue.telefone,
+              telefone: formValue.telefone,
+              nome: formValue.nome,
+              sobrenome: formValue.sobrenome,
+              cpf: formValue.cpf,
+              data_nascimento: formValue.data_nascimento,
+              email: formValue.email,
               password: formValue.password,
-              endereco_estado: lowerCaseFormValue.endereco_estado,
-              endereco_cidade: lowerCaseFormValue.endereco_cidade,
-              endereco_bairro: lowerCaseFormValue.endereco_bairro,
-              endereco_rua: lowerCaseFormValue.endereco_rua,
-              endereco_numero: lowerCaseFormValue.endereco_numero,
-              especializacao: lowerCaseFormValue.especializacao,
-              descricao: lowerCaseFormValue.descricao,
-              avaliacao: lowerCaseFormValue.avaliacao,
+              endereco_estado: formValue.endereco_estado,
+              endereco_cidade: formValue.endereco_cidade,
+              endereco_bairro: formValue.endereco_bairro,
+              endereco_rua: formValue.endereco_rua,
+              endereco_numero: formValue.endereco_numero,
+              especializacao: formValue.especializacao,
+              descricao: formValue.descricao,
+              avaliacao: formValue.avaliacao,
             };
 
       this.authService.register(payload, this.userType).subscribe({
         next: (response) => {
-          this.customModal.openModal();
+          this.successRegisterIndicator = true;
+
+          this.showModalLogin = true;
           this.customModal.configureModal(
             true,
             response.message || 'Cadastro realizado com sucesso.'
           );
         },
         error: (error) => {
-          this.customModal.openModal();
+          this.showModalLogin = true;
           this.customModal.configureModal(
             false,
             error.error.message || 'Erro ao se cadastrar, tente novamente'
@@ -197,23 +194,30 @@ export class LoginComponent implements OnInit {
         },
       });
     } else {
-      console.error('Formulário de registro inválido');
+      this.showModalLogin = true;
+      this.customModal.configureModal(
+        false,
+        'Formulário de registro inválido, revise os dados'
+      );
     }
   }
-
   goToLogin() {
     // Redireciona para a página de login com o parâmetro 'professional' se necessário
-    if (this.userType !== 'cliente') {
-      this.selectedTab = 'login';
+    if (this.token === '' && this.successRegisterIndicator === false) {
+      return;
+    } else if (this.successRegisterIndicator === true) {
+      if (this.userType !== 'cliente') {
+        this.selectedTab = 'login';
 
-      this.router.navigate(['/login'], {
-        queryParams: { param: 'professional' },
-      });
-    } else {
-      this.selectedTab = 'login';
-      this.router.navigate(['/login']);
+        this.router.navigate(['/login'], {
+          queryParams: { param: 'professional' },
+        });
+      } else {
+        this.selectedTab = 'login';
+        this.router.navigate(['/login']);
+      }
+      this.customModal.closeModal();
     }
-    this.customModal.closeModal();
   }
 
   passwordMatchValidator(formGroup: FormGroup): void {
