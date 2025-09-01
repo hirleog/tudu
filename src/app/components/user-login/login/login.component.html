@@ -223,7 +223,6 @@
 
   <app-custom-modal
     #meuModal
-    [showModal]="showModalLogin"
-    (modalClosed)="goToLogin()"
+    (click)="goToLogin()"
   ></app-custom-modal>
 </section>

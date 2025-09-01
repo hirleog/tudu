@@ -147,7 +147,7 @@
             <div class="relative group bg-gray-50 p-4 rounded-lg min-h-[80px]">
               <p class="text-gray-600 whitespace-pre-wrap">
                 {{
-                  userData.descricao !== ""
+                  userData.descricao
                     ? userData.descricao
                     : "Clique em editar para adicionar uma descrição..."
                 }}
@@ -595,7 +595,7 @@
 <!-- Modal  -->
 <app-custom-modal
   #meuModal
-  (modalClosed)="customModal.closeModal()"
+  (click)="customModal.closeModal()"
 ></app-custom-modal>
 
 <app-experience #experienceModal [prestadorId]="prestadorId"></app-experience>

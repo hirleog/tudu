@@ -373,7 +373,7 @@ export class PaymentsComponent implements OnInit {
   //   });
   // }
 
-  closeModal(): void {
+  closePaymentModal(): void {
     this.customModal.closeModal();
     this.payHiredCard.emit(this.closeModalIndicator);
   }

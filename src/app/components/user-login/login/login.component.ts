@@ -22,7 +22,6 @@ export class LoginComponent implements OnInit {
   errorMessage: string = '';
   token: string = '';
   successRegisterIndicator: boolean = false;
-  showModalLogin: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -99,13 +98,9 @@ export class LoginComponent implements OnInit {
           this.token = response.access_token; // ajuste aqui conforme o nome real da propriedade
           if (indicatorFlow === 'prestador') {
             localStorage.setItem('access_token_prestador', this.token);
-            window.location.href = '/tudu-professional/home';
-
             this.router.navigate(['/tudu-professional/home']);
           } else {
             localStorage.setItem('access_token_cliente', this.token);
-            window.location.href = '/';
-
             this.router.navigate(['/']);
           }
         },
@@ -122,7 +117,7 @@ export class LoginComponent implements OnInit {
             this.router.navigate(['/login']);
           }
 
-          this.showModalLogin = true;
+          this.customModal.openModal();
           this.customModal.configureModal(
             false,
             error.error.message || 'Erro ao realizar login, tente novamente'
@@ -179,14 +174,14 @@ export class LoginComponent implements OnInit {
         next: (response) => {
           this.successRegisterIndicator = true;
 
-          this.showModalLogin = true;
+          this.customModal.openModal();
           this.customModal.configureModal(
             true,
             response.message || 'Cadastro realizado com sucesso.'
           );
         },
         error: (error) => {
-          this.showModalLogin = true;
+          this.customModal.openModal();
           this.customModal.configureModal(
             false,
             error.error.message || 'Erro ao se cadastrar, tente novamente'
@@ -194,7 +189,7 @@ export class LoginComponent implements OnInit {
         },
       });
     } else {
-      this.showModalLogin = true;
+      this.customModal.openModal();
       this.customModal.configureModal(
         false,
         'Formulário de registro inválido, revise os dados'

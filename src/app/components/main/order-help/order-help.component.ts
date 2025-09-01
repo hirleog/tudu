@@ -168,7 +168,7 @@ export class OrderHelpComponent implements OnInit {
     }
   }
 
-  closeModal(): void {
+  closeCancelationModal(): void {
     if (this.reqStatus === 'success') {
       this.customModal.closeModal();
       this.router.navigate(['/home']); // Ajuste para sua rota

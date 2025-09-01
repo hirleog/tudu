@@ -56,7 +56,7 @@ export class CustomModalComponent {
 
   closeModal(): void {
     this.showModal = false;
-    this.modalClosed.emit();
+    // this.modalClosed.emit();
   }
 
   // Métodos públicos para controle externo
