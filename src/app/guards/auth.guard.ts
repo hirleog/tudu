@@ -20,6 +20,22 @@ export class AuthGuard implements CanActivate {
     const url = state.url;
     const isPrestador = this.authService.isPrestadorLoggedIn();
     const isCliente = this.authService.isClienteLoggedIn();
+    const isAuthenticated = isPrestador || isCliente;
+
+    // 🔐 Impedir acesso à rota de login se já estiver autenticado
+    if (url === '/login' || url.startsWith('/login')) {
+      if (isAuthenticated) {
+        // Redirecionar para a página inicial apropriada
+        if (isPrestador) {
+          this.router.navigate(['/tudu-professional/home']);
+        } else {
+          this.router.navigate(['/']);
+        }
+        return false;
+      }
+      // Permitir acesso à rota de login se não estiver autenticado
+      return true;
+    }
 
     // Redirecionamento baseado no tipo de usuário logado
     if (url === '/') {
