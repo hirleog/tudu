@@ -20,20 +20,19 @@ export class AuthGuard implements CanActivate {
     const url = state.url;
     const isPrestador = this.authService.isPrestadorLoggedIn();
     const isCliente = this.authService.isClienteLoggedIn();
-    const isAuthenticated = isPrestador || isCliente;
 
-    // 🔐 Impedir acesso à rota de login se já estiver autenticado
-    if (url === '/login' || url.startsWith('/login')) {
-      if (isAuthenticated) {
-        // Redirecionar para a página inicial apropriada
-        if (isPrestador) {
-          this.router.navigate(['/tudu-professional/home']);
-        } else {
-          this.router.navigate(['/']);
-        }
+    // 🔐 NOVA CONDIÇÃO: Bloquear acesso à rota de login se já estiver autenticado
+    if (url.includes('/login')) {
+      if (isCliente) {
+        // Cliente logado tentando acessar login → redirecionar para /home
+        this.router.navigate(['/home']);
+        return false;
+      } else if (isPrestador) {
+        // Prestador logado tentando acessar login → redirecionar para /tudu-professional/home
+        this.router.navigate(['/tudu-professional/home']);
         return false;
       }
-      // Permitir acesso à rota de login se não estiver autenticado
+      // Se não estiver autenticado, permitir acesso à rota de login
       return true;
     }
 
@@ -52,7 +51,9 @@ export class AuthGuard implements CanActivate {
       if (isPrestador) {
         return true;
       } else {
-        this.router.navigate(['/login']);
+        this.router.navigate(['/login'], {
+          queryParams: { param: 'professional' },
+        });
         return false;
       }
     }

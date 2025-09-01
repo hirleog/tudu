@@ -116,7 +116,7 @@
         >
           <div class="flex items-center">
             <i class="fas fa-map-marker-alt text-pink-500 mr-3"></i>
-            <span class="text-gray-700">
+            <span class="text-gray-700 capitalize">
               {{
                 userData.endereco_cidade
                   ? userData.endereco_cidade
@@ -217,9 +217,9 @@
             </div>
           </ng-template>
         </div>
-        <div class="flex justify-end mt-2">
+        <div class="flex justify-end mt-2" *ngIf="isProfessional">
           <button
-            *ngIf="isEditMode"
+            *ngIf="isEditMode && !editandoDescricao"
             (click)="iniciarEdicaoDescricao()"
             class="btn btn-outline-primary fs-6"
             title="Editar descrição"

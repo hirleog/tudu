@@ -358,7 +358,6 @@ export class ProfileDetailComponent implements OnInit {
 
   // Método para iniciar edição - CORRIGIDO
   iniciarEdicaoDescricao(): void {
-    console.log('Botão de edição clicado!'); // Debug
     this.descricaoTemporaria = this.userData.descricao || '';
     this.editandoDescricao = true;
     this.descricaoLength = this.descricaoTemporaria.length;
