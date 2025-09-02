@@ -20,6 +20,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     StarRatingModule,
     ExperienceModule,
+    
   ],
   exports: [ProfileComponent, ProfileDetailComponent],
   providers: [],

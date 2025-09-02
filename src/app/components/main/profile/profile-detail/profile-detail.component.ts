@@ -107,6 +107,9 @@ export class ProfileDetailComponent implements OnInit {
       numero_servicos_feitos: [''],
     });
 
+    // Ouvir o evento de popstate (voltar do navegador)
+    window.addEventListener('popstate', this.handlePopState.bind(this));
+
     if (this.isProfessional && this.isBudgetConsult === false) {
       this.loadUser();
       this.loadExperiences(this.prestadorId);
@@ -117,8 +120,6 @@ export class ProfileDetailComponent implements OnInit {
     } else {
       this.loadUser();
     }
-
-    console.log(this.portfolioItems);
   }
 
   isPrestador(): boolean {
@@ -245,20 +246,6 @@ export class ProfileDetailComponent implements OnInit {
 
   selectTab(tab: string): void {
     this.activeTab = tab;
-  }
-
-  goBack() {
-    if (this.isProfessional && !this.isBudgetConsult) {
-      this.router.navigate(['/profile'], {
-        queryParams: { param: 'professional' },
-      });
-    } else if (this.isBudgetConsult && this.budgetPedido !== '') {
-      this.router.navigate(['/home/budgets'], {
-        queryParams: { id: this.budgetPedido },
-      });
-    } else {
-      this.router.navigate(['/profile']);
-    }
   }
 
   saveExperience(experienceData: any): void {
@@ -408,5 +395,32 @@ export class ProfileDetailComponent implements OnInit {
           break;
       }
     }
+  }
+
+  goBack() {
+    if (this.isProfessional && !this.isBudgetConsult) {
+      this.router.navigate(['/profile'], {
+        queryParams: { param: 'professional' },
+      });
+    } else if (this.isBudgetConsult && this.budgetPedido !== '') {
+      this.router.navigate(['/home/budgets'], {
+        queryParams: { id: this.budgetPedido },
+      });
+    } else {
+      this.router.navigate(['/profile']);
+    }
+  }
+
+  handlePopState(event: PopStateEvent) {
+    // Prevenir o comportamento padrão de voltar
+    event.preventDefault();
+
+    // Acionar seu método goBack personalizado
+    this.goBack();
+  }
+
+  ngOnDestroy() {
+    // Remover o listener para evitar memory leaks
+    window.removeEventListener('popstate', this.handlePopState.bind(this));
   }
 }
