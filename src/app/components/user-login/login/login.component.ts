@@ -132,6 +132,11 @@ export class LoginComponent implements OnInit {
   onRegister(): void {
     if (this.registerForm.valid) {
       const formValue = this.registerForm.value;
+      if (formValue.confirmPassword !== formValue.password) {
+        this.customModal.openModal();
+        this.customModal.configureModal(false, 'As senhas não coincidem');
+        return;
+      }
 
       // Cria o payload com base no tipo de usuário
       const payload =
