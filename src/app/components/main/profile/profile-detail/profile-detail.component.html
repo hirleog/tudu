@@ -217,7 +217,7 @@
             </div>
           </ng-template>
         </div>
-        <div class="flex justify-end mt-2" *ngIf="isProfessional">
+        <div class="flex justify-end mt-2" *ngIf="isProfessional && !isBudgetConsult">
           <button
             *ngIf="isEditMode && !editandoDescricao"
             (click)="iniciarEdicaoDescricao()"
