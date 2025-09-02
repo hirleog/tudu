@@ -13,7 +13,6 @@ import { ClientReviewsComponent } from './components/client-reviews/client-revie
 import { FooterComponent } from './components/footer/footer.component';
 import { AppMenuModule } from './components/main/app-menu/app-menu.module';
 import { ServicesComponent } from './components/services/services.component';
-import { SignUpComponent } from './components/user-login/sign-up/sign-up.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
 
@@ -23,8 +22,8 @@ import { SharedModule } from './shared/shared.module';
     ServicesComponent,
     FooterComponent,
     ClientReviewsComponent,
+
     // AppMenuComponent,
-    SignUpComponent,
   ],
   imports: [
     CommonModule,

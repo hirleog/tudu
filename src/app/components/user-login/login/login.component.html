@@ -79,6 +79,17 @@
                   {{ errorMessage }}
                 </div>
               </div>
+              <div class="text-center mt-3">
+                <a
+                  [routerLink]="['/login/password-reset']"
+                  [queryParams]="{
+                    type: isProfessional ? 'prestadores' : 'clientes'
+                  }"
+                  class="text-decoration-none"
+                >
+                  Esqueci minha senha
+                </a>
+              </div>
 
               <button
                 [disabled]="loginForm.invalid"
@@ -221,8 +232,5 @@
 
   <!-- modais -->
 
-  <app-custom-modal
-    #meuModal
-    (click)="goToLogin()"
-  ></app-custom-modal>
+  <app-custom-modal #meuModal (click)="goToLogin()"></app-custom-modal>
 </section>

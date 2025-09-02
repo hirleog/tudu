@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { jwtDecode } from 'jwt-decode';
+import { env } from 'process';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
@@ -92,8 +93,6 @@ export class AuthService {
     // Limpa qualquer estado interno de autenticação
     this.isClienteLoggedInSubject.next(false);
     this.isPrestadorLoggedInSubject.next(false);
-
-    
   }
 
   isClienteLoggedIn(): boolean {
@@ -168,5 +167,43 @@ export class AuthService {
     }
 
     return null;
+  }
+
+  // redefinição de senha
+  requestPasswordReset(email: string, userType: string): Observable<any> {
+    return this.http.post(
+      `${environment.apiUrl}/${userType}/request-password-reset`,
+      { email }
+    );
+  }
+  // Novo: Verificar código
+  verifyResetCode(
+    email: string,
+    code: string,
+    userType: string
+  ): Observable<any> {
+    return this.http.post(
+      `${environment.apiUrl}/${userType}/verify-reset-code`,
+      {
+        email,
+        code,
+      }
+    );
+  }
+
+  // Novo: Redefinir senha
+  resetPasswordWithCode(
+    email: string,
+    code: string,
+    newPassword: string,
+    confirmPassword: string,
+    userType: string
+  ): Observable<any> {
+    return this.http.patch(`${environment.apiUrl}/${userType}/reset/password`, {
+      email,
+      verificationCode: code,
+      newPassword,
+      confirmNewPassword: confirmPassword,
+    });
   }
 }
