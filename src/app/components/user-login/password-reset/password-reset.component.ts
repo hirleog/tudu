@@ -45,7 +45,7 @@ export class PasswordResetComponent implements OnInit {
     });
 
     this.queryUserType =
-      this.userType === 'cliente' ? 'clientes' : 'prestadores';
+      this.userType === 'clientes' ? 'clientes' : 'prestadores';
   }
 
   passwordMatchValidator(g: FormGroup) {
