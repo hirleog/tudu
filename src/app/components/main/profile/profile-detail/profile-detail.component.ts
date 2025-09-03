@@ -54,6 +54,7 @@ export class ProfileDetailComponent implements OnInit {
   budgetId: any;
   isBudgetConsult: boolean = false;
   budgetPedido: string = '';
+  isLoading: boolean = false;
 
   constructor(
     private router: Router,
@@ -181,6 +182,8 @@ export class ProfileDetailComponent implements OnInit {
   }
 
   saveProfile(): void {
+    this.isLoading = true;
+
     const formData = { ...this.userForm.value };
 
     // Converter todos os valores string para minúsculas
@@ -227,6 +230,8 @@ export class ProfileDetailComponent implements OnInit {
             true,
             response.message || 'Dados atualizados com sucesso.'
           );
+
+          this.isLoading = false;
         },
         error: (error) => {
           this.customModal.openModal();
@@ -234,6 +239,7 @@ export class ProfileDetailComponent implements OnInit {
             false,
             error.message || 'Erro ao atualizar os dados.'
           );
+          this.isLoading = false;
         },
       });
   }

@@ -217,7 +217,10 @@
             </div>
           </ng-template>
         </div>
-        <div class="flex justify-end mt-2" *ngIf="isProfessional && !isBudgetConsult">
+        <div
+          class="flex justify-end mt-2"
+          *ngIf="isProfessional && !isBudgetConsult"
+        >
           <button
             *ngIf="isEditMode && !editandoDescricao"
             (click)="iniciarEdicaoDescricao()"
@@ -403,8 +406,13 @@
           class="btn btn-primary"
           [disabled]="userForm.invalid"
         >
-          Salvar Alterações
-          <i class="fas fa-paper-plane"></i>
+          <span *ngIf="!isLoading"
+            >Salvar Alterações <i class="fas fa-paper-plane"></i
+          ></span>
+          <span *ngIf="isLoading" class="flex items-center justify-center">
+            <i class="fas fa-circle-notch fa-spin mr-2"></i>
+            Processando...
+          </span>
         </button>
         <button (click)="cancelEdit()" class="btn btn-outline-primary">
           Cancelar
@@ -598,4 +606,8 @@
   (click)="customModal.closeModal()"
 ></app-custom-modal>
 
-<app-experience #experienceModal [prestadorId]="prestadorId"></app-experience>
+<app-experience
+  #experienceModal
+  [prestadorId]="prestadorId"
+  (onClose)="ngOnInit()"
+></app-experience>

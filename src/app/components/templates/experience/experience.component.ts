@@ -1,6 +1,13 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ExperienceService } from 'src/app/services/experience.service';
+import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-experience',
@@ -8,6 +15,8 @@ import { ExperienceService } from 'src/app/services/experience.service';
   styleUrls: ['./experience.component.css'],
 })
 export class ExperienceComponent {
+  @ViewChild('meuModal') customModal!: CustomModalComponent;
+
   @Output() onSave = new EventEmitter<any>();
   @Output() onClose = new EventEmitter<void>();
 
@@ -17,6 +26,7 @@ export class ExperienceComponent {
   experienceForm: FormGroup;
   imagePreviews: string[] = [];
   selectedFiles: File[] = [];
+  isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -80,6 +90,8 @@ export class ExperienceComponent {
 
   onSubmit(): void {
     if (this.experienceForm.valid && this.prestadorId) {
+      this.isLoading = true;
+
       const formData = {
         ...this.experienceForm.value,
         prestador_id: this.prestadorId, // Adiciona o ID do prestador
@@ -90,13 +102,18 @@ export class ExperienceComponent {
         .createExperience(formData, this.selectedFiles)
         .subscribe({
           next: (response) => {
-            console.log('Experiência criada com sucesso:', response);
             this.onSave.emit(response); // Emite o resultado
             this.closeModal();
+            this.isLoading = false;
           },
           error: (error) => {
-            console.error('Erro ao criar experiência:', error);
-            alert('Erro ao salvar experiência. Tente novamente.');
+            this.customModal.openModal();
+            this.customModal.configureModal(
+              false,
+              error.message || 'Erro ao atualizar os dados.'
+            );
+
+            this.isLoading = false;
           },
         });
     }

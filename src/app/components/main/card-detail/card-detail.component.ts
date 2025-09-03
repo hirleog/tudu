@@ -147,24 +147,6 @@ export class CardDetailComponent implements OnInit {
         flow: this.flow,
       },
     });
-
-    // Aqui você pode adicionar a lógica específica para cada opção
-    // switch (option) {
-    //   case 'pedido_incompleto':
-    //     // Lógica para pedido incompleto
-    //     break;
-    //   case 'qualidade_pedido':
-    //     // Lógica para problemas de qualidade
-    //     this.break;
-    //   // ... adicione cases para todas as opções
-    //   case 'criticos':
-    //     // Lógica para problemas de qualidade
-    //     break;
-    //   // ... adicione cases para todas as opções
-
-    //   default:
-    //     console.log('Opção não reconhecida:', option);
-    // }
   }
 
   goToOrderHelp() {
