@@ -107,7 +107,7 @@ export class BudgetsComponent implements OnInit {
 
   payHiredCard(paymentIndicator: any): void {
     if (paymentIndicator === 'success') {
-      this.updateCard(this.hiredCardInfo, 'contratar');
+      this.updateCard(this.hiredCardInfo, 'contratar', null);
     } else {
       console.log('pagamento negado');
     }
