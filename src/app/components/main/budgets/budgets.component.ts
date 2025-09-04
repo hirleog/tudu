@@ -28,6 +28,7 @@ export class BudgetsComponent implements OnInit {
   id_cliente: any;
   clientData: any;
   showModal: boolean = false;
+  selectedCandidatura: any;
 
   constructor(
     public cardService: CardService,
@@ -88,13 +89,14 @@ export class BudgetsComponent implements OnInit {
     });
   }
 
-  goToPayment(card: any): void {
+  goToPayment(card: any, id_prestador: any): void {
     this.authService.idCliente$.subscribe((id) => {
       const id_cliente = Number(id);
 
       this.profileDetailService.getClienteById(id_cliente).subscribe({
         next: (data) => {
           this.hiredCardInfo = card;
+          this.selectedCandidatura = id_prestador;
           this.paymentStep = true;
           this.clientData = data;
         },
@@ -107,7 +109,11 @@ export class BudgetsComponent implements OnInit {
 
   payHiredCard(paymentIndicator: any): void {
     if (paymentIndicator === 'success') {
-      this.updateCard(this.hiredCardInfo, 'contratar', null);
+      this.updateCard(
+        this.hiredCardInfo,
+        'contratar',
+        this.selectedCandidatura
+      );
     } else {
       console.log('pagamento negado');
     }
