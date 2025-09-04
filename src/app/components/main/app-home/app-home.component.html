@@ -57,12 +57,9 @@
     class="container mx-auto"
     *ngIf="(cards.length > 0 && selectedIndex === 0) || isLoading"
   >
+    <!-- data-aos="fade-down" -->
     <div class="row g-3 m-0 p-0">
-      <div
-        class="col-12 m-0 p-2"
-        *ngFor="let card of cards"
-        data-aos="fade-down"
-      >
+      <div class="col-12 m-0 p-2" *ngFor="let card of cards">
         <div class="request-card bg-white rounded-lg shadow-md overflow-hidden">
           <!-- Header -->
           <div
@@ -265,13 +262,10 @@
   </div>
 
   <!-- Finalized Orders -->
+  <!-- data-aos="fade-down" -->
   <div class="container" *ngIf="selectedIndex === 1">
     <div class="row g-3 m-0 p-0">
-      <div
-        class="col-12 m-0 p-2"
-        *ngFor="let card of cards"
-        data-aos="fade-down"
-      >
+      <div class="col-12 m-0 p-2" *ngFor="let card of cards">
         <div class="request-card" *ngFor="let candidatura of card.candidaturas">
           <div class="request-card-header card-header bg-light p-3">
             <div class="request-card-icon border-0">
