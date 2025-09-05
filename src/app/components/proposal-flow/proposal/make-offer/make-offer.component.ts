@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
+import { CurrencyMaskConfig } from 'ngx-currency';
 import { Observable, of, Subscription } from 'rxjs';
 import { CreateCard } from 'src/app/interfaces/create-card.model';
 import { AuthService } from 'src/app/services/auth.service';
@@ -35,6 +36,18 @@ export class MakeOfferComponent implements OnInit {
 
   private subscriptionCliente: Subscription = new Subscription();
   serviceDescription: any;
+
+  public currencyOptions: CurrencyMaskConfig = {
+    prefix: 'R$ ',
+    thousands: '.',
+    decimal: ',',
+    precision: 2,
+    align: 'left',
+    allowNegative: false,
+    allowZero: false,
+    suffix: '',
+    nullable: false,
+  };
 
   constructor(
     private routeActive: ActivatedRoute,
@@ -171,7 +184,7 @@ export class MakeOfferComponent implements OnInit {
   payAndCreateCard(): void {
     this.createCard();
   }
- 
+
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória
     this.subscriptionCliente.unsubscribe();

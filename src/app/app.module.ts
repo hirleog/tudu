@@ -15,6 +15,7 @@ import { AppMenuModule } from './components/main/app-menu/app-menu.module';
 import { ServicesComponent } from './components/services/services.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
+import { NgxCurrencyModule } from 'ngx-currency';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { SharedModule } from './shared/shared.module';
     BrowserAnimationsModule,
     AppRoutingModule,
     AppMenuModule,
+    NgxCurrencyModule,
 
     SharedModule,
     ServiceWorkerModule.register('ngsw-worker.js', {

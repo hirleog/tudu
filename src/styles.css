@@ -37,7 +37,6 @@ html {
   z-index: 1001;
 }
 
-
 .btn-topo {
   position: fixed;
   right: 26px;
@@ -547,6 +546,10 @@ hr {
   overflow: hidden;
   /* text-overflow: ellipsis; */
   /* white-space: nowrap; */
+}
+
+.fa-arrow-left {
+  cursor: pointer;
 }
 
 @media (max-width: 500px) {

@@ -9,6 +9,7 @@ import { MultiSelectModule } from '../../ui/multi-select/multi-select.module';
 import { MakeOfferComponent } from './make-offer/make-offer.component';
 import { ProposalComponent } from './proposal.component';
 import { CardSkeletonModule } from '../../templates/card-skeleton/card-skeleton.module';
+import { NgxCurrencyModule } from 'ngx-currency';
 
 const routes: Routes = [
   { path: '', component: ProposalComponent },
@@ -29,6 +30,7 @@ const routes: Routes = [
     AddressModule,
     PaymentsModule,
     CardSkeletonModule,
+    NgxCurrencyModule,
     RouterModule.forChild(routes), // Importante: Use forChild() aqui
   ],
   exports: [

@@ -28,25 +28,16 @@ export function formatDecimal(value: number): number {
 }
 
 export function convertRealToCents(value: string | number): number {
-  // Se já for número, assume que está em reais e converte
+  // Sempre trata como reais (ex: "19,90", "19.90" ou 19.90)
   if (typeof value === 'number') {
-    return Math.round(value * 100);
+    return Math.round(value * 100); // 19.90 -> 1990
   }
 
-  // Remove caracteres não numéricos e trata separador decimal
-  const numericString = value
-    .replace(/[^\d,-]/g, '') // Remove tudo exceto dígitos, vírgula e hífen
-    .replace(',', '.') // Substitui vírgula por ponto (padrão internacional)
-    .replace(/[^0-9.-]/g, ''); // Remove qualquer outro caractere não numérico
+  // Remove tudo que não for dígito ou vírgula/ponto
+  const numericString = value.replace(/[^\d,.-]/g, '').replace(',', '.');
 
   const amount = parseFloat(numericString);
-
-  if (isNaN(amount)) {
-    console.error('Valor inválido para conversão:', value);
-    return 0; // Ou lance um erro se preferir
-  }
-
-  return Math.round(amount * 100); // Converte reais para centavos
+  return isNaN(amount) ? 0 : Math.round(amount * 100); // "19,90" -> 1990
 }
 
 export function cpfValidator(
