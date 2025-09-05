@@ -14,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import { DeviceService } from 'src/app/services/device/service/device.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { convertRealToCents, cpfValidator } from 'src/app/utils/utils';
@@ -57,7 +58,7 @@ export class PaymentsComponent implements OnInit {
   constructor(
     private paymentService: PaymentService,
     private fb: FormBuilder,
-    private route: Router
+    private deviceService: DeviceService
   ) {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (_, i) =>
@@ -198,6 +199,7 @@ export class PaymentsComponent implements OnInit {
       this.processingPayment = true;
 
       const formValue = this.paymentForm.value;
+      const deviceInfo = this.deviceService.getDeviceInfo();
 
       const requestData = {
         id_pedido: this.hiredCardInfo.id_pedido,
@@ -211,7 +213,7 @@ export class PaymentsComponent implements OnInit {
           product_type: 'service',
         },
         customer: {
-          customer_id: this.clientData.id_cliente,
+          customer_id: this.clientData.id_cliente.toString(),
           first_name: this.clientData.nome,
           last_name: this.clientData.sobrenome,
           document_type: 'CPF',
@@ -228,9 +230,7 @@ export class PaymentsComponent implements OnInit {
             postal_code: this.hiredCard.address.cep.replace(/\D/g, ''),
           },
         },
-        device: {
-          ip_address: '127.0.0.1',
-        },
+        device: deviceInfo,
         credit: {
           delayed: false,
           save_card_data: false,
