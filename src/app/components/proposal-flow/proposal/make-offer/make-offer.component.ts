@@ -38,7 +38,7 @@ export class MakeOfferComponent implements OnInit {
   serviceDescription: any;
 
   public currencyOptions: CurrencyMaskConfig = {
-    prefix: 'R$ ',
+    prefix: '',
     thousands: '.',
     decimal: ',',
     precision: 2,
