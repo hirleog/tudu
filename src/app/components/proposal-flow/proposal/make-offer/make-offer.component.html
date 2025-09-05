@@ -74,17 +74,17 @@
               <span class="text-gray-500 sm:text-sm">R$</span>
             </div>
             <input
-              currencyMask
               type="text"
               id="price"
-              inputmode="numeric"
               [(ngModel)]="price"
               name="price"
               class="price-input block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 custom-focus"
+              currencyMask
+              inputmode="numeric"
+              [options]="currencyOptions"
               placeholder="0,00"
               min="0"
               step="0.01"
-              [options]="currencyOptions"
             />
           </div>
         </div>

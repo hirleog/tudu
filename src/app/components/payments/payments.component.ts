@@ -234,7 +234,10 @@ export class PaymentsComponent implements OnInit {
         credit: {
           delayed: false,
           save_card_data: false,
-          transaction_type: 'FULL',
+          transaction_type:
+            this.selectedInstallmentOption.installments === 1
+              ? 'FULL'
+              : 'install_With_Interest',
           number_installments: this.selectedInstallmentOption.installments || 1,
           amount_installment: this.selectedInstallmentOption.installmentValue,
           soft_descriptor: 'TUDU Serviços',

@@ -31,6 +31,7 @@ const routes: Routes = [
     PaymentsModule,
     CardSkeletonModule,
     NgxCurrencyModule,
+    
     RouterModule.forChild(routes), // Importante: Use forChild() aqui
   ],
   exports: [
