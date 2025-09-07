@@ -189,7 +189,7 @@ export class PaymentsComponent implements OnInit {
     return formatted;
   }
 
-  submitPayment(): void {
+  async submitPayment(): Promise<void> {
     if (this.paymentMethod === 'credit') {
       if (this.paymentForm.invalid) {
         this.paymentForm.markAllAsTouched();
@@ -199,7 +199,7 @@ export class PaymentsComponent implements OnInit {
       this.processingPayment = true;
 
       const formValue = this.paymentForm.value;
-      const deviceInfo = this.deviceService.getDeviceInfo();
+      const deviceInfo = await this.deviceService.getDeviceInfo();
 
       const requestData = {
         id_pedido: this.hiredCardInfo.id_pedido,
