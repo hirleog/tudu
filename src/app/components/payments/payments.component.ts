@@ -237,7 +237,7 @@ export class PaymentsComponent implements OnInit {
           transaction_type:
             this.selectedInstallmentOption.installments === 1
               ? 'FULL'
-              : 'INSTALL_WITH_INTEREST',
+              : 'INSTALL_NO_INTEREST',
           number_installments: this.selectedInstallmentOption.installments || 1,
           amount_installment: this.selectedInstallmentOption.installmentValue,
           soft_descriptor: 'TUDU Serviços',
