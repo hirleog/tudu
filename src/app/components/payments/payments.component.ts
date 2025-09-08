@@ -13,7 +13,6 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
 import { DeviceService } from 'src/app/services/device/service/device.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
@@ -30,6 +29,7 @@ export class PaymentsComponent implements OnInit {
   @Input() clientData!: any;
   @Input() hiredCardInfo!: any;
   @Input() hiredCard!: any;
+  @Input() selectedCandidatura!: any;
   @Output() backToOffer = new EventEmitter<string>();
   @Output() payHiredCard = new EventEmitter<string>();
 
@@ -54,6 +54,7 @@ export class PaymentsComponent implements OnInit {
   selectedInstallmentOption: any;
 
   paymentMethod: 'pix' | 'credit' | null = null;
+  defaultTax: number = 19.9;
 
   constructor(
     private paymentService: PaymentService,
@@ -203,7 +204,7 @@ export class PaymentsComponent implements OnInit {
 
       const requestData = {
         id_pedido: this.hiredCardInfo.id_pedido,
-        totalAmount: this.selectedInstallmentOption.totalValue,
+        totalAmount: this.totalWithTax,
         originAmount: convertRealToCents(
           this.hiredCardInfo.candidaturas[0].valor_negociado
         ),
@@ -425,5 +426,19 @@ export class PaymentsComponent implements OnInit {
     }
 
     this.paymentForm.get('cpf')?.setValue(value, { emitEvent: false });
+  }
+
+  get totalWithTax(): number {
+    const totalValueReais =
+      (this.selectedInstallmentOption?.totalValue || 0) / 100;
+    return totalValueReais + (this.defaultTax || 0);
+  }
+
+  get candidatura(): any {
+    const candidato = this.hiredCardInfo.candidaturas.find(
+      (candidato: any) => candidato.prestador_id === this.selectedCandidatura
+    );
+
+    return candidato;
   }
 }

@@ -1,7 +1,7 @@
 <section>
   <app-nav>
     <div left-content>
-      <a routerLink="/home" class="text-decoration-none text-dark">
+      <a (click)="backToHome()" class="text-decoration-none text-dark">
         <i class="fas fa-arrow-left"></i>
       </a>
     </div>
@@ -200,6 +200,8 @@
       [clientData]="clientData"
       [hiredCardInfo]="hiredCardInfo"
       [hiredCard]="card"
+      [selectedCandidatura]="selectedCandidatura"
+
       (payHiredCard)="payHiredCard($event)"
       (backToOffer)="backToOffer($event)"
     ></app-payment>

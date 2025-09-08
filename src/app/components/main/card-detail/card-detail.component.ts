@@ -2,6 +2,7 @@ import { Location } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardOrders } from 'src/app/interfaces/card-orders';
+import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
 
 @Component({
@@ -24,22 +25,28 @@ export class CardDetailComponent implements OnInit {
   flow: string = '';
   questionTitle: string = '';
   backIndicator: any;
+  isProfessionalIndicator: boolean = false;
+  id_prestador!: string | null;
+  temCandidaturaDoPrestadorLogado: any;
 
   constructor(
     public cardService: CardService,
     private routeActive: ActivatedRoute,
     private route: Router,
-    private location: Location
+    private location: Location,
+    private authService: AuthService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
       this.flow = params['flow'];
 
       this.backIndicator = params['card'];
+    });
 
-      console.log(params['card']);
+    this.isProfessionalIndicator = this.authService.isPrestadorLoggedIn();
 
-      // this.cards.push(params['card'] ? JSON.parse(params['card']) : null);
+    this.authService.idPrestador$.subscribe((id_prestador) => {
+      this.id_prestador = id_prestador;
     });
   }
 
@@ -62,7 +69,7 @@ export class CardDetailComponent implements OnInit {
   }
 
   getCardById(): void {
-    this.cardService.getCardById(this.id_pedido).subscribe({
+    this.cardService.getCardById(this.id_pedido, this.id_prestador).subscribe({
       next: (data: any) => {
         const candidaturas = data.candidaturas || [];
 
@@ -75,6 +82,10 @@ export class CardDetailComponent implements OnInit {
             icon: this.cardService.getIconByLabel(data.categoria) || '',
           })),
         });
+
+        this.temCandidaturaDoPrestadorLogado = this.cards[0].candidaturas.find(
+          (candidatura: any) => candidatura.prestador_id === this.id_prestador
+        );
       },
       error: (err) => {
         console.error(err);
@@ -103,14 +114,29 @@ export class CardDetailComponent implements OnInit {
   }
 
   back(): void {
-    const route = this.flow === 'progress' ? '/home/progress' : '/home';
+    if (this.isProfessionalIndicator) {
+      const route =
+        this.flow === 'progress'
+          ? '/tudu-professional/progress'
+          : '/tudu-professional/home';
 
-    if (this.flow === 'progress') {
-      this.route.navigate([route]);
+      if (this.flow === 'progress') {
+        this.route.navigate([route]);
+      } else {
+        this.route.navigate([route], {
+          queryParams: { homeFlow: this.flow },
+        });
+      }
     } else {
-      this.route.navigate([route], {
-        queryParams: { homeFlow: this.flow },
-      });
+      const route = this.flow === 'progress' ? '/home/progress' : '/home';
+
+      if (this.flow === 'progress') {
+        this.route.navigate([route]);
+      } else {
+        this.route.navigate([route], {
+          queryParams: { homeFlow: this.flow },
+        });
+      }
     }
   }
 
@@ -139,20 +165,26 @@ export class CardDetailComponent implements OnInit {
 
   // Método para lidar com a seleção de opções
   handleOption(option: string, card?: CardOrders) {
-    this.route.navigate(['/home/order-help'], {
-      queryParams: {
-        id: this.id_pedido,
-        questionTitle: option,
-        card: JSON.stringify(card),
-        flow: this.flow,
-      },
-    });
-  }
-
-  goToOrderHelp() {
-    this.route.navigate(['/home/order-help'], {
-      queryParams: { id: this.id_pedido },
-    });
+    if (this.isProfessionalIndicator) {
+      this.route.navigate(['/home/order-help'], {
+        queryParams: {
+          param: 'professional',
+          id: this.id_pedido,
+          questionTitle: option,
+          card: JSON.stringify(card),
+          flow: this.flow,
+        },
+      });
+    } else {
+      this.route.navigate(['/home/order-help'], {
+        queryParams: {
+          id: this.id_pedido,
+          questionTitle: option,
+          card: JSON.stringify(card),
+          flow: this.flow,
+        },
+      });
+    }
   }
 
   sendMessage() {

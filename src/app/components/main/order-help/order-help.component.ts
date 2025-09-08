@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardOrders } from 'src/app/interfaces/card-orders';
+import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { StateManagementService } from 'src/app/services/state-management.service';
@@ -23,19 +24,28 @@ export class OrderHelpComponent implements OnInit {
   private emailSuporte = 'suporte@empresa.com.br';
   private assuntoEmail = 'Relato de Problema - Sistema TUDU';
   reqStatus: string = '';
+  isProfessional: boolean = false;
+  id_prestador!: string | null;
 
   constructor(
     private routeActive: ActivatedRoute,
     private router: Router,
     private paymentService: PaymentService,
     private cardService: CardService,
-    public stateManagementService: StateManagementService
+    public stateManagementService: StateManagementService,
+    private authService: AuthService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'] || '';
       this.questionTitle = params['questionTitle'] || '';
       this.card.push(params['card'] ? JSON.parse(params['card']) : null);
     });
+
+    this.authService.idPrestador$.subscribe((id_prestador) => {
+      this.id_prestador = id_prestador;
+    });
+
+    this.isProfessional = this.authService.isPrestadorLoggedIn();
   }
 
   ngOnInit(): void {
@@ -43,17 +53,32 @@ export class OrderHelpComponent implements OnInit {
   }
 
   back() {
-    this.router.navigate(['home/detail']); // Ajuste para sua rota
+    if (this.authService.isPrestadorLoggedIn()) {
+      this.router.navigate(['/home/detail']); // Ajuste para sua rota
 
-    this.routeActive.queryParams.subscribe((params) => {
-      this.router.navigate(['home/detail'], {
-        queryParams: {
-          id_pedido: params['id'], // Reenvia os parâmetros
-          flow: params['flow'], // Reenvia o fluxo
-          card: JSON.stringify(this.card),
-        },
+      this.routeActive.queryParams.subscribe((params) => {
+        this.router.navigate(['/home/detail'], {
+          queryParams: {
+            param: 'professional',
+            id_pedido: params['id'], // Reenvia os parâmetros
+            flow: params['flow'], // Reenvia o fluxo
+            card: JSON.stringify(this.card),
+          },
+        });
       });
-    });
+    } else {
+      this.router.navigate(['home/detail']); // Ajuste para sua rota
+
+      this.routeActive.queryParams.subscribe((params) => {
+        this.router.navigate(['home/detail'], {
+          queryParams: {
+            id_pedido: params['id'], // Reenvia os parâmetros
+            flow: params['flow'], // Reenvia o fluxo
+            card: JSON.stringify(this.card),
+          },
+        });
+      });
+    }
   }
 
   // ✅ ENVIAR VIA WHATSAPP
@@ -123,22 +148,15 @@ export class OrderHelpComponent implements OnInit {
     return corpo;
   }
 
-  cancelarPagamentoDoPedido() {
-    // Aqui você pode chamar o método de cancelamento
-
-    const idPedido: string = this.card[0].id_pedido ?? '';
-
-    this.paymentService.cancelarPagamentoPorIdPagamento(idPedido).subscribe({
-      next: (cancelResponse) => {
-        console.log('Pedido cancelado com sucesso:', cancelResponse);
-      },
-      error: (cancelError) => {
-        console.error('Erro ao cancelar pedido:', cancelError);
-      },
-    });
+  cancelar() {
+    if (this.isProfessional) {
+      this.cancelarCandidatura();
+    } else {
+      this.cancelarCardPagamento();
+    }
   }
 
-  cancelarPedido() {
+  cancelarCardPagamento() {
     const reason = this.message;
     const idPedido: string = this.card[0].id_pedido ?? '';
 
@@ -156,7 +174,6 @@ export class OrderHelpComponent implements OnInit {
           this.stateManagementService.clearAllState();
         },
         error: (err) => {
-          
           this.customModal.openModal();
           this.customModal.configureModal(
             false,
@@ -168,8 +185,51 @@ export class OrderHelpComponent implements OnInit {
     }
   }
 
+  cancelarCandidatura() {
+    // const reason = this.message;
+    const idPedido: string = this.card[0].id_pedido ?? '';
+    const candidaturaDoPrestador: any = this.card[0].candidaturas.find(
+      (candidatura: any) => candidatura.prestador_id === this.id_prestador
+    );
+    // const idCandidatura = candidaturaDoPrestador ? candidaturaDoPrestador.id_candidatura : undefined;
+
+    // if (reason) {
+    this.cardService
+      .cancelarCandidatura(idPedido, candidaturaDoPrestador.id_candidatura)
+      .subscribe({
+        next: (response: any) => {
+          this.reqStatus = response.status;
+
+          this.customModal.openModal();
+          this.customModal.configureModal(
+            true,
+            'Candidatura cancelada com sucesso.'
+          );
+          this.stateManagementService.clearAllState();
+        },
+        error: (err) => {
+          this.customModal.openModal();
+          this.customModal.configureModal(
+            false,
+            err.message ||
+              'Erro ao cancelar a candidatura. Tente novamente mais tarde.'
+          );
+        },
+      });
+    // }
+  }
+
   closeCancelationModal(): void {
-    if (this.reqStatus === 'success') {
+    if (
+      this.reqStatus === 'success' &&
+      this.authService.isPrestadorLoggedIn()
+    ) {
+      this.customModal.closeModal();
+      this.router.navigate(['/tudu-professional/home']); // Ajuste para sua rota
+    } else if (
+      this.reqStatus === 'success' &&
+      !this.authService.isPrestadorLoggedIn()
+    ) {
       this.customModal.closeModal();
       this.router.navigate(['/home']); // Ajuste para sua rota
     } else {

@@ -124,13 +124,16 @@ export class CardService {
     });
   }
 
-  getCardById(id: string) {
+  getCardById(id_pedido: string, id_prestador?: any) {
+    // const idPrestadorString = id_prestador.toString();
+
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       Accept: 'application/json',
+      // id_prestador: idPrestadorString ?? '',
     });
 
-    return this.http.get(`${this.url}/cards/${id}`, { headers });
+    return this.http.get(`${this.url}/cards/${id_pedido}`, { headers });
   }
 
   // Método para buscar o ícone com base no label
@@ -149,6 +152,24 @@ export class CardService {
     return this.http.get<{ cards: CardOrders[]; counts: any }>(
       `${this.url}/cards/list/showcase`,
       { headers }
+    );
+  }
+
+  cancelarCandidatura(
+    id_pedido: string,
+    id_candidatura: string
+  ): Observable<CardOrders> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      'access-control-allow-origin': '*',
+    });
+
+    return this.http.delete<CardOrders>(
+      `${this.url}/cards/candidatura/${id_pedido}/${id_candidatura}`,
+      {
+        headers,
+      }
     );
   }
 }

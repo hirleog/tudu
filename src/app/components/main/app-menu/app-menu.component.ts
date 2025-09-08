@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
+import { NavigationEnd, Router, Event as RouterEvent } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
-import { AuthHelper } from '../../helpers/auth-helper';
-import { Subscription } from 'rxjs';
 import { StateManagementService } from 'src/app/services/state-management.service';
 
 @Component({
@@ -57,7 +56,8 @@ export class AppMenuComponent implements OnInit {
         if (
           event.url.includes('end') ||
           event.url.includes('detail') ||
-          event.url.includes('help')
+          event.url.includes('help') ||
+          event.url.includes('budgets')
         ) {
           this.isEndFlow = true;
         } else {

@@ -198,6 +198,14 @@ export class BudgetsComponent implements OnInit {
     this.paymentStep = indicator;
   }
 
+  backToHome() {
+    if (this.paymentStep) {
+      this.paymentStep = !this.paymentStep;
+    } else {
+      this.route.navigate(['/home']);
+    }
+  }
+
   goToPrestadorDetail(idPrestador: string, idPedido: string) {
     // Navega para a rota com o parâmetro correto
     this.route.navigate(['/profile/profile-detail'], {

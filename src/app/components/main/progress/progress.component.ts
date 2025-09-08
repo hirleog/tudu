@@ -75,7 +75,9 @@ export class ProgressComponent implements OnInit {
             calendarActive: false,
           }))
         );
-        this.loadPrestador(this.candidatura[0].prestador_id);
+        if (this.candidatura[0]?.prestador_id) {
+          this.loadPrestador(this.candidatura[0].prestador_id);
+        }
       },
       error: (error) => console.error('Erro ao obter os cartões:', error),
       complete: () => console.log('Requisição concluída'),

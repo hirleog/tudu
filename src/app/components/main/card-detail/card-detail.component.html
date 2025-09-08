@@ -319,10 +319,13 @@
         </div>
       </div>
       <button
+        *ngIf="temCandidaturaDoPrestadorLogado || !isProfessionalIndicator"
         class="col-12 btn btn-primary"
         (click)="handleOption('cancelar', card)"
       >
-        Cancelar pedido
+        {{
+          isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido"
+        }}
       </button>
     </div>
   </div>

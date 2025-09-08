@@ -156,7 +156,7 @@ export class MakeOfferComponent implements OnInit {
 
   onDateSelected(date: string) {
     const time =
-      this.dateTimeSelected?.split(' - ')[1] || this.timeSelected || '00:00';
+      this.dateTimeSelected?.split(' - ')[1] || this.timeSelected || '12:00';
 
     this.dateSelected = date;
     this.dateTimeSelected = `${date} - ${time}`;

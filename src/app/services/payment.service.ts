@@ -23,18 +23,6 @@ export class PaymentService {
       );
   }
 
-  // Cancelamento por ID do pagamento
-  cancelarPagamentoPorIdPagamento(
-    idPedido: string,
-    amount?: number
-  ): Observable<any> {
-    const body: any = amount ? { amount } : {};
-    return this.http.post<any>(
-      `${environment.apiUrl}/payments/pedido/${idPedido}/cancelar`,
-      body
-    );
-  }
-
   // Cancelamento completo
   cancelarPagamento(idPagamento: string, amount?: number): Observable<any> {
     const body: any = amount ? { amount } : {};
@@ -64,12 +52,12 @@ export class PaymentService {
     return this.http.get(`${environment.apiUrl}/payments/cliente/${idCliente}`);
   }
 
-
-  
   calculateInstallments(payload: any) {
-    return this.http.post(`${environment.apiUrl}/installments/calculate`, payload);
+    return this.http.post(
+      `${environment.apiUrl}/installments/calculate`,
+      payload
+    );
   }
-
 
   // Buscar pagamentos do cliente
   getInstallmentsTable(): Observable<any> {
