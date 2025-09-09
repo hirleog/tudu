@@ -26,6 +26,7 @@ export class OrderHelpComponent implements OnInit {
   reqStatus: string = '';
   isProfessional: boolean = false;
   id_prestador!: string | null;
+  loadingBtn: boolean = false;
 
   constructor(
     private routeActive: ActivatedRoute,
@@ -157,6 +158,8 @@ export class OrderHelpComponent implements OnInit {
   }
 
   cancelarCardPagamento() {
+    this.loadingBtn = true;
+
     const reason = this.message;
     const idPedido: string = this.card[0].id_pedido ?? '';
 
@@ -172,6 +175,7 @@ export class OrderHelpComponent implements OnInit {
           );
 
           this.stateManagementService.clearAllState();
+          this.loadingBtn = false;
         },
         error: (err) => {
           this.customModal.openModal();
@@ -180,12 +184,14 @@ export class OrderHelpComponent implements OnInit {
             err.message ||
               'Erro ao cancelar o pedido. Tente novamente mais tarde.'
           );
+          this.loadingBtn = false;
         },
       });
     }
   }
 
   cancelarCandidatura() {
+    this.loadingBtn = true;
     // const reason = this.message;
     const idPedido: string = this.card[0].id_pedido ?? '';
     const candidaturaDoPrestador: any = this.card[0].candidaturas.find(
@@ -206,6 +212,7 @@ export class OrderHelpComponent implements OnInit {
             'Candidatura cancelada com sucesso.'
           );
           this.stateManagementService.clearAllState();
+          this.loadingBtn = false;
         },
         error: (err) => {
           this.customModal.openModal();
@@ -214,6 +221,7 @@ export class OrderHelpComponent implements OnInit {
             err.message ||
               'Erro ao cancelar a candidatura. Tente novamente mais tarde.'
           );
+          this.loadingBtn = false;
         },
       });
     // }

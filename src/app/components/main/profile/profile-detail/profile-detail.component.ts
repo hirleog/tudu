@@ -223,6 +223,8 @@ export class ProfileDetailComponent implements OnInit {
       )
       .subscribe({
         next: (response) => {
+          window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
+
           this.prestadorProfileFile = null;
 
           this.customModal.openModal();
@@ -237,7 +239,7 @@ export class ProfileDetailComponent implements OnInit {
           this.customModal.openModal();
           this.customModal.configureModal(
             false,
-            error.message || 'Erro ao atualizar os dados.'
+            error.error.message || 'Erro ao atualizar os dados.'
           );
           this.isLoading = false;
         },

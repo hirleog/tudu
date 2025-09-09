@@ -86,8 +86,15 @@
           [disabled]="!message || message.length < 40"
           class="flex-1 flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-medium py-3 px-4 rounded-lg transition-colors"
         >
-          <i class="fab fa-whatsapp"></i>
-          {{ isProfessional ? "Cancelar candidatura" : "Cancelar pedido" }}
+          <span *ngIf="!loadingBtn">
+            {{
+              isProfessional ? "Cancelar candidatura" : "Cancelar pedido"
+            }}</span
+          >
+          <span *ngIf="loadingBtn" class="flex items-center justify-center">
+            <i class="fas fa-circle-notch fa-spin mr-2"></i>
+            Cancelando...
+          </span>
         </button>
 
         <!-- Email -->
