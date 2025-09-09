@@ -92,6 +92,13 @@ export class OrderHelpComponent implements OnInit {
     )}`;
 
     window.open(url, '_blank');
+
+    this.reqStatus = 'whatsapp';
+    this.customModal.openModal();
+    this.customModal.configureModal(
+      true,
+      'Obrigado, continuaremos pelo Whatsapp!'
+    );
   }
 
   // ✅ ENVIAR VIA EMAIL
@@ -240,6 +247,8 @@ export class OrderHelpComponent implements OnInit {
     ) {
       this.customModal.closeModal();
       this.router.navigate(['/home']); // Ajuste para sua rota
+    } else if (this.reqStatus === 'whatsapp') {
+      this.back();
     } else {
       this.customModal.closeModal();
     }

@@ -6,6 +6,7 @@ import { Observable, of, Subscription } from 'rxjs';
 import { CreateCard } from 'src/app/interfaces/create-card.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
+import { StateManagementService } from 'src/app/services/state-management.service';
 import { SharedService } from 'src/app/shared/shared.service';
 import { formatDecimal } from 'src/app/utils/utils';
 
@@ -54,7 +55,8 @@ export class MakeOfferComponent implements OnInit {
     private route: Router,
     public cardService: CardService,
     public authService: AuthService,
-    public sharedService: SharedService
+    public sharedService: SharedService,
+    public stateManagementService: StateManagementService
   ) {
     this.authService.idCliente$.subscribe((id) => {
       this.id_cliente = id;
@@ -132,6 +134,7 @@ export class MakeOfferComponent implements OnInit {
       .postCardWithImages(payloadCard, this.selectedFiles || [])
       .subscribe({
         next: (response) => {
+          this.stateManagementService.clearAllState();
           this.isLoading = false;
           this.route.navigate(['/home']);
         },
