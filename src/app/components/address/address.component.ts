@@ -21,6 +21,7 @@ export class AddressComponent implements OnInit {
   filters: any;
   cardTitle: any;
   serviceDescription: any;
+  cepNotFound: boolean = true;
 
   constructor(
     private fb: FormBuilder,
@@ -80,19 +81,22 @@ export class AddressComponent implements OnInit {
     if (cleanCep && cleanCep.length === 8) {
       this.addressService.getAddressByCep(cleanCep).subscribe(
         (data) => {
-          if (data && !data.erro) {
+          if (data && data.erro !== 'true') {
             this.addressForm.patchValue({
               street: data.logradouro,
               neighborhood: data.bairro,
               city: data.localidade,
               state: data.uf,
             });
+            this.cepNotFound = true;
           } else {
             console.log('CEP não encontrado!');
+            this.cepNotFound = false;
           }
         },
         (error) => {
           console.error('Erro ao buscar o CEP:', error);
+          this.cepNotFound = false;
         }
       );
     }

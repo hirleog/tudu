@@ -76,8 +76,9 @@
               </div>
               <p
                 *ngIf="
-                  addressForm.get('cep')?.invalid &&
-                  addressForm.get('cep')?.touched
+                  (addressForm.get('cep')?.invalid &&
+                    addressForm.get('cep')?.touched) ||
+                  !cepNotFound
                 "
                 class="mt-1 text-sm text-red-500"
               >
@@ -211,7 +212,7 @@
             <button
               type="submit"
               class="col-12 btn btn-outline-primary disabled:opacity-50"
-              [disabled]="!addressForm.valid"
+              [disabled]="!addressForm.valid || !cepNotFound"
             >
               Próximo
               <i class="fas fa-arrow-right ml-2"></i>
