@@ -123,4 +123,17 @@ export class ProgressComponent implements OnInit {
       queryParams: { id: idPedido },
     });
   }
+
+  goToPrestadorDetail(idPrestador: any, idPedido: any) {
+    // Navega para a rota com o parâmetro correto
+    this.route.navigate(['/profile/profile-detail'], {
+      queryParams: {
+        param: 'professional',
+        flow: 'progress',
+        id: idPrestador,
+        pedido: idPedido,
+        
+      },
+    });
+  }
 }

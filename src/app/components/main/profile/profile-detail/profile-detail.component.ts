@@ -406,7 +406,9 @@ export class ProfileDetailComponent implements OnInit {
   }
 
   goBack() {
-    if (this.isProfessional && !this.isBudgetConsult) {
+    if (this.router.url.includes('progress')) {
+      this.router.navigate(['/home/progress']);
+    } else if (this.isProfessional && !this.isBudgetConsult) {
       this.router.navigate(['/profile'], {
         queryParams: { param: 'professional' },
       });

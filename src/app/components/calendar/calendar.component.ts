@@ -45,6 +45,7 @@ export class CalendarComponent implements OnInit {
   @Input() showWeekView: boolean = false;
   weekDays: { date: moment.Moment; isFirst: boolean }[] = [];
   calendarActive: boolean = false;
+  hideCalendarDays: boolean = false;
 
   private today = moment();
   private maxSelectableDate = moment().add(15, 'days');
@@ -159,11 +160,15 @@ export class CalendarComponent implements OnInit {
     const selectedDate = moment(this.currentDate).date(day);
     this.dateSelected = selectedDate.format('DD/MM/YYYY');
     this.dateSelectedChange.emit(this.dateSelected);
+
+    this.hideCalendarDays = true;
     this.updateDateTime();
   }
   selectTime(time: string): void {
     this.timeSelected = time;
     this.timeSelectedChange.emit(this.timeSelected); // Emite o horário selecionado
+
+    this.calendarActive = false;
     this.updateDateTime();
   }
 
@@ -187,11 +192,16 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-  @HostListener('document:click', ['$event'])
-  onClickOutside(event: MouseEvent) {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
-      this.calendarActive = false;
-    }
+  onCalenderButtonInput() {
+    this.calendarActive = !this.calendarActive;
+    this.hideCalendarDays = false;
   }
+
+  // @HostListener('document:click', ['$event'])
+  // onClickOutside(event: MouseEvent) {
+  //   if (!this.elementRef.nativeElement.contains(event.target)) {
+  //     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
+  //     this.calendarActive = false;
+  //   }
+  // }
 }
