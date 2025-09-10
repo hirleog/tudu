@@ -33,13 +33,7 @@ export class AuthGuard implements CanActivate {
     }
 
     // ✅ ROTAS COMPARTILHADAS (acessíveis por ambos)
-    const sharedRoutes = [
-      '/home',
-      '/home/detail',
-      '/profile',
-      '/services',
-      '/login',
-    ];
+    const sharedRoutes = ['/home/detail', '/profile'];
     if (sharedRoutes.some((route) => url.includes(route))) {
       if (isCliente || isPrestador) {
         return true;
@@ -47,8 +41,7 @@ export class AuthGuard implements CanActivate {
       this.router.navigate(['/login']);
       return false;
     }
-
-    // ✅ ROTAS EXCLUSIVAS DO PRESTADOR
+    // ROTAS EXCLUSIVAS DO PRESTADOR
     if (url.startsWith('/tudu-professional')) {
       if (isPrestador) return true;
       this.router.navigate(['/login'], {
@@ -58,7 +51,8 @@ export class AuthGuard implements CanActivate {
     }
 
     // ROTAS EXCLUSIVAS DO CLIENTE
-    if (url.startsWith('/tudu-professional')) {
+    if (url.startsWith('/')) {
+      // 👈 troquei para rota de cliente
       if (isCliente) return true;
       this.router.navigate(['/login']);
       return false;
