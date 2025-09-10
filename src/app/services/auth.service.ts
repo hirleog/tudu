@@ -71,19 +71,23 @@ export class AuthService {
     return this.http.post(`${environment.apiUrl}${endpoint}`, data);
   }
 
+  logoutAll(): void {
+    this.logoutCliente();
+    this.logoutPrestador();
+  }
+
   logoutCliente(): void {
     localStorage.removeItem('access_token_cliente');
     localStorage.removeItem('role_cliente');
+    localStorage.removeItem('cliente_id');
     this.isClienteLoggedInSubject.next(false);
     this.idClienteSubject.next(null);
-
-    // this.isPrestadorLoggedInSubject.next(false);
-    // this.idPrestadorSubject.next(null);
   }
 
   logoutPrestador(): void {
     localStorage.removeItem('access_token_prestador');
     localStorage.removeItem('role_prestador');
+    localStorage.removeItem('prestador_id');
     this.isPrestadorLoggedInSubject.next(false);
     this.idPrestadorSubject.next(null);
   }

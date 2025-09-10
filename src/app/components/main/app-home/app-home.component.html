@@ -60,11 +60,9 @@
     <!-- data-aos="fade-down" -->
     <div class="row g-3 m-0 p-0">
       <div class="col-12 m-0 p-2" *ngFor="let card of cards">
-        <div class="request-card bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="request-card rounded-lg shadow-md overflow-hidden">
           <!-- Header -->
-          <div
-            class="request-card-header bg-white p-3 border-b border-gray-200"
-          >
+          <div class="request-card-header p-3 border-b border-gray-200">
             <div class="request-card-icon mr-3 flex-shrink-0">
               <i
                 [class]="card.icon"
@@ -181,7 +179,7 @@
           </div>
 
           <!-- Footer -->
-          <div class="request-card-footer bg-gray-50 border-t border-gray-200">
+          <div class="request-card-footer  border-t border-gray-200">
             <!-- Botões para "publicado" -->
             <!-- *ngIf="card.status_pedido === 'publicado'" -->
             <div

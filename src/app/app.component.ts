@@ -60,6 +60,7 @@ export class AppComponent implements OnInit {
 
   deferredPrompt: any; // Allows to show the install prompt
   setupButton: any;
+  isProfessional: boolean = false;
 
   constructor(private router: Router) {}
 
@@ -79,6 +80,17 @@ export class AppComponent implements OnInit {
       this.setupButton.style.display = 'inline';
       this.setupButton.disabled = false;
     });
+
+
+    // const isProfessional = this.router.url.includes('professional');
+    // const root = document.documentElement;
+
+    // if (isProfessional) {
+    //   root.style.setProperty('--primary', 'blueviolet'); // Tema profissional
+    // } else {
+    //   root.style.setProperty('--primary', '#f80e6e'); // Tema cliente
+    // }
+    // localStorage.setItem('temaEscuro', JSON.stringify(isProfessional));
   }
   installApp() {
     // Show the prompt

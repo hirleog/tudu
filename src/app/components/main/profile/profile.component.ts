@@ -21,6 +21,7 @@ export class ProfileComponent implements OnInit {
   prestadorId!: string | null;
   userId!: number;
   profileData: any;
+  temaEscuro = false;
 
   constructor(
     public authService: AuthService,
@@ -86,22 +87,30 @@ export class ProfileComponent implements OnInit {
   }
 
   private handlePrestadorFlow(): void {
-    if (!this.clienteIsLogged) {
+    // CORREÇÃO: Se estou no fluxo professional e quero ir para cliente,
+    // preciso verificar se o CLIENTE está logado para fazer a troca
+    if (this.clienteIsLogged) {
+      // Cliente está logado → pode trocar para área do cliente
+      this.router.navigate(['/']);
+    } else {
+      // Cliente NÃO está logado → pede para fazer login como cliente
       alert('Você precisa fazer login como cliente para continuar.');
       this.router.navigate(['/login']);
-    } else {
-      this.router.navigate(['/']);
     }
   }
 
   private handleClienteFlow(): void {
-    if (!this.prestadorIsLogged) {
+    // CORREÇÃO: Se estou no fluxo cliente e quero ir para professional,
+    // preciso verificar se o PRESTADOR está logado para fazer a troca
+    if (this.prestadorIsLogged) {
+      // Prestador está logado → pode trocar para área professional
+      this.router.navigate(['/tudu-professional/home']);
+    } else {
+      // Prestador NÃO está logado → pede para fazer login como prestador
       alert('Você precisa fazer login como prestador para continuar.');
       this.router.navigate(['/login'], {
         queryParams: { param: 'professional' },
       });
-    } else {
-      this.router.navigate(['/tudu-professional/home']);
     }
   }
 
@@ -163,6 +172,24 @@ export class ProfileComponent implements OnInit {
     // else {
     //   this.router.navigate(['/financial']);
     // }
+  }
+
+  alternarTema() {
+    this.temaEscuro = !this.temaEscuro;
+
+    // Alterar variável CSS global
+    const root = document.documentElement;
+
+    if (this.temaEscuro) {
+      root.style.setProperty('--light', '#333333'); // Tema escuro
+      root.style.setProperty('--secondary', '#ffffff'); // Tema escuro
+      root.style.setProperty('--tab-link', '#ffffff'); // Tema escuro
+    } else {
+      root.style.setProperty('--light', '#ffffff'); // Tema claro
+      root.style.setProperty('--secondary', '#4b4b4b'); // Tema escuro
+      root.style.setProperty('--tab-link', '#999'); // Tema escuro
+    }
+    localStorage.setItem('temaEscuro', JSON.stringify(this.temaEscuro));
   }
 
   ngOnDestroy(): void {

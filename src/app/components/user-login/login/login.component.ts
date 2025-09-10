@@ -43,6 +43,12 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
     this.userType = this.isProfessional ? 'prestador' : 'cliente';
 
+    if (this.authService.isClienteLoggedIn()) {
+      this.router.navigate(['/home']);
+    } else if (this.authService.isPrestadorLoggedIn()) {
+      this.router.navigate(['/tudu-professional/home']);
+    }
+
     // Inicializa o formulário de login
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],

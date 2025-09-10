@@ -21,28 +21,26 @@ export class AuthInterceptor implements HttpInterceptor {
     const clienteToken = localStorage.getItem('access_token_cliente');
     const prestadorToken = localStorage.getItem('access_token_prestador');
 
-    // Determina o tipo de usuário baseado na rota atual
-    const currentRoute = this.router.url;
-    const isProfessionalRoute = currentRoute.includes('/tudu-professional');
-
     // Clona a requisição com o token apropriado
     let authReq = req;
-    if (isProfessionalRoute && prestadorToken) {
+    if (prestadorToken && this.authService.isPrestadorLoggedIn()) {
+      // Se prestador está logado, usa token do prestador
       authReq = this.addTokenHeader(req, prestadorToken);
-    } else if (!isProfessionalRoute && clienteToken) {
+    } else if (clienteToken && this.authService.isClienteLoggedIn()) {
+      // Se cliente está logado, usa token do cliente
       authReq = this.addTokenHeader(req, clienteToken);
     }
+    // Se nenhum estiver logado, não adiciona token
 
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          this.handleUnauthorizedError(isProfessionalRoute);
+          this.handleUnauthorizedError();
         }
         return throwError(() => error);
       })
     );
   }
-
   private addTokenHeader(
     req: HttpRequest<any>,
     token: string
@@ -54,21 +52,9 @@ export class AuthInterceptor implements HttpInterceptor {
     });
   }
 
-  private handleUnauthorizedError(isProfessionalRoute: boolean): void {
-    // Limpa os tokens e estados de autenticação
-    this.authService.logout(); // Implemente este método no AuthService se não existir
-
-    // Remove os tokens do localStorage
-    localStorage.removeItem('access_token_cliente');
-    localStorage.removeItem('access_token_prestador');
-
-    // Redireciona para a tela de login apropriada
-    if (isProfessionalRoute) {
-      this.router.navigate(['/login'], {
-        queryParams: { param: 'professional' },
-      });
-    } else {
-      this.router.navigate(['/login']);
-    }
+  private handleUnauthorizedError(): void {
+    // Limpa ambos os tokens em caso de 401
+    this.authService.logoutAll();
+    this.router.navigate(['/login']);
   }
 }

@@ -8,8 +8,9 @@
   /* --primary: #ff3d24; */
   /* --primary: #ffc739; */
   --primary: #f80e6e;
-  /* Cor sólida */
+  /* Cor sóPlida */
   --primary-dark: #d10050;
+  --primary-dark-professional: rgb(99, 31, 163);
   /* --premium: #b80aea; */
   --premium: blueviolet;
   /* --premium: blueviolet; */
@@ -24,6 +25,8 @@
   --dark: #a2a2a2;
   /* --blue: #b80aea; */
   --blue: blueviolet;
+
+  --tab-link: #999;
 }
 
 html {
