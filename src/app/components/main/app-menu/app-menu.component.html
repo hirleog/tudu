@@ -60,6 +60,16 @@
           </p>
         </div>
 
+        <div
+          *ngIf="isProfessional"
+          class="menu-item flex flex-col items-center p-2"
+          [class.active]="router.url === '/tudu-professional/historic'"
+          (click)="switchRoute('/tudu-professional/historic')"
+        >
+          <i class="fas fa-scroll text-lg"></i>
+          <p class="text-xs mt-1">Histórico</p>
+        </div>
+
         <!-- Perfil -->
         <div
           class="menu-item flex flex-col items-center p-2"
@@ -143,6 +153,29 @@
             >Pendentes</span
           >
         </div>
+
+
+         <div
+          *ngIf="isProfessional"
+          class="flex items-center px-4 py-3 menu-item-desktop"
+          [class.active]="router.url === '/tudu-professional/historic'"
+          (click)="switchRoute('/tudu-professional/historic')"
+        >
+          <i class="fas fa-tasks text-lg mr-4"></i>
+          <span class="whitespace-nowrap" *ngIf="isMenuExpanded || isHovered"
+            >Histórico</span
+          >
+        </div>
+
+        <!-- <div
+          *ngIf="isProfessional"
+          class="menu-item flex flex-col items-center p-2"
+          [class.active]="router.url === '/tudu-professional/historic'"
+          (click)="switchRoute('/tudu-professional/historic')"
+        >
+          <i class="fas fa-scroll text-lg"></i>
+          <p class="text-xs mt-1">Histórico</p>
+        </div> -->
 
         <!-- Perfil -->
         <div

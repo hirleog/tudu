@@ -115,15 +115,28 @@ export class CardDetailComponent implements OnInit {
 
   back(): void {
     if (this.isProfessionalIndicator) {
-      const route =
+      const progressRoute =
         this.flow === 'progress'
           ? '/tudu-professional/progress'
           : '/tudu-professional/home';
 
+      const historicRoute =
+        this.flow === 'historic'
+          ? '/tudu-professional/historic'
+          : '/tudu-professional/home';
+
       if (this.flow === 'progress') {
-        this.route.navigate([route]);
+        this.route.navigate([progressRoute]);
       } else {
-        this.route.navigate([route], {
+        this.route.navigate([progressRoute], {
+          queryParams: { homeFlow: this.flow },
+        });
+      }
+
+      if (this.flow === 'historic') {
+        this.route.navigate([historicRoute]);
+      } else {
+        this.route.navigate([historicRoute], {
           queryParams: { homeFlow: this.flow },
         });
       }

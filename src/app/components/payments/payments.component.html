@@ -18,7 +18,7 @@
         </div> -->
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="flex flex-col-reverse gap-8">
         <!-- Resumo do Pedido -->
         <div class="lg:col-span-1">
           <div
@@ -88,6 +88,35 @@
                   >Política de Privacidade</a
                 >.
               </p>
+            </div>
+
+            <div class="mt-8 flex flex-column gap-2">
+              <button
+                class="col-12 btn btn-primary"
+                style="font-size: 17px"
+                (click)="submitPayment()"
+                [disabled]="
+                  paymentMethod === 'credit'
+                    ? paymentForm.invalid
+                    : !acceptedTerms
+                "
+              >
+                <span *ngIf="!processingPayment">Finalizar Pagamento</span>
+                <span
+                  *ngIf="processingPayment"
+                  class="flex items-center justify-center"
+                >
+                  <i class="fas fa-circle-notch fa-spin mr-2"></i>
+                  Processando...
+                </span>
+                <i *ngIf="!processingPayment" class="fas fa-lock ml-2"></i>
+              </button>
+              <button
+                class="col-12 btn btn-outline-primary"
+                (click)="goBack(false)"
+              >
+                Voltar
+              </button>
             </div>
           </div>
         </div>
@@ -454,35 +483,6 @@
                   </div>
                 </div>
               </form>
-
-              <div class="mt-8 flex flex-column gap-2 p-3">
-                <button
-                  class="col-12 btn btn-primary"
-                  style="font-size: 17px"
-                  (click)="submitPayment()"
-                  [disabled]="
-                    paymentMethod === 'credit'
-                      ? paymentForm.invalid
-                      : !acceptedTerms
-                  "
-                >
-                  <span *ngIf="!processingPayment">Finalizar Pagamento</span>
-                  <span
-                    *ngIf="processingPayment"
-                    class="flex items-center justify-center"
-                  >
-                    <i class="fas fa-circle-notch fa-spin mr-2"></i>
-                    Processando...
-                  </span>
-                  <i *ngIf="!processingPayment" class="fas fa-lock ml-2"></i>
-                </button>
-                <button
-                  class="col-12 btn btn-outline-primary"
-                  (click)="goBack(false)"
-                >
-                  Voltar
-                </button>
-              </div>
             </div>
 
             <!-- Rodapé -->

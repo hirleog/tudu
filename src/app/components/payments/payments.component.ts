@@ -317,7 +317,7 @@ export class PaymentsComponent implements OnInit {
           // Define o valor no formControl
           this.paymentForm.patchValue({
             installments:
-              this.installmentData.options[0].installments.toString(),
+              this.installmentData.options[11].installments.toString(),
           });
 
           // Atualiza a variável selectedInstallmentOption
