@@ -30,7 +30,9 @@ export class PasswordResetComponent implements OnInit {
     private route: ActivatedRoute
   ) {
     this.router.events.subscribe(() => {
-      this.isProfessional = this.router.url.includes('professional');
+      this.isProfessional =
+        this.router.url.includes('professional') ||
+        this.router.url.includes('prestadores');
     });
     this.resetForm = this.fb.group(
       {
@@ -185,16 +187,14 @@ export class PasswordResetComponent implements OnInit {
   }
 
   goBack() {
-    if (this.currentStep > 1) {
-      this.currentStep--;
-      this.errorMessage = '';
-      this.successMessage = '';
-    } else {
+    if (this.isProfessional) {
       this.router.navigate(['/login'], {
         queryParams: {
-          param: this.queryUserType === 'prestador' ? 'professional' : null,
+          param: 'professional',
         },
       });
+    } else {
+      this.router.navigate(['/login']);
     }
   }
 
