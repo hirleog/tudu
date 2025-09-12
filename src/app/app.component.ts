@@ -58,7 +58,6 @@ export class AppComponent implements OnInit {
   showHomeMobile: boolean = true;
   deferredPrompt: any; // Allows to show the install prompt
   setupButton: any;
-  isProfessional: boolean = false;
   logoUrl: string = 'assets/logo.png'; // Caminho padrão
 
   constructor(private router: Router) {
@@ -66,10 +65,17 @@ export class AppComponent implements OnInit {
     this.router.events.subscribe((event) => {
       const root = document.documentElement;
       if (event instanceof NavigationEnd) {
-        if (event.url.startsWith('/tudu-professional')) {
-          root.style.setProperty('--primary', 'blueviolet');
+        if (
+          event.url.startsWith('/tudu-professional') ||
+          event.url.includes('professional')
+        ) {
+          root.style.setProperty('--primary', '#8a2be2');
           root.style.setProperty('--primary-dark', '#631fa3');
           this.logoUrl = 'assets/logo-professional.png';
+        } else {
+          root.style.setProperty('--primary', '#f80e6e');
+          root.style.setProperty('--primary-dark', '#b00a4e');
+          this.logoUrl = 'assets/logo.png';
         }
       }
     });

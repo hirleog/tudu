@@ -4,7 +4,11 @@
     <a routerLink="/" class="logo">
       <img
         [routerLink]="[isProfessional ? '/tudu-professional/home' : '/home']"
-        src="../../../assets/logo-rosa.webp"
+        [src]="
+          isProfessional
+            ? '../../../assets/logo-roxoo.webp'
+            : '../../../assets/logo-rosa.webp'
+        "
         class="img-fluid"
         style="width: 4em"
         alt="error"
@@ -14,7 +18,7 @@
   <div right-content></div>
 </app-nav>
 
-<section id="login" class="d-flex justify-content-center mt-2">
+<section id="login" class="d-flex justify-content-center mt-5">
   <div class="row container d-flex justify-content-center">
     <div class="col-md-8">
       <div class="card shadow" style="height: auto">

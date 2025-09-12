@@ -1,10 +1,10 @@
+import { Location } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { CardSocketService } from 'src/app/services/card-socket.service';
 import { CardService } from 'src/app/services/card.service';
-import { Location } from '@angular/common';
 import { StateManagementService } from 'src/app/services/state-management.service';
 
 @Component({
@@ -30,6 +30,7 @@ export class AppHomeComponent implements OnInit {
   limitePorPagina = 10;
   carregandoMais = false;
   finalDaLista = false;
+  logoUrl: string = '';
 
   constructor(
     private route: Router,

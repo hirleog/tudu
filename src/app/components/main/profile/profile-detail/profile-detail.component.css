@@ -40,8 +40,8 @@
   cursor: pointer;
 }
 .tab-button.active {
-  border-bottom: 3px solid #ec4899;
-  color: #ec4899;
+  border-bottom: 3px solid var(--primary);
+  color: var(--primary);
   font-weight: 600;
 }
 /* Limitar texto a 2 linhas */

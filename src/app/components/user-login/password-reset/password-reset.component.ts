@@ -21,6 +21,7 @@ export class PasswordResetComponent implements OnInit {
   countdown: number = 60;
   countdownInterval: any;
   queryUserType: string = '';
+  isProfessional: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -28,6 +29,9 @@ export class PasswordResetComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.router.events.subscribe(() => {
+      this.isProfessional = this.router.url.includes('professional');
+    });
     this.resetForm = this.fb.group(
       {
         email: ['', [Validators.required, Validators.email]],
