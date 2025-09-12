@@ -141,9 +141,3 @@ i {
     max-width: 70%;
   }
 }
-
-@media (max-width: 410px) {
-  .tab-bar a {
-    font-size: 14px !important;
-  }
-}
