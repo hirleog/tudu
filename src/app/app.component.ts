@@ -61,24 +61,7 @@ export class AppComponent implements OnInit {
   logoUrl: string = 'assets/logo.png'; // Caminho padrão
 
   constructor(private router: Router) {
-    // METODO PARA ALTERAR A COR DO THEMA E LOGO DO PROFESSIONAL MFE
-    this.router.events.subscribe((event) => {
-      const root = document.documentElement;
-      if (event instanceof NavigationEnd) {
-        if (
-          event.url.startsWith('/tudu-professional') ||
-          event.url.includes('professional')
-        ) {
-          root.style.setProperty('--primary', '#8a2be2');
-          root.style.setProperty('--primary-dark', '#631fa3');
-          this.logoUrl = 'assets/logo-professional.png';
-        } else {
-          root.style.setProperty('--primary', '#f80e6e');
-          root.style.setProperty('--primary-dark', '#b00a4e');
-          this.logoUrl = 'assets/logo.png';
-        }
-      }
-    });
+    this.themas();
   }
 
   ngOnInit() {
@@ -97,8 +80,6 @@ export class AppComponent implements OnInit {
       this.setupButton.style.display = 'inline';
       this.setupButton.disabled = false;
     });
-
-    // this.professionalTheme();
 
     // const isProfessional = this.router.url.includes('professional');
     // const root = document.documentElement;
@@ -131,13 +112,55 @@ export class AppComponent implements OnInit {
     return outlet?.activatedRouteData?.['animation'];
   }
 
-  professionalTheme(): void {
-    const root = document.documentElement;
+  themas() {
+    // METODO PARA ALTERAR A COR DO THEMA E LOGO DO PROFESSIONAL MFE
+    this.router.events.subscribe((event) => {
+      const root = document.documentElement;
+      if (event instanceof NavigationEnd) {
+        if (
+          event.url.startsWith('/tudu-professional') ||
+          event.url.includes('professional') ||
+          event.url.includes('historic') ||
+          event.url.includes('prestadores')
+        ) {
+          root.style.setProperty('--primary', '#8a2be2');
+          root.style.setProperty('--primary-dark', '#631fa3');
+        } else {
+          root.style.setProperty('--primary', '#f80e6e');
+          root.style.setProperty('--primary-dark', '#b00a4e');
+        }
+      }
 
-    if (this.router.url.includes('/professional')) {
-      root.style.setProperty('--primary', '#ffffff'); // Tema escuro
-    } else {
-      root.style.setProperty('--primary', '#333333'); // Tema claro
-    }
+      // ...dentro do subscribe do router.events...
+      if (event instanceof NavigationEnd) {
+        // Checa se há tema salvo
+        const temaSalvo = localStorage.getItem('temaEscuro');
+        if (temaSalvo !== null && JSON.parse(temaSalvo) === true) {
+          // Aplica tema escuro
+          document.documentElement.style.setProperty('--light', '#333333');
+          document.documentElement.style.setProperty('--secondary', '#ffffff');
+          document.documentElement.style.setProperty('--tab-link', '#ffffff');
+          document.documentElement.style.setProperty(
+            '--secondary-transparent',
+            '#ffffff'
+          );
+          document.documentElement.style.setProperty('--background', '#000000');
+          root.style.setProperty('--bottom-transparent', '#ffffff3a'); // Tema escuro
+        } else {
+          // Aplica tema claro
+          document.documentElement.style.setProperty('--light', '#ffffff');
+          document.documentElement.style.setProperty('--secondary', '#4b4b4b');
+          document.documentElement.style.setProperty('--tab-link', '#999');
+          document.documentElement.style.setProperty(
+            '--secondary-transparent',
+            '#00000079'
+          );
+          document.documentElement.style.setProperty('--background', '#ffffff');
+          root.style.setProperty('--bottom-transparent', '#00000021'); // Tema escuro
+        }
+
+        // ...demais lógicas de cor/tema específicas do fluxo (ex: tudu-professional)...
+      }
+    });
   }
 }

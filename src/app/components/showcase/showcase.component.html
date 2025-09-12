@@ -80,7 +80,7 @@ cliente
     <div class="row g-4 space">
       <div
         *ngFor="let card of serviceCards"
-        class="col-6 col-sm-6 col-md-4 col-lg-3"
+        class="col-6 col-sm-6 col-md-4 col-lg-3" 
         (click)="selectCard(card)"
         [ngClass]="{ 'disabled-card': card.disabled }"
       >

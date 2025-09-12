@@ -1,4 +1,4 @@
-<section>
+<section >
   <div
     *ngIf="
       showDiv &&
@@ -8,10 +8,11 @@
   >
     <!-- Menu Mobile (aparece apenas em telas pequenas) -->
     <div class="md:hidden shadow-lg border-t border-gray-200">
-      <div class="flex justify-around items-center py-2">
+    <!-- <div class="md:hidden shadow-lg"> -->
+      <div class="flex justify-around items-center ">
         <!-- Serviços -->
         <div
-          class="menu-item flex flex-col items-center p-2"
+          class="menu-item flex flex-col items-center p-1"
           [class.active]="
             router.url ===
             (isProfessional || isProfileRoute ? '/tudu-professional/home' : '/')
@@ -29,7 +30,7 @@
         <!-- Pedidos -->
         <div
           *ngIf="isProfessional === false && isProfileRoute === false"
-          class="menu-item flex flex-col items-center p-2"
+          class="menu-item flex flex-col items-center p-1"
           [class.active]="router.url === '/home'"
           (click)="switchRoute('/home')"
         >
@@ -39,7 +40,7 @@
 
         <!-- Pendentes -->
         <div
-          class="menu-item flex flex-col items-center p-2"
+          class="menu-item flex flex-col items-center p-1"
           [class.active]="
             router.url ===
             (isProfessional || isProfileRoute
@@ -62,7 +63,7 @@
 
         <div
           *ngIf="isProfessional"
-          class="menu-item flex flex-col items-center p-2"
+          class="menu-item flex flex-col items-center p-1"
           [class.active]="router.url === '/tudu-professional/historic'"
           (click)="switchRoute('/tudu-professional/historic')"
         >
@@ -72,7 +73,7 @@
 
         <!-- Perfil -->
         <div
-          class="menu-item flex flex-col items-center p-2"
+          class="menu-item flex flex-col items-center p-1"
           [class.active]="profileActiveColor || isProfileRoute"
           (click)="goToProfile()"
         >
@@ -93,7 +94,7 @@
   (mouseleave)="isHovered = false"
 >
   <div
-    class="flex flex-col w-full py-14 h-full hidden md:block"
+    class="flex-col w-full py-14 h-full hidden md:block"
     style="height: 10000vw"
   >
     <!-- Conteúdo do menu desktop (mesmo do seu código original) -->
@@ -154,8 +155,7 @@
           >
         </div>
 
-
-         <div
+        <div
           *ngIf="isProfessional"
           class="flex items-center px-4 py-3 menu-item-desktop"
           [class.active]="router.url === '/tudu-professional/historic'"

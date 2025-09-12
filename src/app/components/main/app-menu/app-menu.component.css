@@ -14,14 +14,16 @@
   flex: 1;
   text-align: center;
   font-size: 24px;
-  color: #333;
+  color: var(--secondary);
 }
 
 /* Estilos para o menu desktop */
 .menu-item-desktop {
-  color: #333;
+  color: var(--secondary);
   transition: all 0.2s ease;
   cursor: pointer;
+  width: 145%;
+  /* background-color: red; */
 }
 
 .menu-item-desktop:hover {
@@ -31,6 +33,7 @@
 .menu-item-desktop.active {
   color: var(--primary);
   background-color: rgba(var(--primary-rgb), 0.1);
+  width: 100%;
 }
 
 .active {
@@ -40,7 +43,7 @@
 }
 
 .inactive {
-  color: #333;
+  color: var(--secondary) !important;
 }
 
 p {
@@ -52,4 +55,29 @@ p {
   top: 4rem !important; /* Ajuste conforme a altura do seu header */
   align-self: flex-start !important; /* Mantém o alinhamento correto */
   z-index: 30 !important; /* Garante que fique acima do conteúdo */
+}
+
+/* Ícones em estado normal (inativo) */
+.menu-item i,
+.menu-item-desktop i {
+  color: var(--secondary);
+  transition: color 0.2s ease;
+}
+
+/* Ícones quando o item está ativo */
+.menu-item.active i,
+.menu-item-desktop.active i {
+  color: var(--primary) !important;
+}
+
+/* Texto normal */
+.menu-item p,
+.menu-item-desktop span {
+  color: var(--secondary);
+}
+
+/* Texto ativo */
+.menu-item.active p,
+.menu-item-desktop.active span {
+  color: var(--primary) !important;
 }

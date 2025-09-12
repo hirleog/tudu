@@ -55,6 +55,7 @@ export class ProfileDetailComponent implements OnInit {
   isBudgetConsult: boolean = false;
   budgetPedido: string = '';
   isLoading: boolean = false;
+  modelActive: boolean = true;
 
   constructor(
     private router: Router,
@@ -367,13 +368,14 @@ export class ProfileDetailComponent implements OnInit {
 
   // Método para cancelar edição - CORRIGIDO
   cancelarEdicaoDescricao(): void {
+    this.modelActive = true;
     this.editandoDescricao = false;
     this.descricaoTemporaria = '';
   }
 
   // Método para salvar descrição - CORRIGIDO
   salvarDescricao(): void {
-    // if (this.descricaoLength <= 500) {
+    this.modelActive = true;
     this.userData.descricao = this.descricaoTemporaria;
     this.editandoDescricao = false;
 
@@ -427,6 +429,22 @@ export class ProfileDetailComponent implements OnInit {
 
     // Acionar seu método goBack personalizado
     this.goBack();
+  }
+
+  insertPortfolioTemplate(): void {
+    this.modelActive = false;
+    this.descricaoTemporaria = `💼 Profissional de [sua área de atuação]
+apaixonado por [o que te motiva ou inspira na sua profissão].
+com experiência em [principais áreas de atuação / serviços que você oferece],
+busco [seu diferencial ou objetivo ao atender clientes].
+
+🚀 Habilidades principais:
+• [habilidade 1]
+• [habilidade 2]
+• [habilidade 3]
+• [habilidade 4]
+
+✨ Sempre em busca de [objetivo profissional, exemplo: aprender novas tecnologias / entregar experiências incríveis / inovar em cada projeto].`;
   }
 
   ngOnDestroy() {

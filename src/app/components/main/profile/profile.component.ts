@@ -53,6 +53,14 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Lê o tema salvo no localStorage e aplica ao iniciar
+    const temaSalvo = localStorage.getItem('temaEscuro');
+    if (temaSalvo !== null) {
+      this.temaEscuro = JSON.parse(temaSalvo);
+      this.aplicarTema();
+    } else {
+      this.aplicarTema();
+    }
     this.loadUser();
   }
 
@@ -176,22 +184,34 @@ export class ProfileComponent implements OnInit {
 
   alternarTema() {
     this.temaEscuro = !this.temaEscuro;
+    localStorage.setItem('temaEscuro', JSON.stringify(this.temaEscuro));
+    this.aplicarTema();
+  }
 
-    // Alterar variável CSS global
+  cleanThema() {
+    localStorage.removeItem('temaEscuro');
+    console.log('them limpo');
+    
+  }
+
+  aplicarTema() {
     const root = document.documentElement;
-
     if (this.temaEscuro) {
       root.style.setProperty('--light', '#333333'); // Tema escuro
       root.style.setProperty('--secondary', '#ffffff'); // Tema escuro
       root.style.setProperty('--tab-link', '#ffffff'); // Tema escuro
+      root.style.setProperty('--secondary-transparent', '#ffffff'); // Tema escuro
+      root.style.setProperty('--background', '#000000'); // Tema escuro
+      root.style.setProperty('--bottom-transparent', '#ffffff3a'); // Tema escuro
     } else {
       root.style.setProperty('--light', '#ffffff'); // Tema claro
-      root.style.setProperty('--secondary', '#4b4b4b'); // Tema escuro
-      root.style.setProperty('--tab-link', '#999'); // Tema escuro
+      root.style.setProperty('--secondary', '#4b4b4b'); // Tema claro
+      root.style.setProperty('--tab-link', '#999'); // Tema claro
+      root.style.setProperty('--secondary-transparent', '#00000079'); // Tema escuro
+      root.style.setProperty('--background', '#ffffff'); // Tema escuro
+      root.style.setProperty('--bottom-transparent', '#00000021'); // Tema escuro
     }
-    localStorage.setItem('temaEscuro', JSON.stringify(this.temaEscuro));
   }
-  
 
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória

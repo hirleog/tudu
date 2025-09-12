@@ -31,7 +31,8 @@ h4 {
   background-color: var(--primary);
 }
 .card-body {
-  background-color: var(--light);
+  background-color: var(--background);
+  /* border: 1px solid var(--secondary); */
 }
 
 .card-body i {
@@ -76,7 +77,6 @@ h4 {
   text-decoration: none;
   font-weight: 400;
   padding: 8px 16px;
-
 }
 .professional-link:hover {
   padding: 8px 16px;
@@ -87,4 +87,5 @@ h4 {
   display: block; /* Garante que o elemento seja tratado como bloco */
   white-space: pre-wrap; /* Mantém quebras de linha */
   text-align: center; /* Centraliza o texto */
+  color: var(--secondary) !important;
 }

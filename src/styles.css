@@ -7,6 +7,7 @@
 :root {
   /* --primary: #ff3d24; */
   /* --primary: #ffc739; */
+  --background: #000000;
   --primary: #f80e6e;
   /* Cor sóPlida */
   --primary-dark: #d10050;
@@ -14,10 +15,10 @@
   --premium: #8a2be2;
   /* --premium: blueviolet; */
 
-  /* --secondary: #1f1f1f; */
-  --secondary: #4b4b4b;
+  --secondary: #ffffff;
   --secondary-transparent: #00000079;
   --secondary-light: rgba(24, 24, 24, 0.986);
+
   --tag-p-grey: #a6a6a6;
   --light: #ffffff;
   --medium: #f8f9fa;
@@ -26,6 +27,7 @@
   --blue: blueviolet;
 
   --tab-link: #999;
+  --bottom-transparent: #00000021;
 }
 
 html {
@@ -71,7 +73,7 @@ body {
 
   max-width: 100%;
 
-  background: var(--light);
+  background: var(--background);
   /* -ms-overflow-style: none;
   scrollbar-width: none;
   user-select: none;
@@ -87,7 +89,7 @@ body {
 }
 
 section {
-  background-color: var(--light);
+  background-color: var(--background);
 }
 
 h1 {
@@ -142,6 +144,18 @@ p {
 
 hr {
   opacity: 0.1;
+  color: var(--secondary);
+}
+.hr-nav-top {
+  border-top: 1px solid var(--secondary);
+  opacity: 0.1;
+}
+.hr-nav-bottom {
+  border-bottom: 1px solid var(--bottom-transparent);
+  /* opacity: 0.1; */
+}
+app-nav {
+  border-bottom: 1px solid var(--bottom-transparent);
 }
 
 .request-card-title h5 {

@@ -1,12 +1,12 @@
 <div class="bg-gray-50 min-h-screen mb-0">
-  <div class="container mx-auto px-4 py-2">
+  <div class="container mx-auto px-3 py-2">
     <div class="service-filter max-w-4xl mx-auto">
       <div class="bg-white rounded-xl shadow-sm overflow-hidden">
         <!-- Categorias de filtro dinâmicas -->
         <div class="divide-y divide-gray-100">
           <div
             *ngFor="let category of filterCategories"
-            class="filter-category p-5 hover:bg-pink-50/50"
+            class="filter-category p-4 hover:bg-pink-50/50"
           >
             <div
               class="flex items-center justify-between cursor-pointer"
@@ -63,7 +63,7 @@
           </div>
 
           <!-- Campo de descrição do serviço -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden p-5">
+          <div class="bg-white rounded-xl shadow-sm overflow-hidden p-4">
             <h3
               class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
             >
@@ -80,9 +80,15 @@
                 required
                 [(ngModel)]="serviceDescription"
                 name="serviceDescription"
-                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500"
+                class="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 min-h-[200px]"
                 rows="4"
-                placeholder="Por favor, forneça todos os detalhes necessários sobre o serviço que você precisa..."
+                placeholder="Exemplo: Preciso trocar a fiação elétrica da cozinha. 
+Inclua informações como:
+
+• O que exatamente precisa ser feito?
+• Qual o tamanho aproximado do espaço?
+• Precisa de algum material específico?
+• Existe alguma urgência ou prazo específico?"
               ></textarea>
               <small
                 class="text-red-500"
@@ -96,7 +102,7 @@
           <!-- Upload de imagens -->
           <form
             #cardForm="ngForm"
-            class="bg-white rounded-xl shadow-sm overflow-hidden p-5"
+            class="bg-white rounded-xl shadow-sm overflow-hidden p-4"
           >
             <h3
               class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"

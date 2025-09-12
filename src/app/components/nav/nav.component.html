@@ -7,8 +7,9 @@
 
 <!-- Navbar Container -->
 <div
-  class="fixed top-0 left-0 right-0 z-50 bg-white shadow-none transition-transform duration-300 ease-out"
+  class="fixed top-0 left-0 right-0 z-50 shadow-none transition-transform duration-300 ease-out"
   [class.-translate-y-full]="!isHeaderVisible"
+  style="background-color: var(--background)"
 >
   <!-- Main Navbar -->
   <div class="w-full">
@@ -21,7 +22,8 @@
   </div>
 
   <!-- Header Menu (Submenu) -->
-  <div header-menu class="w-full bg-white border-t border-gray-200">
+  <!-- <div header-menu class="w-full  border-t border-gray-200"> -->
+  <div header-menu class="w-full hr-nav">
     <ng-content select="[header-menu]"></ng-content>
   </div>
 </div>

@@ -44,3 +44,6 @@
   padding-top: 25px;
   padding-bottom: 25px;
 }
+.finance i {
+  color: var(--secondary) !important;
+}

@@ -5,7 +5,11 @@
       class="logo"
     >
       <img
-      [src]="isProfessional ? '../../../assets/logo-roxoo.webp' : '../../../assets/logo-rosa.webp'"
+        [src]="
+          isProfessional
+            ? '../../../assets/logo-roxoo.webp'
+            : '../../../assets/logo-rosa.webp'
+        "
         style="width: 4em"
         alt="error"
       />
@@ -65,11 +69,11 @@
   <ul class="nav d-flex flex-column gap-3">
     <hr />
 
-     <li class="nav-item">
+    <!-- <li class="nav-item">
       <p class="nav-link d-flex align-items-center" href="#">
         <i class="fas fa-bell me-2"></i> Notificações
       </p>
-    </li> 
+    </li> -->
 
     <li class="nav-item">
       <p
@@ -104,15 +108,15 @@
       </p>
     </li>
 
-     <li class="nav-item">
+    <li class="nav-item">
       <p
         (click)="alternarTema()"
         class="nav-link d-flex align-items-center"
         href="#"
       >
-        {{ temaEscuro ? "🌙 Tema Escuro" : "☀️ Tema Claro" }}
+        {{ temaEscuro ? "☀️ Tema Claro" : "🌙 Tema Escuro" }}
       </p>
-    </li> 
+    </li>
     <hr />
 
     <li class="nav-item">
