@@ -191,6 +191,7 @@ export class ProfileComponent implements OnInit {
     }
     localStorage.setItem('temaEscuro', JSON.stringify(this.temaEscuro));
   }
+  
 
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória

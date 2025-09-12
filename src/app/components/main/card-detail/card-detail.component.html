@@ -319,7 +319,10 @@
         </div>
       </div>
       <button
-        *ngIf="temCandidaturaDoPrestadorLogado || !isProfessionalIndicator"
+        *ngIf="
+          (temCandidaturaDoPrestadorLogado || !isProfessionalIndicator) &&
+          flow !== 'historic'
+        "
         class="col-12 btn btn-primary"
         (click)="handleOption('cancelar', card)"
       >

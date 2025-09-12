@@ -54,15 +54,26 @@ import * as AOS from 'aos';
 })
 export class AppComponent implements OnInit {
   showInstallButton = false;
-
   title = 'automotive-services';
   showHomeMobile: boolean = true;
-
   deferredPrompt: any; // Allows to show the install prompt
   setupButton: any;
   isProfessional: boolean = false;
+  logoUrl: string = 'assets/logo.png'; // Caminho padrão
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    // METODO PARA ALTERAR A COR DO THEMA E LOGO DO PROFESSIONAL MFE
+    this.router.events.subscribe((event) => {
+      const root = document.documentElement;
+      if (event instanceof NavigationEnd) {
+        if (event.url.startsWith('/tudu-professional')) {
+          root.style.setProperty('--primary', 'blueviolet');
+          root.style.setProperty('--primary-dark', '#631fa3');
+          this.logoUrl = 'assets/logo-professional.png';
+        }
+      }
+    });
+  }
 
   ngOnInit() {
     AOS.init();
@@ -81,6 +92,7 @@ export class AppComponent implements OnInit {
       this.setupButton.disabled = false;
     });
 
+    // this.professionalTheme();
 
     // const isProfessional = this.router.url.includes('professional');
     // const root = document.documentElement;
@@ -111,5 +123,15 @@ export class AppComponent implements OnInit {
 
   prepareRoute(outlet: any) {
     return outlet?.activatedRouteData?.['animation'];
+  }
+
+  professionalTheme(): void {
+    const root = document.documentElement;
+
+    if (this.router.url.includes('/professional')) {
+      root.style.setProperty('--primary', '#ffffff'); // Tema escuro
+    } else {
+      root.style.setProperty('--primary', '#333333'); // Tema claro
+    }
   }
 }
