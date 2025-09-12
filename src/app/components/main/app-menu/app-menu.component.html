@@ -1,4 +1,4 @@
-<section >
+<section>
   <div
     *ngIf="
       showDiv &&
@@ -7,9 +7,9 @@
     "
   >
     <!-- Menu Mobile (aparece apenas em telas pequenas) -->
-    <div class="md:hidden shadow-lg border-t border-gray-200">
-    <!-- <div class="md:hidden shadow-lg"> -->
-      <div class="flex justify-around items-center ">
+    <div class="md:hidden shadow-lg hr-nav-top">
+      <!-- <div class="md:hidden shadow-lg"> -->
+      <div class="flex justify-around items-center">
         <!-- Serviços -->
         <div
           class="menu-item flex flex-col items-center p-1"
@@ -87,7 +87,7 @@
 
 <!-- Menu Desktop (aparece apenas em telas médias/grandes) -->
 <div
-  class="flex-shrink-0 top-16 overflow-y-auto transition-all duration-300 ease-in-out shadow-md"
+  class="flex-shrink-0 top-16 overflow-y-auto transition-all duration-300 ease-in-out shadow-md hr-nav-top"
   [class.w-64]="isMenuExpanded || isHovered"
   [class.w-20]="!isMenuExpanded && !isHovered"
   (mouseenter)="isHovered = true"
