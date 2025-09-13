@@ -23,9 +23,9 @@
   </div>
 </app-nav>
 
-<section class="bg-gray-50 min-h-screen p-3 p-md-4" *ngIf="!isLoading">
+<section class="min-h-screen p-3 p-md-4" *ngIf="!isLoading">
   <div
-    class="px-3 py-2 lg:px-8 max-w-4xl mx-auto w-full max-w-2xl bg-white rounded-xl shadow-md transition-smooth"
+    class="px-3 py-5 lg:px-8 max-w-4xl mx-auto w-full max-w-2xl rounded-xl shadow-md transition-smooth"
   >
     <!-- Loading state -->
     <!-- <div class="p-8">
@@ -43,15 +43,13 @@
       <!-- Header -->
       <div class="text-center mb-8">
         <div class="flex flex-column items-center justify-center gap-3 mb-2">
-          <h2 class="text-2xl md:text-3xl font-bold text-gray-800">
-            Faça sua oferta
-          </h2>
+          <h2 class="text-2xl md:text-3xl font-bold">Faça sua oferta</h2>
         </div>
         <div class="space-y-2">
-          <h3 class="text-lg md:text-xl font-semibold text-gray-800">
+          <h3 class="text-lg md:text-xl font-semibold">
             Defina um preço para esse serviço
           </h3>
-          <p class="text-gray-500 text-sm md:text-base">
+          <p class="text-sm md:text-base">
             Dica: O preço para montar custa entre 15% e 30% do valor do móvel
           </p>
           <i class="fas fa-credit-card text-pink-600 text-2xl"></i>
@@ -62,16 +60,14 @@
       <div class="space-y-6 flex flex-column gap-2">
         <!-- Price input -->
         <div class="w-full">
-          <label
-            for="price"
-            class="block text-sm font-medium text-gray-700 mb-1"
+          <label for="price" class="block text-sm font-medium mb-1"
             >Valor da oferta</label
           >
           <div class="relative rounded-md shadow-sm">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
             >
-              <span class="text-gray-500 sm:text-sm">R$</span>
+              <span class="sm:text-sm">R$</span>
             </div>
             <input
               type="text"
@@ -124,7 +120,7 @@
 <!-- ----------------- LOADER MAKE-OFFER ------------------ -->
 <div
   *ngIf="isLoading"
-  class="flex flex-col items-center justify-center min-h-screen space-y-8 bg-white"
+  class="flex flex-col items-center justify-center min-h-screen space-y-8"
 >
   <div
     class="text-5xl font-bold animate-pulse"
@@ -132,7 +128,10 @@
   >
     Tudü
   </div>
-  <div class="text-gray-700 text-center text-xl px-6 leading-relaxed">
+  <div
+    class="text-center text-xl px-6 leading-relaxed"
+    style="color: var(--secondary)"
+  >
     Estamos finalizando a criação do seu pedido...
   </div>
   <div

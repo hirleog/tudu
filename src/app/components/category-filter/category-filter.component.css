@@ -32,6 +32,7 @@
 .filter-category:hover {
   box-shadow: 0 4px 6px -1px rgba(236, 72, 153, 0.1),
     0 2px 4px -1px rgba(236, 72, 153, 0.06);
+    background-color: rgba(255, 192, 203, 0.11);
 }
 
 .other-input {
@@ -75,4 +76,7 @@
 
 .preview-image:hover {
   transform: scale(1.02);
+}
+label {
+  color: var(--secondary);
 }

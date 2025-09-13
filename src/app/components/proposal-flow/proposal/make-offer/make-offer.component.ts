@@ -109,9 +109,10 @@ export class MakeOfferComponent implements OnInit {
     ).toString();
 
     const valorFormatado = formatDecimal(this.price);
+    
 
     const payloadCard: CreateCard = {
-      id_cliente: this.id_cliente.toString(),
+      id_cliente:  this.id_cliente.toString(),
       id_prestador: '0',
       categoria: this.cardTitle,
       status_pedido: 'publicado',

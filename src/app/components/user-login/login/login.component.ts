@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   errorMessage: string = '';
   token: string = '';
   successRegisterIndicator: boolean = false;
+  isLoadingBtn: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -89,6 +90,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLogin(): void {
+    this.isLoadingBtn = true;
+
     if (this.loginForm.valid) {
       this.isProfessional === true
         ? (this.userType = 'prestador')
@@ -105,9 +108,11 @@ export class LoginComponent implements OnInit {
           if (indicatorFlow === 'prestador') {
             localStorage.setItem('access_token_prestador', this.token);
             this.router.navigate(['/tudu-professional/home']);
+            this.isLoadingBtn = false;
           } else {
             localStorage.setItem('access_token_cliente', this.token);
             this.router.navigate(['/']);
+            this.isLoadingBtn = false;
           }
         },
         error: (error: any) => {
@@ -119,8 +124,10 @@ export class LoginComponent implements OnInit {
               queryParams: { param: 'professional' },
               queryParamsHandling: 'merge',
             });
+            this.isLoadingBtn = false;
           } else {
             this.router.navigate(['/login']);
+            this.isLoadingBtn = false;
           }
 
           this.customModal.openModal();
@@ -136,6 +143,8 @@ export class LoginComponent implements OnInit {
   }
 
   onRegister(): void {
+    this.isLoadingBtn = true;
+
     if (this.registerForm.valid) {
       const formValue = this.registerForm.value;
       if (formValue.confirmPassword !== formValue.password) {
@@ -190,6 +199,7 @@ export class LoginComponent implements OnInit {
             true,
             response.message || 'Cadastro realizado com sucesso.'
           );
+          this.isLoadingBtn = false;
         },
         error: (error) => {
           this.customModal.openModal();
@@ -197,6 +207,7 @@ export class LoginComponent implements OnInit {
             false,
             error.error.message || 'Erro ao se cadastrar, tente novamente'
           );
+          this.isLoadingBtn = false;
         },
       });
     } else {
@@ -205,6 +216,7 @@ export class LoginComponent implements OnInit {
         false,
         'Formulário de registro inválido, revise os dados'
       );
+      this.isLoadingBtn = false;
     }
   }
   goToLogin() {

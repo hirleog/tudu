@@ -1,27 +1,25 @@
-<div class="bg-gray-50 min-h-screen mb-0">
+<div class="min-h-screen mb-0" style="background-color: var(--background)">
   <div class="container mx-auto px-3 py-2">
     <div class="service-filter max-w-4xl mx-auto">
-      <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+      <div class="rounded-xl shadow-sm overflow-hidden">
         <!-- Categorias de filtro dinâmicas -->
         <div class="divide-y divide-gray-100">
           <div
             *ngFor="let category of filterCategories"
-            class="filter-category p-4 hover:bg-pink-50/50"
+            class="filter-category p-4 pt-4 pb-4"
           >
             <div
               class="flex items-center justify-between cursor-pointer"
               (click)="toggleCategory(category)"
             >
-              <h3
-                class="text-lg font-semibold text-gray-800 flex items-center gap-2"
-              >
+              <h3 class="text-lg font-semibold flex items-center gap-2">
                 <i
                   [class]="getCategoryIcon(category.title) + ' text-pink-500'"
                 ></i>
                 {{ category.title }}
               </h3>
               <i
-                class="fas fa-chevron-down text-gray-400 transition-transform duration-300"
+                class="fas fa-chevron-down transition-transform duration-300"
                 [class.rotate-180]="category.expanded"
               ></i>
             </div>
@@ -63,10 +61,8 @@
           </div>
 
           <!-- Campo de descrição do serviço -->
-          <div class="bg-white rounded-xl shadow-sm overflow-hidden p-4">
-            <h3
-              class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
-            >
+          <div class="shadow-sm overflow-hidden p-4 filter-category">
+            <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
               <i class="fas fa-align-left text-pink-500"></i>
               {{ filterCategories.length + 1 }}. Descrição do Serviço
             </h3>
@@ -102,62 +98,60 @@ Inclua informações como:
           <!-- Upload de imagens -->
           <form
             #cardForm="ngForm"
-            class="bg-white rounded-xl shadow-sm overflow-hidden p-4"
+            class="shadow-sm overflow-hidden p-4 filter-category"
           >
-            <h3
-              class="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"
-            >
-              <i class="fas fa-images text-pink-500"></i>
-              {{ filterCategories.length + 2 }}. Adicionar Imagens
-            </h3>
+            <div class="pt-4 pb-4">
+              <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+                <i class="fas fa-images text-pink-500"></i>
+                {{ filterCategories.length + 2 }}. Adicionar Imagens
+              </h3>
 
-            <!-- Input de upload -->
-            <label class="block">
-              <span class="block font-medium text-gray-700 mb-1"
-                >Escolher imagens</span
-              >
-              <input
-                type="file"
-                (change)="onFilesSelected($event)"
-                multiple
-                accept="image/*"
-                class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-600 hover:file:bg-pink-100"
-              />
-            </label>
-
-            <!-- Preview das imagens -->
-            <div
-              *ngIf="selectedFiles.length > 0"
-              class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4"
-            >
-              <div
-                *ngFor="let img of selectedPreviews; let i = index"
-                class="relative group border rounded-lg overflow-hidden shadow-sm"
-              >
-                <img
-                  [src]="img"
-                  [alt]="'Imagem selecionada ' + (i + 1)"
-                  class="object-cover w-full h-32"
-                />
-
-                <!-- Botão de remover -->
-                <button
-                  type="button"
-                  (click)="removeImage(i)"
-                  class="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow-sm opacity-100 transition hover:bg-red-50"
-                  title="Remover imagem"
+              <!-- Input de upload -->
+              <label class="block">
+                <span class="block font-medium  mb-1"
+                  >Escolher imagens</span
                 >
-                  <i class="fas fa-times text-sm"></i>
-                </button>
+                <input
+                  type="file"
+                  (change)="onFilesSelected($event)"
+                  multiple
+                  accept="image/*"
+                  class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-pink-50 file:text-pink-600 hover:file:bg-pink-100"
+                />
+              </label>
+
+              <!-- Preview das imagens -->
+              <div
+                *ngIf="selectedFiles.length > 0"
+                class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-4"
+              >
+                <div
+                  *ngFor="let img of selectedPreviews; let i = index"
+                  class="relative group border rounded-lg overflow-hidden shadow-sm"
+                >
+                  <img
+                    [src]="img"
+                    [alt]="'Imagem selecionada ' + (i + 1)"
+                    class="object-cover w-full h-32"
+                  />
+
+                  <!-- Botão de remover -->
+                  <button
+                    type="button"
+                    (click)="removeImage(i)"
+                    class="absolute top-1 right-1 text-red-500 rounded-full p-1 shadow-sm opacity-100 transition hover:bg-red-50"
+                    title="Remover imagem"
+                  >
+                    <i class="fas fa-times text-sm"></i>
+                  </button>
+                </div>
               </div>
             </div>
           </form>
         </div>
 
         <!-- Rodapé do filtro -->
-        <div
-          class="p-4 bg-gray-50 border-t border-gray-100 flex justify-cneter"
-        >
+        <div class="p-4 border-t border-gray-100 flex justify-cneter">
           <button
             class="col-12 btn btn-outline-primary mt-3"
             (click)="submitFilters()"

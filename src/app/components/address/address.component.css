@@ -1,0 +1,10 @@
+label {
+    color: var(--secondary);
+}
+input {
+    background-color: transparent;
+    color: var(--secondary);
+}
+input::placeholder {
+    color: var(--secondary);
+}

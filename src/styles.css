@@ -312,12 +312,12 @@ app-nav {
 }
 .btn-outline-primary {
   border: 1px solid var(--primary);
-  color: var(--primary);
+  color: var(--primary) !important;
 }
 .btn-outline-primary:hover {
+  /* color: red !important; */
   border: 1px solid var(--primary);
   background-color: var(--primary);
-  color: var(--light);
 }
 
 .btn-review {
@@ -378,7 +378,7 @@ app-nav {
   justify-content: center;
   gap: 8px;
   padding: 8px 16px;
-  background-color: white;
+  background-color: var(--background);
   border: 2px solid var(--dark);
   border-radius: 50px;
   color: var(--dark);
@@ -402,7 +402,7 @@ app-nav {
   justify-content: center;
   gap: 8px;
   padding: 8px 16px;
-  background-color: white;
+  background-color: var(--background);
   border: 2px solid rgb(69, 128, 255);
   border-radius: 50px;
   color: rgb(69, 128, 255);

@@ -54,8 +54,8 @@
 
   <!-- My Orders -->
   <div
-  id="card-border"
-    class="container mx-auto "
+    id="card-border"
+    class="container mx-auto"
     *ngIf="(cards.length > 0 && selectedIndex === 0) || isLoading"
   >
     <!-- data-aos="fade-down" -->
@@ -63,7 +63,7 @@
       <div class="col-12 m-0 p-2" *ngFor="let card of cards">
         <div class="request-card rounded-lg shadow-md overflow-hidden">
           <!-- Header -->
-          <div class="request-card-header p-3 ">
+          <div class="request-card-header p-3">
             <div class="request-card-icon mr-3 flex-shrink-0">
               <i
                 [class]="card.icon"
@@ -208,12 +208,12 @@
               </ng-template>
 
               <button
-                class="request-quote-btn"
+                class="btn btn-outline-primary"
                 (click)="goToDetails(card.id_pedido)"
               >
                 <i
                   class="fas fa-search"
-                  style="font-size: 1.5em; color: var(--primary) !important"
+                  style="font-size: 1.5em"
                   title="Clique para ver os detalhes"
                 ></i>
               </button>

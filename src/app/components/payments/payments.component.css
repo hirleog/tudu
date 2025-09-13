@@ -77,6 +77,10 @@ textarea {
   color: white !important;
 }
 
+span {
+  color: var(--secondary) !important;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -22,7 +22,7 @@
         <!-- Resumo do Pedido -->
         <div class="lg:col-span-1">
           <div
-            class="rounded-lg shadow-md p-6 sticky top-6"
+            class="rounded-lg shadow-md p-4 sticky top-6"
             *ngFor="let card of [hiredCardInfo]"
           >
             <h2 class="text-xl font-semibold mb-4">Resumo do Serviço</h2>
@@ -120,7 +120,10 @@
         </div>
 
         <!-- Formas de Pagamento -->
-        <div class="lg:col-span-2">
+        <div
+          class="lg:col-span-2 p-1"
+          style="border: 1px solid var(--bottom-transparent); border-radius: 5px;"
+        >
           <div class="rounded-lg shadow-md overflow-hidden">
             <div class="p-6 border-b border-gray-200">
               <h2 class="text-xl font-semibold">Método de Pagamento</h2>

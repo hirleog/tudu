@@ -21,3 +21,13 @@
 .overflow-x-auto::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+label {
+  color: var(--secondary);
+}
+input {
+  background-color: transparent;
+  color: var(--secondary);
+}
+input::placeholder {
+  color: var(--secondary);
+}

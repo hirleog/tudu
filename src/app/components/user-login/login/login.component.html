@@ -101,7 +101,20 @@
                 class="col-12 btn btn-primary mt-3"
                 style="color: white"
               >
-                Entrar
+                <span *ngIf="!isLoadingBtn"
+                  ><i
+                    class="fas fa-paper-plane"
+                    style="color: white !important"
+                  ></i>
+                  Entrar</span
+                >
+                <span
+                  *ngIf="isLoadingBtn"
+                  class="flex items-center justify-center"
+                >
+                  <i class="fas fa-circle-notch fa-spin mr-2"></i>
+                  Carregando...
+                </span>
               </button>
             </form>
           </div>
@@ -225,7 +238,20 @@
                 style="color: white"
                 class="col-12 btn btn-primary"
               >
-                Cadastrar
+                <span *ngIf="!isLoadingBtn"
+                  ><i
+                    class="fas fa-paper-plane"
+                    style="color: white !important"
+                  ></i>
+                  Cadastrar</span
+                >
+                <span
+                  *ngIf="isLoadingBtn"
+                  class="flex items-center justify-center"
+                >
+                  <i class="fas fa-circle-notch fa-spin mr-2"></i>
+                  Carregando...
+                </span>
               </button>
             </form>
           </div>
