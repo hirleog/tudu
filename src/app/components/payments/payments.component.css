@@ -48,6 +48,35 @@
   animation: fadeInUp 0.3s ease-in-out;
 }
 
+input {
+  background-color: transparent !important;
+  color: var(--secondary) !important;
+}
+input::placeholder {
+  background-color: transparent !important;
+  color: var(--secondary) !important;
+}
+input:disabled {
+  background-color: rgba(131, 131, 131, 0.212) !important;
+}
+label,
+select {
+  color: var(--secondary) !important;
+  background-color: transparent !important;
+}
+select option {
+  background-color: var(--background) !important;
+  color: var(--secondary) !important;
+}
+
+textarea {
+  background-color: transparent !important;
+  color: var(--secondary) !important;
+}
+.btn-primary {
+  color: white !important;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

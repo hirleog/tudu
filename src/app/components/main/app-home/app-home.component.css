@@ -2,17 +2,6 @@ i {
   color: var(--tag-p-grey) !important;
 }
 
-.request-card {
-  display: flex;
-  flex-direction: column;
-  background: var(--light);
-  border-radius: 10px;
-  /* padding: 20px; */
-  margin: 15px 0;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
 .request-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
@@ -23,15 +12,7 @@ i {
   color: #666;
 }
 
-.request-card-body {
-  margin-bottom: 20px;
-}
-
 .card-header {
-  background-color: transparent;
-}
-
-.card-footer {
   background-color: transparent;
 }
 

@@ -28,6 +28,11 @@
 
   --tab-link: #999;
   --bottom-transparent: #00000021;
+
+  /* skeleton */
+  --skeleton-from: #d1d5db; /* gray-300 */
+  --skeleton-via: #f3f4f6; /* gray-100 */
+  --skeleton-to: #d1d5db; /* gray-300 */
 }
 
 html {
@@ -140,6 +145,34 @@ p {
   font-family: "Sarabun", sans-serif;
   font-size: 16px;
   color: var(--secondary);
+}
+
+/* :host ::ng-deep input.form-control {
+  color: var(--secondary) !important;
+  background-color: transparent !important;
+} */
+input.form-control {
+  background-color: transparent !important;
+  color: var(--secondary) !important;
+}
+input.form-control::placeholder {
+  background-color: transparent !important;
+  color: var(--secondary) !important;
+}
+input.form-control:disabled {
+  background-color: rgba(131, 131, 131, 0.212) !important;
+}
+textarea {
+  background-color: transparent !important;
+  color: var(--secondary) !important;
+}
+button.btn-primary {
+  color: white !important;
+}
+
+.input-group-text {
+  color: var(--secondary) !important;
+  background-color: transparent !important;
 }
 
 hr {
@@ -414,7 +447,8 @@ app-nav {
 }
 
 .request-card {
-  background: #ffffff;
+  /* background: #ffffff; */
+  border: 2px solid var(--bottom-transparent);
   border-radius: 10px;
   margin: 15px 0;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -477,7 +511,19 @@ app-nav {
 .request-card-header {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
+  border-bottom: 1px solid var(--bottom-transparent);
+  /* margin-bottom: 15px; */
+}
+
+.request-card-body {
+  margin-top: 30px;
+}
+
+.request-card-header,
+.request-card-body,
+.request-card-footer {
+  /* background-color: var(--background); */
+  /* border: 1px solid var(--bottom-transparent); */
 }
 
 .request-card-number {
@@ -569,6 +615,17 @@ app-nav {
 
 .fa-arrow-left {
   cursor: pointer;
+}
+
+#card-detail .header,
+#card-detail .body,
+#card-detail .resume {
+  border: 1px solid var(--bottom-transparent);
+}
+
+#card-detail .options button:hover {
+  background-color: var(--light);
+  color: var(--secondary);
 }
 
 @media (max-width: 500px) {

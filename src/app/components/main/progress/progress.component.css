@@ -50,9 +50,7 @@ p {
   /* Certifique-se de que a imagem tenha bordas arredondadas */
 }
 
-.card-footer {
-  background-color: transparent;
-}
+
 
 @media (max-width: 350px) {
   .request-card h3 {
