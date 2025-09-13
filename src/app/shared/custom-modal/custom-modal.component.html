@@ -3,7 +3,13 @@
   class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
   [id]="modalId"
 >
-  <div class="bg-white rounded-lg max-w-md w-full p-6 animate-fade-in-up">
+  <div
+    class="rounded-lg max-w-md w-full p-6 animate-fade-in-up"
+    style="
+      background-color: var(--background);
+      border: 1px solid 
+    "
+  >
     <div class="text-center">
       <!-- Ícone dinâmico -->
       <div
@@ -13,7 +19,7 @@
         <i [class]="modalIcon + ' ' + modalIconColor" class="fas text-lg"></i>
       </div>
 
-      <h3 class="text-lg font-medium text-gray-900 mt-3">
+      <h3 class="text-lg font-medium mt-3">
         {{ messageTitle }}
       </h3>
 
