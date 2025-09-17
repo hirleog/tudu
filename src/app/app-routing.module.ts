@@ -49,7 +49,7 @@ const routes: Routes = [
   },
   {
     path: 'proposal',
-    canActivate: [AuthGuard],
+    // canActivate: [AuthGuard],
     loadChildren: () =>
       import('./components/proposal-flow/proposal/proposal.module').then(
         (m) => m.ProposalModule

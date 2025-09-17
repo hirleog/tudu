@@ -96,7 +96,7 @@ export class OrderHelpComponent implements OnInit {
     this.reqStatus = 'whatsapp';
     this.customModal.openModal();
     this.customModal.configureModal(
-      true,
+      'success',
       'Obrigado, continuaremos pelo Whatsapp!'
     );
   }
@@ -177,7 +177,7 @@ export class OrderHelpComponent implements OnInit {
 
           this.customModal.openModal();
           this.customModal.configureModal(
-            true,
+            'success',
             response.message || 'Pedido cancelado com sucesso.'
           );
 
@@ -187,7 +187,7 @@ export class OrderHelpComponent implements OnInit {
         error: (err) => {
           this.customModal.openModal();
           this.customModal.configureModal(
-            false,
+            'error',
             err.message ||
               'Erro ao cancelar o pedido. Tente novamente mais tarde.'
           );
@@ -215,7 +215,7 @@ export class OrderHelpComponent implements OnInit {
 
           this.customModal.openModal();
           this.customModal.configureModal(
-            true,
+            'success',
             'Candidatura cancelada com sucesso.'
           );
           this.stateManagementService.clearAllState();
@@ -224,7 +224,7 @@ export class OrderHelpComponent implements OnInit {
         error: (err) => {
           this.customModal.openModal();
           this.customModal.configureModal(
-            false,
+            'error',
             err.message ||
               'Erro ao cancelar a candidatura. Tente novamente mais tarde.'
           );

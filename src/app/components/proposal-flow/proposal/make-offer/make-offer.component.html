@@ -25,7 +25,7 @@
 
 <section class="min-h-screen p-3 p-md-4" *ngIf="!isLoading">
   <div
-    class="px-3 py-5 lg:px-8 max-w-4xl mx-auto w-full max-w-2xl rounded-xl shadow-md transition-smooth"
+    class="px-3 py-5 lg:px-8 max-w-4xl mx-auto w-full rounded-xl shadow-md transition-smooth"
   >
     <!-- Loading state -->
     <!-- <div class="p-8">
@@ -67,7 +67,7 @@
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
             >
-              <span class="sm:text-sm" style="color: var(--secondary);">R$</span>
+              <span class="sm:text-sm" style="color: var(--secondary)">R$</span>
             </div>
             <input
               type="text"
@@ -116,6 +116,12 @@
     </div>
   </div>
 </section>
+
+<!-- Modal  -->
+<app-custom-modal
+  #meuModal
+  (click)="closeAndGoToLogin()"
+></app-custom-modal>
 
 <!-- ----------------- LOADER MAKE-OFFER ------------------ -->
 <div

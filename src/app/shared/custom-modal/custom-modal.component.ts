@@ -1,11 +1,12 @@
-// shared/components/custom-modal/custom-modal.component.ts
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+type ModalType = 'success' | 'error' | 'warning';
 
 @Component({
   selector: 'app-custom-modal',
-  standalone: false, // ← Importante: não standalone para funcionar com modules
+  standalone: false,
   templateUrl: './custom-modal.component.html',
-  styleUrls: ['./custom-modal.component.css'], // opcional
+  styleUrls: ['./custom-modal.component.css'],
 })
 export class CustomModalComponent {
   @Input() modalId = 'customModal';
@@ -18,7 +19,7 @@ export class CustomModalComponent {
   @Output() modalClosed = new EventEmitter<void>();
   @Input() showModal = false;
 
-  // Propriedades para configuração dinâmica
+  // Configuração dinâmica
   modalIcon: string = 'fa-check';
   modalIconColor: string = 'text-green-600';
   modalBgColor: string = 'bg-green-100';
@@ -27,14 +28,19 @@ export class CustomModalComponent {
 
   openModal(): void {
     this.showModal = true;
-    // this.resetForm();
   }
 
-  configureModal(success: boolean, message: string = ''): void {
-    if (success) {
-      this.setSuccessStyles(message);
-    } else {
-      this.setErrorStyles(message);
+  configureModal(type: ModalType, message: string = ''): void {
+    switch (type) {
+      case 'success':
+        this.setSuccessStyles(message);
+        break;
+      case 'error':
+        this.setErrorStyles(message);
+        break;
+      case 'warning':
+        this.setWarningStyles(message);
+        break;
     }
   }
 
@@ -54,18 +60,27 @@ export class CustomModalComponent {
     this.messageBody = message || 'Ocorreu um erro na operação.';
   }
 
+  private setWarningStyles(message: string): void {
+    this.modalIcon = 'fa-exclamation-circle';
+    this.modalIconColor = 'text-yellow-600';
+    this.modalBgColor = 'bg-yellow-100';
+    this.messageTitle = 'Atenção';
+    this.messageBody =
+      message || 'Verifique as informações antes de prosseguir.';
+  }
+
   closeModal(): void {
     this.showModal = false;
     // this.modalClosed.emit();
   }
 
-  // Métodos públicos para controle externo
+  // Controle externo
   open(
-    success: boolean,
+    type: ModalType,
     message: string = '',
     paymentMethod?: 'pix' | 'credit'
   ): void {
-    this.configureModal(success, message);
+    this.configureModal(type, message);
     if (paymentMethod) {
       this.paymentMethod = paymentMethod;
     }

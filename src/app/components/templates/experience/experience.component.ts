@@ -109,7 +109,7 @@ export class ExperienceComponent {
           error: (error) => {
             this.customModal.openModal();
             this.customModal.configureModal(
-              false,
+              'error',
               error.message || 'Erro ao atualizar os dados.'
             );
 

@@ -230,7 +230,7 @@ export class ProfileDetailComponent implements OnInit {
 
           this.customModal.openModal();
           this.customModal.configureModal(
-            true,
+            'success',
             response.message || 'Dados atualizados com sucesso.'
           );
 
@@ -239,7 +239,7 @@ export class ProfileDetailComponent implements OnInit {
         error: (error) => {
           this.customModal.openModal();
           this.customModal.configureModal(
-            false,
+            'error',
             error.error.message || 'Erro ao atualizar os dados.'
           );
           this.isLoading = false;

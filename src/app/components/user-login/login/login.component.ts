@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import * as bootstrap from 'bootstrap';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
+import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private sharedService: SharedService
   ) {
     // this.route.queryParams.subscribe((params) => {
     //   this.isProfessionalParam = params['param'] || null;
@@ -111,8 +113,15 @@ export class LoginComponent implements OnInit {
             this.isLoadingBtn = false;
           } else {
             localStorage.setItem('access_token_cliente', this.token);
-            this.router.navigate(['/']);
-            this.isLoadingBtn = false;
+
+            const isFirstProposal = this.sharedService.getProposalData();
+            if (isFirstProposal) {
+              this.router.navigate(['/proposal/offer']);
+              this.isLoadingBtn = false;
+            } else {
+              this.router.navigate(['/']);
+              this.isLoadingBtn = false;
+            }
           }
         },
         error: (error: any) => {
@@ -132,7 +141,7 @@ export class LoginComponent implements OnInit {
 
           this.customModal.openModal();
           this.customModal.configureModal(
-            false,
+            'error',
             error.error.message || 'Erro ao realizar login, tente novamente'
           );
         },
@@ -149,7 +158,7 @@ export class LoginComponent implements OnInit {
       const formValue = this.registerForm.value;
       if (formValue.confirmPassword !== formValue.password) {
         this.customModal.openModal();
-        this.customModal.configureModal(false, 'As senhas não coincidem');
+        this.customModal.configureModal('error', 'As senhas não coincidem');
         return;
       }
 
@@ -196,7 +205,7 @@ export class LoginComponent implements OnInit {
 
           this.customModal.openModal();
           this.customModal.configureModal(
-            true,
+            'success',
             response.message || 'Cadastro realizado com sucesso.'
           );
           this.isLoadingBtn = false;
@@ -204,7 +213,7 @@ export class LoginComponent implements OnInit {
         error: (error) => {
           this.customModal.openModal();
           this.customModal.configureModal(
-            false,
+            'error',
             error.error.message || 'Erro ao se cadastrar, tente novamente'
           );
           this.isLoadingBtn = false;
@@ -213,7 +222,7 @@ export class LoginComponent implements OnInit {
     } else {
       this.customModal.openModal();
       this.customModal.configureModal(
-        false,
+        'error',
         'Formulário de registro inválido, revise os dados'
       );
       this.isLoadingBtn = false;

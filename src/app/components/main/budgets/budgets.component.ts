@@ -183,7 +183,7 @@ export class BudgetsComponent implements OnInit {
       error: (error) => {
         this.showModal = true;
         this.customModal.configureModal(
-          true,
+          'success',
           error.message || 'Erro ao recusar a proposta, tente novamente'
         );
       },

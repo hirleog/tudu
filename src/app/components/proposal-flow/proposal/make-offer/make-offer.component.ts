@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as moment from 'moment';
 import { CurrencyMaskConfig } from 'ngx-currency';
@@ -7,6 +7,7 @@ import { CreateCard } from 'src/app/interfaces/create-card.model';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
 import { StateManagementService } from 'src/app/services/state-management.service';
+import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { SharedService } from 'src/app/shared/shared.service';
 import { formatDecimal } from 'src/app/utils/utils';
 
@@ -16,6 +17,8 @@ import { formatDecimal } from 'src/app/utils/utils';
   styleUrls: ['./make-offer.component.css'],
 })
 export class MakeOfferComponent implements OnInit {
+  @ViewChild('meuModal') customModal!: CustomModalComponent;
+
   dateSelected: string = '';
   dateTimeSelected: string = '';
   timeSelected: string = '';
@@ -49,6 +52,7 @@ export class MakeOfferComponent implements OnInit {
     suffix: '',
     nullable: false,
   };
+  isFirstProposal: CreateCard | null | undefined;
 
   constructor(
     private routeActive: ActivatedRoute,
@@ -82,6 +86,12 @@ export class MakeOfferComponent implements OnInit {
   ngOnInit(): void {
     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
 
+    // fluxo para quando o cliente não estava logado e tenta fazer uma proposta
+    this.isFirstProposal = this.sharedService.getProposalData();
+    if (this.isFirstProposal) {
+      this.createCard();
+    }
+
     // this.dateTimeSelected = this.initialDateTime;
     this.selectedFiles = this.sharedService.getFiles();
 
@@ -93,42 +103,60 @@ export class MakeOfferComponent implements OnInit {
   createCard(): Observable<void> {
     this.isLoading = true;
 
-    const dateTimeFormat = moment(
-      this.dateTimeSelected,
-      'DD/MM/YYYY - HH:mm'
-    ).format('YYYY-MM-DD HH:mm');
+    let payloadCard: CreateCard | undefined = undefined;
 
-    const filtersConcat = this.filters
-      .map((category: any) =>
-        category.filters.map((filter: any) => filter.label).join(', ')
-      )
-      .join(', ');
+    if (this.isFirstProposal) {
+      payloadCard = this.isFirstProposal;
+      payloadCard.id_cliente = this.id_cliente.toString();
+    } else {
+      const dateTimeFormat = moment(
+        this.dateTimeSelected,
+        'DD/MM/YYYY - HH:mm'
+      ).format('YYYY-MM-DD HH:mm');
 
-    const codigoConfirmacao = Math.floor(
-      1000 + Math.random() * 9000
-    ).toString();
+      const filtersConcat = this.filters
+        .map((category: any) =>
+          category.filters.map((filter: any) => filter.label).join(', ')
+        )
+        .join(', ');
 
-    const valorFormatado = formatDecimal(this.price);
-    
+      const codigoConfirmacao = Math.floor(
+        1000 + Math.random() * 9000
+      ).toString();
 
-    const payloadCard: CreateCard = {
-      id_cliente:  this.id_cliente.toString(),
-      id_prestador: '0',
-      categoria: this.cardTitle,
-      status_pedido: 'publicado',
-      subcategoria: filtersConcat,
-      serviceDescription: this.serviceDescription,
-      valor: valorFormatado,
-      horario_preferencial: dateTimeFormat,
-      codigo_confirmacao: codigoConfirmacao,
-      cep: this.addressContent[0].cep,
-      street: this.addressContent[0].street,
-      neighborhood: this.addressContent[0].neighborhood,
-      city: this.addressContent[0].city,
-      state: this.addressContent[0].state,
-      number: this.addressContent[0].number,
-      complement: this.addressContent[0].complement || '',
-    };
+      const valorFormatado = formatDecimal(this.price);
+
+      payloadCard = {
+        id_cliente: this.id_cliente !== '' ? this.id_cliente?.toString() : '',
+        id_prestador: '0',
+        categoria: this.cardTitle,
+        status_pedido: 'publicado',
+        subcategoria: filtersConcat,
+        serviceDescription: this.serviceDescription,
+        valor: valorFormatado,
+        horario_preferencial: dateTimeFormat,
+        codigo_confirmacao: codigoConfirmacao,
+        cep: this.addressContent[0].cep,
+        street: this.addressContent[0].street,
+        neighborhood: this.addressContent[0].neighborhood,
+        city: this.addressContent[0].city,
+        state: this.addressContent[0].state,
+        number: this.addressContent[0].number,
+        complement: this.addressContent[0].complement || '',
+      };
+    }
+
+    if (!this.authService.isClienteLoggedIn()) {
+      this.isLoading = false;
+      this.sharedService.setProposalData(payloadCard);
+
+      this.customModal.openModal();
+      this.customModal.configureModal(
+        'warning',
+        'É necessario realizar login para continuar com a proposta.'
+      );
+      return of();
+    }
 
     // Verifica se há arquivos selecionados
     this.cardService
@@ -136,10 +164,14 @@ export class MakeOfferComponent implements OnInit {
       .subscribe({
         next: (response) => {
           this.stateManagementService.clearAllState();
+          this.sharedService.clearProposalData();
+
           this.isLoading = false;
           this.route.navigate(['/home']);
         },
         error: (error) => {
+          this.sharedService.clearProposalData();
+
           this.isLoading = false;
           console.error('Erro ao criar card:', error);
         },
@@ -187,6 +219,13 @@ export class MakeOfferComponent implements OnInit {
 
   payAndCreateCard(): void {
     this.createCard();
+  }
+
+  closeAndGoToLogin(): void {
+    this.customModal.closeModal();
+    this.route.navigate(['/login'], {
+      queryParams: { returnUrl: '/proposal/make-offer' },
+    });
   }
 
   ngOnDestroy(): void {

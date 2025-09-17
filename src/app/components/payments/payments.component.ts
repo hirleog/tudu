@@ -264,14 +264,14 @@ export class PaymentsComponent implements OnInit {
             // Pagamento bem-sucedido
             this.customModal.openModal();
             this.customModal.configureModal(
-              true,
+              'success',
               'Pagamento aprovado com sucesso!'
             );
           } else {
             // Pagamento falhou
             this.customModal.openModal();
             this.customModal.configureModal(
-              false,
+              'error',
               res.details[0].description || 'Pagamento não realizado.'
             );
           }
@@ -280,7 +280,7 @@ export class PaymentsComponent implements OnInit {
           this.processingPayment = false;
           this.customModal.openModal();
           this.customModal.configureModal(
-            false,
+            'error',
             err.details[0].description || 'Pagamento não realizado.'
           );
         },

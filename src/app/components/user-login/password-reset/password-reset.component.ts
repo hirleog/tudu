@@ -163,7 +163,7 @@ export class PasswordResetComponent implements OnInit {
 
           this.customModal.openModal();
           this.customModal.configureModal(
-            false,
+            'error',
             error.error?.message || 'Erro ao redefinir senha'
           );
         },
