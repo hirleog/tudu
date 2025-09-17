@@ -203,9 +203,9 @@ export class ProfileComponent implements OnInit {
       root.style.setProperty('--background', '#000000'); // Tema escuro
       root.style.setProperty('--bottom-transparent', '#ffffff3a'); // Tema escuro
 
-      root.style.setProperty('--skeleton-from', '#d1d5db');
-      root.style.setProperty('--skeleton-via', '#f3f4f6');
-      root.style.setProperty('--skeleton-to', '#d1d5db');
+      root.style.setProperty('--skeleton-from', '#374151');
+      root.style.setProperty('--skeleton-via', '#4b5563');
+      root.style.setProperty('--skeleton-to', '#374151');
     } else {
       root.style.setProperty('--light', '#ffffff'); // Tema claro
       root.style.setProperty('--secondary', '#4b4b4b'); // Tema claro
@@ -214,9 +214,9 @@ export class ProfileComponent implements OnInit {
       root.style.setProperty('--background', '#ffffff'); // Tema escuro
       root.style.setProperty('--bottom-transparent', '#00000021'); // Tema escuro
 
-      root.style.setProperty('--skeleton-from', '#374151');
-      root.style.setProperty('--skeleton-via', '#4b5563');
-      root.style.setProperty('--skeleton-to', '#374151');
+      root.style.setProperty('--skeleton-from', '#d1d5db');
+      root.style.setProperty('--skeleton-via', '#f3f4f6');
+      root.style.setProperty('--skeleton-to', '#d1d5db');
     }
   }
 

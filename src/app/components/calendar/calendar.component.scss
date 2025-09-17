@@ -13,6 +13,18 @@
   font-family: "Roboto", sans-serif;
 }
 
+label {
+  color: var(--secondary);
+}
+input {
+  background-color: transparent;
+  color: var(--secondary);
+}
+input::placeholder {
+  color: var(--secondary);
+}
+
+
 .check-button {
   background-color: var(--blue);
   border-radius: 5;

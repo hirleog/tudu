@@ -17,17 +17,22 @@
   color: #495057;
 }
 .card-header {
-    background-color: var(--background);
-    border-bottom: 1px solid ;
+  background-color: var(--background);
+  border-bottom: 1px solid var(--bottom-transparent);
+  border-start-end-radius: 12px;
+  border-start-start-radius: 12px;
 }
 
 .card-body {
   padding: 2em;
+  border-end-end-radius: 12px;
+  border-bottom-left-radius: 12px;
   background-color: var(--background);
 }
 
 p,
-a, button {
+a,
+button {
   font-size: 1rem;
   color: var(--secondary) !important;
 }

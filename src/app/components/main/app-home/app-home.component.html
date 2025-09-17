@@ -207,7 +207,7 @@
                 </span>
               </ng-template>
 
-              <button
+              <!-- <button
                 class="btn btn-outline-primary"
                 (click)="goToDetails(card.id_pedido)"
               >
@@ -215,6 +215,21 @@
                   class="fas fa-search"
                   style="font-size: 1.5em"
                   title="Clique para ver os detalhes"
+                ></i>
+              </button> -->
+
+              <button
+                (click)="goToDetails(card.id_pedido)"
+                class="request-quote-btn d-flex align-items-center gap-2"
+                style="
+                  border: 1px solid var(--tag-p-grey);
+                  color: var(--primary);
+                  background-color: var(--light);
+                "
+              >
+                <i
+                  class="fas fa-search"
+                  style="color: var(--primary) !important"
                 ></i>
               </button>
             </div>
@@ -293,10 +308,22 @@
               <div
                 class="d-flex justify-content-between align-items-center mb-2"
               >
-                <p>Concluído <br />{{ formatarHorario(card) }}</p>
+                <div>
+                  <span [style.color]="'green'" [style.fontWeight]="'bold'">
+                    CONCLUÍDO
+                    <i
+                      [class]="'fas fa-check-circle'"
+                      style="color: green !important"
+                    ></i>
+                  </span>
+
+                  <p>{{ formatarHorario(card) }}</p>
+                </div>
+
                 <p class="text-end">Pedido <br />#{{ card.id_pedido }}</p>
               </div>
-              <p style="margin-bottom: -1px">Descrição</p>
+              <hr class="mt-3" />
+              <p style="margin-bottom: -1px" class="mt-4">Descrição</p>
 
               <p class="request-card-description">
                 {{ card.subcategoria }}
@@ -304,6 +331,8 @@
               <p class="request-card-description">
                 {{ card.serviceDescription }}
               </p>
+
+              <hr />
             </div>
           </div>
 
