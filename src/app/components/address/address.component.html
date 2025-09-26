@@ -197,7 +197,7 @@
             <button
               type="submit"
               class="col-12 btn btn-outline-primary disabled:opacity-50"
-              [disabled]="!addressForm.valid || !cepNotFound"
+              [disabled]="!addressForm.valid || !cepNotFound || !enderecoCarregado"
             >
               Próximo
               <i class="fas fa-arrow-right ml-2"></i>

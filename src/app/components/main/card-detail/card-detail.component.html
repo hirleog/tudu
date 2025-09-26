@@ -119,7 +119,7 @@
     </div>
 
     <!-- 🔽 NOVA SEÇÃO: Opções que podem te ajudar 🔽 -->
-    <div class="options mb-6 rounded-xl space-y-4 p-2">
+    <div class="options mb-6 rounded-xl space-y-4 p-2" *ngIf="!isProfessionalIndicator">
       <h4 class="text-lg font-semibold text-gray-800 mb-4">
         Opções que podem te ajudar
       </h4>
@@ -180,7 +180,7 @@
         </div>
 
         <!-- Problemas com o Pagamento -->
-        <div class="border rounded-lg overflow-hidden">
+        <div class="border rounded-lg overflow-hidden" *ngIf="flow === 'progress'">
           <button
             (click)="toggleAccordion('pagamento')"
             class="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition-colors"

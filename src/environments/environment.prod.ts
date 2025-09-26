@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
-  mfeUrl: 'https://professional.use-tudu.com.br', 
+  mfeUrl: 'https://professional.use-tudu.com.br',
   apiUrl: 'https://api.use-tudu.com.br',
+  malgaMerchantId: 'merchant_xxx',
 };

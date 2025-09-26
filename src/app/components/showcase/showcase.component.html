@@ -35,17 +35,13 @@
   </div>
 </app-nav>
 
-prestador
-{{ prestadorIsLogged | json }}
-
-cliente
-{{ clienteIsLogged | json }}
-<section id="hero" class="container mx-auto py-8 max-w-6xl">
+<section id="hero" class="mx-auto py-8 max-w-6xl">
   <ng-container #mfeContainer></ng-container>
 
   <div class="container">
+
     <!-- Barra de busca -->
-    <div class="row justify-content-center space">
+    <!-- <div class="row justify-content-center space">
       <div class="col-12">
         <h1 class="text-start mb-3">Qual serviço você precisa?</h1>
         <div class="position-relative">
@@ -72,21 +68,23 @@ cliente
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <!-- <hr class="hr mt-5"> -->
 
     <!-- Vitrine de serviços -->
-    <div class="row g-4 space">
+    <div class="row g-2 pb-5">
+    <h2 class="text-xl font-semibold mb-6">Para Você</h2>
+
       <div
         *ngFor="let card of serviceCards"
-        class="col-6 col-sm-6 col-md-4 col-lg-3" 
+        class="col-4"
         (click)="selectCard(card)"
         [ngClass]="{ 'disabled-card': card.disabled }"
       >
         <div
           data-aos="fade-down"
-          class="card h-100 shadow-sm text-center"
+          class="card h-100 text-center"
           *ngIf="selectedCard === null || selectedCard === card.id"
         >
           <div class="card-body">
@@ -97,7 +95,10 @@ cliente
       </div>
     </div>
 
-    <!-- <hr class="hr mt-5 mb-5"> -->
+    <app-carousel></app-carousel>
+
+    <!-- <app-highlights [service]></app-highlights> -->
+    <app-highlights></app-highlights>
   </div>
 </section>
 

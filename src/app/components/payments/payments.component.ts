@@ -13,10 +13,17 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import {
+  MalgaPaymentWithTokenRequest,
+  MalgaService,
+  MalgaTokenizeAndPayRequest,
+} from 'src/app/malga/service/malga.service';
+import { PaymentFormatter } from 'src/app/malga/utils/payment-formatter';
 import { DeviceService } from 'src/app/services/device/service/device.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
-import { convertRealToCents, cpfValidator } from 'src/app/utils/utils';
+import { convertRealToCents } from 'src/app/utils/utils';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-payment',
@@ -59,31 +66,34 @@ export class PaymentsComponent implements OnInit {
   constructor(
     private paymentService: PaymentService,
     private fb: FormBuilder,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private malgaService: MalgaService
   ) {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (_, i) =>
       (currentYear + i).toString()
     );
 
-    this.paymentForm = this.fb.group({
-      cardNumber: [
-        '',
-        [
-          Validators.required,
-          Validators.pattern(/^[0-9]{13,19}$/), // Cartões têm entre 13 e 19 dígitos
-          this.validateCardNumber.bind(this),
-        ],
-      ],
-      cardHolder: ['', [Validators.required, Validators.minLength(3)]],
-      expiryMonth: ['', Validators.required],
-      expiryYear: ['', Validators.required],
-      cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]],
-      cpf: ['', [Validators.required, cpfValidator]],
-      cardType: [''],
-      installments: ['', [Validators.required]],
-      acceptedTerms: [false, Validators.requiredTrue],
-    });
+    // this.paymentForm = this.fb.group({
+    //   cardNumber: [
+    //     '',
+    //     [
+    //       Validators.required,
+    //       Validators.pattern(/^[0-9]{13,19}$/), // Cartões têm entre 13 e 19 dígitos
+    //       this.validateCardNumber.bind(this),
+    //     ],
+    //   ],
+    //   cardHolder: ['', [Validators.required, Validators.minLength(3)]],
+    //   expiryMonth: ['', Validators.required],
+    //   expiryYear: ['', Validators.required],
+    //   cvv: ['', [Validators.required, Validators.pattern(/^[0-9]{3,4}$/)]],
+    // cpf: ['', [Validators.required, cpfValidator]],
+    // cardType: [''],
+    // installments: ['', [Validators.required]],
+    //   acceptedTerms: [false, Validators.requiredTrue],
+    // });
+
+    this.paymentForm = this.createPaymentForm();
 
     this.selectPaymentMethod('credit');
   }
@@ -94,6 +104,40 @@ export class PaymentsComponent implements OnInit {
 
   get f() {
     return this.paymentForm.controls;
+  }
+
+  private createPaymentForm(): FormGroup {
+    return this.fb.group({
+      cardNumber: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(13),
+          Validators.maxLength(19),
+        ],
+      ],
+      cardHolder: ['', [Validators.required]],
+      expiryMonth: [
+        '',
+        [Validators.required, Validators.min(1), Validators.max(12)],
+      ],
+      expiryYear: ['', [Validators.required, Validators.min(2024)]],
+      cvv: [
+        '',
+        [Validators.required, Validators.minLength(3), Validators.maxLength(4)],
+      ],
+      cpf: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(11),
+          Validators.maxLength(14),
+        ],
+      ],
+      cardType: [''],
+      installments: ['', [Validators.required]],
+      acceptedTerms: [false, Validators.requiredTrue],
+    });
   }
 
   selectPaymentMethod(method: 'pix' | 'credit'): void {
@@ -190,6 +234,113 @@ export class PaymentsComponent implements OnInit {
     return formatted;
   }
 
+  // async submitPayment(): Promise<void> {
+  //   if (this.paymentMethod === 'credit') {
+  //     if (this.paymentForm.invalid) {
+  //       this.paymentForm.markAllAsTouched();
+  //       return;
+  //     }
+
+  //     this.processingPayment = true;
+
+  //     const formValue = this.paymentForm.value;
+  //     const deviceInfo = await this.deviceService.getDeviceInfo();
+
+  //     const requestData = {
+  //       id_pedido: this.hiredCardInfo.id_pedido,
+  //       totalAmount: this.totalWithTax,
+  //       originAmount: convertRealToCents(
+  //         this.hiredCardInfo.candidaturas[0].valor_negociado
+  //       ),
+  //       currency: 'BRL',
+  //       order: {
+  //         order_id: 'ORDER-' + Date.now(),
+  //         product_type: 'service',
+  //       },
+  //       customer: {
+  //         customer_id: this.clientData.id_cliente.toString(),
+  //         first_name: this.clientData.nome,
+  //         last_name: this.clientData.sobrenome,
+  //         document_type: 'CPF',
+  //         document_number: formValue.cpf.replace(/\D/g, ''),
+  //         email: this.clientData.email,
+  //         phone_number: this.clientData.telefone,
+  //         billing_address: {
+  //           street: this.hiredCard.address.street,
+  //           number: this.hiredCard.address.number,
+  //           district: this.hiredCard.address.neighborhood,
+  //           city: this.hiredCard.address.city,
+  //           state: this.hiredCard.address.state,
+  //           country: this.hiredCard.address.country,
+  //           postal_code: this.hiredCard.address.cep.replace(/\D/g, ''),
+  //         },
+  //       },
+  //       device: deviceInfo,
+  //       credit: {
+  //         delayed: false,
+  //         save_card_data: false,
+  //         transaction_type:
+  //           this.selectedInstallmentOption.installments === 1
+  //             ? 'FULL'
+  //             : 'INSTALL_NO_INTEREST',
+  //         number_installments: this.selectedInstallmentOption.installments || 1,
+  //         amount_installment: this.selectedInstallmentOption.installmentValue,
+  //         soft_descriptor: 'TUDU Serviços',
+  //         dynamic_mcc: 7299,
+  //         card: {
+  //           number_token: formValue.cardNumber.replace(/\D/g, ''),
+  //           brand: formValue.cardType.toUpperCase(),
+  //           security_code: formValue.cvv,
+  //           expiration_month: formValue.expiryMonth,
+  //           expiration_year: formValue.expiryYear.slice(-2),
+  //           cardholder_name: formValue.cardHolder.toUpperCase(),
+  //         },
+  //       },
+  //     };
+
+  //     this.paymentService.pagarComCartao(requestData).subscribe({
+  //       next: (res: any) => {
+  //         this.closeModalIndicator = res.success ? 'success' : 'error';
+
+  //         this.processingPayment = false;
+
+  //         if (res.success) {
+  //           // Pagamento bem-sucedido
+  //           this.customModal.openModal();
+  //           this.customModal.configureModal(
+  //             'success',
+  //             'Pagamento aprovado com sucesso!'
+  //           );
+  //         } else {
+  //           // Pagamento falhou
+  //           this.customModal.openModal();
+  //           this.customModal.configureModal(
+  //             'error',
+  //             res.details[0].description || 'Pagamento não realizado.'
+  //           );
+  //         }
+  //       },
+  //       error: (err) => {
+  //         this.processingPayment = false;
+  //         this.customModal.openModal();
+  //         this.customModal.configureModal(
+  //           'error',
+  //           err.details[0].description || 'Pagamento não realizado.'
+  //         );
+  //       },
+  //     });
+  //   } else if (this.paymentMethod === 'pix') {
+  //     if (!this.acceptedTerms) return;
+
+  //     this.processingPayment = true;
+  //     setTimeout(() => {
+  //       this.processingPayment = false;
+  //       this.customModal.openModal();
+  //       console.log('Pagamento via Pix simulado com sucesso');
+  //     }, 2000);
+  //   }
+  // }
+
   async submitPayment(): Promise<void> {
     if (this.paymentMethod === 'credit') {
       if (this.paymentForm.invalid) {
@@ -200,102 +351,216 @@ export class PaymentsComponent implements OnInit {
       this.processingPayment = true;
 
       const formValue = this.paymentForm.value;
-      const deviceInfo = await this.deviceService.getDeviceInfo();
 
-      const requestData = {
-        id_pedido: this.hiredCardInfo.id_pedido,
-        totalAmount: this.totalWithTax,
-        originAmount: convertRealToCents(
-          this.hiredCardInfo.candidaturas[0].valor_negociado
-        ),
-        currency: 'BRL',
-        order: {
-          order_id: 'ORDER-' + Date.now(),
-          product_type: 'service',
-        },
-        customer: {
-          customer_id: this.clientData.id_cliente.toString(),
-          first_name: this.clientData.nome,
-          last_name: this.clientData.sobrenome,
-          document_type: 'CPF',
-          document_number: formValue.cpf.replace(/\D/g, ''),
-          email: this.clientData.email,
-          phone_number: this.clientData.telefone,
-          billing_address: {
-            street: this.hiredCard.address.street,
-            number: this.hiredCard.address.number,
-            district: this.hiredCard.address.neighborhood,
-            city: this.hiredCard.address.city,
-            state: this.hiredCard.address.state,
-            country: this.hiredCard.address.country,
-            postal_code: this.hiredCard.address.cep.replace(/\D/g, ''),
-          },
-        },
-        device: deviceInfo,
-        credit: {
-          delayed: false,
-          save_card_data: false,
-          transaction_type:
-            this.selectedInstallmentOption.installments === 1
-              ? 'FULL'
-              : 'INSTALL_NO_INTEREST',
-          number_installments: this.selectedInstallmentOption.installments || 1,
-          amount_installment: this.selectedInstallmentOption.installmentValue,
-          soft_descriptor: 'TUDU Serviços',
-          dynamic_mcc: 7299,
-          card: {
-            number_token: formValue.cardNumber.replace(/\D/g, ''),
-            brand: formValue.cardType.toUpperCase(),
-            security_code: formValue.cvv,
-            expiration_month: formValue.expiryMonth,
-            expiration_year: formValue.expiryYear.slice(-2),
-            cardholder_name: formValue.cardHolder.toUpperCase(),
-          },
-        },
-      };
+      // OPÇÃO 1: Tokenizar e pagar em uma única chamada (RECOMENDADO)
+      await this.processTokenizeAndPay(formValue);
 
-      this.paymentService.pagarComCartao(requestData).subscribe({
-        next: (res: any) => {
-          this.closeModalIndicator = res.success ? 'success' : 'error';
+      // OPÇÃO 2: Fluxo em duas etapas (tokenizar depois pagar)
+      // await this.processTwoStepPayment(formValue);
 
-          this.processingPayment = false;
-
-          if (res.success) {
-            // Pagamento bem-sucedido
-            this.customModal.openModal();
-            this.customModal.configureModal(
-              'success',
-              'Pagamento aprovado com sucesso!'
-            );
-          } else {
-            // Pagamento falhou
-            this.customModal.openModal();
-            this.customModal.configureModal(
-              'error',
-              res.details[0].description || 'Pagamento não realizado.'
-            );
-          }
-        },
-        error: (err) => {
-          this.processingPayment = false;
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'error',
-            err.details[0].description || 'Pagamento não realizado.'
-          );
-        },
-      });
+      // OPÇÃO 3: Pagamento direto sem tokenização
+      // await this.processDirectPayment(formValue);
     } else if (this.paymentMethod === 'pix') {
-      if (!this.acceptedTerms) return;
-
-      this.processingPayment = true;
-      setTimeout(() => {
-        this.processingPayment = false;
-        this.customModal.openModal();
-        console.log('Pagamento via Pix simulado com sucesso');
-      }, 2000);
+      await this.processPixPayment();
     }
   }
+
+  // OPÇÃO 1: Tokenizar e pagar em uma única chamada (Mais simples)
+  private async processTokenizeAndPay(formValue: any): Promise<void> {
+    const paymentData: MalgaTokenizeAndPayRequest = {
+      merchantId: environment.malgaMerchantId,
+      amount: PaymentFormatter.convertRealToCents(this.totalWithTax),
+      currency: 'BRL',
+      orderId: 'ORDER-' + Date.now(),
+      customer: {
+        name: PaymentFormatter.getFullName(
+          this.clientData.nome,
+          this.clientData.sobrenome
+        ),
+        email: this.clientData.email,
+        phoneNumber: PaymentFormatter.formatPhoneNumber(
+          this.clientData.telefone
+        ),
+        document: {
+          type: 'cpf',
+          number: PaymentFormatter.formatDocument(formValue.cpf),
+        },
+        address: {
+          street: this.hiredCard.address.street,
+          number: this.hiredCard.address.number.toString(),
+          neighborhood: this.hiredCard.address.neighborhood,
+          city: this.hiredCard.address.city,
+          state: this.hiredCard.address.state,
+          country: this.hiredCard.address.country,
+          zipCode: PaymentFormatter.formatZipCode(this.hiredCard.address.cep),
+        },
+      },
+      card: {
+        number: PaymentFormatter.formatCardNumber(formValue.cardNumber),
+        expirationMonth: formValue.expiryMonth,
+        expirationYear: formValue.expiryYear.slice(-2),
+        securityCode: formValue.cvv,
+        holderName: formValue.cardHolder.toUpperCase(),
+      },
+      installments: this.selectedInstallmentOption.installments || 1,
+      saveCard: this.saveCard,
+    };
+
+    this.malgaService.tokenizeAndPay(paymentData).subscribe({
+      next: (res) => {
+        this.processingPayment = false;
+        this.handlePaymentResponse(res);
+      },
+      error: (error) => {
+        this.processingPayment = false;
+        this.handlePaymentError(error);
+      },
+    });
+  }
+
+  // Processar pagamento PIX
+  private async processPixPayment(): Promise<void> {
+    if (!this.acceptedTerms) return;
+
+    this.processingPayment = true;
+
+    const pixData = {
+      merchantId: environment.malgaMerchantId,
+      amount: PaymentFormatter.convertRealToCents(this.totalWithTax),
+      currency: 'BRL',
+      orderId: 'ORDER-' + Date.now(),
+      customer: {
+        name: PaymentFormatter.getFullName(
+          this.clientData.nome,
+          this.clientData.sobrenome
+        ),
+        email: this.clientData.email,
+        phoneNumber: PaymentFormatter.formatPhoneNumber(
+          this.clientData.telefone
+        ),
+        document: {
+          type: 'cpf',
+          number: PaymentFormatter.formatDocument(
+            this.clientData.id_cliente.toString()
+          ),
+        },
+      },
+    };
+
+    this.malgaService.processPixPayment(pixData).subscribe({
+      next: (res: any) => {
+        this.processingPayment = false;
+        this.handlePixSuccess(res);
+      },
+      error: (error) => {
+        this.processingPayment = false;
+        this.handlePaymentError(error);
+      },
+    });
+  }
+
+  private handlePaymentResponse(response: any): void {
+    if (response.status === 'approved' || response.status === 'captured') {
+      this.handlePaymentSuccess(response);
+    } else if (response.status === 'pending') {
+      this.handlePaymentPending(response);
+    } else {
+      this.handlePaymentError(response.message || 'Pagamento não aprovado');
+    }
+  }
+
+  private handlePaymentSuccess(response: any): void {
+    this.closeModalIndicator = 'success';
+    this.customModal.openModal();
+    this.customModal.configureModal(
+      'success',
+      'Pagamento aprovado com sucesso!'
+    );
+
+    // Salvar tokenId se retornado (para compras futuras)
+    if (response.tokenId) {
+      this.saveTokenForFutureUse(response.tokenId);
+    }
+
+    console.log('Pagamento aprovado:', response);
+  }
+
+  private handlePaymentPending(response: any): void {
+    this.closeModalIndicator = 'warning';
+    this.customModal.openModal();
+    this.customModal.configureModal(
+      'warning',
+      'Pagamento pendente de confirmação'
+    );
+  }
+
+  private handlePixSuccess(response: any): void {
+    this.closeModalIndicator = 'success';
+    this.customModal.openModal();
+    this.customModal.configureModal('success', 'PIX gerado com sucesso!');
+  }
+
+  private handlePaymentError(error: any): void {
+    this.closeModalIndicator = 'error';
+    const errorMessage = this.getErrorMessage(error);
+    this.customModal.openModal();
+    this.customModal.configureModal('error', errorMessage);
+  }
+
+  private getErrorMessage(error: any): string {
+    if (error.error?.message) return error.error.message;
+    if (error.details?.[0]?.description) return error.details[0].description;
+    if (error.message) return error.message;
+    return 'Erro ao processar pagamento. Tente novamente.';
+  }
+
+  private saveTokenForFutureUse(tokenId: string): void {
+    // Implementar lógica para salvar o token para uso futuro
+    localStorage.setItem('saved_card_token', tokenId);
+    console.log('Token salvo para uso futuro:', tokenId);
+  }
+
+  // Método para usar cartão salvo (token) em compras futuras
+  useSavedCard(tokenId: string, securityCode: string): void {
+    const paymentData: MalgaPaymentWithTokenRequest = {
+      merchantId: environment.malgaMerchantId,
+      amount: PaymentFormatter.convertRealToCents(this.totalWithTax),
+      currency: 'BRL',
+      orderId: 'ORDER-' + Date.now(),
+      customer: {
+        name: PaymentFormatter.getFullName(
+          this.clientData.nome,
+          this.clientData.sobrenome
+        ),
+        email: this.clientData.email,
+        phoneNumber: PaymentFormatter.formatPhoneNumber(
+          this.clientData.telefone
+        ),
+        document: {
+          type: 'cpf',
+          number: PaymentFormatter.formatDocument(this.paymentForm.value.cpf),
+        },
+        address: {
+          street: this.hiredCard.address.street,
+          number: this.hiredCard.address.number.toString(),
+          neighborhood: this.hiredCard.address.neighborhood,
+          city: this.hiredCard.address.city,
+          state: this.hiredCard.address.state,
+          country: this.hiredCard.address.country,
+          zipCode: PaymentFormatter.formatZipCode(this.hiredCard.address.cep),
+        },
+      },
+      tokenId: tokenId,
+      securityCode: securityCode,
+      installments: this.selectedInstallmentOption.installments || 1,
+    };
+
+    this.malgaService.processPaymentWithToken(paymentData).subscribe({
+      next: (res) => this.handlePaymentResponse(res),
+      error: (error) => this.handlePaymentError(error),
+    });
+  }
+
   calculateInstallments() {
     const totalAmount = convertRealToCents(
       this.hiredCardInfo.candidaturas[0].valor_negociado

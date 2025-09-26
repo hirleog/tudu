@@ -22,6 +22,7 @@ export class AddressComponent implements OnInit {
   cardTitle: any;
   serviceDescription: any;
   cepNotFound: boolean = true;
+  enderecoCarregado: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -89,16 +90,21 @@ export class AddressComponent implements OnInit {
               state: data.uf,
             });
             this.cepNotFound = true;
+            this.enderecoCarregado = true; // endereço carregado!
           } else {
             console.log('CEP não encontrado!');
             this.cepNotFound = false;
+            this.enderecoCarregado = false;
           }
         },
         (error) => {
           console.error('Erro ao buscar o CEP:', error);
           this.cepNotFound = false;
+          this.enderecoCarregado = false;
         }
       );
+    } else {
+      this.enderecoCarregado = false;
     }
   }
 
