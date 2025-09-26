@@ -126,9 +126,9 @@ export class HighlightsComponent implements OnInit {
     return this.categoryDescriptions[categoria] || 'Descrição em breve.';
   }
 
-  goToProposal(card: any) {
+  goToProposal(categoria: any) {
     this.route.navigate(['/proposal'], {
-      queryParams: { cardTitle: card.cardDetail.label },
+      queryParams: { cardTitle: categoria },
     });
   }
 }
