@@ -100,16 +100,18 @@
                     : !acceptedTerms
                 "
               >
-                <span
-                  *ngIf="!processingPayment"
-                  style="color: white !important;"
+                <span *ngIf="!processingPayment" style="color: white !important"
                   >Finalizar Pagamento</span
                 >
                 <span
                   *ngIf="processingPayment"
                   class="flex items-center justify-center"
+                  style="color: white !important"
                 >
-                  <i class="fas fa-circle-notch fa-spin mr-2"></i>
+                  <i
+                    class="fas fa-circle-notch fa-spin mr-2"
+                    style="color: white !important"
+                  ></i>
                   Processando...
                 </span>
                 <i *ngIf="!processingPayment" class="fas fa-lock ml-2"></i>

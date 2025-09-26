@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { card } from '../../interfaces/card';
-import { CardService } from 'src/app/services/card.service';
-import { AuthService } from 'src/app/services/auth.service';
 import { combineLatest, Subscription } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { CardService } from 'src/app/services/card.service';
+import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 
 @Component({
   selector: 'app-showcase',
@@ -11,13 +11,16 @@ import { combineLatest, Subscription } from 'rxjs';
   styleUrls: ['./showcase.component.css'],
 })
 export class ShowcaseComponent implements OnInit, OnDestroy {
-  selectedCard: number | null = null;
+  @ViewChild('meuModal') customModal!: CustomModalComponent;
+
+  selectedCard: any | null = null;
   searchValue: string = '';
 
   serviceCards: any[] = [];
 
   clienteIsLogged: boolean = false;
   prestadorIsLogged: boolean = false;
+  showModal: boolean = false;
 
   private authSubscription: Subscription = new Subscription();
 
@@ -72,11 +75,30 @@ export class ShowcaseComponent implements OnInit, OnDestroy {
 
   // Função para selecionar um card
   selectCard(card: any) {
-    this.selectedCard = card;
+    if (card.disabled) {
+      this.customModal.openModal();
+      this.customModal.configureModal(
+        'warning',
+        'Você já possui um pedido em andamento. Finalize-o para criar um novo.'
+      );
+      this.selectedCard = card;
+    } else {
+      this.selectedCard = card;
 
-    this.route.navigate(['/proposal'], {
-      queryParams: { cardTitle: card.cardDetail.label },
+      this.route.navigate(['/proposal'], {
+        queryParams: { cardTitle: card.cardDetail.label },
+      });
+    }
+  }
+
+  handleModalAction(event: any) {
+    this.route.navigate(['home/detail'], {
+      queryParams: {
+        id: this.selectedCard?.pedidos_ativos[0]?.id_pedido,
+        flow: 'publicado',
+      },
     });
+    this.showModal = false;
   }
 
   ngOnDestroy(): void {

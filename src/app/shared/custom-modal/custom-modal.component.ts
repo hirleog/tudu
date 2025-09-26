@@ -13,10 +13,12 @@ export class CustomModalComponent {
   @Input() title = 'Aviso';
   @Input() message = '';
   @Input() closeButtonText = 'Fechar';
+  @Input() actionButtonText = 'Ver pedido';
   @Input() paymentMethod: 'pix' | 'credit' | null = null;
   @Input() errorDetails: any = null;
 
   @Output() modalClosed = new EventEmitter<void>();
+  @Output() modalAction = new EventEmitter<void>();
   @Input() showModal = false;
 
   // Configuração dinâmica
@@ -69,9 +71,13 @@ export class CustomModalComponent {
       message || 'Verifique as informações antes de prosseguir.';
   }
 
+  actionModal(): void {
+    this.showModal = false;
+    this.modalAction.emit();
+  }
   closeModal(): void {
     this.showModal = false;
-    // this.modalClosed.emit();
+    this.modalClosed.emit();
   }
 
   // Controle externo

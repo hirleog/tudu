@@ -23,13 +23,16 @@ h4 {
 
 .card {
   border: none;
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0);
 }
 
 .card:hover {
   transform: translateY(-5px);
 }
 .card-body {
-  background-color: #f5f5f5;
+  background-color: #f5f5f52e;
+  /* background: transparent !important; */
   padding: 15px 15px;
 
   align-items: center;
@@ -103,6 +106,38 @@ h4 {
   white-space: pre-wrap; /* Mantém quebras de linha */
   text-align: center; /* Centraliza o texto */
   color: var(--secondary) !important;
+}
+
+/* .card-status-popup {
+  position: absolute;
+  top: 0.2em;
+  right: 0.1em;
+  background: #f80e6e;
+  color: #fff;
+  font-size: 0.85em;
+  font-weight: bold;
+  padding: 0.3em 0.8em;
+  border-top-right-radius: 25px;
+  border-bottom-left-radius: 5px;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  pointer-events: none;
+} */
+.card-status-popup {
+  position: absolute;
+  top: 0.2em;
+  right: 0.1em;
+  color: var(--secondary);
+
+  /* background: #f80e6e; */
+  /* color: #fff; */
+  font-size: 0.85em;
+  font-weight: bold;
+  padding: 0.3em 0.8em;
+  /* border-radius: 50%; */
+  z-index: 2;
+  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+  pointer-events: none;
 }
 
 /* Ajustes específicos para telas muito pequenas */

@@ -39,7 +39,6 @@
   <ng-container #mfeContainer></ng-container>
 
   <div class="container">
-
     <!-- Barra de busca -->
     <!-- <div class="row justify-content-center space">
       <div class="col-12">
@@ -74,20 +73,22 @@
 
     <!-- Vitrine de serviços -->
     <div class="row g-2 pb-5">
-    <h2 class="text-xl font-semibold mb-6">Para Você</h2>
+      <h2 class="text-xl font-semibold mb-6">Para Você</h2>
 
       <div
         *ngFor="let card of serviceCards"
         class="col-4"
         (click)="selectCard(card)"
-        [ngClass]="{ 'disabled-card': card.disabled }"
       >
         <div
           data-aos="fade-down"
-          class="card h-100 text-center"
-          *ngIf="selectedCard === null || selectedCard === card.id"
+          class="card h-100 text-center position-relative"
         >
-          <div class="card-body">
+          <!-- Pop-up "Em andamento" -->
+          <div *ngIf="card.disabled" class="card-status-popup">
+            <i class="fas fa-circle-notch fa-spin"></i>
+          </div>
+          <div class="card-body cards-decoration-border">
             <i [class]="card.icon + ' fa-3x text-primary mb-1'"></i>
             <h5 class="card-title">{{ card.cardDetail.label }}</h5>
           </div>
@@ -105,3 +106,11 @@
 <ng-container>
   <app-hero></app-hero>
 </ng-container>
+
+<!-- MODAL -->
+<!-- Modal  -->
+<app-custom-modal
+  #meuModal
+  (modalClosed)="showModal = false"
+  (modalAction)="handleModalAction($event)"
+></app-custom-modal>

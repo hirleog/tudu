@@ -9,11 +9,13 @@ import { HighlightsComponent } from './highlights/highlights.component';
 
 const routes: Routes = [{ path: '', component: ShowcaseComponent }];
 @NgModule({
-  declarations: [ShowcaseComponent, HeroComponent, CarouselComponent, HighlightsComponent],
-  imports: [
-    SharedModule,
-    RouterModule.forChild(routes),
+  declarations: [
+    ShowcaseComponent,
+    HeroComponent,
+    CarouselComponent,
+    HighlightsComponent,
   ],
+  imports: [SharedModule, RouterModule.forChild(routes)],
   exports: [
     // ShowcaseComponent
   ],

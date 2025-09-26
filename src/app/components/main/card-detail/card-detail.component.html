@@ -119,7 +119,10 @@
     </div>
 
     <!-- 🔽 NOVA SEÇÃO: Opções que podem te ajudar 🔽 -->
-    <div class="options mb-6 rounded-xl space-y-4 p-2" *ngIf="!isProfessionalIndicator">
+    <div
+      class="options mb-6 rounded-xl space-y-4 p-2"
+      *ngIf="!isProfessionalIndicator && flow !== 'publicado'"
+    >
       <h4 class="text-lg font-semibold text-gray-800 mb-4">
         Opções que podem te ajudar
       </h4>
@@ -180,7 +183,7 @@
         </div>
 
         <!-- Problemas com o Pagamento -->
-        <div class="border rounded-lg overflow-hidden" *ngIf="flow === 'progress'">
+        <div class="border rounded-lg overflow-hidden">
           <button
             (click)="toggleAccordion('pagamento')"
             class="w-full flex justify-between items-center p-4 hover:bg-gray-50 transition-colors"
@@ -321,7 +324,7 @@
       <button
         *ngIf="
           (temCandidaturaDoPrestadorLogado || !isProfessionalIndicator) &&
-          flow !== 'historic'
+          flow !== 'historic' && flow !== 'finalizado'
         "
         class="col-12 btn btn-primary"
         (click)="handleOption('cancelar', card)"
