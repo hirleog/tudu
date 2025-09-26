@@ -321,19 +321,19 @@
           </div>
         </div>
       </div>
-      <button
-        *ngIf="
-          (temCandidaturaDoPrestadorLogado || !isProfessionalIndicator) &&
-          flow !== 'historic' && flow !== 'finalizado'
-        "
-        class="col-12 btn btn-primary"
-        (click)="handleOption('cancelar', card)"
-      >
-        {{
-          isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido"
-        }}
-      </button>
     </div>
+
+    <button
+      *ngIf="
+        (temCandidaturaDoPrestadorLogado || !isProfessionalIndicator) &&
+        flow !== 'historic' &&
+        flow !== 'finalizado'
+      "
+      class="col-12 btn btn-primary"
+      (click)="handleOption('cancelar', card)"
+    >
+      {{ isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido" }}
+    </button>
   </div>
 </section>
 
