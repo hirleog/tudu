@@ -155,6 +155,14 @@ export class CardService {
     );
   }
 
+  getHighlightsCategorias(): Observable<{
+    highlights: { categoria: string; total: number }[];
+  }> {
+    return this.http.get<{
+      highlights: { categoria: string; total: number }[];
+    }>(`${environment.apiUrl}/cards/categorias/highlights`);
+  }
+
   cancelarCandidatura(
     id_pedido: string,
     id_candidatura: string
