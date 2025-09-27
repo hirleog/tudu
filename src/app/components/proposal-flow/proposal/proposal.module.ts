@@ -10,6 +10,7 @@ import { MakeOfferComponent } from './make-offer/make-offer.component';
 import { ProposalComponent } from './proposal.component';
 import { CardSkeletonModule } from '../../templates/card-skeleton/card-skeleton.module';
 import { NgxCurrencyModule } from 'ngx-currency';
+import { PriceDisplayComponent } from '../../price-display/price-display.component';
 
 const routes: Routes = [
   { path: '', component: ProposalComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
     ProposalComponent,
     MakeOfferComponent,
     CategoryFilterComponent,
+    PriceDisplayComponent,
   ],
   imports: [
     MultiSelectModule,
@@ -31,7 +33,7 @@ const routes: Routes = [
     PaymentsModule,
     CardSkeletonModule,
     NgxCurrencyModule,
-    
+
     RouterModule.forChild(routes), // Importante: Use forChild() aqui
   ],
   exports: [

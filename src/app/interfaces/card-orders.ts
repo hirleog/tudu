@@ -9,6 +9,7 @@ export interface CardOrders {
 
   categoria: string;
   subcategoria: string;
+  filters: string;
   serviceDescription: string;
   valor: string;
   valor_negociado: string;

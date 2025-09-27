@@ -1,0 +1,69 @@
+<!-- price-estimation-display.component.html -->
+<div class="price-estimation-container" *ngIf="priceEstimation && !isLoading">
+  <div class="estimation-header">
+    <h4>
+      <i class="fas fa-calculator me-2"></i>
+      Estimativa para {{ getServiceTypeName() }}
+    </h4>
+    <p class="text-muted">Valor estimado baseado nas suas seleções</p>
+  </div>
+
+  <div class="price-card">
+    <div class="price-main">
+      <div class="average-price">
+        <span class="label">Preço Médio:</span>
+        <span class="value">R$ {{ priceEstimation.basePrice }}</span>
+      </div>
+
+      <div class="price-range">
+        <span class="min">Mín: R$ {{ priceEstimation.minPrice }}</span>
+        <span class="separator">•</span>
+        <span class="max">Máx: R$ {{ priceEstimation.maxPrice }}</span>
+      </div>
+    </div>
+
+    <div class="factors-section" *ngIf="priceEstimation.factors.length > 0">
+      <h6>Fatores considerados:</h6>
+      <ul class="factors-list">
+        <li *ngFor="let factor of priceEstimation.factors">
+          <i class="fas fa-check text-success me-2"></i>
+          {{ factor }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="estimation-note">
+      <small class="text-muted">
+        <i class="fas fa-info-circle me-1"></i>
+        Esta é uma estimativa. O preço final pode variar após avaliação técnica.
+      </small>
+    </div>
+  </div>
+
+  <div class="action-buttons mt-3">
+    <button class="btn btn-primary me-2">
+      <i class="fas fa-clipboard-list me-1"></i>
+      Solicitar Orçamento Completo
+    </button>
+    <button class="btn btn-outline-secondary">
+      <i class="fas fa-redo me-1"></i>
+      Refazer Cálculo
+    </button>
+  </div>
+</div>
+
+<!-- Loading State -->
+<div class="loading-estimation" *ngIf="isLoading">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Calculando...</span>
+  </div>
+  <p>Calculando estimativa...</p>
+</div>
+
+<!-- Empty State -->
+<div class="no-estimation" *ngIf="!priceEstimation && !isLoading">
+  <div class="text-center py-4">
+    <i class="fas fa-calculator fa-3x text-muted mb-3"></i>
+    <p>Selecione as opções acima para ver a estimativa de preço</p>
+  </div>
+</div>

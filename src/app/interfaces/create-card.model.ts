@@ -5,6 +5,7 @@ export interface CreateCard {
 
   categoria: string;
   subcategoria: string;
+  filters: Array<string>;
   serviceDescription: string; // Descrição do serviço
   valor: number;
   horario_preferencial: string;

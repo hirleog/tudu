@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FilterCategory, FilterOption } from 'src/app/interfaces/filters-model';
+import { PriceEstimationService } from 'src/app/services/price-estimation.service';
 import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
@@ -19,8 +20,12 @@ export class CategoryFilterComponent implements OnInit {
   selectedPreviews: string[] = [];
   searchTerm = '';
   selectedCount = 0;
+  priceEstimation: any;
 
-  constructor(private sharedService: SharedService) {}
+  constructor(
+    private sharedService: SharedService,
+    private priceService: PriceEstimationService
+  ) {}
 
   ngOnInit() {
     if (this.serviceTitle) {
@@ -437,6 +442,9 @@ export class CategoryFilterComponent implements OnInit {
     this.selectedCount = this.filterCategories.reduce((count, category) => {
       return count + category.options.filter((opt) => opt.selected).length;
     }, 0);
+
+    // Atualiza a estimativa de preço
+    this.updatePriceEstimation();
   }
 
   resetFilters(): void {
@@ -505,9 +513,41 @@ export class CategoryFilterComponent implements OnInit {
   }
 
   submitFilters(): void {
-    this.filtersSubmitted.emit({
+    const filtersData = {
       filters: this.filterCategories,
       serviceDescription: this.serviceDescription,
+    };
+
+    this.filtersSubmitted.emit(filtersData);
+  }
+
+  // CALCULO DE PREÇO ESTIMADO
+
+  private updatePriceEstimation(): void {
+    console.log(this.serviceTitle);
+
+    const filters = this.getCurrentFilters();
+    this.priceEstimation = this.priceService.estimatePrice(
+      this.serviceTitle,
+      filters
+    );
+
+    this.sharedService.setPriceEstimation(this.priceEstimation);
+  }
+
+  private getCurrentFilters(): any {
+    const filters: any = {};
+    this.filterCategories.forEach((category) => {
+      const selectedOptions = category.options
+        .filter((opt) => opt.selected)
+        .map((opt) => ({
+          value: opt.value,
+          label: opt.label,
+        }));
+      if (selectedOptions.length > 0) {
+        filters[category.title] = selectedOptions;
+      }
     });
+    return filters;
   }
 }

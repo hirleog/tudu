@@ -25,7 +25,7 @@
 
 <section class="min-h-screen p-3 p-md-4" *ngIf="!isLoading">
   <div
-    class="px-3 py-5 lg:px-8 max-w-4xl mx-auto w-full rounded-xl shadow-md transition-smooth"
+    class="px-3 lg:px-8 max-w-4xl mx-auto w-full   transition-smooth"
   >
     <!-- Loading state -->
     <!-- <div class="p-8">
@@ -56,35 +56,143 @@
         </div>
       </div>
 
-      <!-- Form -->
-      <div class="space-y-6 flex flex-column gap-2">
-        <!-- Price input -->
-        <div class="w-full">
-          <label for="price" class="block text-sm font-medium mb-1"
-            >Valor da oferta</label
+      <!-- Card de Estimativa -->
+      <div
+        class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 mb-4 text-white shadow-lg"
+        style="background-color: var(--primary)"
+      >
+        <div class="flex items-center gap-4 ">
+          <div
+            class="bg-white bg-opacity-10 w-12 h-12 rounded-full flex items-center justify-center"
           >
+            <i class="fas fa-tag text-xl"></i>
+          </div>
+          <div>
+            <h4 class="font-bold text-white">Estimativa de Preço</h4>
+            <p class="opacity-90">
+              {{
+                priceEstimation?.description ||
+                  "Montagem e instalação profissional"
+              }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Preço Médio -->
+        <div class="text-center mb-4">
+          <span class="text-purple-200 text-sm block mb-1"
+            >Preço Médio Sugerido</span
+          >
+          <div class="text-4xl font-bold">
+            R$ {{ priceEstimation?.basePrice || "0,00" }}
+          </div>
+        </div>
+
+        <!-- Range de Preços -->
+        <div class="flex items-center justify-center gap-6 mb-4">
+          <div class="text-center">
+            <span class="text-purple-200 text-xs block">Mínimo</span>
+            <span class="font-semibold"
+              >R$ {{ priceEstimation?.minPrice || "0,00" }}</span
+            >
+          </div>
+          <div class="h-8 w-px bg-purple-300"></div>
+          <div class="text-center">
+            <span class="text-purple-200 text-xs block">Máximo</span>
+            <span class="font-semibold"
+              >R$ {{ priceEstimation?.maxPrice || "0,00" }}</span
+            >
+          </div>
+        </div>
+
+        <!-- Fatores Considerados -->
+        <div
+          *ngIf="priceEstimation?.factors && priceEstimation.factors.length > 0"
+          class="bg-opacity-10 rounded-xl p-1 "
+        >
+          <h5 class="font-semibold text-sm mb-2 flex items-center gap-2">
+            <i class="fas fa-check-circle"></i>
+            Itens considerados
+          </h5>
+          <div class="flex flex-wrap gap-2">
+            <span
+              *ngFor="let factor of priceEstimation.factors"
+              class="px-2 py-1 rounded-full text-xs"
+            >
+              {{ factor }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Nota Informativa -->
+        <!-- <div class="flex items-start gap-2 text-xs text-purple-100 opacity-80">
+          <i class="fas fa-info-circle mt-0.5"></i>
+          <p>
+            Esta é uma estimativa baseada em dados de mercado. O preço final
+            pode variar após avaliação técnica.
+          </p>
+        </div> -->
+      </div>
+
+      <!-- Dica sobre o valor -->
+      <div class="mt-2 p-3 mb-5 bg-blue-50 rounded-lg border border-blue-200">
+        <div class="flex items-start gap-2">
+          <i class="fas fa-lightbulb text-blue-500 mt-0.5"></i>
+          <div>
+            <p class="text-sm text-blue-800 font-medium">
+              Você pode ajustar o valor
+            </p>
+            <p class="text-xs text-blue-600">
+              Sugerimos R$ {{ priceEstimation?.basePrice || "0,00" }}, mas você
+              pode oferecer qualquer valor acima de R$
+              {{ priceEstimation?.minPrice || "0,00" }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário de Oferta -->
+      <div class="space-y-6 flex flex-column ">
+        <!-- Price input com informações claras -->
+        <div class="w-full">
+          <div class="flex justify-between items-center mb-2">
+            <label for="price" class="block text-sm font-medium text-gray-700">
+              Valor da sua oferta
+            </label>
+            <span class="text-xs text-gray-500">
+              Mínimo: R$ {{ priceEstimation?.minPrice || "0,00" }}
+            </span>
+          </div>
+
           <div class="relative rounded-md shadow-sm">
             <div
               class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
             >
-              <span class="sm:text-sm" style="color: var(--secondary)">R$</span>
+              <span class="text-gray-500 sm:text-sm">R$</span>
             </div>
             <input
               type="text"
               id="price"
               [(ngModel)]="price"
               name="price"
-              class="price-input block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-pink-500 focus:border-pink-500 custom-focus"
+              [value]="priceEstimation?.basePrice || ''"
+              class="price-input block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-transparent transition-all duration-200"
               currencyMask
               inputmode="numeric"
               [options]="currencyOptions"
               placeholder="0,00"
-              min="0"
+              [min]="priceEstimation?.minPrice || 0"
               step="0.01"
             />
+            <div
+              class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
+            >
+              <i class="fas fa-edit text-gray-400"></i>
+            </div>
           </div>
         </div>
 
+        <!-- Calendar Component -->
         <app-calendar
           [hasTime]="true"
           (dateSelectedChange)="onDateSelected($event)"
@@ -93,10 +201,15 @@
         </app-calendar>
 
         <!-- Info text -->
-        <p class="text-center text-gray-500 text-sm md:text-base">
-          Esse não é o valor final, você pode negociar diretamente com o
-          prestador.
-        </p>
+        <!-- <div
+          class="text-center p-4 bg-gray-50 rounded-lg border border-gray-200"
+        >
+          <p class="text-gray-600 text-sm">
+            <i class="fas fa-handshake text-pink-500 mr-1"></i>
+            Este não é o valor final. Você pode negociar diretamente com o
+            prestador após a contratação.
+          </p>
+        </div> -->
       </div>
 
       <!-- Buttons -->
@@ -118,10 +231,7 @@
 </section>
 
 <!-- Modal  -->
-<app-custom-modal
-  #meuModal
-  (click)="closeAndGoToLogin()"
-></app-custom-modal>
+<app-custom-modal #meuModal (click)="closeAndGoToLogin()"></app-custom-modal>
 
 <!-- ----------------- LOADER MAKE-OFFER ------------------ -->
 <div

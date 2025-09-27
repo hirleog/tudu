@@ -7,6 +7,7 @@ import { CreateCard } from '../interfaces/create-card.model';
 export class SharedService {
   private selectedFiles: File[] = [];
   private proposalData: CreateCard | null = null;
+  private priceData: CreateCard | null = null;
 
   constructor() {}
 
@@ -27,5 +28,15 @@ export class SharedService {
   }
   clearProposalData() {
     this.proposalData = null;
+  }
+  setPriceEstimation(data: CreateCard) {
+    this.priceData = data;
+  }
+
+  getPriceEstimation(): CreateCard | null {
+    return this.priceData;
+  }
+  clearPriceEstimation() {
+    this.priceData = null;
   }
 }

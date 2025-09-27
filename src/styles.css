@@ -9,7 +9,11 @@
   /* --primary: #ffc739; */
   --background: #000000;
   --background-light: #bdbdbd1c;
-  --primary: #f80e6e;
+  --primary: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #db2777 100%
+  ); /* --primary: #f80e6e; */
   /* Cor sóPlida */
   --primary-dark: #d10050;
   /* --premium: #b80aea; */

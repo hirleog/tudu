@@ -1,0 +1,112 @@
+/* price-estimation-display.component.css */
+.price-estimation-container {
+  background: #f8f9fa;
+  border-radius: 15px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border: 1px solid #e9ecef;
+}
+
+.estimation-header h4 {
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.price-card {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 1rem 0;
+}
+
+.price-main {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.average-price {
+  margin-bottom: 1rem;
+}
+
+.average-price .label {
+  display: block;
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.average-price .value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #28a745;
+}
+
+.price-range {
+  font-size: 0.9rem;
+  color: #6c757d;
+}
+
+.price-range .min {
+  color: #dc3545;
+}
+.price-range .max {
+  color: #28a745;
+}
+.price-range .separator {
+  margin: 0 10px;
+}
+
+.factors-section h6 {
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.factors-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.factors-list li {
+  padding: 0.3rem 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.estimation-note {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.loading-estimation {
+  text-align: center;
+  padding: 3rem;
+  color: #6c757d;
+}
+
+.no-estimation {
+  text-align: center;
+  padding: 2rem;
+  color: #6c757d;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .price-estimation-container {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+
+  .average-price .value {
+    font-size: 2rem;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+  }
+}

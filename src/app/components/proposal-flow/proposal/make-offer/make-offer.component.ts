@@ -53,6 +53,7 @@ export class MakeOfferComponent implements OnInit {
     nullable: false,
   };
   isFirstProposal: CreateCard | null | undefined;
+  priceEstimation: any;
 
   constructor(
     private routeActive: ActivatedRoute,
@@ -71,6 +72,8 @@ export class MakeOfferComponent implements OnInit {
       .add(1, 'day')
       .set({ hour: 12, minute: 0, second: 0 })
       .format('DD/MM/YYYY - HH:mm');
+
+    this.priceEstimation = this.sharedService.getPriceEstimation();
 
     this.routeActive.queryParams.subscribe((params) => {
       this.filters = params['filters'] ? JSON.parse(params['filters']) : [];
@@ -98,6 +101,8 @@ export class MakeOfferComponent implements OnInit {
     this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
       this.clienteIsLogged = loggedIn;
     });
+
+    this.price = this.priceEstimation.basePrice.toString();
   }
 
   createCard(): Observable<void> {
@@ -125,6 +130,8 @@ export class MakeOfferComponent implements OnInit {
       ).toString();
 
       const valorFormatado = formatDecimal(this.price);
+      const filters = this.priceEstimation.factors.join(', ');
+      console.log('hudhas', filters);
 
       payloadCard = {
         id_cliente: this.id_cliente !== '' ? this.id_cliente?.toString() : '',
@@ -132,6 +139,7 @@ export class MakeOfferComponent implements OnInit {
         categoria: this.cardTitle,
         status_pedido: 'publicado',
         subcategoria: filtersConcat,
+        filters: filters,
         serviceDescription: this.serviceDescription,
         valor: valorFormatado,
         horario_preferencial: dateTimeFormat,
@@ -226,6 +234,10 @@ export class MakeOfferComponent implements OnInit {
     this.route.navigate(['/login'], {
       queryParams: { returnUrl: '/proposal/make-offer' },
     });
+  }
+
+  parseFloat(price: string): number {
+    return parseFloat(price.replace(',', '.')) || 0;
   }
 
   ngOnDestroy(): void {

@@ -108,9 +108,7 @@ Inclua informações como:
 
               <!-- Input de upload -->
               <label class="block">
-                <span class="block font-medium  mb-1"
-                  >Escolher imagens</span
-                >
+                <span class="block font-medium mb-1">Escolher imagens</span>
                 <input
                   type="file"
                   (change)="onFilesSelected($event)"
@@ -163,3 +161,30 @@ Inclua informações como:
     </div>
   </div>
 </div>
+
+<!-- <div class="price-display-container" *ngIf="priceEstimation">
+  <div class="price-card">
+    <div class="price-header">
+      <i class="fas fa-tag"></i>
+      <h5>Estimativa de Preço</h5>
+    </div>
+    <div class="price-content">
+      <div class="price-range">
+        <span class="from">A partir de</span>
+        <span class="min-price">R$ {{priceEstimation.minPrice}}</span>
+      </div>
+      <div class="average-price">
+        Média: <strong>R$ {{priceEstimation.basePrice}}</strong>
+      </div>
+      <div class="max-price">Até R$ {{priceEstimation.maxPrice}}</div>
+    </div>
+    <div class="price-factors" *ngIf="priceEstimation.factors.length > 0">
+      <small>Fatores considerados:</small>
+      <div class="factors-list">
+        <span class="factor-badge" *ngFor="let factor of priceEstimation.factors">
+          {{factor}}
+        </span>
+      </div>
+    </div>
+  </div>
+</div> -->
