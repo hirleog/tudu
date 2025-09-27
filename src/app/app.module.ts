@@ -10,20 +10,16 @@ import { NgxCurrencyModule } from 'ngx-currency';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ClientReviewsComponent } from './components/client-reviews/client-reviews.component';
-import { FooterComponent } from './components/footer/footer.component';
 import { AppMenuModule } from './components/main/app-menu/app-menu.module';
+import { PrestadorInstitucionalModule } from './components/prestador-institucional/prestador-institucional.module';
 import { ServicesComponent } from './components/services/services.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
-import { PrestadorInstitucionalModule } from './components/prestador-institucional/prestador-institucional.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     ServicesComponent,
-    FooterComponent,
-    ClientReviewsComponent,
 
     // AppMenuComponent,
   ],

@@ -8,6 +8,7 @@
   /* --primary: #ff3d24; */
   /* --primary: #ffc739; */
   --background: #000000;
+  --background-light: #bdbdbd1c;
   --primary: #f80e6e;
   /* Cor sóPlida */
   --primary-dark: #d10050;
@@ -196,7 +197,7 @@ hr {
   border-right: 1px solid rgba(255, 255, 255, 0.12);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   border-top: none; */
-  border: 1px solid #0000000a;
+  border: 1px solid #ffffff49 !important;
 }
 app-nav {
   border-bottom: 1px solid var(--bottom-transparent);
@@ -585,12 +586,6 @@ app-nav {
 }
 .change-renegotiate-btn {
   background-color: var(--blue) !important;
-}
-/* Correção do Carrossel */
-.carousel {
-  overflow: hidden;
-  width: 100%;
-  touch-action: pan-y;
 }
 
 .carousel-inner {

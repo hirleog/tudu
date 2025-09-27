@@ -13,7 +13,7 @@ export class CustomModalComponent {
   @Input() title = 'Aviso';
   @Input() message = '';
   @Input() closeButtonText = 'Fechar';
-  @Input() actionButtonText = 'Ver pedido';
+  @Input() actionButtonText = '';
   @Input() paymentMethod: 'pix' | 'credit' | null = null;
   @Input() errorDetails: any = null;
 

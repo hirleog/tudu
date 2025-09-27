@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NavModule } from '../components/nav/nav.module';
 import { CurrencyFormatDirective } from '../directives/currency-format.directive';
 import { CustomModalModule } from 'src/app/shared/custom-modal/custom-modal.module';
+import { GoogleReviewsService } from '../services/google-reviews.service';
 
 @NgModule({
   declarations: [CurrencyFormatDirective],
@@ -20,5 +21,6 @@ import { CustomModalModule } from 'src/app/shared/custom-modal/custom-modal.modu
     CustomModalModule,
     // StatusFilterPipe,
   ],
+  providers: [GoogleReviewsService],
 })
 export class SharedModule {}

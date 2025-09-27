@@ -31,7 +31,7 @@ h4 {
   transform: translateY(-5px);
 }
 .card-body {
-  background-color: #f5f5f52e;
+  background-color: var(--background-light);
   /* background: transparent !important; */
   padding: 15px 15px;
 
@@ -45,7 +45,20 @@ h4 {
   gap: 5px;
   /* border: 1px solid var(--secondary); */
 }
+.card-body:hover {
+  background-color: var(--primary);
+  color: white;
+  padding: 15px 15px;
+  align-items: center;
+  border-radius: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
 
+/* Estilo normal do ícone */
 .card-body i {
   transition: transform 0.3s, color 0.3s;
   color: var(--primary) !important;
@@ -53,8 +66,13 @@ h4 {
   margin-bottom: 0px !important;
 }
 
+/* Estilo do ícone quando hover no card-body */
+.card-body:hover i {
+  color: white !important; /* Muda a cor para branco no hover */
+}
+
 .card:hover .card-body i {
-  color: var(--primary) !important;
+  color: white !important;
   transform: scale(1.2);
 }
 
@@ -108,35 +126,15 @@ h4 {
   color: var(--secondary) !important;
 }
 
-/* .card-status-popup {
-  position: absolute;
-  top: 0.2em;
-  right: 0.1em;
-  background: #f80e6e;
-  color: #fff;
-  font-size: 0.85em;
-  font-weight: bold;
-  padding: 0.3em 0.8em;
-  border-top-right-radius: 25px;
-  border-bottom-left-radius: 5px;
-  z-index: 2;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  pointer-events: none;
-} */
 .card-status-popup {
   position: absolute;
   top: 0.2em;
   right: 0.1em;
-  color: var(--secondary);
-
-  /* background: #f80e6e; */
-  /* color: #fff; */
-  font-size: 0.85em;
+  color: #25a5ff;
+  font-size: 17px;
   font-weight: bold;
   padding: 0.3em 0.8em;
-  /* border-radius: 50%; */
   z-index: 2;
-  /* box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
   pointer-events: none;
 }
 
@@ -164,6 +162,10 @@ h4 {
   padding-left: 0px;
   padding: 1em;
   padding-bottom: 1em;
+
+  background-color: var(--background-light);
+  padding: 2em;
+  border-radius: 25px;
 }
 
 .ak-bg {
@@ -244,11 +246,12 @@ h4 {
 
 #prestador-btn {
   border: solid 1px var(--premium) !important;
-  color: var(--premium) !important;
+  color: white !important;
+  background-color: var(--premium);
 }
 #prestador-btn:hover {
-  background-color: var(--premium) !important;
-  color: var(--background) !important;
+  background-color: transparent !important;
+  color: var(--premium) !important;
 }
 
 @media (min-width: 768px) and (max-width: 1200px) {
@@ -260,6 +263,8 @@ h4 {
 @media screen and (max-width: 768px) {
   #services {
     flex-direction: column;
+
+    padding: 1em;
   }
 
   .card-spacement {

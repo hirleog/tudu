@@ -1,0 +1,204 @@
+#reviews {
+  background-color: var(--background-light);
+  border-radius: 25px;
+}
+
+h1,
+h4,
+h5,
+p {
+  color: var(--secondary) !important;
+}
+
+.card-review {
+  transition: all 0.3s ease-in-out;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2), 0 6px 20px rgba(0, 0, 0, 0.1);
+  /* background-color: var(--secondary); */
+  background-color: var(--background-light);
+}
+
+.card-review:hover {
+  /* transform: translateY(-5px); */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2), 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-title {
+  font-weight: bold;
+  color: var(--secondary);
+}
+
+.card-text {
+  color: var(--secondary) !important;
+}
+
+#feedback-carousel .card-review {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  height: 16em;
+}
+
+#feedback-carousel .card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.desktop-tablet {
+  display: block;
+}
+
+.mobile {
+  display: none;
+}
+
+.carousel-inner {
+  transition: transform 0.4s ease-in-out;
+  /* Transição suave entre os slides */
+}
+
+.carousel-item {
+  transition: transform 0.4s ease-in-out;
+  margin-bottom: 1em;
+  /* Suaviza o movimento do slide */
+}
+
+/* Garante que os itens do carrossel (os cards) tenham a mesma altura */
+
+#carouselFeedbacks .carousel-item .card-review {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* Faz com que o conteúdo se distribua dentro do card-review*/
+  height: 300px;
+  /* Ajuste a altura conforme necessário */
+}
+
+#carouselFeedbacks .carousel-item .card-body {
+  flex-grow: 1;
+  /* Faz com que o corpo do card-reviewocupe o máximo de espaço */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Adiciona o estilo para o card-review*/
+#carouselFeedbacks .carousel-item .card-review {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 300px;
+}
+
+/* Cabeçalho do feedback: foto e nome */
+.feedback-header {
+  display: flex;
+  align-items: center;
+}
+
+.feedback-photo {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.feedback-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Nome do cliente */
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Estilos para o comentário */
+.card-text {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Estrelas */
+.stars i {
+  font-size: 1.25rem;
+}
+
+/* Ajuste do espaçamento entre o nome, comentário e as estrelas */
+.card-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+#review-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background-light);
+  border-radius: 10px;
+  padding: 2em;
+  margin-bottom: 25px;
+}
+
+#review-header a {
+  cursor: pointer;
+  background-color: var(--primary);
+  border-radius: 50px;
+  padding: 7px 10px;
+}
+
+#review-header h4 {
+  margin: 0px 0px 0px 0px;
+  color: var(--secondary);
+}
+
+.carousel-control-prev,
+.carousel-control-next {
+  background-color: #91919198;
+  width: 45px;
+  height: 45px;
+  border-radius: 100%;
+  top: 7em;
+  font-size: 16px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .desktop-tablet {
+    display: none;
+  }
+
+  .mobile {
+    display: block;
+  }
+
+  #review-header {
+    flex-direction: column;
+  }
+
+  #google-stars {
+    justify-content: center;
+  }
+
+  .card-body {
+    padding: 25px;
+  }
+
+  .feedback-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+  }
+}

@@ -40,7 +40,7 @@ export class ShowcaseComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
+    // window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
 
     this.authSubscription = combineLatest([
       this.authService.isPrestadorLoggedIn$,

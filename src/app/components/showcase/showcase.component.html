@@ -44,7 +44,7 @@
 <section id="hero" class="mx-auto py-8 max-w-6xl">
   <ng-container #mfeContainer></ng-container>
 
-  <div class="container" data-aos="fade-down">
+  <div class="container-fluid" data-aos="fade-down">
     <!-- Barra de busca -->
     <!-- <div class="row justify-content-center space">
       <div class="col-12">
@@ -91,7 +91,7 @@
           <div *ngIf="card.disabled" class="card-status-popup">
             <i class="fas fa-circle-notch fa-spin"></i>
           </div>
-          <div class="card-body cards-decoration-border">
+          <div class="card-body">
             <i [class]="card.icon + ' fa-3x text-primary mb-1'"></i>
             <h5 class="card-title">{{ card.cardDetail.label }}</h5>
           </div>
@@ -104,7 +104,7 @@
     <!-- <app-highlights [service]></app-highlights> -->
     <app-highlights></app-highlights>
 
-    <section id="services" class="container  pt-5">
+    <section id="services" class="container pt-5">
       <div class="flex flex-col lg:flex-row gap-8">
         <!-- Conteúdo de Texto -->
         <div class="w-full lg:w-1/2 z-10" data-aos="fade-down">
@@ -122,7 +122,7 @@
             </p>
             <button
               id="prestador-btn"
-              class="btn btn-outline-primary col-6"
+              class="btn btn-primary col-6"
               [routerLink]="['/prestador-institucional']"
             >
               Saiba mais
@@ -159,17 +159,17 @@
     </section>
   </div>
 
-  <div></div>
-</section>
+  <app-mid-banner></app-mid-banner>
 
-<ng-container>
-  <app-hero></app-hero>
-</ng-container>
+  <app-client-reviews></app-client-reviews>
+  <app-footer></app-footer>
+</section>
 
 <!-- MODAL -->
 <!-- Modal  -->
 <app-custom-modal
   #meuModal
+  [actionButtonText]="'Ver pedido'"
   (modalClosed)="showModal = false"
   (modalAction)="handleModalAction($event)"
 ></app-custom-modal>
