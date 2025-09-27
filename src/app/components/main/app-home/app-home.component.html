@@ -80,6 +80,8 @@
               <p
                 class="request-card-description text-sm text-gray-600 mt-1 truncate-text"
               >
+                <i class="fas fa-map-marker-alt"></i>
+
                 {{ card.address.city }}, {{ card.address.state }} -
                 {{ card.address.neighborhood }}
                 <!-- {{ card.address.street }}, {{ card.address.number }} -
@@ -108,6 +110,11 @@
                     color: var(--primary) !important;
                   "
                 >
+                  <i
+                    class="fas fa-tag"
+                    style="color: var(--primary) !important"
+                  ></i>
+
                   {{ filtro.trim() }}
                 </span>
               </div>
@@ -184,10 +191,11 @@
             <!-- Botões para "publicado" -->
             <!-- *ngIf="card.status_pedido === 'publicado'" -->
             <div
-              class="d-flex justify-content-between card-footer p-3 mt-3"
+              class="d-flex card-footer p-3 mt-3 gap-2"
               style="margin-top: -3em"
             >
               <button
+                style="width: 100%"
                 class="request-quote-btn"
                 routerLinkActive="active"
                 (click)="goToBudgets(card.id_pedido)"
@@ -206,17 +214,6 @@
                   Aguardando uma proposta
                 </span>
               </ng-template>
-
-              <!-- <button
-                class="btn btn-outline-primary"
-                (click)="goToDetails(card.id_pedido)"
-              >
-                <i
-                  class="fas fa-search"
-                  style="font-size: 1.5em"
-                  title="Clique para ver os detalhes"
-                ></i>
-              </button> -->
 
               <button
                 (click)="goToDetails(card.id_pedido)"

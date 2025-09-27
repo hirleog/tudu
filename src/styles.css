@@ -525,7 +525,7 @@ app-nav {
 }
 
 .request-card-body {
-  margin-top: 30px;
+  /* margin-top: 30px; */
 }
 
 .request-card-header,
@@ -614,7 +614,7 @@ app-nav {
   /* Adiciona as reticências (...) ao final do texto */
 }
 .request-card-description {
-  font-size: 0.9rem;
+  font-size: 25px;
   color: #666 !important;
   margin-bottom: 10px;
   overflow: hidden;
