@@ -1,0 +1,399 @@
+<body class="font-[Poppins] bg-gray-50" id="vanta-bg">
+  <!-- Navigation -->
+  <app-nav class="">
+    <div left-content>
+      <div class="flex items-center space-x-2 cursor-pointer">
+        <!-- <i data-feather="zap" class="text-indigo-600"></i>
+
+      <span class="text-xl font-bold text-indigo-600"></span> -->
+        <img
+          [routerLink]="['/']"
+          src="../../../assets/logo-roxoo.webp"
+          class="img-fluid"
+          style="width: 4em"
+          alt="error"
+        />
+      </div>
+    </div>
+
+    <div central-content>
+      <div class="hidden md:flex space-x-8">
+        <a
+          (click)="scrollTo('benefits')"
+          class="text-gray-600 hover:text-indigo-600 transition cursor-pointer"
+        >
+          Vantagens
+        </a>
+        <a
+          (click)="scrollTo('plans')"
+          class="text-gray-600 hover:text-indigo-600 transition cursor-pointer"
+        >
+          Planos
+        </a>
+        <a
+          (click)="scrollTo('rewards')"
+          class="text-gray-600 hover:text-indigo-600 transition cursor-pointer"
+        >
+          Recompensas
+        </a>
+        <a
+          (click)="scrollTo('testimonials')"
+          class="text-gray-600 hover:text-indigo-600 transition cursor-pointer"
+        >
+          Depoimentos
+        </a>
+      </div>
+    </div>
+
+    <div right-content style="flex: none !important">
+      <a
+        (click)="goToProfessionalLogin()"
+        class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-6 rounded-full transition shadow-lg"
+      >
+        Cadastre-se
+      </a>
+    </div>
+  </app-nav>
+
+  <!-- Hero Section -->
+  <section class="container mx-auto px-6 py-20 md:py-32 text-center">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+        Transforme seu talento em <span class="text-gradient">renda extra</span>
+      </h1>
+      <p class="text-xl md:text-2xl text-gray-600 mb-10">
+        Junte-se à nossa plataforma e conquiste sua independência financeira
+        prestando serviços para milhares de clientes
+      </p>
+      <div class="flex flex-col md:flex-row justify-center gap-4">
+        <a
+          (click)="goToProfessionalLogin()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-8 rounded-full text-lg transition shadow-lg hover:shadow-xl"
+        >
+          Comece agora
+        </a>
+        <a
+          href="#benefits"
+          class="border-2 border-indigo-600 text-indigo-600 font-bold py-4 px-8 rounded-full text-lg hover:bg-indigo-50 transition"
+        >
+          Saiba mais
+        </a>
+      </div>
+    </div>
+    <div class="mt-20 flex justify-center">
+      <img
+        src="http://static.photos/technology/1024x576/42"
+        alt="Freelancer working"
+        class="rounded-2xl shadow-2xl w-full max-w-4xl floating"
+      />
+    </div>
+  </section>
+
+  <!-- Benefits Section -->
+  <section id="benefits" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">
+        Por que escolher a Tudü?
+      </h2>
+      <p class="text-center text-gray-500 text-xl mb-16 max-w-2xl mx-auto">
+        Oferecemos tudo que você precisa para transformar suas habilidades em
+        negócio
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Benefit 1 -->
+        <div
+          class="bg-gray-50 p-8 rounded-2xl card-hover border border-gray-100"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-indigo-100 flex items-center justify-center mb-6"
+          >
+            <i data-feather="users" class="text-indigo-600 w-8 h-8"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">Mais Clientes</h3>
+          <p class="text-gray-600">
+            Aumente sua carteira de clientes sem precisar investir em marketing.
+            Nós conectamos você diretamente com quem precisa do seu serviço.
+          </p>
+        </div>
+
+        <!-- Benefit 2 -->
+        <div
+          class="bg-gray-50 p-8 rounded-2xl card-hover border border-gray-100"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-indigo-100 flex items-center justify-center mb-6"
+          >
+            <i data-feather="shield" class="text-indigo-600 w-8 h-8"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">Pagamento Seguro</h3>
+          <p class="text-gray-600">
+            Receba com segurança através da nossa plataforma. Sem preocupação
+            com inadimplência ou problemas com pagamento.
+          </p>
+        </div>
+
+        <!-- Benefit 3 -->
+        <div
+          class="bg-gray-50 p-8 rounded-2xl card-hover border border-gray-100"
+        >
+          <div
+            class="w-16 h-16 rounded-xl bg-indigo-100 flex items-center justify-center mb-6"
+          >
+            <i data-feather="clock" class="text-indigo-600 w-8 h-8"></i>
+          </div>
+          <h3 class="text-xl font-bold mb-4">Flexibilidade Total</h3>
+          <p class="text-gray-600">
+            Você decide quando e onde trabalhar. Aceite serviços de acordo com
+            sua disponibilidade e organize sua própria rotina.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Plans Section -->
+  <section id="plans" class="py-20 gradient-bg">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4 text-white">
+        Planos de Fidelidade
+      </h2>
+      <p class="text-center text-white text-xl mb-16 max-w-3xl mx-auto">
+        Quanto mais serviços você presta, mais benefícios você ganha. Evolua na
+        plataforma e desbloqueie vantagens exclusivas.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <!-- Bronze Plan -->
+        <div
+          class="bg-white bg-opacity-10 p-8 rounded-2xl card-hover backdrop-blur-sm"
+        >
+          <div class="text-center mb-6">
+            <span
+              class="bg-indigo-300 text-indigo-800 text-sm font-bold py-1 px-4 rounded-full"
+              >Iniciante</span
+            >
+          </div>
+          <h3 class="text-2xl font-bold mb-4 text-center text-white">Bronze</h3>
+          <ul class="space-y-3 mb-6">
+            <li class="flex items-start">
+              <i data-feather="check-circle" class="text-white mr-2"></i>
+              <span>Taxa de serviço: 15%</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class="text-white mr-2"></i>
+              <span>Suporte básico</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class="text-white mr-2"></i>
+              <span>Até 5 serviços/mês</span>
+            </li>
+          </ul>
+          <p class="text-center text-white text-sm">
+            Ideal para quem está começando
+          </p>
+        </div>
+
+        <!-- Silver Plan -->
+        <div
+          class="p-8 rounded-2xl card-hover backdrop-blur-sm border-2 border-pink-400"
+        >
+          <!-- <div class=" -top-3 transform -translate-x-1/2" style="width: 100%;">
+            <span
+              class="bg-pink-500 text-white text-center text-sm font-bold py-1 px-4 rounded-full"
+              >Mais Popular</span
+            >
+          </div> -->
+          <div class="text-center mb-6">
+            <span
+              class="bg-pink-500 text-white text-sm font-bold py-1 px-4 rounded-full"
+              >Mais Popular</span
+            >
+          </div>
+          <h3 class="text-2xl font-bold mb-4 text-center text-white">Prata</h3>
+          <ul class="space-y-3 mb-6">
+            <li class="flex items-start">
+              <i data-feather="check-circle" class="mr-2"></i>
+              <span>Taxa de serviço: 12%</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class="mr-2"></i>
+              <span>Suporte prioritário</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class="mr-2"></i>
+              <span>Até 15 serviços/mês</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class="mr-2"></i>
+              <span>Destaque no aplicativo</span>
+            </li>
+          </ul>
+          <p class="text-center text-white text-sm">
+            Para profissionais em crescimento
+          </p>
+        </div>
+
+        <!-- Gold Plan -->
+        <div
+          class="bg-white bg-opacity-10 p-8 rounded-2xl card-hover backdrop-blur-sm"
+        >
+          <div class="text-center mb-6">
+            <span
+              class="bg-yellow-400 text-indigo-900 text-sm font-bold py-1 px-4 rounded-full"
+              >Premium</span
+            >
+          </div>
+          <h3 class="text-2xl font-bold mb-4 text-center text-white">Ouro</h3>
+          <ul class="space-y-3 mb-6">
+            <li class="flex items-start">
+              <i data-feather="check-circle" class=""></i>
+              <span>Taxa de serviço: 8%</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class=""></i>
+              <span>Suporte 24/7</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class=""></i>
+              <span>Serviços ilimitados</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class=""></i>
+              <span>Destaque máximo no app</span>
+            </li>
+            <li class="flex items-start">
+              <i data-feather="check-circle" class=""></i>
+              <span>Cashback em serviços</span>
+            </li>
+          </ul>
+          <p class="text-center text-white text-sm">
+            Para profissionais de alto desempenho
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Rewards System -->
+  <section id="rewards" class="py-20 bg-white">
+    <div class="container mx-auto px-6">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+          Sistema de Recompensas
+        </h2>
+        <p class="text-xl text-gray-500 max-w-2xl mx-auto">
+          Ganhe pontos a cada serviço concluído e troque por benefícios
+          exclusivos
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="mb-8">
+            <div class="flex items-center mb-4">
+              <div
+                class="bg-indigo-600 text-white rounded-full w-10 h-10 flex items-center justify-center mr-4"
+              >
+                <span class="font-bold">1</span>
+              </div>
+              <h3 class="text-xl font-bold">Prestação de Serviços</h3>
+            </div>
+            <p class="text-gray-600 ml-14">
+              Cada serviço concluído com sucesso gera pontos de recompensa.
+            </p>
+          </div>
+
+          <div class="mb-8">
+            <div class="flex items-center mb-4">
+              <div
+                class="bg-indigo-600 text-white rounded-full w-10 h-10 flex items-center justify-center mr-4"
+              >
+                <span class="font-bold">2</span>
+              </div>
+              <h3 class="text-xl font-bold">Avaliações Positivas</h3>
+            </div>
+            <p class="text-gray-600 ml-14">
+              Clientes satisfeitos aumentam sua pontuação e visibilidade.
+            </p>
+          </div>
+
+          <div class="mb-8">
+            <div class="flex items-center mb-4">
+              <div
+                class="bg-indigo-600 text-white rounded-full w-10 h-10 flex items-center justify-center mr-4"
+              >
+                <span class="font-bold">3</span>
+              </div>
+              <h3 class="text-xl font-bold">Resgate de Benefícios</h3>
+            </div>
+            <p class="text-gray-600 ml-14">
+              Troque seus pontos por descontos, cursos ou equipamentos.
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="bg-gradient-to-br from-indigo-600 to-indigo-800 p-8 rounded-2xl text-white shadow-xl"
+        >
+          <h3 class="text-2xl font-bold mb-6 text-center text-white">
+            Benefícios Exclusivos
+          </h3>
+          <div class="grid grid-cols-2 gap-4">
+            <div
+              class="bg-white bg-opacity-20 p-4 rounded-lg text-center hover:bg-opacity-30 transition"
+            >
+              <i data-feather="gift" class="w-8 h-8 mx-auto mb-2"></i>
+              <p class="font-medium">Cashback</p>
+            </div>
+            <div
+              class="bg-white bg-opacity-20 p-4 rounded-lg text-center hover:bg-opacity-30 transition"
+            >
+              <i data-feather="tool" class="w-8 h-8 mx-auto mb-2"></i>
+              <p class="font-medium">Equipamentos</p>
+            </div>
+            <div
+              class="bg-white bg-opacity-20 p-4 rounded-lg text-center hover:bg-opacity-30 transition"
+            >
+              <i data-feather="book-open" class="w-8 h-8 mx-auto mb-2"></i>
+              <p class="font-medium">Cursos</p>
+            </div>
+            <div
+              class="bg-white bg-opacity-20 p-4 rounded-lg text-center hover:bg-opacity-30 transition"
+            >
+              <i data-feather="award" class="w-8 h-8 mx-auto mb-2"></i>
+              <p class="font-medium">Destaques</p>
+            </div>
+          </div>
+          <p class="text-center mt-6 text-white">
+            Quanto mais ativo você for, mais benefícios você desbloqueia!
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section id="testimonials" class="py-20 bg-gray-50">
+    <div class="container mx-auto px-6">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-16">
+        O que nossos prestadores dizem
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-2xl shadow-sm card-hover">
+          <div class="flex items-center mb-4">
+            <img
+              src="http://static.photos/people/200x200/1"
+              alt="Marcos Silva"
+              class="w-12 h-12 rounded-full object-cover mr-4"
+            />
+            <div>
+              <h4></h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>

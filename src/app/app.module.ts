@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { NgxCurrencyModule } from 'ngx-currency';
 import { environment } from '../environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,7 +16,7 @@ import { AppMenuModule } from './components/main/app-menu/app-menu.module';
 import { ServicesComponent } from './components/services/services.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SharedModule } from './shared/shared.module';
-import { NgxCurrencyModule } from 'ngx-currency';
+import { PrestadorInstitucionalModule } from './components/prestador-institucional/prestador-institucional.module';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { NgxCurrencyModule } from 'ngx-currency';
     BrowserAnimationsModule,
     AppRoutingModule,
     AppMenuModule,
+    PrestadorInstitucionalModule,
     NgxCurrencyModule,
 
     SharedModule,

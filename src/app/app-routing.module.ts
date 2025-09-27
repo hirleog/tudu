@@ -70,6 +70,14 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'prestador-institucional',
+    // canActivate: [AuthGuard],
+    loadChildren: () =>
+      import(
+        './components/prestador-institucional/prestador-institucional.module'
+      ).then((m) => m.PrestadorInstitucionalModule),
+  },
+  {
     path: 'tudu-professional',
     canActivate: [AuthGuard],
     loadChildren: () =>

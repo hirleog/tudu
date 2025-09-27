@@ -79,7 +79,7 @@
 
     <!-- Vitrine de serviços -->
     <div class="row g-2 pb-5">
-      <h2 class="text-xl font-semibold mb-6">Para Você</h2>
+      <h2 class="mb-6">Para você</h2>
 
       <div
         *ngFor="let card of serviceCards"
@@ -103,7 +103,64 @@
 
     <!-- <app-highlights [service]></app-highlights> -->
     <app-highlights></app-highlights>
+
+    <!-- <img src="../../../assets/prestador-new.webp" alt="" /> -->
+    <section id="services" class="container spacement pt-5">
+      <div class="flex flex-col lg:flex-row gap-8">
+        <!-- Conteúdo de Texto -->
+        <div class="w-full lg:w-1/2 z-10" data-aos="fade-down">
+          <div id="content-section" class="content">
+            <div style="display: flex">
+              <p class="title-detail">Serviços</p>
+            </div>
+            <h1 style="color: var(--premium)">
+              Quer prestar serviços pela Tudü?
+            </h1>
+            <p class="pb-3 text-lg">
+              Faça agora o seu cadastro e lucre com as suas habilidades. Aumente
+              sua carteira de clientes sem precisar investir em marketing. Nós
+              conectamos você diretamente com quem precisa do seu serviço.
+            </p>
+            <button
+              id="prestador-btn"
+              class="btn btn-outline-primary col-6"
+              [routerLink]="['/prestador-institucional']"
+            >
+              Saiba mais
+            </button>
+          </div>
+        </div>
+
+        <!-- Imagem -->
+        <div
+          class="w-full lg:w-1/2 relative"
+          data-aos="zoom-in"
+          data-aos-duration="600"
+        >
+          <!-- Mobile: Imagem sobreposta suavemente -->
+          <div class="lg:hidden -mt-8 transform -translate-y-4 relative">
+            <img
+              src="../../../assets/Group 2.svg"
+              class="img-fluid mx-auto object-cover"
+              style="max-width: 100%"
+              alt="Profissional Tudu"
+            />
+          </div>
+
+          <!-- Desktop: Imagem normal -->
+          <div class="hidden lg:block">
+            <img
+              src="../../../assets/Group 2.svg"
+              class="img-fluid"
+              alt="Profissional Tudu"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
+
+  <div></div>
 </section>
 
 <ng-container>

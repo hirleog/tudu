@@ -1,0 +1,28 @@
+.gradient-bg {
+  background: linear-gradient(135deg, #6c63ff 0%, #4a44c6 100%);
+}
+.card-hover {
+  transition: all 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+.pulse-animation {
+  animation: pulse 2s infinite;
+}
+
+li span {
+  color: white !important;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}

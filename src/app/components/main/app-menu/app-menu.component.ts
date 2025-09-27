@@ -16,6 +16,7 @@ export class AppMenuComponent implements OnInit {
     '/proposal',
     '/proposal/address',
     '/proposal/offer',
+    '/prestador-institucional',
   ];
   showDiv = true;
   isLogged = false;

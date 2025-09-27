@@ -18,9 +18,9 @@ export class CarouselComponent implements OnInit, OnDestroy {
   slides: Slide[] = [
     {
       id: 1,
-      title: '',
-      description: '',
-      image: 'assets/extudu.webp',
+      title: 'Serviços Premium',
+      description: 'Conheça nossos serviços exclusivos',
+      image: 'assets/eeeE107B6H4.webp',
     },
     {
       id: 2,
