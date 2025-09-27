@@ -14,9 +14,15 @@
   <!-- <div central-content></div> -->
   <div right-content style="flex: none !important">
     <div class="d-flex align-items-center gap-1">
-      <a class="professional-link" (click)="goToProfessional()">{{
-        prestadorIsLogged === true ? "Prestar serviço" : "Seja um profissional"
-      }}</a>
+      <a
+        class="professional-link cursor-pointer"
+        (click)="goToProfessional()"
+        >{{
+          prestadorIsLogged === true
+            ? "Prestar serviço"
+            : "Seja um profissional"
+        }}</a
+      >
       <!-- Botão de login -->
       <a
         [routerLink]="

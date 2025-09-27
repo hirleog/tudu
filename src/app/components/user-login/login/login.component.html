@@ -1,5 +1,14 @@
 <app-nav>
-  <div left-content></div>
+  <div left-content>
+    <div left-content class="d-flex align-items-center">
+      <a
+        [routerLink]="['/']"
+        class="text-decoration-none text-dark d-flex align-items-center"
+      >
+        <i class="fas fa-arrow-left pr-4"></i>
+      </a>
+    </div>
+  </div>
   <div central-content>
     <a routerLink="/" class="logo">
       <img

@@ -14,15 +14,24 @@
   <!-- Main Navbar -->
   <div class="w-full">
     <div class="mx-auto px-2 h-16 flex items-center justify-between">
-      <!-- Conteúdo principal -->
-      <ng-content select="[left-content]"></ng-content>
-      <ng-content select="[central-content]"></ng-content>
-      <ng-content select="[right-content]"></ng-content>
+      <!-- Left Content -->
+      <div class="flex-1 flex justify-start">
+        <ng-content select="[left-content]"></ng-content>
+      </div>
+
+      <!-- Center Content -->
+      <div class="flex-1 flex justify-center">
+        <ng-content select="[central-content]"></ng-content>
+      </div>
+
+      <!-- Right Content -->
+      <div class="flex-1 flex justify-end">
+        <ng-content select="[right-content]"></ng-content>
+      </div>
     </div>
   </div>
 
   <!-- Header Menu (Submenu) -->
-  <!-- <div header-menu class="w-full  border-t border-gray-200"> -->
   <div header-menu class="w-full hr-nav">
     <ng-content select="[header-menu]"></ng-content>
   </div>
