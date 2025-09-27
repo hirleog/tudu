@@ -1,10 +1,66 @@
-i {
-  color: var(--primary);
+/* Ícone de fogo flutuante */
+.fa-fire {
+  color: #ff6b35 !important;
+  filter: drop-shadow(0 2px 4px rgba(255, 107, 53, 0.3));
 }
+
+/* Card styling */
+.cards-decoration-border {
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  position: relative;
+  min-height: 200px; /* Altura mínima consistente */
+}
+
+.cards-decoration-border:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+/* Container do conteúdo do card */
 .card-content {
-  min-height: 100%; /* ajuste conforme necessário */
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   background-color: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header do card (ícone + título) */
+.card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+/* Título com ícone de fogo */
+.title-with-fire {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Animação do ícone de fogo */
+@keyframes gentleBounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.animate-gentle-bounce {
+  animation: gentleBounce 2s ease-in-out infinite;
+}
+
+
+
+/* Garantir que o ícone de fogo flutuante fique acima de tudo */
+.absolute {
+  z-index: 20;
 }
