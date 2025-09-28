@@ -102,7 +102,7 @@ export class MakeOfferComponent implements OnInit {
       this.clienteIsLogged = loggedIn;
     });
 
-    this.price = this.priceEstimation.basePrice.toString();
+    this.price = this.priceEstimation?.basePrice?.toString();
   }
 
   createCard(): Observable<void> {
@@ -129,7 +129,8 @@ export class MakeOfferComponent implements OnInit {
         1000 + Math.random() * 9000
       ).toString();
 
-      const valorFormatado = formatDecimal(this.price);
+      let priceToNumber = Number(this.price);
+      const valorFormatado = formatDecimal(priceToNumber);
       const filters = this.priceEstimation.factors.join(', ');
       console.log('hudhas', filters);
 
