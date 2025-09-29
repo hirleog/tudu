@@ -64,21 +64,29 @@
         <div class="request-card rounded-lg shadow-md overflow-hidden">
           <!-- Header -->
           <div class="request-card-header p-3">
-            <div class="request-card-icon mr-3 flex-shrink-0">
+            <div class="request-card-icon flex-shrink-0">
               <i
                 [class]="card.icon"
                 class="text-2xl"
-                style="color: var(--primary) !important"
+                style="color: var(--primary) !important; font-size: 20px"
               ></i>
             </div>
             <div class="request-card-title flex-grow">
-              <div class="flex justify-between items-start">
+              <div
+                class="d-flex justify-content-between align-items-center gap-2 text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden text-ellipsis"
+              >
                 <h5>
                   {{ card.categoria }}
                 </h5>
+                <span
+                  class="text-gray-500 bg-gray-100 rounded p-1"
+                  style="font-size: 12px"
+                >
+                  #{{ card.id_pedido }}
+                </span>
               </div>
               <p
-                class="request-card-description text-sm text-gray-600 mt-1 truncate-text"
+                class="request-card-description text-gray-600 mt-1 text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden text-ellipsis"
                 style="font-size: 0.9rem !important"
               >
                 <i class="fas fa-map-marker-alt"></i>
@@ -88,19 +96,11 @@
                 <!-- {{ card.address.street }}, {{ card.address.number }} -
                 {{ card.address.city }} - {{ card.address.state }} -->
               </p>
-
-              <span
-                class="text-sm font-medium text-gray-500 bg-gray-100 rounded p-1"
-                style="margin: -30px 0px 30px 0px"
-              >
-                Pedido #{{ card.id_pedido }}
-              </span>
             </div>
           </div>
 
           <!-- Body -->
           <div class="request-card-body p-3">
-            <!-- Filtros de subcategoria com destaque -->
             <div class="mb-4" *ngIf="card.subcategoria">
               <div class="flex flex-wrap gap-2">
                 <span
@@ -121,7 +121,6 @@
               </div>
             </div>
 
-            <!-- Descrição do serviço -->
             <p class="request-card-description text-gray-700 mb-4">
               {{ card.serviceDescription }}
             </p>
@@ -184,6 +183,7 @@
                   ></i>
                 </button>
               </div>
+           
             </div>
           </div>
 
@@ -197,7 +197,7 @@
             >
               <button
                 style="width: 100%"
-                class="request-quote-btn"
+                class="request-quote-btn text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden text-ellipsis"
                 routerLinkActive="active"
                 (click)="goToBudgets(card.id_pedido)"
                 *ngIf="card.candidaturas.length > 0; else semQuotes"
@@ -209,10 +209,15 @@
                   (click)="card.temNovaCandidatura = false"
                   >Novo</span
                 >
+                <!-- <span
+                  class="bg-white text-green-600 text-xs px-2 py-1 rounded-full animate-pulse"
+                >
+                  New!
+                </span> -->
               </button>
               <ng-template #semQuotes>
                 <span
-                  class="request-quote-btn disabled-card bg-secondary text-center"
+                  class="request-quote-btn disabled-card bg-secondary text-center text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden text-ellipsis"
                   style="width: 100%"
                 >
                   Aguardando uma proposta
