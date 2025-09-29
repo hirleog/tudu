@@ -17,6 +17,7 @@
       <a
         class="professional-link cursor-pointer"
         (click)="goToProfessional()"
+        *ngIf="!skeletonLoader"
         >{{
           prestadorIsLogged === true
             ? "Prestar serviço"
@@ -25,6 +26,7 @@
       >
       <!-- Botão de login -->
       <a
+        *ngIf="!skeletonLoader"
         [routerLink]="
           prestadorIsLogged || clienteIsLogged ? '/profile' : '/login'
         "
@@ -41,7 +43,13 @@
   </div>
 </app-nav>
 
-<section id="hero" class="mx-auto py-8 max-w-6xl overflow-hidden">
+<app-home-skeleton *ngIf="skeletonLoader"></app-home-skeleton>
+
+<section
+  id="hero"
+  *ngIf="!skeletonLoader"
+  class="mx-auto py-8 max-w-6xl overflow-hidden"
+>
   <ng-container #mfeContainer></ng-container>
 
   <div class="container-fluid" data-aos="fade-down">
@@ -159,7 +167,6 @@
     </section>
     <app-mid-banner></app-mid-banner>
   </div>
-
 
   <app-client-reviews></app-client-reviews>
   <app-footer></app-footer>

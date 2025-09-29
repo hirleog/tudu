@@ -109,15 +109,16 @@ h4 {
 }
 
 .professional-link {
-  color: var(--secondary);
+  color: var(--background);
   text-decoration: none;
   font-weight: 400;
   padding: 8px 16px;
+  background-color: var(--premium);
+  border-radius: 50px;
 }
 .professional-link:hover {
   padding: 8px 16px;
-  border-radius: 50px;
-  background-color: rgba(0, 0, 0, 0.096);
+  background-color: #5c00a7
 }
 .card-title {
   display: block; /* Garante que o elemento seja tratado como bloco */

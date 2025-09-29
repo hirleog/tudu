@@ -516,6 +516,7 @@ export class CategoryFilterComponent implements OnInit {
     const filtersData = {
       filters: this.filterCategories,
       serviceDescription: this.serviceDescription,
+      priceEstimation: JSON.stringify(this.priceEstimation),
     };
 
     this.filtersSubmitted.emit(filtersData);
@@ -532,7 +533,7 @@ export class CategoryFilterComponent implements OnInit {
       filters
     );
 
-    this.sharedService.setPriceEstimation(this.priceEstimation);
+    // this.sharedService.setPriceEstimation(this.priceEstimation);
   }
 
   private getCurrentFilters(): any {
