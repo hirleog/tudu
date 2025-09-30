@@ -22,8 +22,9 @@ import { PaymentFormatter } from 'src/app/malga/utils/payment-formatter';
 import { DeviceService } from 'src/app/services/device/service/device.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
-import { convertRealToCents } from 'src/app/utils/utils';
+import { convertRealToCents, formatCurrency } from 'src/app/utils/utils';
 import { environment } from 'src/environments/environment';
+import { formatDecimal } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-payment',
@@ -31,6 +32,8 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./payments.component.css'],
 })
 export class PaymentsComponent implements OnInit {
+  formatCurrency = formatCurrency;
+
   @ViewChild('meuModal') customModal!: CustomModalComponent;
 
   @Input() clientData!: any;
@@ -694,11 +697,11 @@ export class PaymentsComponent implements OnInit {
   }
 
   get totalWithTax(): number {
-    const totalValueReais =
-      (this.selectedInstallmentOption?.totalValue || 0) / 100;
-    return totalValueReais + (this.defaultTax || 0);
+    return (
+      (this.selectedInstallmentOption?.totalValue || 0) +
+      (this.defaultTax || 0) * 100
+    );
   }
-
   get candidatura(): any {
     const candidato = this.hiredCardInfo.candidaturas.find(
       (candidato: any) => candidato.prestador_id === this.selectedCandidatura
