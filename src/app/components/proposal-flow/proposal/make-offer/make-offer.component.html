@@ -24,9 +24,7 @@
 </app-nav>
 
 <section class="min-h-screen p-3 p-md-4" *ngIf="!isLoading">
-  <div
-    class=" max-w-4xl mx-auto w-full   transition-smooth"
-  >
+  <div class="max-w-4xl mx-auto w-full transition-smooth">
     <!-- Loading state -->
     <!-- <div class="p-8">
       <div class="animate-pulse space-y-6">
@@ -61,7 +59,7 @@
         class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-6 mb-4 text-white shadow-lg"
         style="background-color: var(--primary)"
       >
-        <div class="flex items-center gap-4 ">
+        <div class="flex items-center gap-4">
           <div
             class="bg-white bg-opacity-10 w-12 h-12 rounded-full flex items-center justify-center"
           >
@@ -108,7 +106,7 @@
         <!-- Fatores Considerados -->
         <div
           *ngIf="priceEstimation?.factors && priceEstimation.factors.length > 0"
-          class="bg-opacity-10 rounded-xl p-1 "
+          class="bg-opacity-10 rounded-xl p-1"
         >
           <h5 class="font-semibold text-sm mb-2 flex items-center gap-2">
             <i class="fas fa-check-circle"></i>
@@ -144,14 +142,14 @@
             </p>
             <p class="text-xs text-blue-600">
               Sugerimos R$ {{ priceEstimation?.basePrice || "0,00" }}, mas você
-              pode oferecer qualquer valor 
+              pode oferecer qualquer valor
             </p>
           </div>
         </div>
       </div>
 
       <!-- Formulário de Oferta -->
-      <div class="space-y-6 flex flex-column ">
+      <div class="space-y-6 flex flex-column">
         <!-- Price input com informações claras -->
         <div class="w-full">
           <div class="flex justify-between items-center mb-2">
@@ -159,7 +157,7 @@
               Valor da sua oferta
             </label>
             <span class="text-xs text-gray-500">
-              Mínimo: R$ {{ priceEstimation?.minPrice || "0,00" }}
+              Mínimo: R$ 50
             </span>
           </div>
 
@@ -179,7 +177,9 @@
               currencyMask
               inputmode="numeric"
               [options]="currencyOptions"
-              placeholder="0,00"
+              placeholder="50,00"
+              (blur)="validateMinimumValue()"
+              [class.is-invalid]="showMinError"
               [min]="priceEstimation?.minPrice || 0"
               step="0.01"
             />

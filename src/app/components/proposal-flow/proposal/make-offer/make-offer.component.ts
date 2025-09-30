@@ -37,6 +37,7 @@ export class MakeOfferComponent implements OnInit {
 
   isLoading: boolean = false;
   clienteIsLogged: boolean = false;
+  showMinError = false;
 
   private subscriptionCliente: Subscription = new Subscription();
   serviceDescription: any;
@@ -79,7 +80,9 @@ export class MakeOfferComponent implements OnInit {
       this.filters = params['filters'] ? JSON.parse(params['filters']) : [];
       this.cardTitle = params['cardTitle'];
       this.serviceDescription = params['serviceDescription'] || '';
-      this.priceEstimation = params['priceEstimation'] ? JSON.parse(params['priceEstimation']) : {};
+      this.priceEstimation = params['priceEstimation']
+        ? JSON.parse(params['priceEstimation'])
+        : {};
 
       this.addressContent = params['addressContent']
         ? JSON.parse(params['addressContent'])
@@ -242,7 +245,13 @@ export class MakeOfferComponent implements OnInit {
   parseFloat(price: string): number {
     return parseFloat(price.replace(',', '.')) || 0;
   }
+  validateMinimumValue() {
+    this.showMinError = this.price < 50;
 
+    if (this.showMinError) {
+      this.price = 50;
+    }
+  }
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória
     this.subscriptionCliente.unsubscribe();
