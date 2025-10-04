@@ -104,6 +104,14 @@ export class PaymentsComponent implements OnInit {
 
   ngOnInit(): void {
     this.calculateInstallments();
+    this.paymentService.getCharges().subscribe({
+      next: (data) => {
+        console.log('sdasdasadsasd', data);
+      },
+      error: (error) => {
+        console.log('errorajdhkjahsdkjashd', error);
+      },
+    });
   }
 
   get f() {
