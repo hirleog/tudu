@@ -52,7 +52,6 @@ export class PaymentService {
     return this.http.get(`${environment.apiUrl}/payments/cliente/${idCliente}`);
   }
 
-
   calculateInstallments(payload: any) {
     return this.http.post(
       `${environment.apiUrl}/installments/calculate`,
@@ -65,10 +64,12 @@ export class PaymentService {
     return this.http.get(`${environment.apiUrl}/installments/table`);
   }
 
-
-
-    // Buscar pagamentos do cliente
+  // Buscar pagamentos do cliente
   getCharges(): Observable<any> {
     return this.http.get(`${environment.apiUrl}/malga/charges`);
+  }
+
+  createToken(cardData: any): Observable<any> {
+    return this.http.post(`${environment.apiUrl}/malga/tokens`, cardData);
   }
 }
