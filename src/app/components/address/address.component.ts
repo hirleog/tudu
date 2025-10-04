@@ -23,6 +23,7 @@ export class AddressComponent implements OnInit {
   serviceDescription: any;
   cepNotFound: boolean = true;
   enderecoCarregado: boolean = false;
+  priceEstimation: string = '';
 
   constructor(
     private fb: FormBuilder,
@@ -53,6 +54,7 @@ export class AddressComponent implements OnInit {
       this.cardTitle = params['cardTitle'];
       this.filters = params['filters'];
       this.serviceDescription = params['serviceDescription'] || '';
+      this.priceEstimation = params['priceEstimation'] || '';
     });
   }
 
@@ -117,6 +119,7 @@ export class AddressComponent implements OnInit {
             cardTitle: params['cardTitle'],
             filters: params['filters'],
             serviceDescription: params['serviceDescription'] || '',
+            priceEstimation: params['priceEstimation'] || '',
           },
         });
       });
@@ -130,6 +133,7 @@ export class AddressComponent implements OnInit {
           cardTitle: this.cardTitle,
           filters: this.filters,
           serviceDescription: this.serviceDescription,
+          priceEstimation: params['priceEstimation'] || '', // Reenvia a descrição do serviço
         },
       });
     });

@@ -37,6 +37,7 @@ export class MakeOfferComponent implements OnInit {
 
   isLoading: boolean = false;
   clienteIsLogged: boolean = false;
+  showMinError = false;
 
   private subscriptionCliente: Subscription = new Subscription();
   serviceDescription: any;
@@ -73,12 +74,15 @@ export class MakeOfferComponent implements OnInit {
       .set({ hour: 12, minute: 0, second: 0 })
       .format('DD/MM/YYYY - HH:mm');
 
-    this.priceEstimation = this.sharedService.getPriceEstimation();
+    // this.priceEstimation = this.sharedService.getPriceEstimation();
 
     this.routeActive.queryParams.subscribe((params) => {
       this.filters = params['filters'] ? JSON.parse(params['filters']) : [];
       this.cardTitle = params['cardTitle'];
       this.serviceDescription = params['serviceDescription'] || '';
+      this.priceEstimation = params['priceEstimation']
+        ? JSON.parse(params['priceEstimation'])
+        : {};
 
       this.addressContent = params['addressContent']
         ? JSON.parse(params['addressContent'])
@@ -102,7 +106,10 @@ export class MakeOfferComponent implements OnInit {
       this.clienteIsLogged = loggedIn;
     });
 
-    this.price = this.priceEstimation?.basePrice?.toString();
+    this.price = (this.priceEstimation?.basePrice * 1.2).toString();
+    this.priceEstimation.basePrice = (
+      this.priceEstimation?.basePrice * 1.2
+    ).toString();
   }
 
   createCard(): Observable<void> {
@@ -221,6 +228,7 @@ export class MakeOfferComponent implements OnInit {
           cardTitle: params['cardTitle'], // Reenvia os parâmetros
           filters: params['filters'],
           serviceDescription: params['serviceDescription'] || '', // Reenvia a descrição do serviço
+          priceEstimation: JSON.stringify(params['priceEstimation']) || '', // Reenvia a descrição do serviço
         },
       });
     });
@@ -240,7 +248,13 @@ export class MakeOfferComponent implements OnInit {
   parseFloat(price: string): number {
     return parseFloat(price.replace(',', '.')) || 0;
   }
+  validateMinimumValue() {
+    this.showMinError = this.price < 50;
 
+    if (this.showMinError) {
+      this.price = 50;
+    }
+  }
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória
     this.subscriptionCliente.unsubscribe();

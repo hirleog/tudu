@@ -10,6 +10,7 @@ import { GoogleReviewsService } from 'src/app/services/google-reviews.service';
 import { FooterComponent } from '../footer/footer.component';
 import { ClientReviewsComponent } from './client-reviews/client-reviews.component';
 import { MidBannerComponent } from './mid-banner/mid-banner.component';
+import { HomeSkeletonComponent } from '../templates/home-skeleton/home-skeleton.component';
 
 const routes: Routes = [{ path: '', component: ShowcaseComponent }];
 @NgModule({
@@ -21,6 +22,7 @@ const routes: Routes = [{ path: '', component: ShowcaseComponent }];
     ClientReviewsComponent,
     MidBannerComponent,
     FooterComponent,
+    HomeSkeletonComponent
   ],
   imports: [SharedModule, RouterModule.forChild(routes)],
   exports: [

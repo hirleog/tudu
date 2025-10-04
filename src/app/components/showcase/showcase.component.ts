@@ -21,6 +21,7 @@ export class ShowcaseComponent implements OnInit, OnDestroy {
   clienteIsLogged: boolean = false;
   prestadorIsLogged: boolean = false;
   showModal: boolean = false;
+  skeletonLoader: boolean = false;
 
   private authSubscription: Subscription = new Subscription();
 
@@ -29,18 +30,11 @@ export class ShowcaseComponent implements OnInit, OnDestroy {
     public cardService: CardService,
     public authService: AuthService
   ) {
-    this.cardService.getShowcaseCards().subscribe({
-      next: (res) => {
-        this.serviceCards = res.cards;
-      },
-      error: (err) => {
-        console.error('Error fetching showcase cards:', err);
-      },
-    });
+    this.loadCards();
   }
 
   async ngOnInit() {
-    // window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
 
     this.authSubscription = combineLatest([
       this.authService.isPrestadorLoggedIn$,
@@ -54,6 +48,20 @@ export class ShowcaseComponent implements OnInit, OnDestroy {
         this.route.navigate(['/tudu-professional/home']);
       }
       // Nos outros casos (apenas cliente ou ambos), mantém na rota atual
+    });
+  }
+
+  loadCards() {
+    this.skeletonLoader = true;
+    this.cardService.getShowcaseCards().subscribe({
+      next: (res) => {
+        this.serviceCards = res.cards;
+        this.skeletonLoader = false;
+      },
+      error: (err) => {
+        console.error('Error fetching showcase cards:', err);
+        this.skeletonLoader = false;
+      },
     });
   }
 

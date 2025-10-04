@@ -12,6 +12,7 @@ export class ProposalComponent implements OnInit {
   selectedOptions: any[] = [];
   paramCategory: any;
   serviceDescription!: string;
+  priceEstimation!: string;
 
   isLoading: boolean = false;
   serviceType: string = 'reparos-manutencao'; // Define o tipo de serviço como 'painting'
@@ -27,11 +28,12 @@ export class ProposalComponent implements OnInit {
       this.filters = params['filters'] ? JSON.parse(params['filters']) : null;
       this.paramCategory = params['cardTitle'] || null; // Obtém o título do card dos parâmetros da rota
       this.serviceDescription = params['serviceDescription'] || ''; // Obtém a descrição do serviço dos parâmetros da rota});
+      this.priceEstimation = params['priceEstimation'] || ''; // Obtém a descrição do serviço dos parâmetros da rota});
     });
 
-    this.routeActive.queryParams.subscribe((params) => {
-      this.paramCategory = params['cardTitle'] || null; // Obtém o título do card dos parâmetros da rota
-    });
+    // this.routeActive.queryParams.subscribe((params) => {
+    //   this.paramCategory = params['cardTitle'] || null; // Obtém o título do card dos parâmetros da rota
+    // });
   }
 
   ngOnInit(): void {
@@ -67,6 +69,7 @@ export class ProposalComponent implements OnInit {
         cardTitle: this.paramCategory,
         filters: JSON.stringify(this.selectedOptions),
         serviceDescription: filters.serviceDescription,
+        priceEstimation: filters.priceEstimation,
       },
     });
     this.route.navigate(['/proposal/address'], {
@@ -74,6 +77,7 @@ export class ProposalComponent implements OnInit {
         cardTitle: this.paramCategory,
         filters: JSON.stringify(this.selectedOptions),
         serviceDescription: filters.serviceDescription,
+        priceEstimation: filters.priceEstimation,
       },
     });
   }

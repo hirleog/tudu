@@ -26,10 +26,33 @@ export interface MalgaTokenizationResponse {
 }
 
 export interface MalgaPaymentRequest {
-  merchantId: string;
+  // Campos principais (formato Malga)
   amount: number;
+  originAmount?: any;
+
   currency: string;
+  statementDescriptor: string;
+  description: string;
+  capture: boolean;
   orderId: string;
+
+  // Estrutura de pagamento (formato Malga)
+  paymentMethod: {
+    paymentType: 'credit' | 'debit';
+    installments: number;
+  };
+
+  paymentSource: {
+    sourceType: 'card';
+    card: {
+      cardNumber: string;
+      cardCvv: string;
+      cardExpirationDate: string;
+      cardHolderName: string;
+    };
+  };
+
+  // Cliente (formato Malga)
   customer: {
     name: string;
     email: string;
@@ -41,25 +64,44 @@ export interface MalgaPaymentRequest {
     address: {
       street: string;
       number: string;
-      neighborhood: string;
+      district: string;
       city: string;
       state: string;
       country: string;
       zipCode: string;
     };
   };
-  paymentMethod: {
-    paymentType: 'credit';
-    installments: number;
-    card: {
-      number: string;
-      expirationMonth: string;
-      expirationYear: string;
-      securityCode: string;
-      holderName: string;
+
+  // App Info (opcional)
+  appInfo?: {
+    platform?: {
+      integrator?: string;
+      name?: string;
+      version?: string;
+    };
+    device?: {
+      name?: string;
+      version?: string;
+    };
+    system?: {
+      name?: string;
+      version?: string;
     };
   };
-  statementDescriptor?: string;
+
+  // Campos para compatibilidade com seu backend
+  id_pedido: string;
+  credit?: {
+    number_installments?: number;
+    amount_installment?: number;
+    soft_descriptor?: string;
+    transaction_type?: string;
+  };
+  installment_data?: {
+    total_with_tax?: number;
+    installments?: number;
+    installment_value?: number;
+  };
 }
 
 export interface MalgaPaymentWithTokenRequest {
@@ -169,7 +211,7 @@ export class MalgaService {
   }
 
   // Tokenizar e pagar em uma única chamada
-  tokenizeAndPay(paymentData: MalgaTokenizeAndPayRequest) {
+  tokenizeAndPay(paymentData: MalgaPaymentRequest) {
     return this.http.post<MalgaPaymentResponse>(
       `${this.apiUrl}/malga/payments/tokenize-and-pay`,
       paymentData

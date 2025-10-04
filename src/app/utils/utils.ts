@@ -87,3 +87,11 @@ export function cpfValidator(
 
   return null; // CPF válido
 }
+
+export function formatCurrency(value: number): string {
+  if (!value) return '';
+  return (value / 100).toLocaleString('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+}

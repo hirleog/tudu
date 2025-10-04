@@ -14,6 +14,7 @@ import { FlowEndComponent } from './flow-end/flow-end.component';
 import { OrderHelpComponent } from './order-help/order-help.component';
 import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
 import { ProgressComponent } from './progress/progress.component';
+import { FinishHireButtonComponent } from './card-detail/finish-hire-button/finish-hire-button.component';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -39,10 +40,12 @@ const routes: Routes = [
     ProgressDetailComponent,
     FlowEndComponent,
     OrderHelpComponent,
+    FinishHireButtonComponent,
     // ProfileComponent,
     // ProfileDetailComponent,
 
     FormatDateTimePipe,
+    FinishHireButtonComponent,
   ],
   imports: [
     SharedModule,
