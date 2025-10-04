@@ -106,7 +106,10 @@ export class MakeOfferComponent implements OnInit {
       this.clienteIsLogged = loggedIn;
     });
 
-    this.price = this.priceEstimation?.basePrice?.toString();
+    this.price = (this.priceEstimation?.basePrice * 1.2).toString();
+    this.priceEstimation.basePrice = (
+      this.priceEstimation?.basePrice * 1.2
+    ).toString();
   }
 
   createCard(): Observable<void> {

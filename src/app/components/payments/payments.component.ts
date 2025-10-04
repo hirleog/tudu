@@ -14,6 +14,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  MalgaPaymentRequest,
   MalgaPaymentWithTokenRequest,
   MalgaService,
   MalgaTokenizeAndPayRequest,
@@ -251,10 +252,10 @@ export class PaymentsComponent implements OnInit {
 
   //     const requestData = {
   //       id_pedido: this.hiredCardInfo.id_pedido,
-  //       totalAmount: this.totalWithTax,
-  //       originAmount: convertRealToCents(
-  //         this.hiredCardInfo.candidaturas[0].valor_negociado
-  //       ),
+  // totalAmount: this.totalWithTax,
+  // originAmount: convertRealToCents(
+  //   this.hiredCardInfo.candidaturas[0].valor_negociado
+  // ),
   //       currency: 'BRL',
   //       order: {
   //         order_id: 'ORDER-' + Date.now(),
@@ -357,29 +358,48 @@ export class PaymentsComponent implements OnInit {
 
       // OPÇÃO 1: Tokenizar e pagar em uma única chamada (RECOMENDADO)
       await this.processTokenizeAndPay(formValue);
-
-      // OPÇÃO 2: Fluxo em duas etapas (tokenizar depois pagar)
-      // await this.processTwoStepPayment(formValue);
-
-      // OPÇÃO 3: Pagamento direto sem tokenização
-      // await this.processDirectPayment(formValue);
     } else if (this.paymentMethod === 'pix') {
       await this.processPixPayment();
     }
   }
 
-  // OPÇÃO 1: Tokenizar e pagar em uma única chamada (Mais simples)
+  // OPÇÃO 1: Tokenizar e pagar em uma única chamada (Atualizado para Malga)
   private async processTokenizeAndPay(formValue: any): Promise<void> {
-    const paymentData: MalgaTokenizeAndPayRequest = {
-      merchantId: environment.malgaMerchantId,
-      amount: PaymentFormatter.convertRealToCents(this.totalWithTax),
+    const deviceInfo = await this.deviceService.getDeviceInfo();
+    console.log(deviceInfo);
+
+    const paymentData: MalgaPaymentRequest = {
+      // Dados básicos da transação (formato Malga)
+      amount: this.totalWithTax,
+      originAmount: convertRealToCents(
+        this.hiredCardInfo.candidaturas[0].valor_negociado
+      ),
       currency: 'BRL',
+      statementDescriptor: 'TUDU',
+      description: `Pedido ORDER-${Date.now()}`,
+      capture: true,
       orderId: 'ORDER-' + Date.now(),
+
+      // Payment Method (formato Malga) - CORRETO
+      paymentMethod: {
+        paymentType: 'credit', // ← ESTÁ CORRETO!
+        installments: this.selectedInstallmentOption.installments || 1,
+      },
+
+      // Payment Source (formato Malga)
+      paymentSource: {
+        sourceType: 'card',
+        card: {
+          cardNumber: PaymentFormatter.formatCardNumber(formValue.cardNumber),
+          cardCvv: formValue.cvv,
+          cardExpirationDate: `${formValue.expiryMonth}/${formValue.expiryYear}`,
+          cardHolderName: formValue.cardHolder.toUpperCase(),
+        },
+      },
+
+      // Customer (formato Malga)
       customer: {
-        name: PaymentFormatter.getFullName(
-          this.clientData.nome,
-          this.clientData.sobrenome
-        ),
+        name: `${this.clientData.nome} ${this.clientData.sobrenome}`,
         email: this.clientData.email,
         phoneNumber: PaymentFormatter.formatPhoneNumber(
           this.clientData.telefone
@@ -391,24 +411,54 @@ export class PaymentsComponent implements OnInit {
         address: {
           street: this.hiredCard.address.street,
           number: this.hiredCard.address.number.toString(),
-          neighborhood: this.hiredCard.address.neighborhood,
+          district: this.hiredCard.address.neighborhood,
           city: this.hiredCard.address.city,
           state: this.hiredCard.address.state,
-          country: this.hiredCard.address.country,
+          country: this.hiredCard.address.country || 'BR',
           zipCode: PaymentFormatter.formatZipCode(this.hiredCard.address.cep),
         },
       },
-      card: {
-        number: PaymentFormatter.formatCardNumber(formValue.cardNumber),
-        expirationMonth: formValue.expiryMonth,
-        expirationYear: formValue.expiryYear.slice(-2),
-        securityCode: formValue.cvv,
-        holderName: formValue.cardHolder.toUpperCase(),
-      },
-      installments: this.selectedInstallmentOption.installments || 1,
-      saveCard: this.saveCard,
-    };
 
+      // App Info (opcional)
+      appInfo: {
+        platform: {
+          integrator: 'tudu-servicos',
+          name: 'tudu-servicos',
+          version: '1.0',
+        },
+        device: {
+          name: deviceInfo.plataform,
+          version: '1.0',
+        },
+        system: {
+          name: 'Tudu Serviços',
+          version: '1.0',
+        },
+      },
+
+      // Campo para compatibilidade com seu backend
+      id_pedido: this.hiredCard.id_pedido,
+
+      installment_data: {
+        total_with_tax: this.totalWithTax,
+        installments: this.selectedInstallmentOption.installments,
+        installment_value: this.selectedInstallmentOption.installmentValue,
+      },
+    };
+    // Dados de parcelamento para validação no backend
+    // credit: {
+    //   number_installments: this.selectedInstallmentOption.installments || 1,
+    //   amount_installment: PaymentFormatter.convertRealToCents(
+    //     this.selectedInstallmentOption.installmentValue
+    //   ),
+    //   soft_descriptor: 'TUDU',
+    //   transaction_type: 'pre_authorization',
+    // },
+
+    // totalAmount: PaymentFormatter.convertRealToCents(this.totalWithTax),
+    // originAmount: PaymentFormatter.convertRealToCents(this.totalAmount),
+
+    // Chamada para o serviço atualizado
     this.malgaService.tokenizeAndPay(paymentData).subscribe({
       next: (res) => {
         this.processingPayment = false;
@@ -421,6 +471,57 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
+  // Atualize também o handlePaymentResponse para lidar com pré-autorização
+  // private handlePaymentResponse(response: any): void {
+  //   if (response.success) {
+  //     if (response.capture === false) {
+  //       // Pré-autorização bem-sucedida - aguardar captura
+  //       this.showSuccessMessage(
+  //         'Pré-autorização realizada com sucesso! ' +
+  //           'O valor foi reservado em seu cartão e será capturado em breve.'
+  //       );
+
+  //       // Guardar o charge_id para captura futura
+  //       this.storeChargeId(response.charge_id);
+  //     } else {
+  //       // Captura imediata bem-sucedida
+  //       this.showSuccessMessage('Pagamento realizado com sucesso!');
+  //     }
+
+  //     // Navegar para página de sucesso
+  //     this.router.navigate(['/payment-success'], {
+  //       state: {
+  //         paymentData: response,
+  //         orderId: response.id_pedido,
+  //       },
+  //     });
+  //   } else {
+  //     this.handlePaymentError(response);
+  //   }
+  // }
+
+  // Método para capturar pré-autorização posteriormente
+  // async capturePreAuthorizedPayment(
+  //   chargeId: string,
+  //   amount?: number
+  // ): Promise<void> {
+  //   this.malgaService.captureCharge(chargeId, amount).subscribe({
+  //     next: (res) => {
+  //       console.log('Captura realizada com sucesso:', res);
+  //       // Atualizar status do pedido no seu sistema
+  //     },
+  //     error: (error) => {
+  //       console.error('Erro na captura:', error);
+  //       // Tratar erro de captura
+  //     },
+  //   });
+  // }
+
+  // Armazenar charge_id para uso futuro
+  private storeChargeId(chargeId: string): void {
+    // Salvar no localStorage, service state, ou enviar para seu backend
+    localStorage.setItem('last_charge_id', chargeId);
+  }
   // Processar pagamento PIX
   private async processPixPayment(): Promise<void> {
     if (!this.acceptedTerms) return;

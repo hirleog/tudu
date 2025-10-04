@@ -1,0 +1,379 @@
+<app-nav>
+  <div left-content>
+    <a routerLink="/" class="transition-colors mr-3">
+      <i
+        style="color: var(--primary) !important"
+        class="fas fa-arrow-left text-2xl"
+      ></i>
+    </a>
+  </div>
+
+  <div central-content>
+    <a routerLink="/" class="block">
+      <img
+        src="../../../assets/logo-rosa.webp"
+        style="width: 4em"
+        alt="error"
+      />
+    </a>
+  </div>
+
+  <div right-content>
+    <i
+      style="color: var(--primary) !important"
+      class="fas fa-question-circle text-2xl cursor-pointer"
+      title="Clique para mais informações"
+    ></i>
+  </div>
+
+  <div header-menu>
+    <div class="tab-bar hr-nav-bottom">
+      <a
+        *ngFor="let item of headerPageOptions; let i = index"
+        class="tab-link"
+        [class.active]="selectedIndex === i"
+        (click)="selectItem(i)"
+      >
+        {{ item }}
+      </a>
+      <div
+        class="tab-indicator"
+        [ngStyle]="{
+          transform: 'translateX(' + selectedIndex * 100 + '%)',
+          width: 100 / headerPageOptions.length + '%'
+        }"
+      ></div>
+    </div>
+  </div>
+</app-nav>
+
+<section class="max-w-4xl mx-auto lg:px-8 mt-12">
+  <div class="container" *ngIf="isLoading">
+    <app-card-skeleton *ngFor="let i of [1, 2, 3, 4]"></app-card-skeleton>
+  </div>
+
+  <!-- My Orders -->
+  <div
+    id="card-border"
+    class="container mx-auto"
+    *ngIf="(cards.length > 0 && selectedIndex === 0) || isLoading"
+  >
+    <!-- data-aos="fade-down" -->
+    <div class="row g-3 m-0 p-0">
+      <div class="col-12 m-0 p-2" *ngFor="let card of cards">
+        <div class="request-card rounded-lg shadow-md overflow-hidden">
+          <!-- Header -->
+          <div class="request-card-header p-3">
+            <div class="request-card-icon mr-3 flex-shrink-0">
+              <i
+                [class]="card.icon"
+                class="text-2xl"
+                style="color: var(--primary) !important"
+              ></i>
+            </div>
+            <div class="request-card-title flex-grow">
+              <div class="flex justify-between items-start">
+                <h5>
+                  {{ card.categoria }}
+                </h5>
+              </div>
+              <p
+                class="request-card-description text-sm text-gray-600 mt-1 truncate-text"
+              >
+                <i class="fas fa-map-marker-alt"></i>
+
+                {{ card.address.city }}, {{ card.address.state }} -
+                {{ card.address.neighborhood }}
+                <!-- {{ card.address.street }}, {{ card.address.number }} -
+                {{ card.address.city }} - {{ card.address.state }} -->
+              </p>
+
+              <span
+                class="text-sm font-medium text-gray-500 bg-gray-100 rounded p-1"
+                style="margin: -30px 0px 30px 0px"
+              >
+                Pedido #{{ card.id_pedido }}
+              </span>
+            </div>
+          </div>
+
+          <!-- Body -->
+          <div class="request-card-body p-3">
+            <!-- Filtros de subcategoria com destaque -->
+            <div class="mb-4" *ngIf="card.subcategoria">
+              <div class="flex flex-wrap gap-2">
+                <span
+                  *ngFor="let filtro of card.subcategoria.split(',')"
+                  class="px-3 py-1 rounded-full text-xs font-medium text-white"
+                  style="
+                    border: 1px solid var(--primary);
+                    color: var(--primary) !important;
+                  "
+                >
+                  <i
+                    class="fas fa-tag"
+                    style="color: var(--primary) !important"
+                  ></i>
+
+                  {{ filtro.trim() }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Descrição do serviço -->
+            <p class="request-card-description text-gray-700 mb-4">
+              {{ card.serviceDescription }}
+            </p>
+
+            <!-- Campos de valor e data -->
+            <div class="space-y-3">
+              <div class="input-group">
+                <span class="input-group-text border-r-0">$</span>
+                <input
+                  type="text"
+                  class="form-control border-l-0"
+                  [(ngModel)]="card.valor_negociado"
+                  [placeholder]="card.valor | currency : 'BRL'"
+                  [disabled]="!!card.renegotiateActive"
+                />
+                <button
+                  *ngIf="card.status_pedido === 'andamento'"
+                  [ngClass]="{
+                    'change-renegotiate-btn': !card.renegotiateActive
+                  }"
+                  class="btn btn-outline-secondary border-l-0"
+                  type="button"
+                  id="btn-renegotiate"
+                  (click)="renegotiateActive(card)"
+                >
+                  <i
+                    class="fa"
+                    [ngClass]="card.renegotiateActive ? 'fa-pencil' : 'fa-undo'"
+                  ></i>
+                </button>
+              </div>
+
+              <div class="input-group">
+                <span class="input-group-text border-r-0">#</span>
+                <input
+                  [readonly]="true"
+                  type="text"
+                  class="form-control border-l-0"
+                  aria-label="Amount (to the nearest dollar)"
+                  [placeholder]="card.placeholderDataHora"
+                  [disabled]="!card.calendarActive"
+                  (click)="openCalendar(card)"
+                />
+                <button
+                  *ngIf="card.status_pedido === 'andamento'"
+                  [ngClass]="{
+                    'change-renegotiate-btn':
+                      card.calendarActive && card.placeholderDataHora
+                  }"
+                  class="btn btn-outline-secondary border-l-0"
+                  type="button"
+                  id="btn-renegotiate"
+                  (click)="toggleCalendar(card, $event)"
+                >
+                  <i
+                    class="fas"
+                    [ngClass]="
+                      !card.calendarActive ? 'fa-calendar-alt' : 'fa-undo'
+                    "
+                  ></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="request-card-footer">
+            <!-- Botões para "publicado" -->
+            <!-- *ngIf="card.status_pedido === 'publicado'" -->
+            <div
+              class="d-flex card-footer p-3 mt-3 gap-2"
+              style="margin-top: -3em"
+            >
+              <button
+                style="width: 100%"
+                class="request-quote-btn"
+                routerLinkActive="active"
+                (click)="goToBudgets(card.id_pedido)"
+                *ngIf="card.candidaturas.length > 0; else semQuotes"
+              >
+                Oba! Orçamentos disponíveis ({{ card.candidaturas.length }})
+                <span
+                  *ngIf="card.temNovaCandidatura"
+                  class="badge-novo"
+                  (click)="card.temNovaCandidatura = false"
+                  >Novo</span
+                >
+              </button>
+              <ng-template #semQuotes>
+                <span
+                  class="request-quote-btn disabled-card bg-secondary text-center"
+                  style="width: 100%"
+                >
+                  Aguardando uma proposta
+                </span>
+              </ng-template>
+
+              <button
+                (click)="goToDetails(card.id_pedido)"
+                class="request-quote-btn d-flex align-items-center gap-2"
+                style="
+                  border: 1px solid var(--tag-p-grey);
+                  color: var(--primary);
+                  background-color: var(--light);
+                "
+              >
+                <i
+                  class="fas fa-search"
+                  style="color: var(--primary) !important"
+                ></i>
+              </button>
+            </div>
+
+            <!-- Botões para "em andamento" -->
+            <div
+              *ngIf="card.status_pedido === 'andamento'"
+              class="request-card-footer d-flex gap-3 p-3"
+              style="margin-top: -3em"
+            >
+              <button
+                class="request-quote-btn col-6"
+                [ngClass]="{
+                  'change-renegotiate-btn':
+                    (card.valor_negociado &&
+                      card.valor_negociado !== card.valor) ||
+                    (card.calendarActive === true &&
+                      dateTimeFormatted !== card.placeholderDataHora)
+                }"
+                style="background-color: var(--primary); color: var(--light)"
+                routerLink="/home/progress"
+              >
+                {{
+                  card.valor_negociado && card.valor_negociado !== card.valor
+                    ? "Renegociar"
+                    : "Aceitar"
+                }}
+              </button>
+              <button
+                style="
+                  color: var(--primary) !important;
+                  background-color: var(--light) !important;
+                  border: 1px solid var(--primary) !important;
+                "
+                class="request-quote-btn bg-secondary col-6"
+              >
+                Detalhes
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Finalized Orders -->
+  <!-- data-aos="fade-down" -->
+  <div class="container" *ngIf="selectedIndex === 1">
+    <div class="row g-3 m-0 p-0">
+      <div class="col-12 m-0 p-2" *ngFor="let card of cards">
+        <div class="request-card" *ngFor="let candidatura of card.candidaturas">
+          <div class="request-card-header card-header p-3">
+            <div class="request-card-icon border-0">
+              <i
+                [class]="card.icon"
+                style="color: var(--primary) !important"
+              ></i>
+            </div>
+            <div class="request-card-title">
+              <div class="d-flex align-items-center">
+                <h5>{{ card.categoria }}</h5>
+                <!-- <div>&nbsp;•&nbsp;</div> -->
+              </div>
+              <p class="request-card-description truncate-text">
+                {{ card.address.street }}, {{ card.address.number }} -
+                {{ card.address.city }} - {{ card.address.state }}
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="d-flex justify-content-around align-items-center"
+            style="margin-top: -15px"
+          >
+            <div class="request-card-body card-body p-3 mb-0 w-100">
+              <div
+                class="d-flex justify-content-between align-items-center mb-2"
+              >
+                <div>
+                  <span [style.color]="'green'" [style.fontWeight]="'bold'">
+                    CONCLUÍDO
+                    <i
+                      [class]="'fas fa-check-circle'"
+                      style="color: green !important"
+                    ></i>
+                  </span>
+
+                  <p>{{ formatarHorario(card) }}</p>
+                </div>
+
+                <p class="text-end">Pedido <br />#{{ card.id_pedido }}</p>
+              </div>
+              <hr class="mt-3" />
+              <p style="margin-bottom: -1px" class="mt-4">Descrição</p>
+
+              <p class="request-card-description">
+                {{ card.subcategoria }}
+              </p>
+              <p class="request-card-description">
+                {{ card.serviceDescription }}
+              </p>
+
+              <hr />
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between card-footer p-3">
+            <button
+              class="request-quote-btn col-6"
+              (click)="goToDetails(card.id_pedido)"
+            >
+              Detalhes
+            </button>
+            <div class="container d-flex justify-content-end">
+              <h2>
+                {{
+                  candidatura.valor_negociado !== card.valor
+                    ? (candidatura.valor_negociado | currency : "BRL")
+                    : (card.valor | currency : "BRL")
+                }}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPETION PARA QUANDO NAO HOVER PERDIDOS PENDENTES -->
+  <div
+    *ngIf="
+      cards.length === 0 ||
+      (selectedIndex === 0 && counts?.publicado === 0) ||
+      (selectedIndex === 1 && counts?.finalizado === 0)
+    "
+    class="d-flex align-items-center justify-content-center"
+    style="height: 68vh"
+  >
+    <div class="d-flex flex-column align-items-center gap-3">
+      <i class="fas fa-file-lines" style="font-size: 5em"></i>
+      <p class="fs-3">Ainda não há serviços disponíveis</p>
+    </div>
+  </div>
+</section>
+
+<!-- <a (click)="scrollUp()" class="btn-topo md:hidden"> &#x2191; </a> -->
+<div class="mt-5 pt-3"></div>

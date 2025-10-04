@@ -109,7 +109,7 @@ h4 {
 }
 
 .professional-link {
-  color: var(--background);
+  color: white;
   text-decoration: none;
   font-weight: 400;
   padding: 8px 16px;
@@ -118,7 +118,7 @@ h4 {
 }
 .professional-link:hover {
   padding: 8px 16px;
-  background-color: #5c00a7
+  background-color: #5c00a7;
 }
 .card-title {
   display: block; /* Garante que o elemento seja tratado como bloco */
