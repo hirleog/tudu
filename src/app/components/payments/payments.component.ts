@@ -365,16 +365,34 @@ export class PaymentsComponent implements OnInit {
       const formValue = this.paymentForm.value;
 
       // OPÇÃO 1: Tokenizar e pagar em uma única chamada (RECOMENDADO)
-      await this.processTokenizeAndPay(formValue);
+      await this.tokenCardNumber(formValue);
     } else if (this.paymentMethod === 'pix') {
       await this.processPixPayment();
     }
   }
 
+  public tokenCardNumber(formValue: any) {
+    const tokenData: any = {
+      cardNumber: formValue.cardNumber.replace(/\s/g, ''),
+      cardCvv: formValue.cvv,
+      cardExpirationDate: `${formValue.expiryMonth}/${formValue.expiryYear}`,
+      cardHolderName: formValue.cardHolder.toUpperCase(),
+    };
+
+    this.paymentService.createToken(tokenData).subscribe({
+      next: (data: any) => {
+        this.processTokenizeAndPay(formValue, data.tokenId);
+      },
+      error: (error: any) => {},
+    });
+  }
+
   // OPÇÃO 1: Tokenizar e pagar em uma única chamada (Atualizado para Malga)
-  private async processTokenizeAndPay(formValue: any): Promise<void> {
+  private async processTokenizeAndPay(
+    formValue: any,
+    cardToken?: any
+  ): Promise<void> {
     const deviceInfo = await this.deviceService.getDeviceInfo();
-    console.log(deviceInfo);
 
     const paymentData: MalgaPaymentRequest = {
       // Dados básicos da transação (formato Malga)
@@ -398,7 +416,7 @@ export class PaymentsComponent implements OnInit {
       paymentSource: {
         sourceType: 'card',
         card: {
-          cardNumber: PaymentFormatter.formatCardNumber(formValue.cardNumber),
+          cardNumber: cardToken,
           cardCvv: formValue.cvv,
           cardExpirationDate: `${formValue.expiryMonth}/${formValue.expiryYear}`,
           cardHolderName: formValue.cardHolder.toUpperCase(),
