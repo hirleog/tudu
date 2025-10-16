@@ -381,7 +381,7 @@ export class PaymentsComponent implements OnInit {
         this.processTokenizeAndPay(formValue, data.tokenId);
       },
       error: (error: any) => {
-        this.processingPayment = true;
+        this.processingPayment = false;
       },
     });
   }
@@ -473,9 +473,9 @@ export class PaymentsComponent implements OnInit {
 
     // Chamada para o serviço atualizado
     this.malgaService.tokenizeAndPay(paymentData).subscribe({
-      next: (res) => {
+      next: (res: any) => {
         this.processingPayment = false;
-        this.handlePaymentResponse(res);
+        this.handlePaymentResponse(res.responseData);
       },
       error: (error) => {
         this.processingPayment = false;
