@@ -381,7 +381,9 @@ export class PaymentsComponent implements OnInit {
       next: (data: any) => {
         this.processTokenizeAndPay(formValue, data.tokenId);
       },
-      error: (error: any) => {},
+      error: (error: any) => {
+        this.processingPayment = true;
+      },
     });
   }
 
