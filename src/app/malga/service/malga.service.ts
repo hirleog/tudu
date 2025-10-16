@@ -91,12 +91,12 @@ export interface MalgaPaymentRequest {
 
   // Campos para compatibilidade com seu backend
   id_pedido: string;
-  credit?: {
-    number_installments?: number;
-    amount_installment?: number;
-    soft_descriptor?: string;
-    transaction_type?: string;
-  };
+  // credit?: {
+  //   number_installments?: number;
+  //   amount_installment?: number;
+  //   soft_descriptor?: string;
+  //   transaction_type?: string;
+  // };
   installment_data?: {
     total_with_tax?: number;
     installments?: number;
