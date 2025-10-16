@@ -38,6 +38,10 @@ export interface CardOrders {
   hasQuotes: boolean; // Se há orçamentos disponíveis
 
   candidaturas: Candidatura[]; // ✅ Agora com tipo correto
+  chargeInfos?: {
+    charge_id?: string;
+    total_amount?: string;
+  };
   charge_id?: string; // ID da cobrança no Malga
   temNovaCandidatura?: boolean; // Indica se há uma nova candidatura
   currentImageIndex: any;

@@ -41,11 +41,12 @@
           </div>
 
           <h3 class="fw-bold fs-3 mt-3">
-            {{
+            <!-- {{
               candidatura.valor_negociado !== c.valor
                 ? (candidatura.valor_negociado | currency : "BRL")
                 : (c.valor | currency : "BRL")
-            }}
+            }} -->
+            {{ c.chargeInfos?.total_amount | currency : "BRL" }}
           </h3>
           <!-- <h2>
               {{
