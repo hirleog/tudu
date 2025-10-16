@@ -57,7 +57,6 @@ export class PaymentsComponent implements OnInit {
   );
   years: string[];
 
-  closeModalIndicator: string = '';
   installmentsTableData: any[] = [];
   installmentData: any;
   selectedInstallmentOption: any;
@@ -592,7 +591,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   private handlePaymentSuccess(response: any): void {
-    this.closeModalIndicator = 'success';
+    this.payHiredCard.emit('success');
     this.customModal.openModal();
     this.customModal.configureModal(
       'success',
@@ -606,7 +605,8 @@ export class PaymentsComponent implements OnInit {
   }
 
   private handlePaymentPending(response: any): void {
-    this.closeModalIndicator = 'warning';
+    this.payHiredCard.emit('warning');
+
     this.customModal.openModal();
     this.customModal.configureModal(
       'warning',
@@ -615,13 +615,15 @@ export class PaymentsComponent implements OnInit {
   }
 
   private handlePixSuccess(response: any): void {
-    this.closeModalIndicator = 'success';
+    this.payHiredCard.emit('success');
+
     this.customModal.openModal();
     this.customModal.configureModal('success', 'PIX gerado com sucesso!');
   }
 
   private handlePaymentError(error: any): void {
-    this.closeModalIndicator = 'error';
+    this.payHiredCard.emit('error');
+
     const errorMessage = this.getErrorMessage(error);
     this.customModal.openModal();
     this.customModal.configureModal('error', errorMessage);
@@ -764,7 +766,6 @@ export class PaymentsComponent implements OnInit {
 
   closePaymentModal(): void {
     this.customModal.closeModal();
-    this.payHiredCard.emit(this.closeModalIndicator);
   }
 
   goBack(indicator: any): void {
