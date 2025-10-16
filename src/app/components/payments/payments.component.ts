@@ -381,7 +381,9 @@ export class PaymentsComponent implements OnInit {
       next: (data: any) => {
         this.processTokenizeAndPay(formValue, data.tokenId);
       },
-      error: (error: any) => {},
+      error: (error: any) => {
+        this.processingPayment = true;
+      },
     });
   }
 
@@ -469,18 +471,6 @@ export class PaymentsComponent implements OnInit {
         installment_value: this.selectedInstallmentOption.installmentValue,
       },
     };
-    // Dados de parcelamento para validação no backend
-    // credit: {
-    //   number_installments: this.selectedInstallmentOption.installments || 1,
-    //   amount_installment: PaymentFormatter.convertRealToCents(
-    //     this.selectedInstallmentOption.installmentValue
-    //   ),
-    //   soft_descriptor: 'TUDU',
-    //   transaction_type: 'pre_authorization',
-    // },
-
-    // totalAmount: PaymentFormatter.convertRealToCents(this.totalWithTax),
-    // originAmount: PaymentFormatter.convertRealToCents(this.totalAmount),
 
     // Chamada para o serviço atualizado
     this.malgaService.tokenizeAndPay(paymentData).subscribe({
@@ -588,7 +578,11 @@ export class PaymentsComponent implements OnInit {
   }
 
   private handlePaymentResponse(response: any): void {
-    if (response.status === 'approved' || response.status === 'captured') {
+    if (
+      response.status === 'approved' ||
+      response.status === 'captured' ||
+      response.status === 'authorized'
+    ) {
       this.handlePaymentSuccess(response);
     } else if (response.status === 'pending') {
       this.handlePaymentPending(response);
@@ -609,8 +603,6 @@ export class PaymentsComponent implements OnInit {
     if (response.tokenId) {
       this.saveTokenForFutureUse(response.tokenId);
     }
-
-    console.log('Pagamento aprovado:', response);
   }
 
   private handlePaymentPending(response: any): void {
