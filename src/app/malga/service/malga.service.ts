@@ -132,40 +132,6 @@ export interface MalgaPaymentWithTokenRequest {
   installments: number;
 }
 
-export interface MalgaTokenizeAndPayRequest {
-  merchantId: string;
-  amount: number;
-  currency: string;
-  orderId: string;
-  customer: {
-    name: string;
-    email: string;
-    phoneNumber: string;
-    document: {
-      type: string;
-      number: string;
-    };
-    address: {
-      street: string;
-      number: string;
-      neighborhood: string;
-      city: string;
-      state: string;
-      country: string;
-      zipCode: string;
-    };
-  };
-  card: {
-    number: string;
-    expirationMonth: string;
-    expirationYear: string;
-    securityCode: string;
-    holderName: string;
-  };
-  installments: number;
-  saveCard?: boolean;
-}
-
 export interface MalgaPaymentResponse {
   chargeId: string;
   status: 'approved' | 'declined' | 'pending';
@@ -194,13 +160,6 @@ export class MalgaService {
     );
   }
 
-  // Processar pagamento com cartão (sem tokenização)
-  processCreditCardPayment(paymentData: MalgaPaymentRequest) {
-    return this.http.post<MalgaPaymentResponse>(
-      `${this.apiUrl}/malga/charges`,
-      paymentData
-    );
-  }
 
   // Processar pagamento com token salvo
   processPaymentWithToken(paymentData: MalgaPaymentWithTokenRequest) {

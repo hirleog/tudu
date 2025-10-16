@@ -17,7 +17,6 @@ import {
   MalgaPaymentRequest,
   MalgaPaymentWithTokenRequest,
   MalgaService,
-  MalgaTokenizeAndPayRequest,
 } from 'src/app/malga/service/malga.service';
 import { PaymentFormatter } from 'src/app/malga/utils/payment-formatter';
 import { DeviceService } from 'src/app/services/device/service/device.service';
@@ -25,7 +24,6 @@ import { PaymentService } from 'src/app/services/payment.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { convertRealToCents, formatCurrency } from 'src/app/utils/utils';
 import { environment } from 'src/environments/environment';
-import { formatDecimal } from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-payment',
