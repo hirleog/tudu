@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CardOrders } from 'src/app/interfaces/card-orders';
+import { MalgaService } from 'src/app/malga/service/malga.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
 import { PaymentService } from 'src/app/services/payment.service';
@@ -34,7 +35,8 @@ export class OrderHelpComponent implements OnInit {
     private paymentService: PaymentService,
     private cardService: CardService,
     public stateManagementService: StateManagementService,
-    private authService: AuthService
+    private authService: AuthService,
+    private malgaService: MalgaService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'] || '';
@@ -231,7 +233,50 @@ export class OrderHelpComponent implements OnInit {
           this.loadingBtn = false;
         },
       });
-    // }
+  }
+
+  cancelPayment() {
+    let valorFinal;
+
+    if (this.card[0].candidaturas && this.card[0].candidaturas.length > 0) {
+      const candidatura = this.card[0].candidaturas[0]; // Pega a primeira candidatura
+
+      if (candidatura.valor_negociado) {
+        const valorNegociado = Number(candidatura.valor_negociado) || 0;
+        const valorOriginal = Number(this.card[0].valor) || 0;
+        valorFinal =
+          valorNegociado !== valorOriginal
+            ? valorNegociado.toString()
+            : valorOriginal.toString();
+      }
+    }
+
+    const payload = {
+      amount: valorFinal,
+    };
+
+    this.malgaService
+      .cancelPayment(payload, this.card[0].charge_id ?? '')
+      .subscribe({
+        next: (response: any) => {
+          this.reqStatus = response.status;
+
+          this.customModal.openModal();
+          this.customModal.configureModal(
+            'success',
+            response.message || 'Pagamento cancelado com sucesso.'
+          );
+          this.stateManagementService.clearAllState();
+        },
+        error: (err) => {
+          this.customModal.openModal();
+          this.customModal.configureModal(
+            'error',
+            err.message ||
+              'Erro ao cancelar o pagamento. Tente novamente mais tarde.'
+          );
+        },
+      });
   }
 
   closeCancelationModal(): void {
