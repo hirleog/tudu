@@ -256,7 +256,7 @@ export class OrderHelpComponent implements OnInit {
     };
 
     this.malgaService
-      .cancelPayment(payload, this.card[0].charge_id ?? '')
+      .cancelPayment(payload, this.card[0].chargeInfos?.charge_id ?? '')
       .subscribe({
         next: (response: any) => {
           this.reqStatus = response.status;
