@@ -160,7 +160,6 @@ export class MalgaService {
     );
   }
 
-
   // Processar pagamento com token salvo
   processPaymentWithToken(paymentData: MalgaPaymentWithTokenRequest) {
     return this.http.post<MalgaPaymentResponse>(
@@ -174,6 +173,13 @@ export class MalgaService {
     return this.http.post<MalgaPaymentResponse>(
       `${this.apiUrl}/malga/payments/tokenize-and-pay`,
       paymentData
+    );
+  }
+
+  cancelPayment(payload: { amount?: string }, chargeId: string) {
+    return this.http.post<MalgaPaymentResponse>(
+      `${this.apiUrl}/malga/charges/${chargeId}/void`,
+      payload
     );
   }
 

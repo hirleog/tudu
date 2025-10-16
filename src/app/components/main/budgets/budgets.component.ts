@@ -29,6 +29,7 @@ export class BudgetsComponent implements OnInit {
   clientData: any;
   showModal: boolean = false;
   selectedCandidatura: any;
+  paymentIndicator: string = '';
 
   constructor(
     public cardService: CardService,
@@ -176,7 +177,14 @@ export class BudgetsComponent implements OnInit {
     this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
       next: () => {
         this.stateManagementService.clearAllState();
-        this.closeModal('contratar');
+        this.paymentIndicator = step;
+        
+        this.customModal.openModal();
+        this.customModal.configureModal(
+          'success',
+          'Pagamento aprovado com sucesso!'
+        );
+
       },
       error: (error) => {
         this.showModal = true;
@@ -193,8 +201,8 @@ export class BudgetsComponent implements OnInit {
     return of();
   }
 
-  closeModal(step: string): void {
-    if (step === 'contratar') {
+  closeModal(): void {
+    if (this.paymentIndicator === 'contratar') {
       this.route.navigate(['/home/progress']);
     } else {
       this.getCardById(); // Atualiza a lista de cartões após a atualização

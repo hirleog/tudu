@@ -401,9 +401,9 @@ export class PaymentsComponent implements OnInit {
       ),
       currency: 'BRL',
       statementDescriptor: 'TUDU',
-      description: `Pedido ORDER-${Date.now()}`,
+      description: '',
       capture: true,
-      orderId: 'ORDER-' + Date.now(),
+      orderId: '',
 
       // Payment Method (formato Malga) - CORRETO
       paymentMethod: {
@@ -595,13 +595,12 @@ export class PaymentsComponent implements OnInit {
 
   private handlePaymentSuccess(response: any): void {
     this.payHiredCard.emit('success');
-    console.log('sucessooooo');
 
-    this.customModal.openModal();
-    this.customModal.configureModal(
-      'success',
-      'Pagamento aprovado com sucesso!'
-    );
+    // this.customModal.openModal();
+    // this.customModal.configureModal(
+    //   'success',
+    //   'Pagamento aprovado com sucesso!'
+    // );
 
     // Salvar tokenId se retornado (para compras futuras)
     if (response.tokenId) {
