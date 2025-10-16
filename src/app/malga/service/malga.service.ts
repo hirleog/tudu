@@ -160,13 +160,6 @@ export class MalgaService {
     );
   }
 
-  // Processar pagamento com cartão (sem tokenização)
-  processCreditCardPayment(paymentData: MalgaPaymentRequest) {
-    return this.http.post<MalgaPaymentResponse>(
-      `${this.apiUrl}/malga/charges`,
-      paymentData
-    );
-  }
 
   // Processar pagamento com token salvo
   processPaymentWithToken(paymentData: MalgaPaymentWithTokenRequest) {
