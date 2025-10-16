@@ -176,9 +176,7 @@ export class BudgetsComponent implements OnInit {
     this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
       next: () => {
         this.stateManagementService.clearAllState();
-        step === 'contratar'
-          ? this.route.navigate(['/home/progress'])
-          : this.getCardById(); // Atualiza a lista de cartões após a atualização
+        this.closeModal('contratar');
       },
       error: (error) => {
         this.showModal = true;
@@ -194,6 +192,16 @@ export class BudgetsComponent implements OnInit {
 
     return of();
   }
+
+  closeModal(step: string): void {
+    if (step === 'contratar') {
+      this.route.navigate(['/home/progress']);
+    } else {
+      this.getCardById(); // Atualiza a lista de cartões após a atualização
+    }
+    this.customModal.closeModal();
+  }
+
   backToOffer(indicator: any): void {
     this.paymentStep = indicator;
   }
