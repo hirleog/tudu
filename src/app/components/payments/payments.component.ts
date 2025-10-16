@@ -583,15 +583,20 @@ export class PaymentsComponent implements OnInit {
       response.status === 'authorized'
     ) {
       this.handlePaymentSuccess(response);
+      console.log('authorizedddd');
     } else if (response.status === 'pending') {
       this.handlePaymentPending(response);
     } else {
+      console.log('errorrrrr');
+
       this.handlePaymentError(response.message || 'Pagamento não aprovado');
     }
   }
 
   private handlePaymentSuccess(response: any): void {
     this.payHiredCard.emit('success');
+    console.log('sucessooooo');
+
     this.customModal.openModal();
     this.customModal.configureModal(
       'success',
@@ -623,6 +628,7 @@ export class PaymentsComponent implements OnInit {
 
   private handlePaymentError(error: any): void {
     this.payHiredCard.emit('error');
+    console.log('errroooo');
 
     const errorMessage = this.getErrorMessage(error);
     this.customModal.openModal();
