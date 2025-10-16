@@ -252,7 +252,7 @@ export class OrderHelpComponent implements OnInit {
     // // }
 
     const payload = {
-      amount: this.card[0].chargeInfos?.total_amount,
+      amount: Number(this.card[0].chargeInfos?.total_amount),
     };
 
     this.malgaService
