@@ -183,7 +183,6 @@
                   ></i>
                 </button>
               </div>
-           
             </div>
           </div>
 
@@ -351,11 +350,12 @@
             </button>
             <div class="container d-flex justify-content-end">
               <h2>
-                {{
+                <!-- {{
                   candidatura.valor_negociado !== card.valor
                     ? (candidatura.valor_negociado | currency : "BRL")
                     : (card.valor | currency : "BRL")
-                }}
+                }} -->
+                {{ card.chargeInfos?.total_amount | currency : "BRL" }}
               </h2>
             </div>
           </div>

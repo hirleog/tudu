@@ -178,7 +178,7 @@ export class MalgaService {
 
   cancelPayment(payload: { amount?: number }, chargeId: string) {
     return this.http.post<MalgaPaymentResponse>(
-      `${this.apiUrl}/malga/charges/${chargeId}/void`,
+      `${this.apiUrl}/malga/cancel/charges/${chargeId}/void`,
       payload
     );
   }
