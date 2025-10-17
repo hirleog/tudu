@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { MalgaService } from 'src/app/malga/service/malga.service';
 import { AuthService } from 'src/app/services/auth.service';
@@ -162,42 +163,116 @@ export class OrderHelpComponent implements OnInit {
     if (this.isProfessional) {
       this.cancelarCandidatura();
     } else {
-      this.cancelarCardPagamento();
+      this.cancelarPedidoCompleto();
     }
   }
 
-  cancelarCardPagamento() {
+  cancelarPedidoCompleto() {
     this.loadingBtn = true;
 
     const reason = this.message;
     const idPedido: string = this.card[0].id_pedido ?? '';
+    const payload = {
+      amount: Number(this.card[0].chargeInfos?.total_amount),
+    };
+    const chargeId = this.card[0].chargeInfos?.charge_id ?? '';
 
-    if (reason) {
-      this.cardService.cancelCard(idPedido, reason).subscribe({
-        next: (response) => {
-          this.reqStatus = response.status;
-
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'success',
-            response.message || 'Pedido cancelado com sucesso.'
-          );
-
-          this.stateManagementService.clearAllState();
-          this.loadingBtn = false;
-        },
-        error: (err) => {
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'error',
-            err.message ||
-              'Erro ao cancelar o pedido. Tente novamente mais tarde.'
-          );
-          this.loadingBtn = false;
-        },
-      });
+    if (!reason) {
+      this.loadingBtn = false;
+      return;
     }
+
+    // Executa ambos em paralelo
+    forkJoin({
+      card: this.cardService.cancelCard(idPedido, reason),
+      payment: this.malgaService.cancelPayment(payload, chargeId),
+    }).subscribe({
+      next: (responses) => {
+        this.reqStatus = 'success';
+
+        this.customModal.openModal();
+        this.customModal.configureModal(
+          'success',
+          'Pedido e pagamento cancelados com sucesso.'
+        );
+
+        this.stateManagementService.clearAllState();
+        this.loadingBtn = false;
+      },
+      error: (err) => {
+        console.error('Erro no cancelamento:', err);
+
+        this.customModal.openModal();
+        this.customModal.configureModal(
+          'error',
+          err.message || 'Erro ao cancelar pedido e/ou pagamento.'
+        );
+        this.loadingBtn = false;
+      },
+    });
   }
+
+  // cancelCard() {
+  //   this.loadingBtn = true;
+
+  //   const reason = this.message;
+  //   const idPedido: string = this.card[0].id_pedido ?? '';
+
+  //   if (reason) {
+  //     this.cardService.cancelCard(idPedido, reason).subscribe({
+  //       next: (response) => {
+  //         this.reqStatus = response.status;
+
+  //         this.customModal.openModal();
+  //         this.customModal.configureModal(
+  //           'success',
+  //           response.message || 'Pedido cancelado com sucesso.'
+  //         );
+
+  //         this.stateManagementService.clearAllState();
+  //         this.loadingBtn = false;
+  //       },
+  //       error: (err) => {
+  //         this.customModal.openModal();
+  //         this.customModal.configureModal(
+  //           'error',
+  //           err.message ||
+  //             'Erro ao cancelar o pedido. Tente novamente mais tarde.'
+  //         );
+  //         this.loadingBtn = false;
+  //       },
+  //     });
+  //   }
+  // }
+
+  // cancelPayment() {
+  //   const payload = {
+  //     amount: Number(this.card[0].chargeInfos?.total_amount),
+  //   };
+
+  //   this.malgaService
+  //     .cancelPayment(payload, this.card[0].chargeInfos?.charge_id ?? '')
+  //     .subscribe({
+  //       next: (response: any) => {
+  //         this.reqStatus = response.success === true ? 'success' : 'error';
+
+  //         this.customModal.openModal();
+  //         this.customModal.configureModal(
+  //           'success',
+  //           response.message || 'Pagamento cancelado com sucesso.'
+  //         );
+  //         this.stateManagementService.clearAllState();
+  //       },
+  //       error: (err) => {
+  //         this.customModal.openModal();
+  //         this.customModal.configureModal(
+  //           'error',
+  //           err.message ||
+  //             'Erro ao cancelar o pagamento. Tente novamente mais tarde.'
+  //         );
+  //       },
+  //     });
+  // }
 
   cancelarCandidatura() {
     this.loadingBtn = true;
@@ -235,36 +310,9 @@ export class OrderHelpComponent implements OnInit {
       });
   }
 
-  cancelPayment() {
-    const payload = {
-      amount: Number(this.card[0].chargeInfos?.total_amount),
-    };
-
-    this.malgaService
-      .cancelPayment(payload, this.card[0].chargeInfos?.charge_id ?? '')
-      .subscribe({
-        next: (response: any) => {
-          this.reqStatus = response.status;
-
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'success',
-            response.message || 'Pagamento cancelado com sucesso.'
-          );
-          this.stateManagementService.clearAllState();
-        },
-        error: (err) => {
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'error',
-            err.message ||
-              'Erro ao cancelar o pagamento. Tente novamente mais tarde.'
-          );
-        },
-      });
-  }
-
   closeCancelationModal(): void {
+    console.log(this.reqStatus);
+
     if (
       this.reqStatus === 'success' &&
       this.authService.isPrestadorLoggedIn()

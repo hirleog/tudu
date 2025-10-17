@@ -156,9 +156,7 @@
             <label for="price" class="block text-sm font-medium text-gray-700">
               Valor da sua oferta
             </label>
-            <span class="text-xs text-gray-500">
-              Mínimo: R$ 50
-            </span>
+            <span class="text-xs text-gray-500"> Mínimo: R$ 50 </span>
           </div>
 
           <div class="relative rounded-md shadow-sm">
@@ -214,6 +212,7 @@
       <!-- Buttons -->
       <div class="mt-8 flex flex-column gap-2">
         <button
+          style="background: var(--gradient-primary); border: none"
           (click)="payAndCreateCard()"
           class="col-12 btn btn-primary"
           [disabled]="dateTimeSelected === '' || price === ''"
@@ -221,7 +220,7 @@
           Avançar
           <i class="fas fa-paper-plane"></i>
         </button>
-        <button (click)="goBack()" class="col-12 btn btn-outline-primary">
+        <button  (click)="goBack()" class="col-12 btn btn-outline-primary btn-gradient-hover">
           Voltar
         </button>
       </div>

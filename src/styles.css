@@ -9,12 +9,13 @@
   /* --primary: #ffc739; */
   --background: #000000;
   --background-light: #bdbdbd1c;
-  --primary: linear-gradient(
-    135deg,
-    #7c3aed 0%,
-    #db2777 100%
-  ); /* --primary: #f80e6e; */
-  /* Cor sóPlida */
+
+  --gradient-primary: linear-gradient(
+    to right,
+    #7c3aed,
+    /* purple-600 */ #db2777 /* pink-600 */
+  );
+
   --primary-dark: #d10050;
   /* --premium: #b80aea; */
   --premium: #8a2be2;
@@ -74,6 +75,14 @@ html {
 .btn-topo:hover {
   color: white;
   background-color: var(--primary);
+}
+
+.btn-gradient-hover {
+  transition: background 0.3s ease-in-out;
+
+  &:hover {
+    background: var(--gradient-primary);
+  }
 }
 
 body {
