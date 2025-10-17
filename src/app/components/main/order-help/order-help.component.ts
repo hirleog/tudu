@@ -177,7 +177,6 @@ export class OrderHelpComponent implements OnInit {
     if (reason) {
       this.cardService.cancelCard(idPedido, reason).subscribe({
         next: (response) => {
-          this.stateManagementService.clearAllState();
           this.reqStatus = response.success === true ? 'success' : 'error';
 
           if (this.flow === 'progress') {
@@ -190,6 +189,7 @@ export class OrderHelpComponent implements OnInit {
             );
           }
 
+          this.stateManagementService.clearAllState();
           this.loadingBtn = false;
         },
         error: (err) => {
@@ -203,37 +203,6 @@ export class OrderHelpComponent implements OnInit {
         },
       });
     }
-  }
-
-  cancelPayment() {
-    const payload = {
-      amount: Number(this.card[0].chargeInfos?.total_amount),
-    };
-
-    this.malgaService
-      .cancelPayment(payload, this.card[0].chargeInfos?.charge_id ?? '')
-      .subscribe({
-        next: (response: any) => {
-          this.stateManagementService.clearAllState();
-          this.reqStatus = response.success === true ? 'success' : 'error';
-
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'success',
-            response.message || 'Pedido cancelado com sucesso.'
-          );
-          this.loadingBtn = false;
-        },
-        error: (err) => {
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'error',
-            err.message ||
-              'Erro ao cancelar o pagamento. Tente novamente mais tarde.'
-          );
-          this.loadingBtn = false;
-        },
-      });
   }
 
   cancelarCandidatura() {
@@ -252,11 +221,16 @@ export class OrderHelpComponent implements OnInit {
         next: (response: any) => {
           this.reqStatus = response.status;
 
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'success',
-            'Candidatura cancelada com sucesso.'
-          );
+          if (this.flow === 'progress') {
+            this.cancelPayment();
+          } else {
+            this.customModal.openModal();
+            this.customModal.configureModal(
+              'success',
+              response.message || 'Candidatura cancelada com sucesso.'
+            );
+          }
+
           this.stateManagementService.clearAllState();
           this.loadingBtn = false;
         },
@@ -266,6 +240,37 @@ export class OrderHelpComponent implements OnInit {
             'error',
             err.message ||
               'Erro ao cancelar a candidatura. Tente novamente mais tarde.'
+          );
+          this.loadingBtn = false;
+        },
+      });
+  }
+
+  cancelPayment() {
+    const payload = {
+      amount: Number(this.card[0].chargeInfos?.total_amount),
+    };
+
+    this.malgaService
+      .cancelPayment(payload, this.card[0].chargeInfos?.charge_id ?? '')
+      .subscribe({
+        next: (response: any) => {
+          this.reqStatus = response.success === true ? 'success' : 'error';
+
+          this.customModal.openModal();
+          this.customModal.configureModal(
+            'success',
+            response.message || 'Pedido cancelado com sucesso.'
+          );
+          this.stateManagementService.clearAllState();
+          this.loadingBtn = false;
+        },
+        error: (err) => {
+          this.customModal.openModal();
+          this.customModal.configureModal(
+            'error',
+            err.message ||
+              'Erro ao cancelar o pagamento. Tente novamente mais tarde.'
           );
           this.loadingBtn = false;
         },
