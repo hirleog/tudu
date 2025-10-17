@@ -236,21 +236,6 @@ export class OrderHelpComponent implements OnInit {
   }
 
   cancelPayment() {
-    // let valorFinal;
-
-    // // if (this.card[0].candidaturas && this.card[0].candidaturas.length > 0) {
-    // //   const candidatura = this.card[0].candidaturas[0]; // Pega a primeira candidatura
-
-    // //   if (candidatura.valor_negociado) {
-    // //     const valorNegociado = Number(candidatura.valor_negociado) || 0;
-    // //     const valorOriginal = Number(this.card[0].valor) || 0;
-    // //     valorFinal =
-    // //       valorNegociado !== valorOriginal
-    // //         ? valorNegociado.toString()
-    // //         : valorOriginal.toString();
-    // //   }
-    // // }
-
     const payload = {
       amount: Number(this.card[0].chargeInfos?.total_amount),
     };
