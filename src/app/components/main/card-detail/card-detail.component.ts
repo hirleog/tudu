@@ -127,6 +127,7 @@ export class CardDetailComponent implements OnInit {
 
       if (this.flow === 'progress') {
         this.route.navigate([progressRoute]);
+        return;
       } else {
         this.route.navigate([progressRoute], {
           queryParams: { homeFlow: this.flow },
@@ -135,6 +136,7 @@ export class CardDetailComponent implements OnInit {
 
       if (this.flow === 'historic') {
         this.route.navigate([historicRoute]);
+        return;
       } else {
         this.route.navigate([historicRoute], {
           queryParams: { homeFlow: this.flow },
@@ -145,6 +147,7 @@ export class CardDetailComponent implements OnInit {
 
       if (this.flow === 'progress') {
         this.route.navigate([route]);
+        return;
       } else {
         this.route.navigate([route], {
           queryParams: { homeFlow: this.flow },

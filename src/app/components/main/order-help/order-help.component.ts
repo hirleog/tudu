@@ -187,10 +187,10 @@ export class OrderHelpComponent implements OnInit {
               'success',
               response.message || 'Pedido cancelado com sucesso.'
             );
+            this.loadingBtn = false;
           }
 
           this.stateManagementService.clearAllState();
-          this.loadingBtn = false;
         },
         error: (err) => {
           this.customModal.openModal();
