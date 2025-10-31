@@ -296,7 +296,7 @@ export class AppHomeComponent implements OnInit {
     const currentState = this.stateManagement.getState(currentStatus);
     currentState.scrollY = window.scrollY;
     this.route.navigate(['/home/budgets'], {
-      queryParams: { id: id_pedido },
+      queryParams: { id: id_pedido, flow: this.flow},
     });
   }
 

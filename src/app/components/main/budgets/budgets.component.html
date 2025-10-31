@@ -1,4 +1,4 @@
-<section style="height: auto;">
+<section style="height: auto">
   <app-nav>
     <div left-content>
       <a (click)="backToHome()" class="text-decoration-none text-dark">
@@ -27,100 +27,85 @@
     *ngIf="!paymentStep"
   >
     <div class="row g-3 m-0 p-0">
-      <!-- Linha Bootstrap com espaçamento -->
-      <!-- data-aos="fade-down" -->
       <div
         class="col-12 m-0 p-0"
         *ngFor="let candidatura of card?.candidaturas; let i = index"
       >
-        <!-- Colunas responsivas -->
-        <div class="request-card d-flex flex-column gap-2">
-          <div
-            class="request-card-header card-header d-flex justify-content-between p-3"
-          >
-            <div class="d-flex align-items-center">
-              <div class="request-card-icon border-0">
-                <i
-                  [class]="card.icon"
-                  style="color: var(--primary) !important"
-                ></i>
-              </div>
-              <div class="request-card-title">
-                <div class="d-flex align-items-center">
-                  <h5>{{ card.categoria }}</h5>
-                  <!-- <div>&nbsp;•&nbsp;</div> -->
-                </div>
-                <!-- <p class="request-card-description truncate-text">
-                  {{ card.address.street }}, {{ card.address.number }} -
-                  {{ card.address.city }} - {{ card.address.state }}
-                </p> -->
-              </div>
-            </div>
-
-            <!-- <div class="d-flex justify-content-start align-items-center">
-              <h3 class="fs-4" style="color: var(--premium)">
-                {{ card.valor | currency }}
-              </h3>
-            </div> -->
+        <!-- Card de candidatura dentro do app-card-layout -->
+        <app-card-layout
+          [statusPedido]="card.status_pedido"
+          [cardTemplateIndicator]="2"
+        >
+          <!-- HEADER -->
+          <div service-icon>
+            <i
+              [class]="card.icon"
+              class="text-2xl"
+              style="color: var(--light)"
+            ></i>
           </div>
 
-          <!-- <div class="custom-input-container container">
-            <input
-              [readOnly]="true"
-              id="valor"
-              type="text"
-              maxlength="15"
-              appCurrencyFormat
-              class="custom-input"
-              [placeholder]="
-                candidatura.valor_negociado
-                  | currency : 'BRL' : 'symbol' : '1.2-2'
-              "
-            />
-          </div> -->
-          <div
-            class="d-flex flex-column align-items-start card-body p-3 pt-0 pb-0 gap-3"
-          >
+          <div service-title>
+            {{ card.categoria }}
+          </div>
+
+          <div service-address>
+            <i
+              class="fas fa-map-marker-alt text-xs mr-1"
+              style="font-size: 12px"
+            ></i>
+            {{ card.address?.city }}, {{ card.address?.state }}
+          </div>
+
+          <i
+            details-btn
+            (click)="
+              goToPrestadorDetail(candidatura.prestador_id, card.id_pedido)
+            "
+            class="fa-solid fa-magnifying-glass cursor-pointer"
+            style="color: var(--primary) !important"
+          ></i>
+
+          <!-- BODY -->
+          <div info-row>
             <div
-              class="d-flex mt-3"
+              class="d-flex"
+              style="cursor: pointer"
               (click)="
                 goToPrestadorDetail(candidatura.prestador_id, card.id_pedido)
               "
-              style="cursor: pointer"
             >
-              <div class="request-card-icon ">
+              <div class="request-card-icon">
                 <img
                   [src]="
                     !candidatura.prestador_info?.foto
                       ? '../../../assets/img-default.webp'
                       : candidatura.prestador_info?.foto
                   "
-                  alt=""
+                  alt="foto do prestador"
                   class="img-fluid"
+                  style="width: 48px; height: 48px; border-radius: 50%"
                 />
               </div>
 
-              <div>
-                <div class="d-flex justify-content-between">
-                  <div class="d-flex align-items-center gap-2">
-                    <h5 class="m-0 capitalize">
-                      {{ candidatura.prestador_info?.nome }}
-                    </h5>
-                    <i class="fas fa-star text-warning"></i>
-                    <p class="m-0" style="color: var(--secondary)">
-                      <!-- {{ card.rate }} -->
-                    </p>
-                    <!-- <p class="mb-0">({{ card.serviceComplete }} serviços)</p> -->
-                  </div>
+              <div class="ms-2">
+                <div class="d-flex align-items-center gap-2">
+                  <h5 class="m-0 capitalize">
+                    {{ candidatura.prestador_info?.nome }}
+                  </h5>
+                  <i class="fas fa-star text-warning"></i>
+                  <p class="m-0 text-secondary">
+                    {{ candidatura.prestador_info?.avaliacao || "—" }}
+                  </p>
                 </div>
                 <p style="color: var(--premium) !important">
                   Prestador Premium
                 </p>
               </div>
             </div>
-            <!-- <h3>Lance</h3> -->
+
             <div
-              class="d-flex justify-content-start align-items-start flex-column gap-2 w-100"
+              class="d-flex justify-content-start align-items-start flex-column gap-2 mt-3"
             >
               <h2 class="fs-4 fw-bold text-truncate">
                 {{
@@ -128,68 +113,49 @@
                     | currency : "BRL" : "symbol" : "1.2-2"
                 }}
               </h2>
-              <!-- <span
-                class="d-flex align-items-center justify-content-center text-black"
-                style="margin-bottom: 11px"
-                >•</span
-              > -->
-              <h2 class="fs-4 fw-bold text-truncate">
+              <h2 class="fs-6 fw-semibold text-truncate text-gray-600">
                 {{
                   candidatura.horario_negociado | date : "dd/MM/yyyy - HH:mm"
                 }}
               </h2>
             </div>
-
-            <div>
-              <p class="m-0" style="color: var(--secondary) !important">
-                <!-- {{ card.distanceMinutes }} min -->
-              </p>
-              <p style="color: var(--secondary) !important">
-                <!-- {{ card.distance }} km -->
-              </p>
-            </div>
           </div>
 
-          <div class="request-card-footer d-flex gap-2 p-3">
-            <button
-              style="
-                color: var(--primary);
-                background-color: var(--light) !important;
-                border: 1px solid var(--primary);
-              "
-              class="request-quote-btn col-6"
-              (click)="updateCard(card, 'recusar', candidatura.prestador_id)"
-            >
-              Recusar
-            </button>
+          <div order-number>#{{ card.id_pedido }}</div>
 
-            <!-- (click)="updateCard(card, 'contratar')" -->
-            <button
-              class="request-quote-btn col-6"
-              style="background-color: var(--primary); color: white"
-              (click)="goToPayment(card, candidatura.prestador_id)"
-            >
-              Contratar
-            </button>
-            <!-- <button
-              class="request-quote-btn col-6"
-              [ngClass]="{
-                'change-button':
-                  candidatura.editedPrice &&
-                  candidatura.editedPrice !== candidatura.price
-              }"
-              style="background-color: var(--primary); color: var(--light)"
-              routerLink="/home/progress"
-            >
-              {{
-                candidatura.editedPrice &&
-                candidatura.editedPrice !== candidatura.price
-                  ? "Negociar"
-                  : "Contratar"
-              }}
-            </button> -->
+          <!-- DESCRIPTION (opcional) -->
+          <div description class="text-gray-500 text-sm">
+            Clique para ver mais detalhes sobre o prestador.
           </div>
-        </div>
+
+          <!-- FOOTER -->
+          <button
+            main-btn
+            class="request-quote-btn"
+            style="
+              color: var(--primary);
+              background-color: var(--light) !important;
+              border: 1px solid var(--primary);
+              width: 100% !important;
+            "
+            (click)="updateCard(card, 'recusar', candidatura.prestador_id)"
+          >
+            Recusar
+          </button>
+
+          <button
+            price
+            class="request-quote-btn"
+            style="
+              background-color: var(--primary);
+              color: white;
+              width: 100% !important;
+            "
+            (click)="goToPayment(card, candidatura.prestador_id)"
+          >
+            Contratar
+          </button>
+        </app-card-layout>
       </div>
     </div>
   </div>
@@ -221,10 +187,7 @@
 </div>
 
 <!-- Modal  -->
-<app-custom-modal
-  #meuModal
-  (click)="closeModal()"
-></app-custom-modal>
+<app-custom-modal #meuModal (click)="closeModal()"></app-custom-modal>
 
 <!-- Conteúdo da página -->
 <div class="container mt-5 pt-5"></div>

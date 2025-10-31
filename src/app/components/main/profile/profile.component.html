@@ -7,7 +7,7 @@
       <img
         [src]="
           isProfessional
-            ? '../../../assets/logo-roxoo.webp'
+            ? '../../../assets/logo-branco.webp'
             : '../../../assets/logo-branco.webp'
         "
         style="width: 4em"
@@ -16,7 +16,12 @@
     </a>
     <h3
       *ngIf="isProfessional"
-      style="margin-bottom: 0px; margin-top: 3px; font-size: 17px"
+      style="
+        margin-bottom: 0px;
+        margin-top: 3px;
+        font-size: 15px;
+        color: var(--light);
+      "
     >
       Professional
     </h3>

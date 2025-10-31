@@ -28,49 +28,66 @@
     </div>
   </div>
 
-  <!-- STATUS + TAGS -->
-
-  <div class="flex justify-between gap-2 items-center p-3 border-gray-100">
+  <!-- BODY -->
+  <div class="service-card-body p-4 space-y-3">
     <div>
-      <div class="status-badge" [ngStyle]="badgeStyles">
-        <ng-content select="[status-badge]"></ng-content>
+      <div
+        class="flex flex-col items-start gap-3 border-b border-gray-100 pb-3 mb-3"
+        *ngIf="cardTemplateIndicator === 1"
+      >
+        <div class="flex justify-between w-full pb-2">
+          <div class="status-badge" [ngStyle]="badgeStyles">
+            <ng-content select="[status-badge]"></ng-content>
+          </div>
+
+          <div
+            class="text-xs text-gray-50 font-semibold"
+            style="
+              background-color: #d3d3d32c;
+              color: grey;
+              border-radius: 25px;
+              padding: 5px;
+            "
+          >
+            <ng-content select="[order-number]"></ng-content>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 items-center">
+          <ng-content select="[filter-tag]"></ng-content>
+        </div>
       </div>
-      <div class="mt-1 fw-semibold" *ngIf="statusPedido === 'finalizado'">
+
+      <div class="fw-semibold" *ngIf="statusPedido === 'finalizado'">
         <ng-content select="[conclusion-date]"></ng-content>
       </div>
     </div>
-
-    <div
-      class="text-xs text-gray-50 font-semibold"
-      style="
-        background-color: #d3d3d32c;
-        color: grey;
-        border-radius: 25px;
-        padding: 5px;
-      "
-    >
-      <ng-content select="[order-number]"></ng-content>
-    </div>
-  </div>
-  <div class="flex flex-wrap gap-2 items-center p-3 border-b border-gray-100">
-    <ng-content select="[filter-tag]"></ng-content>
-  </div>
-
-  <!-- BODY -->
-  <div class="service-card-body p-3 space-y-3">
     <ng-content select="[info-row]"></ng-content>
+
     <ng-content select="[description]"></ng-content>
   </div>
 
   <!-- FOOTER -->
+
   <div
     class="service-card-footer flex justify-between items-center p-3 border-t border-gray-100 bg-gray-50"
   >
     <div>
       <ng-content select="[main-btn]"></ng-content>
     </div>
-    <div class="price">
+    <div class="fw-semibold">
       <ng-content select="[price]"></ng-content>
     </div>
   </div>
+  <!-- <div
+    
+    class="flex row justify-between items-center p-3 border-t border-gray-100 bg-gray-50"
+  >
+    <div class="col-6">
+      <ng-content select="[main-btn]"></ng-content>
+    </div>
+    <div class="col-6">
+      <ng-content select="[price]"></ng-content>
+    </div>
+  </div> -->
 </div>

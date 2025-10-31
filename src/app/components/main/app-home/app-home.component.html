@@ -58,7 +58,10 @@
       <!-- PEDIDOS ATIVOS (selectedIndex === 0) -->
       <ng-container *ngIf="selectedIndex === 0">
         <div class="col-12 m-0 p-2" *ngFor="let card of cards">
-          <app-card-layout [statusPedido]="card.status_pedido">
+          <app-card-layout
+            [statusPedido]="card.status_pedido"
+            [cardTemplateIndicator]="1"
+          >
             <!-- Header -->
             <div
               service-icon
@@ -80,15 +83,13 @@
               <div>{{ card.categoria }}</div>
             </div>
 
-            <div service-address class="flex items-center">
+            <div service-address>
               <i
                 class="fas fa-map-marker-alt text-xs mr-1"
-                style="font-size: 12px"
+                style="font-size: 12px; color: var(--primary) !important"
               ></i>
-              {{ card.address.city }}, {{ card.address.state }} -
-              {{ card.address.neighborhood }}
+              {{ card.address.city }}, {{ card.address.state }}
             </div>
-
             <i
               details-btn
               (click)="goToDetails(card.id_pedido)"
@@ -169,7 +170,10 @@
       <ng-container *ngIf="selectedIndex === 1">
         <div class="col-12 m-0 p-2" *ngFor="let card of cards">
           <ng-container *ngFor="let candidatura of card.candidaturas">
-            <app-card-layout [statusPedido]="card.status_pedido">
+            <app-card-layout
+              [statusPedido]="card.status_pedido"
+              [cardTemplateIndicator]="1"
+            >
               <!-- Header -->
               <div
                 service-icon

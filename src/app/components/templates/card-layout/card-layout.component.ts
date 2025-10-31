@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-card-layout',
@@ -7,6 +8,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class CardLayoutComponent implements OnInit {
   @Input() statusPedido: string = '';
+  @Input() cardTemplateIndicator: number = 0; // 1 para serviço, 2 para candidatura
 
   tags: string[] = ['Residencial', 'Urgente', 'Elétrica'];
 
@@ -19,6 +21,17 @@ export class CardLayoutComponent implements OnInit {
 
   currentStatus = this.statusOptions[0];
   private statusInterval: any;
+  flowIndicator: string = '1';
+
+  constructor(private route: Router) {
+    this.route.events.subscribe(() => {
+      if (this.route.url.includes('budgets')) {
+        this.flowIndicator = 'budgets';
+        console.log('asdasdadsasda', this.flowIndicator);
+        
+      }
+    });
+  }
 
   ngOnInit() {
     let index = 0;
@@ -26,6 +39,9 @@ export class CardLayoutComponent implements OnInit {
       index = (index + 1) % this.statusOptions.length;
       this.currentStatus = this.statusOptions[index];
     }, 3000);
+
+    console.log('cardTemplateIndicator',this.cardTemplateIndicator);
+    
   }
 
   get badgeStyles(): { [key: string]: string } {

@@ -6,6 +6,27 @@
     color: var(--primary);
     font-size: 20px;
   }
+
+  .order-badge {
+    background-color: #d3d3d32c;
+    color: grey;
+    border-radius: 25px;
+    padding: 5px;
+  }
+
+  .template-2-order {
+    margin-top: -6em;
+  }
+
+  /* Estilos específicos para cada template */
+  &[data-template="1"] {
+    /* Estilos específicos do template 1 */
+  }
+
+  &[data-template="2"] {
+    /* Estilos específicos do template 2 */
+  }
+
   .status-badge {
     display: inline-flex;
     align-items: center;
@@ -106,4 +127,18 @@
     background-color: #eeeeee;
     color: #757575;
   }
+}
+
+.prestador-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.budget-card-footer button {
+  width: 100%;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.2s;
 }
