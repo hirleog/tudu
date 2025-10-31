@@ -15,6 +15,7 @@ import { OrderHelpComponent } from './order-help/order-help.component';
 import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
 import { ProgressComponent } from './progress/progress.component';
 import { FinishHireButtonComponent } from './card-detail/finish-hire-button/finish-hire-button.component';
+import { CardLayoutComponent } from '../templates/card-layout/card-layout.component';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -41,6 +42,7 @@ const routes: Routes = [
     FlowEndComponent,
     OrderHelpComponent,
     FinishHireButtonComponent,
+    CardLayoutComponent,
     // ProfileComponent,
     // ProfileDetailComponent,
 

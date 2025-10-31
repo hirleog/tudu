@@ -3,17 +3,17 @@
     <a (click)="back()" class="text-decoration-none text-dark">
       <i
         class="fas fa-arrow-left me-2"
-        style="font-size: 1.5em; color: var(--primary)"
+        style="font-size: 1.5em; color: var(--light)"
       ></i>
     </a>
   </div>
   <div central-content>
-    <h3 class="title-page m-0">Detalhes</h3>
+    <h3 class="title-page m-0" style="color: var(--light);">Detalhes</h3>
   </div>
   <div right-content>
     <i
       class="fas fa-question-circle"
-      style="font-size: 1.5em; color: var(--primary)"
+      style="font-size: 1.5em; color: var(--light)"
       title="Clique para mais informações"
       (click)="openModal()"
     ></i>
@@ -329,7 +329,7 @@
         flow !== 'historic' &&
         flow !== 'finalizado'
       "
-      class="col-12 btn btn-primary"
+      class="col-12 btn btn-outline-primary"
       (click)="handleOption('cancelar', card)"
     >
       {{ isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido" }}

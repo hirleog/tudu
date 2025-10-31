@@ -97,6 +97,8 @@ export class AppHomeComponent implements OnInit {
     this.flowNavigate();
   }
 
+  
+
   listCards(status_pedido: string) {
     if (this.carregandoMais || this.finalDaLista) {
       return;
