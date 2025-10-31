@@ -6,9 +6,8 @@
         (clienteIsLogged === true && isProfessional === false && !isEndFlow))
     "
   >
-    <!-- Menu Mobile (aparece apenas em telas pequenas) -->
-    <div class="md:hidden shadow-lg hr-nav-top">
-      <!-- <div class="md:hidden shadow-lg"> -->
+    <!-- Menu Mobile Flutuante -->
+    <div class="menu-flutuante md:hidden">
       <div class="flex justify-around items-center">
         <!-- Serviços -->
         <div
@@ -61,6 +60,7 @@
           </p>
         </div>
 
+        <!-- Histórico -->
         <div
           *ngIf="isProfessional"
           class="menu-item flex flex-col items-center p-1"

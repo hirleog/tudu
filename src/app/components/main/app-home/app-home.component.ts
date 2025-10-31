@@ -97,6 +97,8 @@ export class AppHomeComponent implements OnInit {
     this.flowNavigate();
   }
 
+  
+
   listCards(status_pedido: string) {
     if (this.carregandoMais || this.finalDaLista) {
       return;
@@ -294,7 +296,7 @@ export class AppHomeComponent implements OnInit {
     const currentState = this.stateManagement.getState(currentStatus);
     currentState.scrollY = window.scrollY;
     this.route.navigate(['/home/budgets'], {
-      queryParams: { id: id_pedido },
+      queryParams: { id: id_pedido, flow: this.flow},
     });
   }
 

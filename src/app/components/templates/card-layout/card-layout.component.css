@@ -1,0 +1,144 @@
+.service-card {
+  background: var(--light, #fff);
+  border-radius: 1rem;
+  transition: all 0.3s ease;
+  .service-card-header i {
+    color: var(--primary);
+    font-size: 20px;
+  }
+
+  .order-badge {
+    background-color: #d3d3d32c;
+    color: grey;
+    border-radius: 25px;
+    padding: 5px;
+  }
+
+  .template-2-order {
+    margin-top: -6em;
+  }
+
+  /* Estilos específicos para cada template */
+  &[data-template="1"] {
+    /* Estilos específicos do template 1 */
+  }
+
+  &[data-template="2"] {
+    /* Estilos específicos do template 2 */
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 4px 10px;
+    border-radius: 25px;
+    text-transform: capitalize;
+    transition: all 0.3s ease;
+
+    /* Faz o ícone herdar a cor da badge */
+    i {
+      color: inherit !important;
+    }
+  }
+
+  .filter-tag {
+    background: var(--tag-bg, #f9fafb);
+    border: 1px solid var(--primary);
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+    color: var(--primary);
+    font-size: 12px;
+  }
+  /* .details-btn {
+    font-size: 17px;
+    font-weight: 600;
+    transition: background-color 0.8s ease-in-out;
+    background: var(--primary);
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  .details-btn:hover {
+    background: var(--primary-dark);
+  } */
+
+  .details-btn {
+    cursor: pointer;
+  }
+  .price {
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--primary);
+  }
+
+  .service-address {
+    font-size: 13px;
+    color: rgb(212, 212, 212) !important;
+  }
+
+  .icon-style {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary) !important;
+    width: 40px;
+    height: 40px;
+    font-size: 12px;
+    font-size: 20px;
+    border-radius: 10px;
+  }
+  .price {
+    font-weight: 600;
+    color: var(--background-color);
+  }
+
+  .service-title {
+    font-weight: 600;
+
+    font-size: 1.1rem;
+  }
+
+  .badge-finalizado {
+    background-color: #e0f7fa;
+    color: #00796b;
+  }
+
+  .badge-concluido {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .badge-cancelado {
+    background-color: #ffebee;
+    color: #c62828;
+  }
+
+  .badge-publicado {
+    background-color: #fff3e0;
+    color: #25a5ff;
+  }
+
+  .badge-default {
+    background-color: #eeeeee;
+    color: #757575;
+  }
+}
+
+.prestador-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.budget-card-footer button {
+  width: 100%;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.2s;
+}

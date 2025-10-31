@@ -1,0 +1,93 @@
+<div
+  class="service-card rounded-xl shadow-md overflow-hidden bg-white hover:shadow-lg transition-all duration-300 relative"
+>
+  <!-- HEADER -->
+  <div
+    class="service-card-header flex items-center justify-between p-3 border-b border-gray-200"
+  >
+    <div class="flex items-center gap-3">
+      <div class="icon-style">
+        <ng-content select="[service-icon]"></ng-content>
+      </div>
+      <div class="flex flex-col">
+        <div class="flex items-center gap-3">
+          <div class="service-title">
+            <ng-content select="[service-title]"></ng-content>
+          </div>
+          <div>
+            <ng-content select="[details-btn]"></ng-content>
+          </div>
+        </div>
+        <div
+          class="whitespace-nowrap overflow-hidden text-ellipsis"
+          style="font-size: 12px; color: var(--tab-link)"
+        >
+          <ng-content select="[service-address]"></ng-content>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BODY -->
+  <div class="service-card-body p-4 space-y-3">
+    <div>
+      <div
+        class="flex flex-col items-start gap-3 border-b border-gray-100 pb-3 mb-3"
+        *ngIf="cardTemplateIndicator === 1"
+      >
+        <div class="flex justify-between w-full pb-2">
+          <div class="status-badge" [ngStyle]="badgeStyles">
+            <ng-content select="[status-badge]"></ng-content>
+          </div>
+
+          <div
+            class="text-xs text-gray-50 font-semibold"
+            style="
+              background-color: #d3d3d32c;
+              color: grey;
+              border-radius: 25px;
+              padding: 5px;
+            "
+          >
+            <ng-content select="[order-number]"></ng-content>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 items-center">
+          <ng-content select="[filter-tag]"></ng-content>
+        </div>
+      </div>
+
+      <div class="fw-semibold" *ngIf="statusPedido === 'finalizado'">
+        <ng-content select="[conclusion-date]"></ng-content>
+      </div>
+    </div>
+    <ng-content select="[info-row]"></ng-content>
+
+    <ng-content select="[description]"></ng-content>
+  </div>
+
+  <!-- FOOTER -->
+
+  <div
+    class="service-card-footer flex justify-between items-center p-3 border-t border-gray-100 bg-gray-50"
+  >
+    <div>
+      <ng-content select="[main-btn]"></ng-content>
+    </div>
+    <div class="fw-semibold">
+      <ng-content select="[price]"></ng-content>
+    </div>
+  </div>
+  <!-- <div
+    
+    class="flex row justify-between items-center p-3 border-t border-gray-100 bg-gray-50"
+  >
+    <div class="col-6">
+      <ng-content select="[main-btn]"></ng-content>
+    </div>
+    <div class="col-6">
+      <ng-content select="[price]"></ng-content>
+    </div>
+  </div> -->
+</div>

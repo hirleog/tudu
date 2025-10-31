@@ -5,7 +5,7 @@
 /* @import "~bootstrap/dist/css/bootstrap.min.css"; */
 
 :root {
-  /* --primary: #ff3d24; */
+  --primary: #F80E6E;
   /* --primary: #ffc739; */
   --background: #000000;
   --background-light: #bdbdbd1c;
@@ -32,7 +32,7 @@
   /* --blue: #b80aea; */
   --blue: blueviolet;
 
-  --tab-link: #999;
+  --tab-link: #c3c3c3;
   --bottom-transparent: #00000021;
 
   /* skeleton */
