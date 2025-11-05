@@ -36,10 +36,16 @@
   width: 100%;
 }
 
+
+
 .active {
-  color: var(--primary) !important;
-  pointer-events: none !important;
-  cursor: none;
+  /* background-color: var(--primary);
+  border-radius: 100px;
+      height: 70px;
+    max-width: fit-content; */
+  color: var(--secondary) !important;
+  /* pointer-events: none !important;
+  cursor: none; */
 }
 
 .inactive {
@@ -67,7 +73,7 @@ p {
 /* Ícones quando o item está ativo */
 .menu-item.active i,
 .menu-item-desktop.active i {
-  color: var(--primary) !important;
+  color: var(--secondary) !important;
 }
 
 /* Texto normal */
@@ -79,7 +85,7 @@ p {
 /* Texto ativo */
 .menu-item.active p,
 .menu-item-desktop.active span {
-  color: var(--primary) !important;
+  color: var(--secondary) !important;
 }
 
 /* MENU FLUTUANTE (versão mobile) */
