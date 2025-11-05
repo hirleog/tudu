@@ -17,6 +17,7 @@
         "build": {
           "builder": "ngx-build-plus:browser",
           "options": {
+            "preserveSymlinks": true,
             "outputPath": "dist/tudu",
             "index": "src/index.html",
             "main": "src/main.ts",
