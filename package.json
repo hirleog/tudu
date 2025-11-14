@@ -35,7 +35,7 @@
     "rxjs": "~7.5.0",
     "socket.io-client": "^4.5.4",
     "tslib": "^2.3.0",
-    "tudu-components": "file:../tudü/tudu-workspace/dist/tudu-components/tudu-components-0.0.0-watch+1763131313618.tgz",
+    "tudu-components": "file:../tudü/tudu-workspace/dist/tudu-components/tudu-components-0.0.1.tgz",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
