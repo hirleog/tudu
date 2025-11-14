@@ -1,16 +1,13 @@
-<app-nav>
+<lib-nav>
   <div left-content class="d-flex align-items-center">
     <a
       [routerLink]="isProfessional ? '/tudu-professional/home' : '/'"
       class="logo"
     >
       <img
-        [src]="
-          isProfessional
-            ? '../../../assets/logo-branco.webp'
-            : '../../../assets/logo-branco.webp'
-        "
+        src="../../../assets/logo-branco.webp"
         style="width: 4em"
+        class="logo-responsive"
         alt="error"
       />
     </a>
@@ -19,7 +16,7 @@
       style="
         margin-bottom: 0px;
         margin-top: 3px;
-        font-size: 15px;
+        font-size: 17px;
         color: var(--light);
       "
     >
@@ -30,7 +27,7 @@
   <div central-content></div>
   <!-- <div central-content></div> -->
   <div right-content></div>
-</app-nav>
+</lib-nav>
 
 <section
   id="profile"

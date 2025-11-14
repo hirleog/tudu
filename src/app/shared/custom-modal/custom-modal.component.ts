@@ -20,12 +20,12 @@ export class CustomModalComponent {
   @Output() modalClosed = new EventEmitter<void>();
   @Output() modalAction = new EventEmitter<void>();
   @Input() showModal = false;
+  @Input() messageTitle: string = 'Pagamento Aprovado!';
 
   // Configuração dinâmica
   modalIcon: string = 'fa-check';
   modalIconColor: string = 'text-green-600';
   modalBgColor: string = 'bg-green-100';
-  messageTitle: string = 'Pagamento Aprovado!';
   messageBody: string = 'Seu pagamento foi processado com sucesso.';
 
   openModal(): void {

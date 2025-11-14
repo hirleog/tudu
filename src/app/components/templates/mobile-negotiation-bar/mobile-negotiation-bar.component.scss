@@ -1,0 +1,71 @@
+.mobile-negotiation-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 2px solid #e2e8f0;
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  padding: 12px 16px;
+  animation: slideUp 0.3s ease-out;
+}
+
+.bar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.date-time,
+.value {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.date-time i,
+.value i {
+  color: var(--primary, #3b82f6);
+  font-size: 12px;
+}
+
+.bar-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* Esconder em desktop */
+@media (min-width: 768px) {
+  .mobile-negotiation-bar {
+    display: none;
+  }
+}
+
+/* Ajustes para telas muito pequenas */
+@media (max-width: 320px) {
+  .mobile-negotiation-bar {
+    padding: 10px 12px;
+  }
+
+  .date-time,
+  .value {
+    font-size: 12px;
+  }
+}

@@ -1,5 +1,5 @@
 <section style="height: auto">
-  <app-nav>
+  <lib-nav>
     <div left-content>
       <a (click)="backToHome()" class="text-decoration-none text-dark">
         <i class="fas fa-arrow-left" style="color: var(--light)"></i>
@@ -15,9 +15,7 @@
         title="Clique para mais informações"
       ></i>
     </div>
-
-    
-  </app-nav>
+  </lib-nav>
 
   <!-- <div id="budgets" class="container" *ngIf="cards?.candidaturas?.length > 0">
     <h4 class="text-start">Meus orçamentos</h4>
@@ -30,11 +28,11 @@
   >
     <div class="row g-3 m-0 p-0">
       <div
-        class="col-12 m-0 p-0"
+        class="col-12 m-0 p-2"
         *ngFor="let candidatura of card?.candidaturas; let i = index"
       >
-        <!-- Card de candidatura dentro do app-card-layout -->
-        <app-card-layout
+        <!-- Card de candidatura dentro do lib-card-layout -->
+        <lib-card-layout
           [statusPedido]="card.status_pedido"
           [cardTemplateIndicator]="2"
         >
@@ -131,6 +129,20 @@
           </div>
 
           <!-- FOOTER -->
+          <!-- <button
+            main-btn
+            class="request-quote-btn"
+            style="
+              color: var(--primary);
+              background-color: var(--light) !important;
+              border: 1px solid var(--primary);
+              width: 100% !important;
+            "
+            (click)="updateCard(card, 'recusar', candidatura.prestador_id)"
+          >
+            Recusar
+          </button> -->
+
           <button
             main-btn
             class="request-quote-btn"
@@ -143,6 +155,21 @@
             (click)="updateCard(card, 'recusar', candidatura.prestador_id)"
           >
             Recusar
+            <span
+              *ngIf="!processingBudget"
+              style="color: white !important"
+            ></span>
+            <span
+              *ngIf="processingBudget"
+              class="flex items-center justify-center"
+              style="color: white !important"
+            >
+              <i
+                class="fas fa-circle-notch fa-spin mr-2"
+                style="color: white !important"
+              ></i>
+              Aguarde...
+            </span>
           </button>
 
           <button
@@ -157,7 +184,7 @@
           >
             Contratar
           </button>
-        </app-card-layout>
+        </lib-card-layout>
       </div>
     </div>
   </div>

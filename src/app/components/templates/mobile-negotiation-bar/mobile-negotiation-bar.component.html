@@ -1,0 +1,39 @@
+<div *ngIf="isMobile && isVisible" class="mobile-negotiation-bar">
+  <!-- Header com data/hora e valor -->
+  <div class="bar-header">
+    <div class="date-time">
+      <i class="fas fa-calendar-alt mr-1"></i>
+      {{ startDateTime | date : "dd/MM/yyyy HH:mm" }}
+    </div>
+    <div class="value">
+      <i class="fas fa-tag mr-1"></i>
+      {{ value | currency : "BRL" }}
+    </div>
+  </div>
+
+  <!-- Botões de ação -->
+  <div class="bar-actions">
+   <button
+  class="btn-negotiate btn btn-outline-primary"
+  [class.col-12]="hideAdvanceBtn"
+  [class.col-6]="!hideAdvanceBtn"
+  (click)="handleNegotiate()"
+  [disabled]="negotiateDisabled"
+  [class.disabled]="negotiateDisabled"
+>
+  <i class="fas fa-handshake mr-1"></i>
+  {{ negotiateButtonText }}
+</button>
+
+    <button
+    *ngIf="!hideAdvanceBtn"
+      class="btn-advance col-6 btn btn-primary"
+      (click)="handleAdvance()"
+      [disabled]="advanceDisabled"
+      [class.disabled]="advanceDisabled"
+    >
+      <i class="fas fa-arrow-right mr-1"></i>
+      {{ advanceButtonText }}
+    </button>
+  </div>
+</div>

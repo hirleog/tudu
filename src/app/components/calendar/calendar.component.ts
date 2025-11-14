@@ -26,14 +26,16 @@ export class CalendarComponent implements OnInit {
   // timeSelected: string = '';
   dateSelected: string = '';
 
-  @Input() openCalendar: boolean = false; // Array de datas no formato 'YYYY-MM-DD'
+  @Input() calendarActive: boolean = false; // Array de datas no formato 'YYYY-MM-DD'
   @Input() showChangeDateBtn: boolean = true; // Array de datas no formato 'YYYY-MM-DD'
   @Input() hasTime: boolean = false; // Array de datas no formato 'YYYY-MM-DD'
   @Input() markedDates: string[] = []; // Array de datas no formato 'YYYY-MM-DD'
+  @Input() hideCalendarInput: boolean = false; // Array de datas no formato 'YYYY-MM-DD'
 
   @Input() initialDate: string = ''; // Nova entrada para definir a data inicial
   @Input() initialTime: string = ''; // Adicione isso junto com os outros @Input()
   @Input() initialDateTime: any; // Adicione isso junto com os outros @Input()
+  @Input() hideCalendarDays: boolean = false; // Adicione isso junto com os outros @Input()
 
   // @Output() dateSelected = new EventEmitter<string>();
   // @Output() timeSelected = new EventEmitter<string>();
@@ -44,8 +46,6 @@ export class CalendarComponent implements OnInit {
 
   @Input() showWeekView: boolean = false;
   weekDays: { date: moment.Moment; isFirst: boolean }[] = [];
-  calendarActive: boolean = false;
-  hideCalendarDays: boolean = false;
 
   private today = moment();
   private maxSelectableDate = moment().add(15, 'days');
@@ -169,6 +169,8 @@ export class CalendarComponent implements OnInit {
     this.timeSelectedChange.emit(this.timeSelected); // Emite o horário selecionado
 
     this.calendarActive = false;
+        this.hideCalendarDays = false;
+
     this.updateDateTime();
   }
 

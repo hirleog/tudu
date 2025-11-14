@@ -1,9 +1,9 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddressComponent } from './address.component';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NavModule } from '../nav/nav.module';
 import { RouterModule, Routes } from '@angular/router';
+import { AddressComponent } from './address.component';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 const routes: Routes = [{ path: 'address', component: AddressComponent }];
 
@@ -13,7 +13,7 @@ const routes: Routes = [{ path: 'address', component: AddressComponent }];
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NavModule,
+    SharedModule,
     RouterModule.forChild(routes),
   ],
   exports: [AddressComponent],

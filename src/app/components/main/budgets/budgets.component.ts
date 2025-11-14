@@ -30,6 +30,7 @@ export class BudgetsComponent implements OnInit {
   showModal: boolean = false;
   selectedCandidatura: any;
   paymentIndicator: string = '';
+  processingBudget: boolean = false;
 
   constructor(
     public cardService: CardService,
@@ -91,6 +92,8 @@ export class BudgetsComponent implements OnInit {
   }
 
   goToPayment(card: any, id_prestador: any): void {
+    this.processingBudget = true;
+
     this.authService.idCliente$.subscribe((id) => {
       const id_cliente = Number(id);
 
@@ -100,9 +103,10 @@ export class BudgetsComponent implements OnInit {
           this.selectedCandidatura = id_prestador;
           this.paymentStep = true;
           this.clientData = data;
+          this.processingBudget = false;
         },
         error: (err) => {
-          console.error('Erro ao buscar dados do cliente:', err);
+          this.processingBudget = false;
         },
       });
     });
@@ -178,13 +182,7 @@ export class BudgetsComponent implements OnInit {
       next: () => {
         this.stateManagementService.clearAllState();
         this.paymentIndicator = step;
-        
-        this.customModal.openModal();
-        this.customModal.configureModal(
-          'success',
-          'Pagamento aprovado com sucesso!'
-        );
-
+        this.closeModal();
       },
       error: (error) => {
         this.showModal = true;

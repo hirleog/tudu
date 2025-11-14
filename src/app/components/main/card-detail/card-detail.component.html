@@ -1,4 +1,4 @@
-<app-nav>
+<lib-nav>
   <div left-content>
     <a (click)="back()" class="text-decoration-none text-dark">
       <i
@@ -8,7 +8,7 @@
     </a>
   </div>
   <div central-content>
-    <h3 class="title-page m-0" style="color: var(--light);">Detalhes</h3>
+    <h3 class="title-page m-0" style="color: var(--light)">Detalhes</h3>
   </div>
   <div right-content>
     <i
@@ -18,9 +18,13 @@
       (click)="openModal()"
     ></i>
   </div>
-</app-nav>
+</lib-nav>
 <section style="margin-top: 1em" class="max-w-4xl mx-auto lg:px-8">
-  <div id="card-detail" class="container mt-4 pt-2 pb-2" *ngFor="let card of cards">
+  <div
+    id="card-detail"
+    class="container mt-4 pt-2 pb-2"
+    *ngFor="let card of cards"
+  >
     <!-- Header da tela -->
     <div
       class="header d-flex align-items-center mb-4 rounded-xl shadow-sm space-y-4 p-6"
@@ -334,8 +338,135 @@
     >
       {{ isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido" }}
     </button>
+
+    <app-mobile-negotiation-bar
+      *ngIf="
+        (flow === 'publicado' || flow === 'recusado') && isProfessionalIndicator
+      "
+      [startDateTime]="card.horario_preferencial"
+      [value]="card.valor"
+      [negotiateButtonText]="'Negociar'"
+      [advanceButtonText]="'Avançar'"
+      [hideAdvanceBtn]="flow === 'recusado' ? true : false"
+      (onNegotiate)="handleNegotiate($event)"
+      (onAdvance)="handleAdvance($event)"
+    >
+    </app-mobile-negotiation-bar>
   </div>
 </section>
+
+<app-custom-modal
+  #modalCandidatar
+  [actionButtonText]="'Candidatar-se'"
+  (modalAction)="handleModalAction(cards[0])"
+></app-custom-modal>
+
+<app-custom-modal
+  #modalNegociar
+  [actionButtonText]="'Negociar'"
+  (modalAction)="handleModalAction(cards[0])"
+>
+  <div optional-content>
+    <div class="input-group mb-3">
+      <span class="input-group-text">$</span>
+
+      <input
+        type="text"
+        class="form-control"
+        [placeholder]="
+          (cards.length > 0 ? cards[0].valor : 0)
+            | currency : 'BRL' : 'symbol' : '1.2-2'
+        "
+        [(ngModel)]="priceNegotiated"
+        currencyMask
+        [options]="currencyOptions"
+        inputmode="numeric"
+        min="0"
+        step="0.01"
+      />
+      <button
+        [ngClass]="{
+          'change-renegotiate-btn':
+            cards.length > 0 && !cards[0].renegotiateActive
+        }"
+        class="btn btn-outline-secondary"
+        type="button"
+        id="btn-renegotiate"
+      >
+        <i
+          class="fa"
+          style="color: white !important"
+          [ngClass]="'fa-pencil'"
+        ></i>
+      </button>
+    </div>
+
+    <div #calendarContainer>
+      <div>
+        <div class="input-group mb-3">
+          <span class="input-group-text">#</span>
+          <input
+            [readonly]="true"
+            type="text"
+            class="form-control"
+            [(ngModel)]="dateTimeSelected"
+            (click)="calendarActive = !calendarActive"
+            [placeholder]="
+              cards.length > 0
+                ? (cards[0].horario_preferencial | date : 'dd/MM/yyyy - HH:mm')
+                : ''
+            "
+          />
+          <button
+            (click)="calendarActive = !calendarActive"
+            [ngClass]="{
+              'change-renegotiate-btn':
+                cards.length > 0 && cards[0].calendarActive
+            }"
+            class="btn btn-outline-secondary"
+            type="button"
+            id="btn-renegotiate"
+          >
+            <i
+              class="fas"
+              style="color: white !important"
+              [ngClass]="
+                cards.length > 0 && !cards[0].calendarActive
+                  ? 'fa-calendar-alt'
+                  : 'fa-undo'
+              "
+            ></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="container" style="z-index: 1001">
+        <app-calendar
+          [hasTime]="true"
+          [showWeekView]="false"
+          [initialDateTime]="
+            cards.length > 0 ? cards[0].horario_preferencial : null
+          "
+          [hideCalendarInput]="true"
+          [calendarActive]="calendarActive || false"
+          [hideCalendarDays]="hideCalendarDays"
+          (closeCalendar)="onCalendarClose()"
+          (dateSelectedChange)="onDateSelected($event)"
+          (timeSelectedChange)="onTimeSelected($event)"
+        >
+        </app-calendar>
+      </div>
+    </div>
+  </div>
+</app-custom-modal>
+
+<app-custom-modal
+  #modalConfirmacao
+  [messageTitle]="'Proposta enviada com sucesso!'"
+  [actionButtonText]="'Ver pedidos'"
+  (modalClosed)="(showModal)"
+  (modalAction)="goToHomeSeeProposal()"
+></app-custom-modal>
 
 <!-- modal -->
 <div [ngClass]="{ 'modal-backdrop': isModalVisible }"></div>
