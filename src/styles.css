@@ -657,6 +657,7 @@ lib-nav {
   position: relative;
 }
 
+
 @keyframes highlight {
   0%,
   100% {
@@ -672,6 +673,8 @@ lib-nav {
 .notification-pulse {
   animation: pulse 2s infinite;
 }
+
+
 
 @keyframes pulse-circle {
   0% {
