@@ -39,7 +39,21 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Instalar dependências
+      - name: Buildar Biblioteca Tudu Components
+        run: |
+          # Verifica se a biblioteca existe e a builda
+          if [ -d "tudu-workspace" ]; then
+            cd tudu-workspace
+            npm install --force
+            npm run build:tudu-components
+            cd dist/tudu-components
+            npm pack
+            cd ../../..
+          else
+            echo "Biblioteca tudu-components não encontrada, continuando sem ela..."
+          fi
+
+      - name: Instalar dependências do projeto principal
         run: npm install --force
 
       - name: Buildar projeto
