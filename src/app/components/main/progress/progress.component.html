@@ -1,4 +1,4 @@
-<app-nav>
+<lib-nav>
   <div left-content>
     <a
       routerLink="/home"
@@ -20,7 +20,7 @@
       title="Clique para mais informações"
     ></i>
   </div>
-</app-nav>
+</lib-nav>
 
 <div id="my-budgets" class="container mt-2 max-w-4xl mx-auto lg:px-8">
   <div class="row g-3 m-0 p-0">
@@ -30,8 +30,8 @@
         style="margin-bottom: 20px !important"
         *ngFor="let candidatura of c.candidaturas; let j = index"
       >
-        <!-- CARD reaproveitando app-card-layout -->
-        <app-card-layout
+        <!-- CARD reaproveitando lib-card-layout -->
+        <lib-card-layout
           [statusPedido]="c.status_pedido"
           [cardTemplateIndicator]="2"
         >
@@ -150,7 +150,7 @@
           >
             Acompanhar
           </button>
-        </app-card-layout>
+        </lib-card-layout>
       </div>
     </div>
 

@@ -15,7 +15,9 @@ import { OrderHelpComponent } from './order-help/order-help.component';
 import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
 import { ProgressComponent } from './progress/progress.component';
 import { FinishHireButtonComponent } from './card-detail/finish-hire-button/finish-hire-button.component';
-import { CardLayoutComponent } from '../templates/card-layout/card-layout.component';
+import { MobileNegotiationBarModule } from '../templates/mobile-negotiation-bar/mobile-negotiation-bar.module';
+import { NgxCurrencyModule } from 'ngx-currency';
+import { TuduComponentsModule } from 'tudu-components';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -42,7 +44,6 @@ const routes: Routes = [
     FlowEndComponent,
     OrderHelpComponent,
     FinishHireButtonComponent,
-    CardLayoutComponent,
     // ProfileComponent,
     // ProfileDetailComponent,
 
@@ -55,6 +56,8 @@ const routes: Routes = [
     CalendarModule,
     AddressModule,
     CardSkeletonModule,
+    MobileNegotiationBarModule,
+    NgxCurrencyModule,
     RouterModule.forChild(routes),
   ],
   exports: [FormatDateTimePipe],

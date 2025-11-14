@@ -24,7 +24,6 @@ input::placeholder {
   color: var(--secondary);
 }
 
-
 .check-button {
   background-color: var(--blue);
   border-radius: 5;
@@ -267,6 +266,28 @@ input::placeholder {
 .calendar-container-ajust {
   position: relative;
   z-index: 1000; /* Deve ser maior que o overlay */
+}
+
+/* Classes para estado selecionado */
+.time-selected {
+  background-color: var(--primary); /* Equivalente ao bg-pink-600 */
+  color: white; /* Equivalente ao text-white */
+  border-color: var(--primary); /* Equivalente ao border-pink-200 */
+}
+
+/* Classe base para os botões */
+.time-btn {
+  padding: 0.5rem 0; /* py-2 */
+  font-size: 0.875rem; /* text-sm */
+  border-radius: 0.25rem; /* rounded */
+  border: 1px solid #e5e7eb; /* border border-gray-200 */
+  transition: all 0.2s ease;
+}
+
+.time-btn:hover {
+  background-color: var(--primary); /* hover:bg-pink-50 */
+  border-color: var(--primary); /* hover:border-pink-200 */
+  color: var(--light);
 }
 
 @media (min-width: 992px) {

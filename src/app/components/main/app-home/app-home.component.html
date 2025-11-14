@@ -1,4 +1,4 @@
-<app-nav>
+<lib-nav>
   <div left-content>
     <a routerLink="/" class="transition-colors mr-3">
       <i
@@ -45,7 +45,7 @@
       ></div>
     </div>
   </div>
-</app-nav>
+</lib-nav>
 
 <section class="max-w-4xl mx-auto lg:px-8 mt-12">
   <div class="container" *ngIf="isLoading">
@@ -58,7 +58,7 @@
       <!-- PEDIDOS ATIVOS (selectedIndex === 0) -->
       <ng-container *ngIf="selectedIndex === 0">
         <div class="col-12 m-0 p-2" *ngFor="let card of cards">
-          <app-card-layout
+          <lib-card-layout
             [statusPedido]="card.status_pedido"
             [cardTemplateIndicator]="1"
           >
@@ -101,12 +101,12 @@
 
             <!-- Status e Tags -->
             <div status-badge class="status-badge">
-              <i class="fas fa-circle text-xs mr-1"></i>
+              <i class="fas fa-circle text-xs mr-1 notification-pulse"></i>
               {{ card.status_pedido | titlecase }}
             </div>
 
             <div
-              *ngFor="let filtro of card.subcategoria?.split(',')"
+              *ngFor="let filtro of card.subcategoria.split(',')"
               filter-tag
               class="filter-tag"
             >
@@ -139,12 +139,12 @@
             <button
               main-btn
               style="width: 100%"
-              class="request-quote-btn text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden text-ellipsis"
+              class="request-quote-btn btn-soft-glow-enhanced text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden"
               routerLinkActive="active"
               (click)="goToBudgets(card.id_pedido)"
               *ngIf="card.candidaturas.length > 0; else semQuotes"
             >
-              Oba! Orçamentos disponíveis ({{ card.candidaturas.length }})
+              Oba! Orçamentos ({{ card.candidaturas.length }})
               <span
                 *ngIf="card.temNovaCandidatura"
                 class="badge-novo"
@@ -162,7 +162,7 @@
             </ng-template>
 
             <div price>{{ card.valor | currency : "BRL" }}</div>
-          </app-card-layout>
+          </lib-card-layout>
         </div>
       </ng-container>
 
@@ -170,7 +170,7 @@
       <ng-container *ngIf="selectedIndex === 1">
         <div class="col-12 m-0 p-2" *ngFor="let card of cards">
           <ng-container *ngFor="let candidatura of card.candidaturas">
-            <app-card-layout
+            <lib-card-layout
               [statusPedido]="card.status_pedido"
               [cardTemplateIndicator]="1"
             >
@@ -239,7 +239,7 @@
               <div price>
                 {{ card.chargeInfos?.total_amount | currency : "BRL" }}
               </div>
-            </app-card-layout>
+            </lib-card-layout>
           </ng-container>
         </div>
       </ng-container>

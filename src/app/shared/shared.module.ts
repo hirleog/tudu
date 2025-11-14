@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NavModule } from '../components/nav/nav.module';
-import { CurrencyFormatDirective } from '../directives/currency-format.directive';
 import { CustomModalModule } from 'src/app/shared/custom-modal/custom-modal.module';
+import { TuduComponentsModule } from 'tudu-components';
+import { CurrencyFormatDirective } from '../directives/currency-format.directive';
 import { GoogleReviewsService } from '../services/google-reviews.service';
 
 @NgModule({
@@ -16,9 +16,9 @@ import { GoogleReviewsService } from '../services/google-reviews.service';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NavModule,
     CurrencyFormatDirective,
     CustomModalModule,
+    TuduComponentsModule,
     // StatusFilterPipe,
   ],
   providers: [GoogleReviewsService],
