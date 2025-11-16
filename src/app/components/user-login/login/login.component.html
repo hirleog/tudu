@@ -5,7 +5,7 @@
         [routerLink]="['/']"
         class="text-decoration-none text-dark d-flex align-items-center"
       >
-        <i class="fas fa-arrow-left pr-4"></i>
+        <i class="fas fa-arrow-left pr-4" style="color: var(--light)"></i>
       </a>
     </div>
   </div>
@@ -13,11 +13,7 @@
     <a routerLink="/" class="logo">
       <img
         [routerLink]="[isProfessional ? '/tudu-professional/home' : '/home']"
-        [src]="
-          isProfessional
-            ? '../../../assets/logo-roxoo.webp'
-            : '../../../assets/logo-branco.webp'
-        "
+        src="../../../assets/logo-branco.webp"
         class="img-fluid"
         style="width: 4em"
         alt="error"

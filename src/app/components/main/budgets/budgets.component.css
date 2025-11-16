@@ -2,13 +2,10 @@ p {
   font-size: 14px !important;
 }
 
-
-
 .request-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
-
 
 .change-button {
   background-color: var(--premium) !important;
@@ -37,3 +34,27 @@ p {
   border-radius: 50%;
   /* Certifique-se de que a imagem tenha bordas arredondadas */
 }
+
+/* HEADER PAGE */
+.service-card-header i {
+  color: var(--primary);
+  font-size: 20px;
+}
+.icon-style {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary) !important;
+  width: 40px;
+  height: 40px;
+  font-size: 12px;
+  font-size: 20px;
+  border-radius: 10px;
+}
+.service-title {
+  font-weight: 600;
+
+  font-size: 1.1rem;
+}
+
+

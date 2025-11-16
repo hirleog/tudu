@@ -158,10 +158,25 @@ export class CardDetailComponent implements OnInit {
     this.isLoadingBtn = true;
 
     const dateTime = `${this.dateSelected} - ${this.timeSelected}`;
-    const horario_negociado_formatted = moment(
-      dateTime,
-      'DD/MM/YYYY - HH:mm'
-    ).format('YYYY-MM-DD HH:mm');
+
+    // CORREÇÃO: Verificar se a data e hora são válidas antes de formatar
+    let horario_negociado_formatted = null;
+
+    if (this.dateSelected && this.timeSelected) {
+      const momentDate = moment(dateTime, 'DD/MM/YYYY - HH:mm');
+
+      // Verificar se a data é válida
+      if (momentDate.isValid()) {
+        horario_negociado_formatted = momentDate.format('YYYY-MM-DD HH:mm');
+      } else {
+        console.error('Data ou hora inválida:', dateTime);
+        // Usar o horário original do card como fallback
+        horario_negociado_formatted = card.horario_preferencial;
+      }
+    } else {
+      // Se não há data/hora selecionada, usar o horário original
+      horario_negociado_formatted = card.horario_preferencial;
+    }
 
     // // Obtém a candidatura do prestador atual (se existir)
     // const candidaturaAtual = card.candidaturas?.find(
@@ -220,7 +235,7 @@ export class CardDetailComponent implements OnInit {
         {
           prestador_id: Number(this.id_prestador),
           valor_negociado: valorNegociado,
-          horario_negociado: horario_negociado_formatted,
+          horario_negociado: horario_negociado_formatted, // ✅ Agora sempre será uma data válida ou null
           status: 'negociacao',
           // statusPedido === 'pendente' || isAceito ? 'aceito' : 'negociacao',
         },

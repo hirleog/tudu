@@ -7,7 +7,11 @@
     "
   >
     <!-- Menu Mobile Flutuante -->
-    <div class="menu-flutuante md:hidden">
+    <div
+      class="menu-flutuante md:hidden"
+      [class.menu-visible]="isMenuVisible"
+      [class.menu-hidden]="!isMenuVisible"
+    >
       <div class="flex justify-around items-center">
         <!-- Serviços -->
         <div

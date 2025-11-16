@@ -59,6 +59,8 @@ export class BudgetsComponent implements OnInit {
       next: (data: any) => {
         const candidaturas = data.candidaturas || [];
 
+        
+
         // Primeiro monta o card com ícone e candidaturas
         this.card = {
           ...data,
@@ -68,6 +70,8 @@ export class BudgetsComponent implements OnInit {
             icon: this.cardService.getIconByLabel(data.categoria) || '',
           })),
         };
+
+
 
         // Prepara as chamadas para os prestadores
         const chamadasPrestadores = this.card.candidaturas

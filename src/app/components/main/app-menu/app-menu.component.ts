@@ -11,6 +11,25 @@ import { StateManagementService } from 'src/app/services/state-management.servic
   styleUrls: ['./app-menu.component.css'],
 })
 export class AppMenuComponent implements OnInit {
+  private subscriptionCliente: Subscription = new Subscription();
+  private subscriptionPrestador: Subscription = new Subscription();
+
+  showDiv = true;
+  isLogged = false;
+  isProfessional: boolean = false;
+  isProfileRoute: boolean = false; // Nova variável para verificar a rota
+  profileActiveColor: boolean = false;
+
+  private lastScrollTop = 0;
+  isMenuVisible = true;
+  private scrollThreshold = 50;
+
+  clienteIsLogged: boolean = false;
+  prestadorIsLogged: boolean = false;
+  isEndFlow: boolean = false;
+  isMenuExpanded: boolean = true;
+  isHovered: boolean = false;
+
   hiddenRoutes = [
     '/login',
     '/proposal',
@@ -18,20 +37,6 @@ export class AppMenuComponent implements OnInit {
     '/proposal/offer',
     '/prestador-institucional',
   ];
-  showDiv = true;
-  isLogged = false;
-  isProfessional: boolean = false;
-  isProfileRoute: boolean = false; // Nova variável para verificar a rota
-  profileActiveColor: boolean = false;
-
-  private subscriptionCliente: Subscription = new Subscription();
-  private subscriptionPrestador: Subscription = new Subscription();
-
-  clienteIsLogged: boolean = false;
-  prestadorIsLogged: boolean = false;
-  isEndFlow: boolean = false;
-  isMenuExpanded: boolean = true;
-  isHovered: boolean = false;
   constructor(
     public router: Router,
     public authService: AuthService,
@@ -77,6 +82,8 @@ export class AppMenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.setupScrollBehavior();
+
     // Inscreve-se no estado de login
     this.subscriptionPrestador.add(
       this.authService.isPrestadorLoggedIn$.subscribe((loggedIn) => {
@@ -135,9 +142,35 @@ export class AppMenuComponent implements OnInit {
     this.isHovered = isHovered;
   }
 
+  private setupScrollBehavior() {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', this.handleScroll.bind(this), {
+        passive: true,
+      });
+    }
+  }
+
+  private handleScroll() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+    // Scroll down - esconde menu
+    if (scrollTop > this.lastScrollTop && scrollTop > this.scrollThreshold) {
+      this.isMenuVisible = false;
+    }
+    // Scroll up - mostra menu
+    else if (scrollTop < this.lastScrollTop) {
+      this.isMenuVisible = true;
+    }
+
+    this.lastScrollTop = scrollTop;
+  }
+
   ngOnDestroy(): void {
     // Cancela as inscrições para evitar vazamentos de memória
     this.subscriptionCliente.unsubscribe();
     this.subscriptionPrestador.unsubscribe();
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('scroll', this.handleScroll.bind(this));
+    }
   }
 }
