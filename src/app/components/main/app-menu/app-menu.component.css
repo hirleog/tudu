@@ -36,8 +36,6 @@
   width: 100%;
 }
 
-
-
 .active {
   /* background-color: var(--primary);
   border-radius: 100px;
@@ -91,44 +89,54 @@ p {
 /* MENU FLUTUANTE (versão mobile) */
 .menu-flutuante {
   position: fixed;
-  bottom: 20px; /* sobe um pouco acima do limite inferior da tela */
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 90%; /* deixa espaço nas laterais */
+  width: 90%;
   background: #fff;
-  border-radius: 50px; /* cantos arredondados */
+  border-radius: 50px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   padding: 10px 0;
   z-index: 1000;
+  transition: all 0.3s ease-in-out;
 }
 
+/* Estado visível - menu aparece */
+.menu-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  visibility: visible;
+}
+
+/* Estado escondido - menu desaparece para baixo */
+.menu-hidden {
+  opacity: 0;
+  transform: translateX(-50%) translateY(100px);
+  visibility: hidden;
+}
 /* Itens do menu */
 .menu-flutuante .menu-item {
   flex: 1;
   text-align: center;
   font-size: 24px;
   color: var(--secondary);
+  transition: all 0.2s ease;
 }
 
-/* Ícones */
 .menu-item i {
   color: var(--secondary);
   transition: color 0.2s ease;
 }
-
-/* Ícone e texto quando ativo */
 .menu-item.active i,
 .menu-item.active p {
   color: var(--primary) !important;
 }
 
-/* Texto */
 .menu-item p {
   font-size: 12px;
   color: var(--secondary);
   margin-top: 4px;
 }
-
 /* Efeito hover opcional */
 .menu-item:hover {
   opacity: 0.8;

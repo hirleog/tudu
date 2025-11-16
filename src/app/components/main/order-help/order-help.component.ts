@@ -177,7 +177,7 @@ export class OrderHelpComponent implements OnInit {
     if (reason) {
       this.cardService.cancelCard(idPedido, reason).subscribe({
         next: (response) => {
-          this.reqStatus = response.success === true ? 'success' : 'error';
+          this.reqStatus = response.status === 'success' ? 'success' : 'error';
 
           if (this.flow === 'progress') {
             this.cancelPayment();

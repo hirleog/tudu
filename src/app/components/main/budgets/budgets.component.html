@@ -15,6 +15,45 @@
         title="Clique para mais informações"
       ></i>
     </div>
+
+    <div
+      header-menu
+      style="background-color: var(--background) !important"
+      class="service-card-header md:hidden flex items-center justify-between p-3 border-b border-gray-200"
+    >
+      <div class="flex items-center gap-3">
+        <div class="icon-style">
+          <div>
+            <i
+              [class]="card.icon"
+              class="text-2xl"
+              style="color: var(--light)"
+            ></i>
+          </div>
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-3">
+            <div class="service-title truncate w-full">
+              <div>
+                {{ card.categoria }}
+              </div>
+            </div>
+          </div>
+          <div
+            class="whitespace-nowrap overflow-hidden text-ellipsis"
+            style="font-size: 12px; color: var(--tab-link)"
+          >
+            <div>
+              <i
+                class="fas fa-map-marker-alt text-xs mr-1"
+                style="font-size: 12px"
+              ></i>
+              {{ card.address?.city }}, {{ card.address?.state }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </lib-nav>
 
   <!-- <div id="budgets" class="container" *ngIf="cards?.candidaturas?.length > 0">
@@ -23,7 +62,7 @@
 
   <div
     id="my-budgets"
-    class="container mt-2 max-w-4xl mx-auto lg:px-8"
+    class="container mt-5 pt-5 max-w-4xl mx-auto lg:px-8"
     *ngIf="!paymentStep"
   >
     <div class="row g-3 m-0 p-0">
@@ -35,9 +74,10 @@
         <lib-card-layout
           [statusPedido]="card.status_pedido"
           [cardTemplateIndicator]="2"
+          [hideHeader]="true"
         >
           <!-- HEADER -->
-          <div service-icon>
+          <div service-icon class="cursor-pointer">
             <i
               [class]="card.icon"
               class="text-2xl"
@@ -56,15 +96,6 @@
             ></i>
             {{ card.address?.city }}, {{ card.address?.state }}
           </div>
-
-          <i
-            details-btn
-            (click)="
-              goToPrestadorDetail(candidatura.prestador_id, card.id_pedido)
-            "
-            class="fa-solid fa-magnifying-glass cursor-pointer"
-            style="color: var(--primary) !important"
-          ></i>
 
           <!-- BODY -->
           <div info-row>
@@ -124,7 +155,13 @@
           <div order-number>#{{ card.id_pedido }}</div>
 
           <!-- DESCRIPTION (opcional) -->
-          <div description class="text-gray-500 text-sm">
+          <div
+            description
+            class="text-gray-500 text-sm cursor-pointer"
+            (click)="
+              goToPrestadorDetail(candidatura.prestador_id, card.id_pedido)
+            "
+          >
             Clique para ver mais detalhes sobre o prestador.
           </div>
 
