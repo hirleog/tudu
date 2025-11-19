@@ -72,4 +72,37 @@ export class PaymentService {
   createToken(cardData: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/malga/tokens`, cardData);
   }
+
+  // Método para criar cobrança PIX
+  createPixCharge(pixData: any): Observable<any> {
+    return this.http.post(
+      `${environment.apiUrl}/pagseguro/pix/charge`,
+      pixData
+    );
+  }
+
+  // Método para buscar status de uma charge PIX
+  getPixChargeStatus(chargeId: string): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/pagseguro/charge/${chargeId}`);
+  }
+
+  // Método para buscar por reference_id (ID do pedido)
+  getPixChargeByReference(referenceId: string): Observable<any> {
+    return this.http.get(
+      `${environment.apiUrl}/pagseguro/charge/reference/${referenceId}`
+    );
+  }
+
+  // Método para cancelar charge PIX
+  cancelPixCharge(chargeId: string): Observable<any> {
+    return this.http.post(
+      `${environment.apiUrl}/pagseguro/charge/${chargeId}/cancel`,
+      {}
+    );
+  }
+
+  // Adicione este método no seu PaymentService
+  testPagBankAuth(): Observable<any> {
+    return this.http.get(`${environment.apiUrl}/pagseguro/check-api-key`);
+  }
 }

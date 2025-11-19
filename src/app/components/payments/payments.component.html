@@ -1,6 +1,6 @@
 <div
   class="min-h-screen lg:px-8 max-w-4xl mx-auto w-full rounded-xl transition-smooth"
-  style="margin-top: -20px"
+  style="margin-top: 50px"
 >
   <div class="container mx-auto px-1">
     <div class="max-w-4xl mx-auto">
@@ -124,10 +124,10 @@
         </div>
 
         <!-- Formas de Pagamento -->
+        <!-- border: 1px solid var(--bottom-transparent); -->
         <div
           class="lg:col-span-2 p-1"
           style="
-            border: 1px solid var(--bottom-transparent);
             border-radius: 5px;
           "
         >
@@ -140,18 +140,6 @@
             <div class="border-b border-gray-200">
               <nav class="flex -mb-px">
                 <button
-                  (click)="selectPaymentMethod('pix')"
-                  class="flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm"
-                  [class.border-pink-500]="paymentMethod === 'pix'"
-                  [class.text-pink-600]="paymentMethod === 'pix'"
-                  [class.border-transparent]="paymentMethod !== 'pix'"
-                  [class.text-gray-500]="paymentMethod !== 'pix'"
-                  [class.hover:text-gray-700]="paymentMethod !== 'pix'"
-                  [class.hover:border-gray-300]="paymentMethod !== 'pix'"
-                >
-                  <i class="fas fa-qrcode mr-2"></i> Pix
-                </button>
-                <button
                   (click)="selectPaymentMethod('credit')"
                   class="flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm"
                   [class.border-pink-500]="paymentMethod === 'credit'"
@@ -162,6 +150,18 @@
                   [class.hover:border-gray-300]="paymentMethod !== 'credit'"
                 >
                   <i class="far fa-credit-card mr-2"></i> Cartão de Crédito
+                </button>
+                <button
+                  (click)="selectPaymentMethod('pix')"
+                  class="flex-1 py-4 px-1 text-center border-b-2 font-medium text-sm"
+                  [class.border-pink-500]="paymentMethod === 'pix'"
+                  [class.text-pink-600]="paymentMethod === 'pix'"
+                  [class.border-transparent]="paymentMethod !== 'pix'"
+                  [class.text-gray-500]="paymentMethod !== 'pix'"
+                  [class.hover:text-gray-700]="paymentMethod !== 'pix'"
+                  [class.hover:border-gray-300]="paymentMethod !== 'pix'"
+                >
+                  <i class="fas fa-qrcode mr-2"></i> Pix
                 </button>
               </nav>
             </div>
@@ -177,7 +177,7 @@
                       Pague instantaneamente com Pix
                     </p>
                     <button
-                      (click)="generatePix()"
+                      (click)="submitPayment()"
                       class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition duration-200"
                     >
                       Gerar QR Code

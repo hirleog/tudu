@@ -243,113 +243,6 @@ export class PaymentsComponent implements OnInit {
     return formatted;
   }
 
-  // async submitPayment(): Promise<void> {
-  //   if (this.paymentMethod === 'credit') {
-  //     if (this.paymentForm.invalid) {
-  //       this.paymentForm.markAllAsTouched();
-  //       return;
-  //     }
-
-  //     this.processingPayment = true;
-
-  //     const formValue = this.paymentForm.value;
-  //     const deviceInfo = await this.deviceService.getDeviceInfo();
-
-  //     const requestData = {
-  //       id_pedido: this.hiredCardInfo.id_pedido,
-  // totalAmount: this.totalWithTax,
-  // originAmount: convertRealToCents(
-  //   this.hiredCardInfo.candidaturas[0].valor_negociado
-  // ),
-  //       currency: 'BRL',
-  //       order: {
-  //         order_id: 'ORDER-' + Date.now(),
-  //         product_type: 'service',
-  //       },
-  //       customer: {
-  //         customer_id: this.clientData.id_cliente.toString(),
-  //         first_name: this.clientData.nome,
-  //         last_name: this.clientData.sobrenome,
-  //         document_type: 'CPF',
-  //         document_number: formValue.cpf.replace(/\D/g, ''),
-  //         email: this.clientData.email,
-  //         phone_number: this.clientData.telefone,
-  //         billing_address: {
-  //           street: this.hiredCard.address.street,
-  //           number: this.hiredCard.address.number,
-  //           district: this.hiredCard.address.neighborhood,
-  //           city: this.hiredCard.address.city,
-  //           state: this.hiredCard.address.state,
-  //           country: this.hiredCard.address.country,
-  //           postal_code: this.hiredCard.address.cep.replace(/\D/g, ''),
-  //         },
-  //       },
-  //       device: deviceInfo,
-  //       credit: {
-  //         delayed: false,
-  //         save_card_data: false,
-  //         transaction_type:
-  //           this.selectedInstallmentOption.installments === 1
-  //             ? 'FULL'
-  //             : 'INSTALL_NO_INTEREST',
-  //         number_installments: this.selectedInstallmentOption.installments || 1,
-  //         amount_installment: this.selectedInstallmentOption.installmentValue,
-  //         soft_descriptor: 'TUDU Serviços',
-  //         dynamic_mcc: 7299,
-  //         card: {
-  //           number_token: formValue.cardNumber.replace(/\D/g, ''),
-  //           brand: formValue.cardType.toUpperCase(),
-  //           security_code: formValue.cvv,
-  //           expiration_month: formValue.expiryMonth,
-  //           expiration_year: formValue.expiryYear.slice(-2),
-  //           cardholder_name: formValue.cardHolder.toUpperCase(),
-  //         },
-  //       },
-  //     };
-
-  //     this.paymentService.pagarComCartao(requestData).subscribe({
-  //       next: (res: any) => {
-  //         this.closeModalIndicator = res.success ? 'success' : 'error';
-
-  //         this.processingPayment = false;
-
-  //         if (res.success) {
-  //           // Pagamento bem-sucedido
-  //           this.customModal.openModal();
-  //           this.customModal.configureModal(
-  //             'success',
-  //             'Pagamento aprovado com sucesso!'
-  //           );
-  //         } else {
-  //           // Pagamento falhou
-  //           this.customModal.openModal();
-  //           this.customModal.configureModal(
-  //             'error',
-  //             res.details[0].description || 'Pagamento não realizado.'
-  //           );
-  //         }
-  //       },
-  //       error: (err) => {
-  //         this.processingPayment = false;
-  //         this.customModal.openModal();
-  //         this.customModal.configureModal(
-  //           'error',
-  //           err.details[0].description || 'Pagamento não realizado.'
-  //         );
-  //       },
-  //     });
-  //   } else if (this.paymentMethod === 'pix') {
-  //     if (!this.acceptedTerms) return;
-
-  //     this.processingPayment = true;
-  //     setTimeout(() => {
-  //       this.processingPayment = false;
-  //       this.customModal.openModal();
-  //       console.log('Pagamento via Pix simulado com sucesso');
-  //     }, 2000);
-  //   }
-  // }
-
   async submitPayment(): Promise<void> {
     if (this.paymentMethod === 'credit') {
       if (this.paymentForm.invalid) {
@@ -365,6 +258,7 @@ export class PaymentsComponent implements OnInit {
       await this.tokenCardNumber(formValue);
     } else if (this.paymentMethod === 'pix') {
       await this.processPixPayment();
+      // this.testPagBankAuthentication();
     }
   }
 
@@ -535,39 +429,69 @@ export class PaymentsComponent implements OnInit {
     // Salvar no localStorage, service state, ou enviar para seu backend
     localStorage.setItem('last_charge_id', chargeId);
   }
-  // Processar pagamento PIX
+
+  testPagBankAuthentication(): void {
+    console.log('🧪 Testando autenticação PagBank...');
+
+    this.paymentService.testPagBankAuth().subscribe({
+      next: (response: any) => {
+        console.log('✅ Resposta:', response);
+
+        if (response.success) {
+          alert('✅ Autenticação OK!\n' + response.message);
+        } else {
+          alert(
+            `❌ Falha:\n${response.error}\n\nConfig: ${JSON.stringify(
+              response.config,
+              null,
+              2
+            )}`
+          );
+        }
+      },
+      error: (error) => {
+        console.error('❌ Erro:', error);
+        alert('❌ Erro na requisição: ' + error.message);
+      },
+    });
+  }
+
   private async processPixPayment(): Promise<void> {
-    if (!this.acceptedTerms) return;
+    // if (!this.acceptedTerms) return;
 
     this.processingPayment = true;
 
     const pixData = {
-      merchantId: environment.malgaMerchantId,
-      amount: PaymentFormatter.convertRealToCents(this.totalWithTax),
-      currency: 'BRL',
-      orderId: 'ORDER-' + Date.now(),
-      customer: {
-        name: PaymentFormatter.getFullName(
-          this.clientData.nome,
-          this.clientData.sobrenome
-        ),
-        email: this.clientData.email,
-        phoneNumber: PaymentFormatter.formatPhoneNumber(
-          this.clientData.telefone
-        ),
-        document: {
-          type: 'cpf',
-          number: PaymentFormatter.formatDocument(
-            this.clientData.id_cliente.toString()
-          ),
-        },
-      },
+      reference_id: this.hiredCard.id_pedido,
+      description: `Pagamento - ${this.hiredCard.categoria}`,
+      value: Number(this.hiredCardInfo.candidaturas[0].valor_negociado),
+      customer_name: `${this.clientData.nome} ${this.clientData.sobrenome}`,
+      customer_email: this.clientData.email,
+      customer_tax_id: this.clientData.cpf,
+      expires_in_minutes: 30,
     };
 
-    this.malgaService.processPixPayment(pixData).subscribe({
-      next: (res: any) => {
+    this.paymentService.createPixCharge(pixData).subscribe({
+      next: (response: any) => {
         this.processingPayment = false;
-        this.handlePixSuccess(res);
+
+        if (response.success) {
+          // AGORA É BEM SIMPLES - dados diretos na resposta
+          const pixInfo = {
+            qr_code: response.data.qr_code, // Código PIX copia e cola
+            qr_code_image: response.data.qr_code_image, // URL da imagem QR Code
+            encrypted_value: response.data.qr_code, // Compatibilidade
+            expiration_date: response.data.expiration_date, // Data de expiração
+            charge_id: response.data.id, // ID da charge
+            order_id: response.data.id, // ID do pedido
+            valor: response.data.amount.value / 100, // Valor em reais
+            local_payment_id: response.data.local_payment_id, // ID local
+          };
+
+          this.handlePixSuccess(pixInfo);
+        } else {
+          this.handlePaymentError(response.error);
+        }
       },
       error: (error) => {
         this.processingPayment = false;
@@ -575,7 +499,6 @@ export class PaymentsComponent implements OnInit {
       },
     });
   }
-
   private handlePaymentResponse(response: any): void {
     if (
       response.status === 'approved' ||
@@ -620,6 +543,27 @@ export class PaymentsComponent implements OnInit {
 
   private handlePixSuccess(response: any): void {
     this.payHiredCard.emit('success');
+
+    // Extrai os dados do PIX da resposta
+    const pixData = response.payment_method?.pix;
+    const chargeId = response.id;
+    const localPaymentId = response.local_payment_id;
+
+    if (!pixData) {
+      this.handlePaymentError('Dados do PIX não encontrados na resposta');
+      return;
+    }
+
+    // Salva os dados do PIX para exibir no modal
+    const pixInfo = {
+      qr_code: pixData.qr_code,
+      qr_code_image: pixData.qr_code_image,
+      encrypted_value: pixData.encrypted_value,
+      expiration_date: pixData.expiration_date,
+      charge_id: chargeId,
+      local_payment_id: localPaymentId,
+      valor: response.amount.value / 100, // Converter para reais
+    };
 
     this.customModal.openModal();
     this.customModal.configureModal('success', 'PIX gerado com sucesso!');
@@ -799,6 +743,94 @@ export class PaymentsComponent implements OnInit {
     const isValid = sum % 10 === 0;
 
     return isValid ? null : { invalidCardNumber: true };
+  }
+
+  private startPaymentPolling(chargeId: string): void {
+    let attempts = 0;
+    const maxAttempts = 180; // 30 minutos (10 segundos * 180 = 30 minutos)
+    const interval = 10000; // 10 segundos
+
+    const pollInterval = setInterval(() => {
+      attempts++;
+
+      this.paymentService.getPixChargeStatus(chargeId).subscribe({
+        next: (response: any) => {
+          if (response.success) {
+            const status = response.data.pagseguro?.status;
+
+            switch (status) {
+              case 'PAID':
+                clearInterval(pollInterval);
+                this.handlePixPaid(response.data);
+                break;
+              case 'EXPIRED':
+                clearInterval(pollInterval);
+                this.handlePixExpired();
+                break;
+              case 'CANCELLED':
+                clearInterval(pollInterval);
+                this.handlePixCancelled();
+                break;
+              default:
+                // Continua polling se ainda estiver pendente
+                if (attempts >= maxAttempts) {
+                  clearInterval(pollInterval);
+                  this.handlePixTimeout();
+                }
+            }
+          }
+        },
+        error: (error) => {
+          console.error('Erro no polling:', error);
+          if (attempts >= maxAttempts) {
+            clearInterval(pollInterval);
+            this.handlePixTimeout();
+          }
+        },
+      });
+    }, interval);
+  }
+
+  // Handlers para diferentes status do PIX
+  private handlePixPaid(paymentData: any): void {
+    this.payHiredCard.emit('success');
+
+    this.customModal.openModal();
+    this.customModal.configureModal(
+      'success',
+      'Pagamento PIX confirmado com sucesso!'
+    );
+
+    // Limpa dados do PIX do localStorage
+    localStorage.removeItem('last_pix_charge_id');
+    localStorage.removeItem('last_pix_data');
+  }
+
+  private handlePixExpired(): void {
+    this.payHiredCard.emit('expired');
+
+    this.customModal.openModal();
+    this.customModal.configureModal(
+      'warning',
+      'PIX expirado. Gere um novo código para pagar.'
+    );
+  }
+
+  private handlePixCancelled(): void {
+    this.payHiredCard.emit('cancelled');
+
+    this.customModal.openModal();
+    this.customModal.configureModal('warning', 'PIX cancelado.');
+  }
+
+  private handlePixTimeout(): void {
+    this.payHiredCard.emit('timeout');
+
+    this.customModal.openModal();
+    this.customModal.configureModal(
+      'warning',
+      'Tempo de verificação esgotado. Verifique o status do pagamento mais tarde.'
+    );
   }
 
   formatCpf(event: any): void {

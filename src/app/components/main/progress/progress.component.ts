@@ -15,7 +15,7 @@ export class ProgressComponent implements OnInit {
   card: CardOrders[] = [];
   candidatura: any;
   prestadorInfos: any;
-
+  isLoading: boolean = false;
   // cards: ProgressCard[] = [
   //   {
   //     name: 'Aline',
@@ -56,6 +56,7 @@ export class ProgressComponent implements OnInit {
 
   listCards() {
     this.stateManagement.clearAllState();
+    this.isLoading = true;
 
     this.cardService.getCards('pendente').subscribe({
       next: (response) => {
@@ -78,17 +79,24 @@ export class ProgressComponent implements OnInit {
         if (this.candidatura[0]?.prestador_id) {
           this.loadPrestador(this.candidatura[0].prestador_id);
         }
+        this.isLoading = false;
       },
-      error: (error) => console.error('Erro ao obter os cartões:', error),
+      error: (error) => {
+        console.error('Erro ao carregar os cards:', error);
+        this.isLoading = false;
+      },
       complete: () => console.log('Requisição concluída'),
     });
   }
 
   loadPrestador(id_prestador: number): void {
+    this.isLoading = true;
+
     this.profileDetailService
       .getPrestadorById(id_prestador)
       .subscribe((data: any) => {
         this.prestadorInfos = data;
+        this.isLoading = false;
       });
   }
 
@@ -132,7 +140,6 @@ export class ProgressComponent implements OnInit {
         flow: 'progress',
         id: idPrestador,
         pedido: idPedido,
-        
       },
     });
   }
