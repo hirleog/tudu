@@ -59,8 +59,6 @@ export class BudgetsComponent implements OnInit {
       next: (data: any) => {
         const candidaturas = data.candidaturas || [];
 
-        
-
         // Primeiro monta o card com ícone e candidaturas
         this.card = {
           ...data,
@@ -70,8 +68,6 @@ export class BudgetsComponent implements OnInit {
             icon: this.cardService.getIconByLabel(data.categoria) || '',
           })),
         };
-
-
 
         // Prepara as chamadas para os prestadores
         const chamadasPrestadores = this.card.candidaturas
@@ -96,8 +92,6 @@ export class BudgetsComponent implements OnInit {
   }
 
   goToPayment(card: any, id_prestador: any): void {
-    this.processingBudget = true;
-
     this.authService.idCliente$.subscribe((id) => {
       const id_cliente = Number(id);
 
@@ -107,11 +101,8 @@ export class BudgetsComponent implements OnInit {
           this.selectedCandidatura = id_prestador;
           this.paymentStep = true;
           this.clientData = data;
-          this.processingBudget = false;
         },
-        error: (err) => {
-          this.processingBudget = false;
-        },
+        error: (err) => {},
       });
     });
   }

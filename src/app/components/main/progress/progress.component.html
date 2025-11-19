@@ -23,6 +23,10 @@
 </lib-nav>
 
 <div id="my-budgets" class="container mt-2 max-w-4xl mx-auto lg:px-8">
+  <div class="container" *ngIf="isLoading">
+    <app-card-skeleton *ngFor="let i of [1, 2, 3, 4]"></app-card-skeleton>
+  </div>
+  
   <div class="row g-3 m-0 p-0">
     <div class="col-12 m-0 p-0" *ngFor="let c of card; let i = index">
       <div
@@ -171,4 +175,4 @@
   </div>
 </div>
 
-<div class="container mt-5 pt-5"></div>
+<!-- <div class="container mt-5 pt-5"></div> -->
