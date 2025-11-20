@@ -65,6 +65,8 @@ export class AppHomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     this.cardSocketService.ouvirAlertaNovaCandidatura().subscribe((data) => {
       console.log(`Nova candidatura recebida:`, data);
       const id = data.id_pedido;
@@ -96,8 +98,6 @@ export class AppHomeComponent implements OnInit {
     });
     this.flowNavigate();
   }
-
-  
 
   listCards(status_pedido: string) {
     if (this.carregandoMais || this.finalDaLista) {
@@ -296,7 +296,7 @@ export class AppHomeComponent implements OnInit {
     const currentState = this.stateManagement.getState(currentStatus);
     currentState.scrollY = window.scrollY;
     this.route.navigate(['/home/budgets'], {
-      queryParams: { id: id_pedido, flow: this.flow},
+      queryParams: { id: id_pedido, flow: this.flow },
     });
   }
 

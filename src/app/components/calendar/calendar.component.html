@@ -97,11 +97,21 @@
       <div class="grid grid-cols-4 gap-2">
         <button
           *ngFor="let time of availableTimes"
-          (click)="selectTime(time)"
+          (click)="!isTimeDisabled(time) && selectTime(time)"
           [class.time-selected]="time === timeSelected"
-          class="time-btn"
+          [class.text-gray-400]="isTimeDisabled(time)"
+          [class.cursor-not-allowed]="isTimeDisabled(time)"
+          [class.bg-gray-100]="isTimeDisabled(time)"
+          [class.opacity-70]="isTimeDisabled(time)"
+          [disabled]="isTimeDisabled(time)"
+          class="time-btn transition-colors duration-200"
+          [ngClass]="{
+            'hover:bg-pink-50': !isTimeDisabled(time),
+            'hover:bg-gray-100': isTimeDisabled(time)
+          }"
         >
           {{ time }}
+          <span *ngIf="isTimeDisabled(time)" class="text-xs block"></span>
         </button>
       </div>
     </div>

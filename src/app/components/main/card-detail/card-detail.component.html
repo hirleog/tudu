@@ -19,112 +19,246 @@
     ></i>
   </div>
 </lib-nav>
-<section style="margin-top: 1em" class="max-w-4xl mx-auto lg:px-8">
-  <div
-    id="card-detail"
-    class="container mt-4 pt-2 pb-2"
-    *ngFor="let card of cards"
-  >
-    <!-- Header da tela -->
-    <div
-      class="header d-flex align-items-center mb-4 rounded-xl shadow-sm space-y-4 p-6"
-    >
-      <i
-        [class]="card.icon"
-        class="me-2 fs-1"
-        style="color: var(--primary) !important"
-      ></i>
-      <h4 class="m-0">{{ card.categoria }}</h4>
-    </div>
 
-    <!-- Body da tela -->
-    <div class="body mb-6 rounded-xl shadow-sm space-y-4 p-6">
-      <div class="card-body">
-        <p class="card-text">
-          <strong>Número do Pedido:</strong> #{{ card.id_pedido }}
-        </p>
-        <p class="card-text">
-          <strong>Solicitado em:</strong>
-          {{ card.createdAt | date : "dd/MM/yyyy - HH:mm" }}
-        </p>
+<section class="min-h-screen bg-white pb-24">
+  <!-- padding bottom para o botão fixo -->
+  <div id="card-detail" class="max-w-4xl mx-auto" *ngFor="let card of cards">
+    <!-- Galeria de Imagens (Estilo Airbnb) -->
+    <div *ngIf="card.imagens && card.imagens.length > 0" class="relative">
+      <div class="relative w-full aspect-[4/3] bg-gray-100 overflow-hidden">
+        <img
+          [src]="card.imagens[card.currentImageIndex || 0]"
+          alt="Imagem do Serviço"
+          class="w-full h-full object-cover"
+          onerror="this.onerror=null;this.src='https://placehold.co/600x400/E0E0E0/616161?text=Imagem+indisponível';"
+        />
+
+        <!-- Navegação de Imagens -->
+        <button
+          *ngIf="card.imagens.length > 1"
+          (click)="navigateImages(card, -1)"
+          class="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+        >
+          <i class="fas fa-chevron-left text-gray-600"></i>
+        </button>
+        <button
+          *ngIf="card.imagens.length > 1"
+          (click)="navigateImages(card, 1)"
+          class="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+        >
+          <i class="fas fa-chevron-right text-gray-600"></i>
+        </button>
+
+        <!-- Indicador de Imagens -->
+        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+          <div
+            *ngFor="let img of card.imagens; let i = index"
+            class="w-2 h-2 rounded-full transition-all duration-300"
+            [class]="
+              i === (card.currentImageIndex || 0)
+                ? 'bg-white'
+                : 'bg-white bg-opacity-50'
+            "
+          ></div>
+        </div>
+      </div>
+
+      <!-- Miniaturas Scroll Horizontal -->
+      <div
+        *ngIf="card.imagens.length > 1"
+        class="flex overflow-x-auto space-x-2 px-4 py-3 border-b border-gray-200 bg-white"
+      >
+        <img
+          *ngFor="let imagem of card.imagens; let imgIndex = index"
+          [src]="imagem"
+          alt="Miniatura"
+          class="w-16 h-16 object-cover rounded-lg cursor-pointer border-2 transition-all duration-200 flex-shrink-0"
+          [ngClass]="{
+            'border-pink-500 shadow-md':
+              imgIndex === (card.currentImageIndex || 0),
+            'border-transparent hover:border-gray-300':
+              imgIndex !== (card.currentImageIndex || 0)
+          }"
+          (click)="selectImage(card, imgIndex)"
+          onerror="this.onerror=null;this.src='https://placehold.co/64x64/E0E0E0/616161?text=Mini';"
+        />
       </div>
     </div>
 
-    <!-- Sessão de Resumo do Pedido -->
-    <div class="resume mb-6 rounded-xl shadow-sm space-y-4 p-6">
-      <div class="card-body d-flex flex-column gap-3">
-        <h4 class="card-title mb-3"><strong>Resumo do Pedido</strong></h4>
-        <p class="card-text"><strong>Serviços:</strong> {{ card.categoria }}</p>
-        <p class="card-text">
-          <strong>Filtros:</strong> {{ card.subcategoria }}
-        </p>
-        <p class="card-text">
-          <strong>Descrição: </strong>{{ card.serviceDescription }}
-        </p>
-        <p class="card-text">
-          <strong>Endereço: </strong> {{ card.address.street }},
-          {{ card.address.number }} - {{ card.address.city }} -
-          {{ card.address.state }}
-        </p>
+    <!-- Header do Serviço (Estilo Airbnb) -->
+    <div class="px-4 py-6 border-b border-gray-200">
+      <div class="flex items-start justify-between mb-3">
+        <h1 class="text-2xl font-semibold text-gray-900">
+          {{ card.categoria }}
+        </h1>
+        <i
+          [class]="card.icon"
+          class="text-2xl"
+          style="color: var(--primary)"
+        ></i>
+      </div>
 
-        <p *ngIf="card.data_finalizacao !== null">
-          Concluido em:
-          {{ card.data_finalizacao | date : "dd/MM/yyyy - HH:mm" }}
-        </p>
+      <p class="text-gray-600 mb-4">{{ card.subcategoria }}</p>
 
-        <div *ngIf="card.imagens && card.imagens.length > 0" class="mt-6">
-          <h4 class="mb-2"><strong>Imagens Adicionadas:</strong></h4>
-          <div
-            class="relative w-full aspect-video bg-gray-200 rounded-lg overflow-hidden shadow-md flex items-center justify-center"
-          >
-            <img
-              [src]="card.imagens[card.currentImageIndex || 0]"
-              alt="Imagem do Serviço"
-              class="object-cover w-full h-full"
-              onerror="this.onerror=null;this.src='https://placehold.co/600x400/E0E0E0/616161?text=Imagem+indisponível';"
-            />
-            <button
-              *ngIf="card.imagens.length > 1"
-              (click)="navigateImages(card, -1)"
-              class="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-colors duration-200 focus:outline-none"
-            >
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <button
-              *ngIf="card.imagens.length > 1"
-              (click)="navigateImages(card, 1)"
-              class="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-colors duration-200 focus:outline-none"
-            >
-              <i class="fas fa-chevron-right"></i>
-            </button>
+      <!-- Badges de Status -->
+      <div class="flex items-center gap-3">
+        <span
+          class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium"
+          [ngClass]="{
+            'bg-green-100 text-green-800': card.status_pedido === 'publicado',
+            'bg-blue-100 text-blue-800': card.status_pedido === 'andamento',
+            'bg-gray-100 text-gray-800': card.status_pedido === 'finalizado',
+            'bg-red-100 text-red-800': card.status_pedido === 'cancelado',
+            'bg-yellow-100 text-yellow-800': card.status_pedido === 'pendente'
+          }"
+        >
+          {{ getStatusText(card.status_pedido) }}
+        </span>
+        <span class="text-gray-400">•</span>
+        <span class="text-gray-500 text-sm">Pedido #{{ card.id_pedido }}</span>
+      </div>
+    </div>
+
+    <!-- Informações do Serviço (Estilo Airbnb) -->
+    <div class="px-4 py-6 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Sobre o serviço</h2>
+
+      <div class="space-y-4">
+        <!-- Descrição -->
+        <div class="flex items-start">
+          <i
+            class="fas fa-file-alt text-gray-400 mt-1 mr-4 w-5 text-center"
+          ></i>
+          <div class="flex-1">
+            <p class="text-gray-900 font-medium mb-1">Descrição</p>
+            <p class="text-gray-600">{{ card.serviceDescription }}</p>
           </div>
+        </div>
 
-          <div
-            *ngIf="card.imagens.length > 1"
-            class="flex overflow-x-auto mt-3 space-x-2 p-1"
-          >
-            <img
-              *ngFor="let imagem of card.imagens; let imgIndex = index"
-              [src]="imagem"
-              alt="Miniatura"
-              class="w-20 h-20 object-cover rounded-md cursor-pointer border-2 transition-all duration-200"
-              [ngClass]="{
-                'border-pink-500 shadow-md':
-                  imgIndex === (card.currentImageIndex || 0),
-                'border-transparent hover:border-gray-300':
-                  imgIndex !== (card.currentImageIndex || 0)
-              }"
-              (click)="selectImage(card, imgIndex)"
-              onerror="this.onerror=null;this.src='https://placehold.co/80x80/E0E0E0/616161?text=Mini';"
-            />
+        <!-- Localização -->
+        <div class="flex items-start">
+          <i
+            class="fas fa-map-marker-alt text-gray-400 mt-1 mr-4 w-5 text-center"
+          ></i>
+          <div class="">
+            <p class="text-gray-900 font-medium mb-1">Localização</p>
+            <p class="text-gray-600">
+              {{ card.address.street }}, {{ card.address.number }}<br />
+              {{ card.address.neighborhood }}<br />
+              {{ card.address.city }} - {{ card.address.state }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Horário -->
+        <div class="flex items-start">
+          <i class="fas fa-clock text-gray-400 mt-1 mr-4 w-5 text-center"></i>
+          <div class="flex-1">
+            <p class="text-gray-900 font-medium mb-1">Horário Preferencial</p>
+            <p class="text-gray-600">
+              {{ formatDateTime(card.horario_preferencial) }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Valor -->
+        <div class="flex items-start">
+          <i
+            class="fas fa-dollar-sign text-gray-400 mt-1 mr-4 w-5 text-center"
+          ></i>
+          <div class="flex-1">
+            <p class="text-gray-900 font-medium mb-1">Valor</p>
+            <p class="text-2xl font-bold text-gray-900">R$ {{ card.valor }}</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- 🔽 NOVA SEÇÃO: Opções que podem te ajudar 🔽 -->
+    <!-- Detalhes do Pedido -->
+    <div class="px-4 py-6 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">
+        Detalhes do pedido
+      </h2>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <p class="text-gray-500 text-sm mb-1">Solicitado em</p>
+          <p class="text-gray-900 font-medium">
+            {{ card.createdAt | date : "dd/MM/yyyy" }}
+          </p>
+          <p class="text-gray-500 text-xs">
+            {{ card.createdAt | date : "HH:mm" }}
+          </p>
+        </div>
+
+        <div *ngIf="card.data_finalizacao">
+          <p class="text-gray-500 text-sm mb-1">Concluído em</p>
+          <p class="text-gray-900 font-medium">
+            {{ card.data_finalizacao | date : "dd/MM/yyyy" }}
+          </p>
+          <p class="text-gray-500 text-xs">
+            {{ card.data_finalizacao | date : "HH:mm" }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Candidaturas (se houver) -->
     <div
-      class="options mb-6 rounded-xl space-y-4 p-2"
+      *ngIf="card.candidaturas && card.candidaturas.length > 0"
+      class="px-4 py-6 border-b border-gray-200"
+    >
+      <div class="flex items-center mb-4">
+        <h2 class="text-xl font-semibold text-gray-900">Propostas Recebidas</h2>
+        <span
+          class="bg-pink-100 text-pink-800 text-sm font-medium px-2.5 py-0.5 rounded-full ml-2"
+        >
+          {{ card.candidaturas.length }}
+        </span>
+      </div>
+
+      <div class="space-y-3">
+        <div
+          *ngFor="let candidatura of card.candidaturas"
+          class="p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors bg-white"
+        >
+          <div class="flex justify-between items-start mb-2">
+            <div>
+              <p class="text-lg font-bold text-gray-900">
+                R$ {{ candidatura.valor_negociado }}
+              </p>
+              <p class="text-gray-600 text-sm">
+                {{ candidatura.horario_negociado }}
+              </p>
+            </div>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+              [ngClass]="{
+                'bg-blue-100 text-blue-800':
+                  candidatura.status === 'negociacao',
+                'bg-green-100 text-green-800': candidatura.status === 'aceito',
+                'bg-red-100 text-red-800': candidatura.status === 'recusado',
+                'bg-gray-100 text-gray-800': candidatura.status === 'cancelado'
+              }"
+            >
+              {{
+                getCandidaturaStatusText(
+                  candidatura.status ? candidatura.status : ""
+                )
+              }}
+            </span>
+          </div>
+          <p class="text-gray-500 text-xs">
+            Candidatado em:
+            <!-- {{ candidatura.data_candidatura | date : "dd/MM/yyyy 'às' HH:mm" }} -->
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Seção de Ajuda (Mantida como estava) -->
+    <div
+      class="options mb-6 rounded-xl space-y-4 p-4"
       *ngIf="!isProfessionalIndicator && flow !== 'publicado'"
     >
       <h4 class="text-lg font-semibold text-gray-800 mb-4">
@@ -327,19 +461,9 @@
       </div>
     </div>
 
-    <button
-      *ngIf="
-        (temCandidaturaDoPrestadorLogado || !isProfessionalIndicator) &&
-        flow !== 'historic' &&
-        flow !== 'finalizado'
-      "
-      class="col-12 btn btn-outline-primary"
-      (click)="handleOption('cancelar', card)"
-    >
-      {{ isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido" }}
-    </button>
-
+    <!-- Botão de Negociação (mantido como estava) -->
     <app-mobile-negotiation-bar
+    class="py-3 px-4"
       *ngIf="
         (flow === 'publicado' || flow === 'recusado') && isProfessionalIndicator
       "
@@ -355,9 +479,30 @@
   </div>
 </section>
 
+<!-- Botão Fixo no Bottom (mantido) -->
+<div
+  *ngIf="
+    (temCandidaturaDoPrestadorLogado || !isProfessionalIndicator) &&
+    flow !== 'historic' &&
+    flow !== 'finalizado'
+  "
+  class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-40"
+>
+  <div class="max-w-4xl mx-auto">
+    <button
+      class="w-full py-3 px-4 border border-red-500 text-red-500 rounded-xl font-medium hover:bg-red-50 transition-colors"
+      (click)="handleOption('cancelar', cards[0])"
+    >
+      {{ isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido" }}
+    </button>
+  </div>
+</div>
+
+<!-- MODAIS (mantidos exatamente como estavam) -->
 <app-custom-modal
   #modalCandidatar
   [actionButtonText]="'Candidatar-se'"
+  [isLoadingBtn]="isLoadingBtn"
   (modalAction)="handleModalAction(cards[0])"
 ></app-custom-modal>
 
@@ -464,7 +609,8 @@
   #modalConfirmacao
   [messageTitle]="'Proposta enviada com sucesso!'"
   [actionButtonText]="'Ver pedidos'"
-  (modalClosed)="(showModal)"
+  [showBtn]="modalConfirmIndicator"
+  (modalClosed)="(true)"
   (modalAction)="goToHomeSeeProposal()"
 ></app-custom-modal>
 
@@ -509,6 +655,3 @@
     </div>
   </div>
 </div>
-
-<!-- Botão de contratação -->
-<!-- <app-finish-hire-button></app-finish-hire-button> -->

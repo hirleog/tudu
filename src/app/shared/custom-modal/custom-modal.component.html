@@ -54,19 +54,41 @@
 
       <div class="mt-4 d-flex justify-content-center gap-1">
         <button
+          *ngIf="showBtn"
           (click)="closeModal()"
           type="button"
           class="btn btn-outline-primary"
         >
           {{ closeButtonText }}
         </button>
-        <button
+        <!-- <button
           (click)="actionModal()"
           type="button"
           class="btn btn-primary"
           *ngIf="actionButtonText !== ''"
         >
           {{ actionButtonText }}
+        </button> -->
+
+        <button
+          (click)="actionModal()"
+          type="button"
+          class="btn btn-primary"
+          *ngIf="actionButtonText !== ''"
+        >
+          <span *ngIf="!isLoadingBtn" style="color: white !important"
+            >{{ actionButtonText }}
+          </span>
+          <span
+            *ngIf="isLoadingBtn"
+            class="flex items-center justify-center gap-2"
+            style="color: white !important"
+            >Processando...
+            <i
+              class="fas fa-circle-notch fa-spin mr-2"
+              style="color: white !important"
+            ></i>
+          </span>
         </button>
       </div>
     </div>

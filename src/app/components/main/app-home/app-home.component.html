@@ -48,7 +48,7 @@
   </div>
 </lib-nav>
 
-<section class="container mt-12 max-w-4xl mx-auto lg:px-8">
+<section class="container mt-16 max-w-4xl mx-auto lg:px-8">
   <div class="container" *ngIf="isLoading">
     <app-card-skeleton *ngFor="let i of [1, 2, 3, 4]"></app-card-skeleton>
   </div>
@@ -89,7 +89,8 @@
                 class="fas fa-map-marker-alt text-xs mr-1"
                 style="font-size: 12px; color: var(--primary) !important"
               ></i>
-              {{ card.address.city }}, {{ card.address.state }}
+              {{ card.address.city }}, {{ card.address.state }} -
+              {{ card.address.neighborhood }}
             </div>
             <i
               details-btn
@@ -120,7 +121,7 @@
                 >Data de início:</span
               >
               <span class="info-value fw-semibold">{{
-                card.horario_preferencial | date : "dd/MM/yyyy"
+                card.horario_preferencial | date : "dd/MM/yyyy - HH:mm"
               }}</span>
             </div>
 
@@ -155,7 +156,7 @@
             </button>
             <ng-template #semQuotes>
               <button
-                class="request-quote-btn disabled-card bg-secondary text-center text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden "
+                class="request-quote-btn disabled-card bg-secondary text-center text-xs sm:text-sm md:text-base whitespace-nowrap overflow-hidden"
                 style="width: 100%"
               >
                 Aguardando proposta

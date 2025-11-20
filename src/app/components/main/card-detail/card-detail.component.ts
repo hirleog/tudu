@@ -55,7 +55,6 @@ export class CardDetailComponent implements OnInit {
   isProfessionalIndicator: boolean = false;
   id_prestador!: any;
   temCandidaturaDoPrestadorLogado: any;
-  showModal: boolean = false;
   isLoadingBtn: boolean = false;
   modalConfirmIndicator: boolean = false;
   calendarActive: boolean = false;
@@ -111,32 +110,12 @@ export class CardDetailComponent implements OnInit {
   getCardById(): void {
     this.cardService.getCardById(this.id_pedido, this.id_prestador).subscribe({
       next: (data: any) => {
-        // const placeholderDataHora =
-        //   data.candidaturas?.[0]?.horario_negociado !==
-        //     data.horario_preferencial && data.candidaturas.length > 0
-        //     ? moment(data.candidaturas?.[0]?.horario_negociado).format(
-        //         'DD/MM/YYYY - HH:mm'
-        //       )
-        //     : moment(data.horario_preferencial).format('DD/MM/YYYY - HH:mm');
-
-        // const valorFormatted =
-        //   data.candidaturas?.[0]?.valor_negociado ?? data.valor;
-
-        // const candidaturas =
-        //   data.candidaturas?.map((candidatura: any) => ({
-        //     ...candidatura,
-        //     valor_negociado: candidatura.valor_negociado
-        //       ? valorFormatted
-        //       : candidatura.valor_negociado,
-        //   })) ?? [];
-
         const candidaturas = data.candidaturas || [];
 
         // Primeiro monta o card com ícone e candidaturas
         this.cards.push({
           ...data,
           calendarActive: false,
-
           icon: this.cardService.getIconByLabel(data.categoria) || '',
           candidaturas: candidaturas.map((candidatura: any) => ({
             ...candidatura,
@@ -144,16 +123,21 @@ export class CardDetailComponent implements OnInit {
           })),
         });
 
+        // Verifica se existe candidatura do prestador logado
         this.temCandidaturaDoPrestadorLogado = this.cards[0].candidaturas.find(
           (candidatura: any) => candidatura.prestador_id === this.id_prestador
         );
+
+        // Se já existe candidatura, redireciona para home/proposta
+        if (this.temCandidaturaDoPrestadorLogado && !this.isProfessionalIndicator) {
+          this.goToHomeSeeProposal();
+        }
       },
       error: (err) => {
         console.error(err);
       },
     });
   }
-
   updateCard(card: CardOrders): Observable<CardOrders> {
     this.isLoadingBtn = true;
 
@@ -244,7 +228,7 @@ export class CardDetailComponent implements OnInit {
 
     this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
       next: (response) => {
-        this.modalConfirmIndicator = true;
+        this.modalConfirmIndicator = false;
         this.modalConfirmacao.openModal();
         this.modalConfirmacao.configureModal(
           'success',
@@ -419,7 +403,7 @@ export class CardDetailComponent implements OnInit {
   }
 
   handleModalAction(card: any) {
-    this.showModal = false;
+    this.isLoadingBtn = true;
     this.updateCard(card);
   }
 
@@ -443,5 +427,32 @@ export class CardDetailComponent implements OnInit {
       'warning',
       'Deseja finalizar a candidatura para este pedido?'
     );
+  }
+  // Métodos auxiliares para o novo layout
+  getStatusText(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      publicado: 'Disponível',
+      andamento: 'Em Andamento',
+      finalizado: 'Finalizado',
+      cancelado: 'Cancelado',
+      pendente: 'Pendente',
+    };
+    return statusMap[status] || status;
+  }
+
+  getCandidaturaStatusText(status: string): string {
+    const statusMap: { [key: string]: string } = {
+      negociacao: 'Em Negociação',
+      aceito: 'Aceito',
+      recusado: 'Recusado',
+      cancelado: 'Cancelado',
+    };
+    return statusMap[status] || status;
+  }
+
+  formatDateTime(dateTime: string): string {
+    // Implemente a formatação conforme necessário
+    // Exemplo: return moment(dateTime).format('DD/MM/YYYY [às] HH:mm');
+    return dateTime;
   }
 }

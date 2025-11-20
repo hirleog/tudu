@@ -487,7 +487,7 @@ export class CategoryFilterComponent implements OnInit {
     });
   }
 
-  onFilesSelected(event: any) {
+  async onFilesSelected(event: any) {
     const files = event.target.files;
     this.selectedFiles = [];
     this.selectedPreviews = [];
@@ -495,18 +495,92 @@ export class CategoryFilterComponent implements OnInit {
     if (files) {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        this.selectedFiles.push(file);
-        this.sharedService.setFiles(this.selectedFiles);
 
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          this.selectedPreviews.push(e.target.result);
-        };
-        reader.readAsDataURL(file);
+        try {
+          // Verifica se já é WebP ou precisa converter
+          if (file.type === 'image/webp') {
+            // Já é WebP, usa diretamente
+            this.selectedFiles.push(file);
+          } else {
+            // Converte para WebP
+            const webpFile = await this.simpleConvertToWebP(file);
+            this.selectedFiles.push(webpFile);
+          }
+
+          this.sharedService.setFiles(this.selectedFiles);
+
+          // Gera preview
+          const reader = new FileReader();
+          reader.onload = (e: any) => {
+            this.selectedPreviews.push(e.target.result);
+          };
+          reader.readAsDataURL(
+            this.selectedFiles[this.selectedFiles.length - 1]
+          );
+        } catch (error) {
+          console.error('Erro ao processar imagem:', error);
+          // Fallback para arquivo original
+          this.selectedFiles.push(file);
+          this.sharedService.setFiles(this.selectedFiles);
+
+          const reader = new FileReader();
+          reader.onload = (e: any) => {
+            this.selectedPreviews.push(e.target.result);
+          };
+          reader.readAsDataURL(file);
+        }
       }
     }
   }
 
+  private async simpleConvertToWebP(file: File): Promise<File> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      img.onload = () => {
+        // Mantém as dimensões originais ou redimensiona se for muito grande
+        const maxWidth = 1920;
+        const maxHeight = 1080;
+
+        let { width, height } = img;
+
+        // Redimensiona se necessário
+        if (width > maxWidth || height > maxHeight) {
+          const ratio = Math.min(maxWidth / width, maxHeight / height);
+          width *= ratio;
+          height *= ratio;
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        // Converte para WebP
+        canvas.toBlob(
+          (blob) => {
+            if (blob) {
+              const webpFile = new File(
+                [blob],
+                file.name.replace(/\.[^/.]+$/, '.webp'),
+                { type: 'image/webp' }
+              );
+              resolve(webpFile);
+            } else {
+              reject(new Error('Falha na conversão para WebP'));
+            }
+          },
+          'image/webp',
+          0.8
+        );
+      };
+
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  }
   removeImage(index: number): void {
     this.selectedFiles.splice(index, 1);
     this.selectedPreviews.splice(index, 1);
