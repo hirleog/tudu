@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FilterCategory, FilterOption } from 'src/app/interfaces/filters-model';
 import { PriceEstimationService } from 'src/app/services/price-estimation.service';
 import { SharedService } from 'src/app/shared/shared.service';
+import heic2any from 'heic2any';
 
 @Component({
   selector: 'app-category-filter',
@@ -492,95 +493,58 @@ export class CategoryFilterComponent implements OnInit {
     this.selectedFiles = [];
     this.selectedPreviews = [];
 
-    if (files) {
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+    if (!files) return;
 
+    for (let i = 0; i < files.length; i++) {
+      let file = files[i];
+
+      const isHeic =
+        file.type.includes('heic') ||
+        file.type.includes('heif') ||
+        /\.heic$/i.test(file.name) ||
+        /\.heif$/i.test(file.name);
+
+      if (isHeic) {
         try {
-          // Verifica se já é WebP ou precisa converter
-          if (file.type === 'image/webp') {
-            // Já é WebP, usa diretamente
-            this.selectedFiles.push(file);
-          } else {
-            // Converte para WebP
-            const webpFile = await this.simpleConvertToWebP(file);
-            this.selectedFiles.push(webpFile);
-          }
+          let converted = await heic2any({
+            blob: file,
+            toType: 'image/jpeg',
+            quality: 0.9,
+          });
 
-          this.sharedService.setFiles(this.selectedFiles);
+          // Pode retornar Blob[] ou Blob
+          const blob = Array.isArray(converted) ? converted[0] : converted;
 
-          // Gera preview
-          const reader = new FileReader();
-          reader.onload = (e: any) => {
-            this.selectedPreviews.push(e.target.result);
-          };
-          reader.readAsDataURL(
-            this.selectedFiles[this.selectedFiles.length - 1]
+          file = new File(
+            [blob],
+            file.name.replace(/\.(heic|heif)$/i, '.jpg'),
+            {
+              type: 'image/jpeg',
+            }
           );
-        } catch (error) {
-          console.error('Erro ao processar imagem:', error);
-          // Fallback para arquivo original
-          this.selectedFiles.push(file);
-          this.sharedService.setFiles(this.selectedFiles);
-
-          const reader = new FileReader();
-          reader.onload = (e: any) => {
-            this.selectedPreviews.push(e.target.result);
-          };
-          reader.readAsDataURL(file);
+        } catch (err: any) {
+          // Ignora apenas esse erro específico
+          if (err?.message?.includes('already browser readable')) {
+            console.warn('Arquivo já é legível, pulando conversão:', file.name);
+          } else {
+            console.error('Erro ao converter HEIC real:', err);
+            continue; // evita quebrar a seleção
+          }
         }
       }
+
+      // Continua fluxo normal
+      this.selectedFiles.push(file);
+      this.sharedService.setFiles(this.selectedFiles);
+
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.selectedPreviews.push(e.target.result);
+      };
+      reader.readAsDataURL(file);
     }
   }
 
-  private async simpleConvertToWebP(file: File): Promise<File> {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      img.onload = () => {
-        // Mantém as dimensões originais ou redimensiona se for muito grande
-        const maxWidth = 1920;
-        const maxHeight = 1080;
-
-        let { width, height } = img;
-
-        // Redimensiona se necessário
-        if (width > maxWidth || height > maxHeight) {
-          const ratio = Math.min(maxWidth / width, maxHeight / height);
-          width *= ratio;
-          height *= ratio;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        ctx?.drawImage(img, 0, 0, width, height);
-
-        // Converte para WebP
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              const webpFile = new File(
-                [blob],
-                file.name.replace(/\.[^/.]+$/, '.webp'),
-                { type: 'image/webp' }
-              );
-              resolve(webpFile);
-            } else {
-              reject(new Error('Falha na conversão para WebP'));
-            }
-          },
-          'image/webp',
-          0.8
-        );
-      };
-
-      img.onerror = reject;
-      img.src = URL.createObjectURL(file);
-    });
-  }
   removeImage(index: number): void {
     this.selectedFiles.splice(index, 1);
     this.selectedPreviews.splice(index, 1);
