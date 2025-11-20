@@ -74,9 +74,25 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     this.generateCalendar();
-    this.timeSelected = this.dateTimeSelected.split(' - ')[1] || '12:00';
-  }
 
+    // Define a data atual como padrão antes de verificar horários
+    if (!this.dateSelected) {
+      const today = moment().format('DD/MM/YYYY');
+      this.dateSelected = today;
+    }
+
+    const timeFromDateTime = this.dateTimeSelected.split(' - ')[1];
+
+    if (timeFromDateTime && !this.isTimeDisabled(timeFromDateTime)) {
+      this.timeSelected = timeFromDateTime;
+    } else {
+      // Encontra o primeiro horário não expirado
+      const firstAvailableTime = this.availableTimes.find(
+        (time) => !this.isTimeDisabled(time)
+      );
+      this.timeSelected = firstAvailableTime || '14:00'; // Fallback para 14:00 que é mais seguro
+    }
+  }
   generateCalendar(): void {
     // Limpa os arrays
     this.daysInMonth = [];
@@ -169,7 +185,7 @@ export class CalendarComponent implements OnInit {
     this.timeSelectedChange.emit(this.timeSelected); // Emite o horário selecionado
 
     this.calendarActive = false;
-        this.hideCalendarDays = false;
+    this.hideCalendarDays = false;
 
     this.updateDateTime();
   }
@@ -199,11 +215,32 @@ export class CalendarComponent implements OnInit {
     this.hideCalendarDays = false;
   }
 
-  // @HostListener('document:click', ['$event'])
-  // onClickOutside(event: MouseEvent) {
-  //   if (!this.elementRef.nativeElement.contains(event.target)) {
-  //     window.scrollTo({ top: 0, behavior: 'smooth' }); // Rola suavemente para o topo
-  //     this.calendarActive = false;
-  //   }
-  // }
+  isTimeDisabled(time: string): boolean {
+    if (!this.dateSelected) return false;
+
+    // Converte a data selecionada e o horário para um objeto moment
+    const selectedDateTime = moment(
+      `${this.dateSelected} ${time}`,
+      'DD/MM/YYYY HH:mm'
+    );
+    const now = moment();
+
+    // Verifica se o horário já passou (é anterior ao momento atual)
+    const isPastTime = selectedDateTime.isBefore(now, 'minute');
+
+    // Verifica se a diferença é menor que 2 horas (120 minutos)
+    const timeDifference = selectedDateTime.diff(now, 'minutes');
+    const isLessThan2Hours = timeDifference < 120;
+
+    // Verifica se é o mesmo dia
+    const isToday = moment(this.dateSelected, 'DD/MM/YYYY').isSame(now, 'day');
+
+    // Desabilita se for horário passado OU se for hoje e tiver menos de 2 horas de diferença
+    return isPastTime || (isToday && isLessThan2Hours);
+  }
+
+  // Método auxiliar para formatar horários
+  formatTimeForComparison(time: string): string {
+    return time.replace(':', '');
+  }
 }

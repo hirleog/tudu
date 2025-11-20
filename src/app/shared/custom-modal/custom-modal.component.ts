@@ -21,12 +21,15 @@ export class CustomModalComponent {
   @Output() modalAction = new EventEmitter<void>();
   @Input() showModal = false;
   @Input() messageTitle: string = 'Pagamento Aprovado!';
+  @Input() showBtn = true;
+  
 
   // Configuração dinâmica
   modalIcon: string = 'fa-check';
   modalIconColor: string = 'text-green-600';
   modalBgColor: string = 'bg-green-100';
   messageBody: string = 'Seu pagamento foi processado com sucesso.';
+  @Input() isLoadingBtn!: boolean;
 
   openModal(): void {
     this.showModal = true;
@@ -72,8 +75,14 @@ export class CustomModalComponent {
   }
 
   actionModal(): void {
-    this.showModal = false;
-    this.modalAction.emit();
+    if (this.isLoadingBtn !== undefined) {
+      this.isLoadingBtn = true;
+      this.modalAction.emit();
+    } else {
+      this.modalAction.emit();
+      this.isLoadingBtn = false;
+      this.showModal = false;
+    }
   }
   closeModal(): void {
     this.showModal = false;
