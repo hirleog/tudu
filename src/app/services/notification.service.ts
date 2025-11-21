@@ -7,7 +7,9 @@ export class NotificationService {
   constructor(private http: HttpClient) {}
 
   sendSubscriptionToServer(subscription: PushSubscription) {
-    return this.http.post(`${environment.apiUrl}/notifications`, {
+    return this.http.post(`${environment.apiUrl}/notifications/subscribe`, {
+      clienteId: 1, // coloque IDs reais
+      prestadorId: 1, // coloque IDs reais
       subscription: subscription.toJSON(),
     });
   }
