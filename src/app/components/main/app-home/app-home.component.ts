@@ -112,18 +112,15 @@ export class AppHomeComponent implements OnInit {
     console.log('Solicitando permissão...');
 
     const permission = await Notification.requestPermission();
-
     if (permission !== 'granted') {
-      console.log('Permissão negada pelo usuário.');
+      console.log('Permissão negada.');
       return;
     }
 
     console.log('Permissão concedida! Registrando push...');
 
     if (!this.swPush.isEnabled) {
-      console.warn(
-        'SwPush não está habilitado! Service worker ainda não ativo.'
-      );
+      console.warn('SwPush não está habilitado.');
       return;
     }
 
@@ -133,11 +130,15 @@ export class AppHomeComponent implements OnInit {
       })
       .then((sub) => {
         console.log('Subscription criada:', sub);
-        this.notificationService.sendSubscriptionToServer(sub).subscribe();
+
+        this.notificationService
+          .sendSubscriptionToServer(sub)
+          .subscribe((res) => {
+            console.log('Subscription salva no servidor:', res);
+          });
       })
       .catch((err) => console.error('Erro ao registrar push:', err));
   }
-
   listCards(status_pedido: string) {
     if (this.carregandoMais || this.finalDaLista) {
       return;
