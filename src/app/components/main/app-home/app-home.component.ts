@@ -1,10 +1,12 @@
 import { Location } from '@angular/common';
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { SwPush } from '@angular/service-worker';
 import * as moment from 'moment';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { CardSocketService } from 'src/app/services/card-socket.service';
 import { CardService } from 'src/app/services/card.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { StateManagementService } from 'src/app/services/state-management.service';
 
 @Component({
@@ -13,6 +15,9 @@ import { StateManagementService } from 'src/app/services/state-management.servic
   styleUrls: ['./app-home.component.css'],
 })
 export class AppHomeComponent implements OnInit {
+  readonly VAPID_PUBLIC_KEY =
+    'BETOn-pGBaW59qF-RFin_fUGfJmZshZFIg2KynwJUDfCEg5mon6iRE6hdPTxplYV5lCKWuupLAGz56V9OSecgA4';
+
   headerPageOptions: string[] = [];
   overlay: boolean = false;
   dateTimeFormatted: string = '';
@@ -38,8 +43,12 @@ export class AppHomeComponent implements OnInit {
     public cardService: CardService,
     public cardSocketService: CardSocketService,
     private location: Location,
-    private stateManagement: StateManagementService
+    private stateManagement: StateManagementService,
+    private swPush: SwPush,
+    private notificationService: NotificationService
   ) {
+    this.subscribeToNotifications();
+
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
 
@@ -97,6 +106,22 @@ export class AppHomeComponent implements OnInit {
       this.cleanActualRoute();
     });
     this.flowNavigate();
+  }
+
+  subscribeToNotifications() {
+    console.log('Solicitando permissão para notificações push...');
+
+    if (!this.swPush.isEnabled) return;
+    console.log('permissao concedida...');
+
+    this.swPush
+      .requestSubscription({
+        serverPublicKey: this.VAPID_PUBLIC_KEY,
+      })
+      .then((sub) => {
+        this.notificationService.sendSubscriptionToServer(sub).subscribe();
+      })
+      .catch((err) => console.error('Erro ao registrar push', err));
   }
 
   listCards(status_pedido: string) {

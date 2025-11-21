@@ -48,10 +48,12 @@
   </div>
 </lib-nav>
 
+
 <section class="container mt-16 max-w-4xl mx-auto lg:px-8">
   <div class="container" *ngIf="isLoading">
     <app-card-skeleton *ngFor="let i of [1, 2, 3, 4]"></app-card-skeleton>
   </div>
+  <button (click)="subscribeToNotifications()">🔔 Ativar notificações</button>
 
   <!-- Template Unificado -->
   <div *ngIf="cards.length > 0 || isLoading">
