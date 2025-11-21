@@ -108,20 +108,34 @@ export class AppHomeComponent implements OnInit {
     this.flowNavigate();
   }
 
-  subscribeToNotifications() {
-    console.log('Solicitando permissão para notificações push...');
+  async subscribeToNotifications() {
+    console.log('Solicitando permissão...');
 
-    if (!this.swPush.isEnabled) return;
-    console.log('permissao concedida...');
+    const permission = await Notification.requestPermission();
+
+    if (permission !== 'granted') {
+      console.log('Permissão negada pelo usuário.');
+      return;
+    }
+
+    console.log('Permissão concedida! Registrando push...');
+
+    if (!this.swPush.isEnabled) {
+      console.warn(
+        'SwPush não está habilitado! Service worker ainda não ativo.'
+      );
+      return;
+    }
 
     this.swPush
       .requestSubscription({
         serverPublicKey: this.VAPID_PUBLIC_KEY,
       })
       .then((sub) => {
+        console.log('Subscription criada:', sub);
         this.notificationService.sendSubscriptionToServer(sub).subscribe();
       })
-      .catch((err) => console.error('Erro ao registrar push', err));
+      .catch((err) => console.error('Erro ao registrar push:', err));
   }
 
   listCards(status_pedido: string) {
