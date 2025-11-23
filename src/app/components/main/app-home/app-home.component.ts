@@ -130,41 +130,45 @@ export class AppHomeComponent implements OnInit {
     let clienteId: any = null;
     let prestadorId: any = null;
 
-    console.log('Ativando Push...');
+    console.log('🔔 Ativando Push...');
+
+    console.log('Service Worker supported:', 'serviceWorker' in navigator);
 
     if (this.authService.isClienteLoggedIn()) {
       clienteId = await firstValueFrom(this.authService.idCliente$);
-      console.log('Ativando Push cliente...', clienteId);
+      console.log('👤 Cliente ID:', clienteId);
     } else if (this.authService.isPrestadorLoggedIn()) {
       prestadorId = await firstValueFrom(this.authService.idPrestador$);
-      console.log('Ativando Push prestador...', prestadorId);
+      console.log('👷 Prestador ID:', prestadorId);
     }
 
+    // Diagnóstico detalhado do SwPush
+    console.log('🔍 Diagnóstico SwPush:');
+    console.log('- SwPush.isEnabled:', this.swPush.isEnabled);
+    console.log('- Navigator.serviceWorker:', navigator.serviceWorker);
+    console.log('- Location:', window.location.href);
+
     if (!this.swPush.isEnabled) {
-      console.warn('SwPush não habilitado');
+      console.warn('❌ SwPush não está habilitado. Verificando causas...');
       return;
     }
 
     try {
-      console.log('Solicitando subscription...');
-      console.log('Solicitando subscription...');
+      console.log('📝 Solicitando subscription...');
 
-      this.swPush
-        .requestSubscription({
-          serverPublicKey: this.VAPID_PUBLIC_KEY,
-        })
-        .then((sub) => {
-          console.log('Subscription criada:', sub);
+      const subscription = await this.swPush.requestSubscription({
+        serverPublicKey: this.VAPID_PUBLIC_KEY,
+      });
 
-          this.notificationService
-            .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
-            .subscribe(() => console.log('Subscription salva!'));
-        })
-        .catch((err) => {
-          console.error('Erro ao criar subscription (Promise):', err);
-        });
+      console.log('✅ Subscription criada:', subscription);
+
+      await this.notificationService
+        .sendSubscriptionToServer(clienteId, prestadorId, subscription.toJSON())
+        .toPromise();
+
+      console.log('💾 Subscription salva no servidor!');
     } catch (err) {
-      console.error('Erro ao criar subscription:', err);
+      console.error('❌ Erro ao criar subscription:', err);
     }
   }
 
