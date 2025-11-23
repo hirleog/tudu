@@ -3,6 +3,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
 import * as moment from 'moment';
+import { firstValueFrom } from 'rxjs';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardSocketService } from 'src/app/services/card-socket.service';
@@ -126,16 +127,17 @@ export class AppHomeComponent implements OnInit {
   }
 
   async activatePush() {
-    if (this.authService.isClienteLoggedIn()) {
-      this.authService.idCliente$.subscribe((id) => {
-        this.clienteId = id; // <-- CORRIGIDO
-      });
-    } else if (this.authService.isPrestadorLoggedIn()) {
-      this.authService.idPrestador$.subscribe((id) => {
-        this.prestadorId = id; // <-- OK
-      });
-    }
+    let clienteId: any = 2;
+    let prestadorId: any = null;
 
+    // if (this.authService.isClienteLoggedIn()) {
+    //   clienteId = await firstValueFrom(this.authService.idCliente$);
+    //   console.log('👤 Cliente ID:', clienteId);
+    // } else if (this.authService.isPrestadorLoggedIn()) {
+    //   prestadorId = await firstValueFrom(this.authService.idPrestador$);
+    //   console.log('👷 Prestador ID:', prestadorId);
+    // }
+    
     console.warn('SwPush step');
     if (!this.swPush.isEnabled) {
       console.warn('SwPush não habilitado');
@@ -155,8 +157,8 @@ export class AppHomeComponent implements OnInit {
 
           this.notificationService
             .sendSubscriptionToServer(
-              this.id_cliente,
-              this.prestadorId,
+              clienteId,
+              prestadorId,
               sub.toJSON()
             )
             .subscribe(() => {
