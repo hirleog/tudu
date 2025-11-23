@@ -15,6 +15,6 @@ export class NotificationService {
   }
   /** Testa o push chamando notifications/test/clienteId/prestadorId */
   sendTest(clienteId: number, prestadorId: number) {
-    return this.http.post(`${environment.apiUrl}/notifications/test/${clienteId}/${prestadorId}`, {});
+    return this.http.post(`${environment.apiUrl}/notifications/test`, {});
   }
 }
