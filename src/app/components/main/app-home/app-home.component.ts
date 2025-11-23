@@ -3,6 +3,7 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
 import * as moment from 'moment';
+import { firstValueFrom } from 'rxjs';
 import { CardOrders } from 'src/app/interfaces/card-orders';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardSocketService } from 'src/app/services/card-socket.service';
@@ -126,48 +127,29 @@ export class AppHomeComponent implements OnInit {
   }
 
   async activatePush() {
+    let clienteId: any = null;
+    let prestadorId: any = null;
+
     if (this.authService.isClienteLoggedIn()) {
-      this.authService.idCliente$.subscribe((id) => {
-        this.id_cliente = id;
-        console.log('ID do cliente logado:', this.id_cliente);
-      });
+      clienteId = await firstValueFrom(this.authService.idCliente$);
     } else if (this.authService.isPrestadorLoggedIn()) {
-      this.authService.idPrestador$.subscribe((id) => {
-        this.prestadorId = id;
-        console.log('ID do prestador logado:', this.prestadorId);
-      });
+      prestadorId = await firstValueFrom(this.authService.idPrestador$);
     }
 
-    console.warn('SwPush step');
     if (!this.swPush.isEnabled) {
       console.warn('SwPush não habilitado');
       return;
     }
-    console.warn('passou  do SwPush step');
 
-    try {
-      console.log('INICIO Subscription:');
+    const sub = await this.swPush.requestSubscription({
+      serverPublicKey: this.VAPID_PUBLIC_KEY,
+    });
 
-      this.swPush
-        .requestSubscription({
-          serverPublicKey: this.VAPID_PUBLIC_KEY,
-        })
-        .then((sub) => {
-          console.log('Subscription criada:', sub);
+    await this.notificationService
+      .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
+      .toPromise();
 
-          this.notificationService
-            .sendSubscriptionToServer(
-              this.id_cliente,
-              this.prestadorId,
-              sub.toJSON()
-            )
-            .subscribe(() => {
-              console.log('Subscription salva!');
-            });
-        });
-    } catch (err) {
-      console.error('Erro ao criar subscription:', err);
-    }
+    console.log('Subscription salva!');
   }
 
   // async activatePush() {
