@@ -146,9 +146,7 @@ export class AppHomeComponent implements OnInit {
     console.warn('passou  do SwPush step');
 
     try {
-      console.log('Subscription criada:');
-
-      const user = { clienteId: this.clienteId, prestadorId: this.prestadorId };
+      console.log('INICIO Subscription:');
 
       this.swPush
         .requestSubscription({
@@ -159,9 +157,9 @@ export class AppHomeComponent implements OnInit {
 
           this.notificationService
             .sendSubscriptionToServer(
-              user.clienteId,
-              user.prestadorId,
-              sub.toJSON(),
+              this.id_cliente,
+              this.prestadorId,
+              sub.toJSON()
             )
             .subscribe(() => {
               console.log('Subscription salva!');
