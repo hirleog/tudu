@@ -127,16 +127,16 @@ export class AppHomeComponent implements OnInit {
   }
 
   async activatePush() {
-    let clienteId: any = 2;
+    let clienteId: any = null;
     let prestadorId: any = null;
 
-    // if (this.authService.isClienteLoggedIn()) {
-    //   clienteId = await firstValueFrom(this.authService.idCliente$);
-    //   console.log('👤 Cliente ID:', clienteId);
-    // } else if (this.authService.isPrestadorLoggedIn()) {
-    //   prestadorId = await firstValueFrom(this.authService.idPrestador$);
-    //   console.log('👷 Prestador ID:', prestadorId);
-    // }
+    if (this.authService.isClienteLoggedIn()) {
+      clienteId = await firstValueFrom(this.authService.idCliente$);
+      console.log('👤 Cliente ID:', clienteId);
+    } else if (this.authService.isPrestadorLoggedIn()) {
+      prestadorId = await firstValueFrom(this.authService.idPrestador$);
+      console.log('👷 Prestador ID:', prestadorId);
+    }
     
     console.warn('SwPush step');
     if (!this.swPush.isEnabled) {
@@ -157,8 +157,8 @@ export class AppHomeComponent implements OnInit {
 
           this.notificationService
             .sendSubscriptionToServer(
-              clienteId,
-              prestadorId,
+              this.id_cliente,
+              this.prestadorId,
               sub.toJSON()
             )
             .subscribe(() => {
