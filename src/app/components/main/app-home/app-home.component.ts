@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SwPush } from '@angular/service-worker';
 import * as moment from 'moment';
 import { CardOrders } from 'src/app/interfaces/card-orders';
+import { AuthService } from 'src/app/services/auth.service';
 import { CardSocketService } from 'src/app/services/card-socket.service';
 import { CardService } from 'src/app/services/card.service';
 import { NotificationService } from 'src/app/services/notification.service';
@@ -37,10 +38,11 @@ export class AppHomeComponent implements OnInit {
   finalDaLista = false;
   logoUrl: string = '';
 
-  clienteId = 1;
-  prestadorId = 1;
+  clienteId!: any;
+  prestadorId!: any;
   loading = false;
   result: any;
+  id_cliente!: any;
   constructor(
     private route: Router,
     private activeRoute: ActivatedRoute,
@@ -49,9 +51,10 @@ export class AppHomeComponent implements OnInit {
     private location: Location,
     private stateManagement: StateManagementService,
     private swPush: SwPush,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    public authService: AuthService
   ) {
-    this.subscribeToNotifications();
+    this.askNotificationPermission();
 
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
@@ -112,37 +115,79 @@ export class AppHomeComponent implements OnInit {
     this.flowNavigate();
   }
 
-  async subscribeToNotifications() {
-    console.log('Solicitando permissão...');
-
+  async askNotificationPermission() {
     const permission = await Notification.requestPermission();
-    if (permission !== 'granted') {
-      console.log('Permissão negada.');
-      return;
+
+    if (permission === 'granted') {
+      console.log('Permissão OK, agora o usuário pode ativar o Push.');
+    } else {
+      console.log('Usuário negou.');
     }
-
-    console.log('Permissão concedida! Registrando push...');
-
-    if (!this.swPush.isEnabled) {
-      console.warn('SwPush não está habilitado.');
-      return;
-    }
-
-    this.swPush
-      .requestSubscription({
-        serverPublicKey: this.VAPID_PUBLIC_KEY,
-      })
-      .then((sub) => {
-        console.log('Subscription criada:', sub);
-
-        this.notificationService
-          .sendSubscriptionToServer(sub)
-          .subscribe((res) => {
-            console.log('Subscription salva no servidor:', res);
-          });
-      })
-      .catch((err) => console.error('Erro ao registrar push:', err));
   }
+
+  async activatePush() {
+    if (this.authService.isClienteLoggedIn()) {
+      this.authService.idCliente$.subscribe((id) => {
+        this.id_cliente = id;
+        console.log('ID do cliente logado:', this.id_cliente);
+      });
+    } else if (this.authService.isPrestadorLoggedIn()) {
+      this.authService.idPrestador$.subscribe((id) => {
+        this.prestadorId = id;
+        console.log('ID do prestador logado:', this.prestadorId);
+      });
+    }
+
+    console.warn('SwPush step');
+    if (!this.swPush.isEnabled) {
+      console.warn('SwPush não habilitado');
+      return;
+    }
+    console.warn('passou  do SwPush step');
+
+    try {
+      const sub = await this.swPush.requestSubscription({
+        serverPublicKey: this.VAPID_PUBLIC_KEY,
+      });
+
+      console.log('Subscription criada:', sub);
+
+      const user = { clienteId: this.clienteId, prestadorId: this.prestadorId };
+
+      this.notificationService
+        .sendSubscriptionToServer(
+          sub.toJSON(),
+          user.clienteId,
+          user.prestadorId
+        )
+        .subscribe(() => {
+          console.log('Subscription salva!');
+        });
+    } catch (err) {
+      console.error('Erro ao criar subscription:', err);
+    }
+  }
+
+  // async activatePush() {
+  //   if (!this.swPush.isEnabled) {
+  //     console.warn('SwPush não habilitado');
+  //     return;
+  //   }
+
+  //   try {
+  //     const sub = await this.swPush.requestSubscription({
+  //       serverPublicKey: this.VAPID_PUBLIC_KEY,
+  //     });
+
+  //     console.log('Subscription criada:', sub);
+
+  //     this.notificationService
+  //       .sendSubscriptionToServer(sub.toJSON())
+  //       .subscribe(() => console.log('Subscription salva no servidor'));
+  //   } catch (err) {
+  //     console.error('Erro ao criar subscription:', err);
+  //   }
+  // }
 
   testPush() {
     this.loading = true;
