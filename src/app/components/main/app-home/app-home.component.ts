@@ -146,10 +146,11 @@ export class AppHomeComponent implements OnInit {
     }
 
     console.log('Ativando Push passou do swpush...');
-
+    
     const sub = await this.swPush.requestSubscription({
       serverPublicKey: this.VAPID_PUBLIC_KEY,
     });
+    console.log(' passou do SUB...');
 
     await this.notificationService
       .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
