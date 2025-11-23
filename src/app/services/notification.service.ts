@@ -10,9 +10,9 @@ export class NotificationService {
   constructor(private http: HttpClient) {}
 
   sendSubscriptionToServer(
-    subscription: any,
     clienteId: number | null,
-    prestadorId: number | null
+    prestadorId: number | null,
+    subscription: any,
   ) {
     return this.http.post(`${environment.apiUrl}/notifications/subscribe`, {
       clienteId,
