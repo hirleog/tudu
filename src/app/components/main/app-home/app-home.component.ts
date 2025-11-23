@@ -146,7 +146,7 @@ export class AppHomeComponent implements OnInit {
     }
 
     try {
-      console.log('INICIO Subscription:');
+      console.log('Solicitando subscription...');
 
       this.swPush
         .requestSubscription({
@@ -157,14 +157,14 @@ export class AppHomeComponent implements OnInit {
 
           this.notificationService
             .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
-            .subscribe(() => {
-              console.log('Subscription salva!');
-            });
+            .subscribe(() => console.log('Subscription salva!'));
+        })
+        .catch((err) => {
+          console.error('Erro ao criar subscription (Promise):', err);
         });
     } catch (err) {
       console.error('Erro ao criar subscription:', err);
     }
-    console.log('Subscription salva!');
   }
 
   // async activatePush() {
