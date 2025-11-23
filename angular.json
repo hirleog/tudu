@@ -30,6 +30,11 @@
                 "glob": "**/*",
                 "input": "node_modules/heic2any/dist",
                 "output": "/assets/heic2any/"
+              },
+              {
+                "glob": "service-worker.js",
+                "input": "src",
+                "output": "/"
               }
             ],
             "styles": ["src/styles.css", "node_modules/aos/dist/aos.css"],

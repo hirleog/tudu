@@ -48,12 +48,26 @@
   </div>
 </lib-nav>
 
-
 <section class="container mt-16 max-w-4xl mx-auto lg:px-8">
   <div class="container" *ngIf="isLoading">
     <app-card-skeleton *ngFor="let i of [1, 2, 3, 4]"></app-card-skeleton>
   </div>
-  <button (click)="subscribeToNotifications()">🔔 Ativar notificações</button>
+  <div class="card" style="padding: 20px; max-width: 300px">
+    <h3>Testar Push</h3>
+
+    <label>Cliente ID:</label>
+    <input type="number" [(ngModel)]="clienteId" />
+
+    <label>Prestador ID:</label>
+    <input type="number" [(ngModel)]="prestadorId" />
+
+    <button (click)="testPush()" [disabled]="loading">
+      {{ loading ? "Enviando..." : "Enviar Teste" }}
+    </button>
+
+    <pre *ngIf="result">{{ result | json }}</pre>
+  </div>
+  <button (click)="subscribeToNotifications()">🔔chamar notificações</button>
 
   <!-- Template Unificado -->
   <div *ngIf="cards.length > 0 || isLoading">

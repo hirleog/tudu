@@ -37,6 +37,10 @@ export class AppHomeComponent implements OnInit {
   finalDaLista = false;
   logoUrl: string = '';
 
+  clienteId = 1;
+  prestadorId = 1;
+  loading = false;
+  result: any;
   constructor(
     private route: Router,
     private activeRoute: ActivatedRoute,
@@ -139,6 +143,25 @@ export class AppHomeComponent implements OnInit {
       })
       .catch((err) => console.error('Erro ao registrar push:', err));
   }
+
+  testPush() {
+    this.loading = true;
+    this.result = null;
+
+    this.notificationService
+      .sendTest(this.clienteId, this.prestadorId)
+      .subscribe({
+        next: (res) => {
+          this.result = res;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.result = err;
+          this.loading = false;
+        },
+      });
+  }
+
   listCards(status_pedido: string) {
     if (this.carregandoMais || this.finalDaLista) {
       return;
