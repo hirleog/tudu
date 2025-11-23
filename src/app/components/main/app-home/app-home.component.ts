@@ -127,19 +127,25 @@ export class AppHomeComponent implements OnInit {
   }
 
   async activatePush() {
-    let clienteId: any = null;
-    let prestadorId: any = null;
+    let clienteId: any = 0;
+    let prestadorId: any = 0;
+
+    console.log('Ativando Push...');
 
     if (this.authService.isClienteLoggedIn()) {
       clienteId = await firstValueFrom(this.authService.idCliente$);
+      console.log('Ativando Push cliente...', clienteId);
     } else if (this.authService.isPrestadorLoggedIn()) {
       prestadorId = await firstValueFrom(this.authService.idPrestador$);
+      console.log('Ativando Push prestador...', prestadorId);
     }
 
     if (!this.swPush.isEnabled) {
       console.warn('SwPush não habilitado');
       return;
     }
+
+    console.log('Ativando Push passou do swpush...');
 
     const sub = await this.swPush.requestSubscription({
       serverPublicKey: this.VAPID_PUBLIC_KEY,
