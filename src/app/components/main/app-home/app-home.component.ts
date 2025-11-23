@@ -127,8 +127,8 @@ export class AppHomeComponent implements OnInit {
   }
 
   async activatePush() {
-    let clienteId: any = 0;
-    let prestadorId: any = 0;
+    let clienteId: any = null;
+    let prestadorId: any = null;
 
     console.log('Ativando Push...');
 
