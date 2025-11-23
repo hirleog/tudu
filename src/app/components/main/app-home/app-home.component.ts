@@ -147,6 +147,7 @@ export class AppHomeComponent implements OnInit {
 
     try {
       console.log('Solicitando subscription...');
+      console.log('Solicitando subscription...');
 
       this.swPush
         .requestSubscription({
