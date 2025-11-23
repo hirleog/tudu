@@ -146,22 +146,26 @@ export class AppHomeComponent implements OnInit {
     console.warn('passou  do SwPush step');
 
     try {
-      const sub = await this.swPush.requestSubscription({
-        serverPublicKey: this.VAPID_PUBLIC_KEY,
-      });
-
-      console.log('Subscription criada:', sub);
+      console.log('Subscription criada:');
 
       const user = { clienteId: this.clienteId, prestadorId: this.prestadorId };
 
-      this.notificationService
-        .sendSubscriptionToServer(
-          sub.toJSON(),
-          user.clienteId,
-          user.prestadorId
-        )
-        .subscribe(() => {
-          console.log('Subscription salva!');
+      this.swPush
+        .requestSubscription({
+          serverPublicKey: this.VAPID_PUBLIC_KEY,
+        })
+        .then((sub) => {
+          console.log('Subscription criada:', sub);
+
+          this.notificationService
+            .sendSubscriptionToServer(
+              user.clienteId,
+              user.prestadorId,
+              sub.toJSON(),
+            )
+            .subscribe(() => {
+              console.log('Subscription salva!');
+            });
         });
     } catch (err) {
       console.error('Erro ao criar subscription:', err);
