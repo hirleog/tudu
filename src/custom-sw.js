@@ -11,6 +11,20 @@ self.addEventListener("push", (event) => {
 
   const data = event.data.json();
 
+  // 🔍 DEBUG: Log completo do payload recebido
+  console.log("[SW] Payload recebido:", {
+    title: data.title,
+    url: data.url,
+    dataUrl: data.data?.url,
+    fullData: data,
+  });
+
+  // ✅ CORREÇÃO: Garante que a URL vem de múltiplas fontes possíveis
+  const notificationUrl =
+    data.url || data.data?.url || "https://use-tudu.com.br";
+
+  console.log("[SW] URL que será usada:", notificationUrl);
+
   const options = {
     body: data.body,
     icon: data.icon || "assets/icons/icon-192x192.png",
@@ -18,12 +32,13 @@ self.addEventListener("push", (event) => {
     vibrate: data.vibrate || [200, 100, 200],
     requireInteraction: data.requireInteraction ?? true, // Mantém a notificação presa até interação
     data: {
-      url: data.url,
+      url: notificationUrl, // ✅ USA A URL CORRIGIDA
+      originalData: data, // Para debug futuro
     },
 
     // ANDROID HEADS-UP PUSH 🔥🔥🔥
     // Deixa como push prioridade máxima, igual Instagram
-    tag: "tudu-push",
+    tag: data.tag || "tudu-push",
     renotify: true,
     actions: [
       {
@@ -38,6 +53,8 @@ self.addEventListener("push", (event) => {
     options.channelId = data.channelId;
   }
 
+  console.log("[SW] Opções da notificação:", options);
+
   event.waitUntil(self.registration.showNotification(data.title, options));
 });
 
@@ -46,6 +63,13 @@ self.addEventListener("push", (event) => {
 // ==========================
 self.addEventListener("notificationclick", (event) => {
   console.log("[SW] Notificação clicada:", event.notification);
+
+  // 🔍 DEBUG: Log dos dados da notificação
+  console.log("[SW] Dados da notificação:", event.notification.data);
+
+  const urlToOpen = event.notification.data?.url || "https://use-tudu.com.br";
+  console.log("[SW] URL que será aberta:", urlToOpen);
+
   event.notification.close();
 
   // Abre ou foca aba já aberta
@@ -53,14 +77,35 @@ self.addEventListener("notificationclick", (event) => {
     clients
       .matchAll({ type: "window", includeUncontrolled: true })
       .then((clientsList) => {
+        console.log("[SW] Abas abertas encontradas:", clientsList.length);
+
+        // Tenta focar em uma aba já aberta com a mesma URL
         for (const client of clientsList) {
-          if (client.url === event.notification.data.url && "focus" in client) {
+          console.log("[SW] Verificando aba:", client.url);
+          if (client.url.includes("use-tudu.com.br") && "focus" in client) {
+            console.log("[SW] Focando aba existente:", client.url);
             return client.focus();
           }
         }
+
+        // Se não encontrou, abre nova aba
+        console.log("[SW] Abrindo nova aba com URL:", urlToOpen);
         if (clients.openWindow) {
-          return clients.openWindow(event.notification.data.url);
+          return clients.openWindow(urlToOpen);
         }
       })
+      .catch((error) => {
+        console.error("[SW] Erro ao abrir URL:", error);
+        // Fallback: abre a URL principal
+        return clients.openWindow("https://use-tudu.com.br");
+      })
   );
+});
+
+// ==========================
+//   FALHA NO ENVIO DO PUSH (Opcional)
+// ==========================
+self.addEventListener("pushsubscriptionchange", (event) => {
+  console.log("[SW] Subscription change:", event);
+  // Aqui você pode recriar a subscription se expirar
 });
