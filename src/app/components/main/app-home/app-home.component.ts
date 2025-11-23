@@ -137,7 +137,7 @@ export class AppHomeComponent implements OnInit {
       prestadorId = await firstValueFrom(this.authService.idPrestador$);
       console.log('👷 Prestador ID:', prestadorId);
     }
-    
+
     console.warn('SwPush step');
     if (!this.swPush.isEnabled) {
       console.warn('SwPush não habilitado');
@@ -156,11 +156,7 @@ export class AppHomeComponent implements OnInit {
           console.log('Subscription criada:', sub);
 
           this.notificationService
-            .sendSubscriptionToServer(
-              this.id_cliente,
-              this.prestadorId,
-              sub.toJSON()
-            )
+            .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
             .subscribe(() => {
               console.log('Subscription salva!');
             });
