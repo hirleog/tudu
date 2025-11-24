@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
+import { NotificationService } from 'src/app/services/notification.service';
 import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 
 @Component({
@@ -22,11 +23,14 @@ export class ProfileComponent implements OnInit {
   userId!: number;
   profileData: any;
   temaEscuro = false;
+  resultMessage!: string;
+  resultSuccess: any;
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private profileDetailService: ProfileDetailService
+    private profileDetailService: ProfileDetailService,
+    private notificationService: NotificationService
   ) {
     this.router.events.subscribe(() => {
       this.isProfessional = this.router.url.includes('professional');
@@ -218,6 +222,17 @@ export class ProfileComponent implements OnInit {
       root.style.setProperty('--skeleton-via', '#f3f4f6');
       root.style.setProperty('--skeleton-to', '#d1d5db');
     }
+  }
+
+  async activateNotifications() {
+    // this.isLoading = true;
+    this.resultMessage = '';
+
+    const result = await this.notificationService.activatePush();
+
+    this.resultSuccess = result.success;
+    this.resultMessage = result.message;
+    // this.isLoading = false;
   }
 
   ngOnDestroy(): void {
