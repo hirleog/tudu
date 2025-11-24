@@ -117,20 +117,86 @@ export class AppHomeComponent implements OnInit {
     this.flowNavigate();
   }
 
-  async askNotificationPermission() {
-    const permission = await Notification.requestPermission();
+  async askNotificationPermission(): Promise<boolean> {
+    try {
+      console.log('🔔 Solicitando permissão de notificação...');
 
-    if (permission === 'granted') {
-      console.log('Permissão OK, agora o usuário pode ativar o Push.');
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data && event.data.type === 'NAVIGATE_TO') {
-            this.route.navigateByUrl(event.data.url);
-          }
-        });
+      // ✅ VERIFICAR PERMISSÃO ATUAL PRIMEIRO
+      if (Notification.permission === 'granted') {
+        console.log('✅ Permissão já concedida anteriormente');
+        return true;
       }
-    } else {
-      console.log('Usuário negou.');
+
+      if (Notification.permission === 'denied') {
+        console.warn('❌ Permissão negada permanentemente pelo usuário');
+        return false;
+      }
+
+      // ✅ UNIFICAR DOMÍNIO ANTES DE PEDIR PERMISSÃO
+      await this.ensureConsistentDomain();
+
+      // ✅ PEDIR PERMISSÃO DE FORMA MAIS AMIGÁVEL
+      const permission = await Notification.requestPermission();
+
+      console.log(`🔔 Resposta do usuário: ${permission}`);
+
+      if (permission === 'granted') {
+        console.log('✅ Permissão concedida! Configurando listeners...');
+        this.setupServiceWorkerListeners();
+        return true;
+      } else {
+        console.warn('❌ Usuário negou permissão de notificação');
+        return false;
+      }
+    } catch (error) {
+      console.error('❌ Erro ao solicitar permissão:', error);
+      return false;
+    }
+  }
+
+  private async ensureConsistentDomain(): Promise<void> {
+    // ✅ GARANTIR QUE ESTAMOS NO DOMÍNIO CORRETO
+    const currentUrl = window.location.href;
+    const canonicalDomain = 'https://use-tudu.com.br';
+
+    // Se estamos em localhost ou domínio diferente, redirecionar?
+    if (!currentUrl.includes('use-tudu.com.br')) {
+      console.warn('⚠️ Domínio inconsistente detectado:', currentUrl);
+
+      // Em produção, considerar redirecionar para domínio canônico
+      if (
+        !currentUrl.includes('localhost') &&
+        !currentUrl.includes('127.0.0.1')
+      ) {
+        console.log('🔄 Redirecionando para domínio canônico...');
+        window.location.href = canonicalDomain;
+        return;
+      }
+    }
+
+    console.log('✅ Domínio verificado:', currentUrl);
+  }
+
+  private setupServiceWorkerListeners(): void {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+      console.log('🔧 Configurando listeners do Service Worker...');
+
+      navigator.serviceWorker.addEventListener('message', (event) => {
+        if (event.data && event.data.type === 'NAVIGATE_TO') {
+          console.log('🔄 Navegando para:', event.data.url);
+          this.route.navigateByUrl(event.data.url);
+        }
+      });
+
+      // ✅ CONFIRMAR QUE O SW ESTÁ NO DOMÍNIO CORRETO
+      navigator.serviceWorker.ready.then((registration) => {
+        console.log('🔍 Service Worker scope:', registration.scope);
+        console.log('🔍 Domínio atual:', window.location.origin);
+
+        if (!registration.scope.includes('use-tudu.com.br')) {
+          console.error('❌ Service Worker registrado em domínio errado!');
+        }
+      });
     }
   }
 
