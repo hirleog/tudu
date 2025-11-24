@@ -44,5 +44,11 @@
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "notification": {
+    "icon": "assets/icons/icon-192x192.png",
+    "badge": "assets/icons/badge-72x72.png",
+    "vibration": [300, 100, 400],
+    "require_interaction": true
+  }
 }

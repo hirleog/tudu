@@ -122,6 +122,13 @@ export class AppHomeComponent implements OnInit {
 
     if (permission === 'granted') {
       console.log('Permissão OK, agora o usuário pode ativar o Push.');
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data && event.data.type === 'NAVIGATE_TO') {
+            this.route.navigateByUrl(event.data.url);
+          }
+        });
+      }
     } else {
       console.log('Usuário negou.');
     }
