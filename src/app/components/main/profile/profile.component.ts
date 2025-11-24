@@ -223,16 +223,14 @@ export class ProfileComponent implements OnInit {
       root.style.setProperty('--skeleton-to', '#d1d5db');
     }
   }
-
-  async activateNotifications() {
-    // this.isLoading = true;
-    this.resultMessage = '';
-
-    const result = await this.notificationService.activatePush();
-
-    this.resultSuccess = result.success;
-    this.resultMessage = result.message;
-    // this.isLoading = false;
+  // qualquer.component.ts
+  async enableNotifications() {
+    try {
+      await this.notificationService.activatePushSimple();
+      console.log('✅ Notificações ativadas com sucesso!');
+    } catch (error) {
+      console.error('❌ Erro:', error);
+    }
   }
 
   ngOnDestroy(): void {

@@ -17,6 +17,9 @@ import { StateManagementService } from 'src/app/services/state-management.servic
   styleUrls: ['./app-home.component.css'],
 })
 export class AppHomeComponent implements OnInit {
+  readonly VAPID_PUBLIC_KEY =
+    'BETOn-pGBaW59qF-RFin_fUGfJmZshZFIg2KynwJUDfCEg5mon6iRE6hdPTxplYV5lCKWuupLAGz56V9OSecgA4';
+
   headerPageOptions: string[] = [];
   overlay: boolean = false;
   dateTimeFormatted: string = '';
@@ -53,6 +56,7 @@ export class AppHomeComponent implements OnInit {
     public authService: AuthService
   ) {
     this.askNotificationPermission();
+    this.activatePush();
 
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
@@ -122,6 +126,67 @@ export class AppHomeComponent implements OnInit {
       console.log('Usuário negou.');
     }
   }
+
+  async activatePush() {
+    let clienteId: any = null;
+    let prestadorId: any = null;
+
+    if (this.authService.isClienteLoggedIn()) {
+      clienteId = await firstValueFrom(this.authService.idCliente$);
+      console.log('👤 Cliente ID:', clienteId);
+    } else if (this.authService.isPrestadorLoggedIn()) {
+      prestadorId = await firstValueFrom(this.authService.idPrestador$);
+      console.log('👷 Prestador ID:', prestadorId);
+    }
+
+    console.warn('SwPush step');
+    if (!this.swPush.isEnabled) {
+      console.warn('SwPush não habilitado');
+      return;
+    }
+    console.warn('passou  do SwPush step');
+
+    try {
+      console.log('INICIO Subscription:');
+
+      this.swPush
+        .requestSubscription({
+          serverPublicKey: this.VAPID_PUBLIC_KEY,
+        })
+        .then((sub) => {
+          console.log('Subscription criada:', sub);
+
+          this.notificationService
+            .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
+            .subscribe(() => {
+              console.log('Subscription salva!');
+            });
+        });
+    } catch (err) {
+      console.error('Erro ao criar subscription:', err);
+    }
+  }
+
+  // async activatePush() {
+  //   if (!this.swPush.isEnabled) {
+  //     console.warn('SwPush não habilitado');
+  //     return;
+  //   }
+
+  //   try {
+  //     const sub = await this.swPush.requestSubscription({
+  //       serverPublicKey: this.VAPID_PUBLIC_KEY,
+  //     });
+
+  //     console.log('Subscription criada:', sub);
+
+  //     this.notificationService
+  //       .sendSubscriptionToServer(sub.toJSON())
+  //       .subscribe(() => console.log('Subscription salva no servidor'));
+  //   } catch (err) {
+  //     console.error('Erro ao criar subscription:', err);
+  //   }
+  // }
 
   testPush() {
     this.loading = true;
