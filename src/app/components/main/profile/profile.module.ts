@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { environment } from 'src/environments/environment';
+import { ExperienceModule } from '../../templates/experience/experience.module';
 import { StarRatingModule } from '../../templates/star-rating/star-rating.module';
 import { ProfileDetailComponent } from './profile-detail/profile-detail.component';
 import { ProfileComponent } from './profile.component';
-import { ExperienceModule } from '../../templates/experience/experience.module';
 
 const routes: Routes = [
   { path: '', component: ProfileComponent },
@@ -20,7 +22,9 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     StarRatingModule,
     ExperienceModule,
-    
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+    }),
   ],
   exports: [ProfileComponent, ProfileDetailComponent],
   providers: [],
