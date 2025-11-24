@@ -119,11 +119,11 @@ export class AppHomeComponent implements OnInit {
 
   async askNotificationPermission(): Promise<boolean> {
     try {
-      console.log('🔔 Solicitando permissão de notificação...');
+      alert('🔔 Solicitando permissão de notificação...');
 
       // ✅ VERIFICAR PERMISSÃO ATUAL PRIMEIRO
       if (Notification.permission === 'granted') {
-        console.log('✅ Permissão já concedida anteriormente');
+        alert('✅ Permissão já concedida anteriormente');
         return true;
       }
 
@@ -138,10 +138,10 @@ export class AppHomeComponent implements OnInit {
       // ✅ PEDIR PERMISSÃO DE FORMA MAIS AMIGÁVEL
       const permission = await Notification.requestPermission();
 
-      console.log(`🔔 Resposta do usuário: ${permission}`);
+      alert(`🔔 Resposta do usuário: ${permission}`);
 
       if (permission === 'granted') {
-        console.log('✅ Permissão concedida! Configurando listeners...');
+        alert('✅ Permissão concedida! Configurando listeners...');
         this.setupServiceWorkerListeners();
         return true;
       } else {
@@ -168,30 +168,30 @@ export class AppHomeComponent implements OnInit {
         !currentUrl.includes('localhost') &&
         !currentUrl.includes('127.0.0.1')
       ) {
-        console.log('🔄 Redirecionando para domínio canônico...');
+        alert('🔄 Redirecionando para domínio canônico...');
         window.location.href = canonicalDomain;
         return;
       }
     }
 
-    console.log('✅ Domínio verificado:', currentUrl);
+    alert('✅ Domínio verificado:' + currentUrl);
   }
 
   private setupServiceWorkerListeners(): void {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      console.log('🔧 Configurando listeners do Service Worker...');
+      alert('🔧 Configurando listeners do Service Worker...');
 
       navigator.serviceWorker.addEventListener('message', (event) => {
         if (event.data && event.data.type === 'NAVIGATE_TO') {
-          console.log('🔄 Navegando para:', event.data.url);
+          alert('🔄 Navegando para:' + event.data.url);
           this.route.navigateByUrl(event.data.url);
         }
       });
 
       // ✅ CONFIRMAR QUE O SW ESTÁ NO DOMÍNIO CORRETO
       navigator.serviceWorker.ready.then((registration) => {
-        console.log('🔍 Service Worker scope:', registration.scope);
-        console.log('🔍 Domínio atual:', window.location.origin);
+        alert('🔍 Service Worker scope:' + registration.scope);
+        alert('🔍 Domínio atual:' + window.location.origin);
 
         if (!registration.scope.includes('use-tudu.com.br')) {
           console.error('❌ Service Worker registrado em domínio errado!');
