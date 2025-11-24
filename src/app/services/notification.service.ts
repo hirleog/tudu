@@ -137,52 +137,143 @@ export class NotificationService {
     });
   }
 
-  /**
-   * Versão simplificada - retorna Promise<void> para uso rápido
-   */
-  activatePushSimple(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
+  async activatePushSimple(): Promise<void> {
+    try {
       const { clienteId, prestadorId } = await this.getUserIds();
 
-      alert('iniciando swPush');
-      
-      if (!this.swPush.isEnabled) {
-        console.warn('SwPush não habilitado');
-        reject('SwPush não habilitado');
-        return;
+      console.log('📍 1. Iniciando ativação de push');
+
+      // ✅ Tentativa principal com swPush (usando string)
+      try {
+        return await this.activateWithSwPush(clienteId, prestadorId);
+      } catch (swError) {
+        console.warn('❌ SwPush falhou, tentando fallback...', swError);
+
+        // ✅ Fallback para navegadores problemáticos
+        return await this.activateWithFallback(clienteId, prestadorId);
+      }
+    } catch (error) {
+      console.error('❌ Todas as tentativas falharam:', error);
+      throw error;
+    }
+  }
+
+  private async activateWithSwPush(
+    clienteId: string,
+    prestadorId: string
+  ): Promise<void> {
+    console.log('🔄 Tentando com SwPush...');
+
+    if (!this.swPush.isEnabled) {
+      throw new Error('SwPush não habilitado');
+    }
+
+    // ✅ Aguardar um pouco para garantir que o SW está pronto
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // ✅ swPush.requestSubscription espera STRING, não Uint8Array
+    const subscription = await this.swPush.requestSubscription({
+      serverPublicKey: this.vapidPublicKey, // Já é string
+    });
+
+    await this.sendSubscriptionToBackend(clienteId, prestadorId, subscription);
+    console.log('✅ Subscription com SwPush realizada!');
+  }
+
+  private urlBase64ToUint8Array(base64String: string): any {
+    try {
+      const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/-/g, '+')
+        .replace(/_/g, '/');
+
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
       }
 
-      alert('passou do swPush');
-      
-      this.swPush
-        .requestSubscription({
-          serverPublicKey: this.vapidPublicKey,
-        })
-        .then((sub) => {
-          alert('Subscription criada:' + sub);
+      return outputArray;
+    } catch (error) {
+      console.error('❌ Erro ao converter chave VAPID:', error);
+      throw new Error('Chave VAPID inválida');
+    }
+  }
 
-          this.http
-            .post(`${environment.apiUrl}/notifications/subscribe`, {
-              clienteId,
-              prestadorId,
-              subscription: sub.toJSON(),
-            })
-            .subscribe({
-              next: () => {
-                alert('Subscription salva!');
-                resolve();
-              },
-              error: (err) => {
-                console.error('Erro ao salvar subscription:', err);
-                reject(err);
-              },
-            });
-        })
-        .catch((err) => {
-          console.error('Erro ao criar subscription:', err);
-          reject(err);
+  private async activateWithFallback(
+    clienteId: string,
+    prestadorId: string
+  ): Promise<void> {
+    console.log('🔄 Tentando método fallback manual...');
+
+    try {
+      // ✅ Registrar Service Worker manualmente se necessário
+      let registration: ServiceWorkerRegistration;
+
+      if (!navigator.serviceWorker?.controller) {
+        console.log('📋 Registrando Service Worker manualmente...');
+        registration = await navigator.serviceWorker.register(
+          '/ngsw-worker.js'
+        );
+
+        // Aguardar o SW ficar ativo
+        await new Promise<void>((resolve) => {
+          if (registration.active) {
+            resolve();
+          } else {
+            registration.addEventListener('activate', () => resolve());
+          }
         });
-    });
+
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      } else {
+        registration = await navigator.serviceWorker.ready;
+      }
+
+      console.log('📋 Service Worker pronto, solicitando subscription...');
+
+      // ✅ CORREÇÃO: Criar Uint8Array corretamente
+      const applicationServerKey = this.urlBase64ToUint8Array(
+        this.vapidPublicKey
+      );
+
+      // ✅ Usar a API diretamente do Service Worker
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: applicationServerKey,
+      });
+
+      console.log('✅ Subscription criada via fallback');
+      await this.sendSubscriptionToBackend(
+        clienteId,
+        prestadorId,
+        subscription
+      );
+      console.log('✅ Subscription com fallback realizada!');
+    } catch (error) {
+      console.error('❌ Fallback também falhou:', error);
+      throw new Error(`Não foi possível ativar notificações: `);
+    }
+  }
+  private async sendSubscriptionToBackend(
+    clienteId: string,
+    prestadorId: string,
+    subscription: any
+  ) {
+    console.log('📤 Enviando subscription para backend...');
+
+    const subData = subscription.toJSON ? subscription.toJSON() : subscription;
+
+    await this.http
+      .post(`${environment.apiUrl}/notifications/subscribe`, {
+        clienteId,
+        prestadorId,
+        subscription: subData,
+      })
+      .toPromise();
+
+    console.log('✅ Subscription salva no backend!');
   }
 
   /**

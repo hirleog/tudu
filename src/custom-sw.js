@@ -1,4 +1,28 @@
 // ==========================
+//   MENSAGEM PARA CLIENTE
+// ==========================
+self.addEventListener("message", (event) => {
+  console.log("[SW] Mensagem recebida do cliente:", event.data);
+
+  if (event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+// ==========================
+//   INSTALAÇÃO DO SERVICE WORKER
+// ==========================
+self.addEventListener("install", (event) => {
+  console.log("[SW] Service Worker instalado");
+  self.skipWaiting(); // Ativa imediatamente
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("[SW] Service Worker ativado - assumindo controle");
+  event.waitUntil(self.clients.claim()); // Toma controle de todas as abas
+});
+
+// ==========================
 //   RECEBIMENTO DO PUSH
 // ==========================
 self.addEventListener("push", (event) => {
@@ -9,80 +33,144 @@ self.addEventListener("push", (event) => {
     return;
   }
 
-  const data = event.data.json();
-  console.log("[SW] Payload recebido:", data);
+  let data;
+  try {
+    data = event.data.json();
+    console.log("[SW] Payload recebido:", data);
+  } catch (error) {
+    console.error("[SW] Erro ao parsear payload:", error);
+    // Fallback para payload texto simples
+    data = {
+      title: "Tudü",
+      body: event.data.text() || "Nova notificação",
+      url: "https://use-tudu.com.br",
+    };
+  }
 
   const notificationUrl =
     data.url || data.data?.url || "https://use-tudu.com.br";
 
-  // ✅ DETECÇÃO DE PLATAFORMA
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-  console.log("[SW] Plataforma detectada:", isIOS ? "iOS" : "Android/Desktop");
+  // ✅ DETECÇÃO DE PLATAFORMA MAIS PRECISA
+  const userAgent = navigator.userAgent || self.clientUserAgent || "";
+  const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+  const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+  const isOpera = /Opera Mini|OPiOS/.test(userAgent);
 
-  // 🔥 CONFIGURAÇÃO UNIVERSAL + ESPECÍFICA iOS
-  const options = {
-    body: data.body,
-    icon: data.icon || "assets/icons/icon-192x192.png",
-    badge: data.badge || "assets/icons/badge-72x72.png",
+  console.log(
+    "[SW] Plataforma detectada - iOS:",
+    isIOS,
+    "Safari:",
+    isSafari,
+    "Opera:",
+    isOpera
+  );
 
-    // ✅ CONFIGURAÇÕES CROSS-PLATFORM
+  // 🔥 CONFIGURAÇÃO BASE PARA TODAS AS PLATAFORMAS
+  const baseOptions = {
+    body: data.body || "Nova notificação",
+    icon: data.icon || "/assets/icons/icon-192x192.png",
+    badge: data.badge || "/assets/icons/badge-72x72.png",
     tag: data.tag || "tudu-push-" + Date.now(),
     renotify: true,
-
-    // ✅ DADOS PARA NAVEGAÇÃO
     data: {
       url: notificationUrl,
       cardId: data.data?.cardId,
       categoria: data.data?.categoria,
       timestamp: new Date().toISOString(),
+      platform: isIOS ? "ios" : isSafari ? "safari" : "android",
     },
   };
 
-  // ✅ CONFIGURAÇÕES ESPECÍFICAS ANDROID/DESKTOP
-  if (!isIOS) {
-    // Android/Desktop suportam mais features
-    options.requireInteraction = true; // Mantém na tela até interação
-    options.vibrate = [300, 100, 400, 100, 400]; // Vibração
-    options.sound = data.sound || "/assets/sounds/notification.mp3";
+  let finalOptions = { ...baseOptions };
 
-    // Ações rápidas (Android/Desktop)
-    options.actions = [
-      {
-        action: "open",
-        title: "📱 Abrir App",
-        icon: "/assets/icons/open-72x72.png",
-      },
-      {
-        action: "view_card",
-        title: "👀 Ver Pedido",
-        icon: "/assets/icons/eye-72x72.png",
-      },
-    ];
+  // ✅ CONFIGURAÇÕES ESPECÍFICAS POR PLATAFORMA
+  if (isIOS || isSafari) {
+    // 🍎 CONFIGURAÇÕES iOS/SAFARI (MAIS RESTRITAS)
+    console.log("[SW] Aplicando configurações iOS/Safari");
 
-    // Flag adicional para Android/Desktop
-    options.data.isHeadsUp = true;
+    // iOS/Safari ignoram muitas opções, manter mínimo
+    finalOptions = {
+      ...baseOptions,
+      // iOS pode suportar actions básicas, testar
+      actions: data.actions || [
+        {
+          action: "open",
+          title: "Abrir",
+        },
+      ],
+    };
   } else {
-    // ✅ CONFIGURAÇÕES ESPECÍFICAS iOS
-    console.log("[SW] Aplicando configurações específicas para iOS");
-    // iOS tem limitações: não suporta vibrate, requireInteraction, actions customizadas
-    // Manter configurações mínimas e compatíveis
+    // 🤖 CONFIGURAÇÕES ANDROID/DESKTOP (COMPLETAS)
+    console.log("[SW] Aplicando configurações Android/Desktop");
+
+    finalOptions = {
+      ...baseOptions,
+      requireInteraction: true,
+      vibrate: [300, 100, 400, 100, 400],
+      sound: data.sound || "/assets/sounds/notification.mp3",
+      actions: [
+        {
+          action: "open",
+          title: "📱 Abrir App",
+          icon: "/assets/icons/open-72x72.png",
+        },
+        {
+          action: "view_card",
+          title: "👀 Ver Pedido",
+          icon: "/assets/icons/eye-72x72.png",
+        },
+      ],
+      data: {
+        ...baseOptions.data,
+        isHeadsUp: true,
+        supportsActions: true,
+      },
+    };
   }
 
-  console.log("[SW] Opções da notificação:", options);
+  // 🎯 CONFIGURAÇÕES ESPECIAIS PARA OPERA MINI
+  if (isOpera) {
+    console.log("[SW] Aplicando configurações Opera Mini");
+    // Opera Mini tem limitações extremas
+    finalOptions.actions = undefined;
+    finalOptions.vibrate = undefined;
+    finalOptions.requireInteraction = false;
+  }
 
-  // 🔥 MOSTRA A NOTIFICAÇÃO
+  console.log("[SW] Opções finais da notificação:", finalOptions);
+
+  // 🔥 MOSTRA A NOTIFICAÇÃO COM FALLBACK
   event.waitUntil(
     self.registration
-      .showNotification(data.title, options)
+      .showNotification(data.title || "Tudü", finalOptions)
       .then(() => {
-        console.log(
-          `[SW] Notificação exibida com sucesso para ${
-            isIOS ? "iOS" : "Android/Desktop"
-          }!`
-        );
+        console.log(`[SW] ✅ Notificação exibida com sucesso!`);
+
+        // ✅ ENVIAR CONFIRMAÇÃO PARA O CLIENTE (opcional)
+        self.clients.matchAll().then((clients) => {
+          clients.forEach((client) => {
+            client.postMessage({
+              type: "NOTIFICATION_DISPLAYED",
+              payload: data,
+              timestamp: new Date().toISOString(),
+            });
+          });
+        });
       })
       .catch((error) => {
-        console.error("[SW] Erro ao exibir notificação:", error);
+        console.error("[SW] ❌ Erro ao exibir notificação:", error);
+
+        // 🆘 FALLBACK: Tentar com opções mínimas
+        const fallbackOptions = {
+          body: data.body,
+          icon: "/assets/icons/icon-192x192.png",
+          data: { url: notificationUrl },
+        };
+
+        return self.registration.showNotification(
+          data.title || "Tudü",
+          fallbackOptions
+        );
       })
   );
 });
@@ -91,7 +179,7 @@ self.addEventListener("push", (event) => {
 //   CLICK NA NOTIFICAÇÃO
 // ==========================
 self.addEventListener("notificationclick", (event) => {
-  console.log("[SW] Notification clicada:", event);
+  console.log("[SW] 🔔 Notification clicada:", event);
 
   const notification = event.notification;
   const action = event.action;
@@ -104,15 +192,21 @@ self.addEventListener("notificationclick", (event) => {
 
   let urlToOpen = data.url || "https://use-tudu.com.br";
 
-  // ✅ TRATA DIFERENTES AÇÕES (Android/Desktop)
+  // ✅ TRATA DIFERENTES AÇÕES
   if (action === "view_card" && data.cardId) {
     urlToOpen = `/tudu-professional/card-details/${data.cardId}`;
   } else if (action === "open") {
     urlToOpen = "/tudu-professional/home";
+  } else if (!action) {
+    // Click direto na notificação (iOS/Safari)
+    if (data.cardId) {
+      urlToOpen = `/tudu-professional/card-details/${data.cardId}`;
+    } else {
+      urlToOpen = "/tudu-professional/home";
+    }
   }
-  // No iOS, action geralmente é undefined (click direto)
 
-  console.log("[SW] URL final que será aberta:", urlToOpen);
+  console.log("[SW] Navegando para:", urlToOpen);
 
   event.waitUntil(
     clients
@@ -123,33 +217,33 @@ self.addEventListener("notificationclick", (event) => {
       .then((clientList) => {
         console.log("[SW] Abas abertas encontradas:", clientList.length);
 
-        // Tenta focar em aba existente
+        // 🔍 Tenta focar em aba existente
         for (const client of clientList) {
           if (client.url.includes("use-tudu.com.br") && "focus" in client) {
-            console.log("[SW] Focando aba existente");
+            console.log("[SW] Focando aba existente:", client.url);
 
-            // Se a aba já está na URL correta, só foca
-            if (client.url.includes(urlToOpen)) {
-              return client.focus();
-            } else {
-              // Se não está, navega para a URL e foca
-              client.postMessage({
-                type: "NAVIGATE_TO",
-                url: urlToOpen,
-              });
-              return client.focus();
-            }
+            // Enviar comando de navegação
+            client.postMessage({
+              type: "NAVIGATE_TO",
+              url: urlToOpen,
+              timestamp: new Date().toISOString(),
+            });
+
+            return client.focus();
           }
         }
 
-        // Se não encontrou aba, abre nova
-        console.log("[SW] Abrindo nova aba com URL:", urlToOpen);
+        // 🆕 Se não encontrou aba, abre nova
+        console.log("[SW] Abrindo nova aba:", urlToOpen);
         if (clients.openWindow) {
-          return clients.openWindow(self.location.origin + urlToOpen);
+          const fullUrl = self.location.origin + urlToOpen;
+          console.log("[SW] URL completa:", fullUrl);
+          return clients.openWindow(fullUrl);
         }
       })
       .catch((error) => {
-        console.error("[SW] Erro ao abrir URL:", error);
+        console.error("[SW] ❌ Erro ao abrir URL:", error);
+        // Fallback absoluto
         return clients.openWindow("https://use-tudu.com.br");
       })
   );
@@ -160,18 +254,27 @@ self.addEventListener("notificationclick", (event) => {
 // ==========================
 self.addEventListener("notificationclose", (event) => {
   console.log("[SW] Notification fechada:", event.notification);
-  // Aqui você pode registrar analytics, etc.
+
+  // 📊 Analytics: registrar fechamento de notificação
+  const data = event.notification.data || {};
+  console.log(
+    "[SW] Notificação fechada - Duração:",
+    new Date() - new Date(data.timestamp)
+  );
 });
 
 // ==========================
-//   INSTALAÇÃO DO SERVICE WORKER
+//   BACKGROUND SYNC (FUTURO)
 // ==========================
-self.addEventListener("install", (event) => {
-  console.log("[SW] Service Worker instalado");
-  self.skipWaiting(); // Ativa imediatamente
+self.addEventListener("sync", (event) => {
+  console.log("[SW] Background sync:", event.tag);
+
+  if (event.tag === "notification-sync") {
+    event.waitUntil(doBackgroundSync());
+  }
 });
 
-self.addEventListener("activate", (event) => {
-  console.log("[SW] Service Worker ativado");
-  return self.clients.claim(); // Toma controle de todas as abas
-});
+async function doBackgroundSync() {
+  // Implementar sync de notificações pendentes
+  console.log("[SW] Executando background sync...");
+}
