@@ -144,18 +144,22 @@ export class NotificationService {
     return new Promise(async (resolve, reject) => {
       const { clienteId, prestadorId } = await this.getUserIds();
 
+      alert('iniciando swPush');
+      
       if (!this.swPush.isEnabled) {
         console.warn('SwPush não habilitado');
         reject('SwPush não habilitado');
         return;
       }
 
+      alert('passou do swPush');
+      
       this.swPush
         .requestSubscription({
           serverPublicKey: this.vapidPublicKey,
         })
         .then((sub) => {
-          console.log('Subscription criada:', sub);
+          alert('Subscription criada:' + sub);
 
           this.http
             .post(`${environment.apiUrl}/notifications/subscribe`, {
@@ -165,7 +169,7 @@ export class NotificationService {
             })
             .subscribe({
               next: () => {
-                console.log('Subscription salva!');
+                alert('Subscription salva!');
                 resolve();
               },
               error: (err) => {

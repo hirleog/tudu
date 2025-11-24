@@ -10,31 +10,43 @@ self.addEventListener("push", (event) => {
   }
 
   const data = event.data.json();
-
   console.log("[SW] Payload recebido:", data);
 
   const notificationUrl =
     data.url || data.data?.url || "https://use-tudu.com.br";
 
-  // 🔥 CONFIGURAÇÃO PARA HEADS-UP NOTIFICATIONS
+  // ✅ DETECÇÃO DE PLATAFORMA
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+  console.log("[SW] Plataforma detectada:", isIOS ? "iOS" : "Android/Desktop");
+
+  // 🔥 CONFIGURAÇÃO UNIVERSAL + ESPECÍFICA iOS
   const options = {
     body: data.body,
     icon: data.icon || "assets/icons/icon-192x192.png",
     badge: data.badge || "assets/icons/badge-72x72.png",
 
-    // ✅ CONFIGURAÇÕES PARA HEADS-UP (APARECER COMO POPUP)
-    requireInteraction: true, // Mantém na tela até interação
-    tag: data.tag || "tudu-push-" + Date.now(), // Tag única para não agrupar
+    // ✅ CONFIGURAÇÕES CROSS-PLATFORM
+    tag: data.tag || "tudu-push-" + Date.now(),
     renotify: true,
 
-    // ✅ VIBRAÇÃO (Android)
-    vibrate: [300, 100, 400, 100, 400], // Padrão longo para chamar atenção
+    // ✅ DADOS PARA NAVEGAÇÃO
+    data: {
+      url: notificationUrl,
+      cardId: data.data?.cardId,
+      categoria: data.data?.categoria,
+      timestamp: new Date().toISOString(),
+    },
+  };
 
-    // ✅ SOM (se suportado)
-    sound: data.sound || "/assets/sounds/notification.mp3",
+  // ✅ CONFIGURAÇÕES ESPECÍFICAS ANDROID/DESKTOP
+  if (!isIOS) {
+    // Android/Desktop suportam mais features
+    options.requireInteraction = true; // Mantém na tela até interação
+    options.vibrate = [300, 100, 400, 100, 400]; // Vibração
+    options.sound = data.sound || "/assets/sounds/notification.mp3";
 
-    // ✅ AÇÕES RÁPIDAS
-    actions: [
+    // Ações rápidas (Android/Desktop)
+    options.actions = [
       {
         action: "open",
         title: "📱 Abrir App",
@@ -45,53 +57,41 @@ self.addEventListener("push", (event) => {
         title: "👀 Ver Pedido",
         icon: "/assets/icons/eye-72x72.png",
       },
-    ],
+    ];
 
-    // ✅ DADOS PARA NAVEGAÇÃO
-    data: {
-      url: notificationUrl,
-      cardId: data.data?.cardId,
-      categoria: data.data?.categoria,
-      isHeadsUp: true, // Flag para identificar que é heads-up
-      timestamp: new Date().toISOString(),
-    },
+    // Flag adicional para Android/Desktop
+    options.data.isHeadsUp = true;
+  } else {
+    // ✅ CONFIGURAÇÕES ESPECÍFICAS iOS
+    console.log("[SW] Aplicando configurações específicas para iOS");
+    // iOS tem limitações: não suporta vibrate, requireInteraction, actions customizadas
+    // Manter configurações mínimas e compatíveis
+  }
 
-    // ✅ CONFIGURAÇÕES ESPECÍFICAS ANDROID
-    // Alguns browsers Android precisam destas configurações extras
-    android: {
-      icon: data.icon || "assets/icons/icon-192x192.png",
-      badge: data.badge || "assets/icons/badge-72x72.png",
-      channelId: "tudu-heads-up", // Canal de notificação específico
-      vibrate: [300, 100, 400, 100, 400],
-    },
+  console.log("[SW] Opções da notificação:", options);
 
-    // ✅ CONFIGURAÇÕES ESPECÍFICAS IOS (se aplicável)
-    ios: {
-      sound: data.sound || "default",
-      badge: 1,
-    },
-  };
-
-  console.log("[SW] Opções da notificação (HEADS-UP):", options);
-
-  // 🔥 MOSTRA A NOTIFICAÇÃO COMO HEADS-UP
+  // 🔥 MOSTRA A NOTIFICAÇÃO
   event.waitUntil(
     self.registration
       .showNotification(data.title, options)
       .then(() => {
-        console.log("[SW] Heads-up notification exibida com sucesso!");
+        console.log(
+          `[SW] Notificação exibida com sucesso para ${
+            isIOS ? "iOS" : "Android/Desktop"
+          }!`
+        );
       })
       .catch((error) => {
-        console.error("[SW] Erro ao exibir heads-up:", error);
+        console.error("[SW] Erro ao exibir notificação:", error);
       })
   );
 });
 
 // ==========================
-//   CLICK NA NOTIFICAÇÃO HEADS-UP
+//   CLICK NA NOTIFICAÇÃO
 // ==========================
 self.addEventListener("notificationclick", (event) => {
-  console.log("[SW] Heads-up notification clicada:", event);
+  console.log("[SW] Notification clicada:", event);
 
   const notification = event.notification;
   const action = event.action;
@@ -104,12 +104,13 @@ self.addEventListener("notificationclick", (event) => {
 
   let urlToOpen = data.url || "https://use-tudu.com.br";
 
-  // ✅ TRATA DIFERENTES AÇÕES
+  // ✅ TRATA DIFERENTES AÇÕES (Android/Desktop)
   if (action === "view_card" && data.cardId) {
     urlToOpen = `/tudu-professional/card-details/${data.cardId}`;
   } else if (action === "open") {
     urlToOpen = "/tudu-professional/home";
   }
+  // No iOS, action geralmente é undefined (click direto)
 
   console.log("[SW] URL final que será aberta:", urlToOpen);
 
@@ -158,6 +159,19 @@ self.addEventListener("notificationclick", (event) => {
 //   FECHAR NOTIFICAÇÃO
 // ==========================
 self.addEventListener("notificationclose", (event) => {
-  console.log("[SW] Heads-up notification fechada:", event.notification);
+  console.log("[SW] Notification fechada:", event.notification);
   // Aqui você pode registrar analytics, etc.
+});
+
+// ==========================
+//   INSTALAÇÃO DO SERVICE WORKER
+// ==========================
+self.addEventListener("install", (event) => {
+  console.log("[SW] Service Worker instalado");
+  self.skipWaiting(); // Ativa imediatamente
+});
+
+self.addEventListener("activate", (event) => {
+  console.log("[SW] Service Worker ativado");
+  return self.clients.claim(); // Toma controle de todas as abas
 });

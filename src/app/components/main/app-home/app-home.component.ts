@@ -151,7 +151,7 @@ export class AppHomeComponent implements OnInit {
       console.warn('SwPush não habilitado');
       return;
     }
-    console.warn('passou  do SwPush step');
+    alert('passou  do SwPush step');
 
     try {
       console.log('INICIO Subscription:');
@@ -161,16 +161,16 @@ export class AppHomeComponent implements OnInit {
           serverPublicKey: this.VAPID_PUBLIC_KEY,
         })
         .then((sub) => {
-          console.log('Subscription criada:', sub);
+          alert('Subscription criada:' + sub);
 
           this.notificationService
             .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
             .subscribe(() => {
-              console.log('Subscription salva!');
+              alert('Subscription salva!');
             });
         });
     } catch (err) {
-      console.error('Erro ao criar subscription:', err);
+      alert('Erro ao criar subscription:' + err);
     }
   }
 

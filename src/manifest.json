@@ -5,6 +5,12 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ff007f",
+  "ios": {
+    "capable": true,
+    "status_bar_style": "black-translucent"
+  },
+  "prefer_related_applications": false,
+  "categories": ["business", "productivity"],
   "icons": [
     {
       "src": "assets/icons/icon-192x192.png",
@@ -15,6 +21,12 @@
       "src": "assets/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "assets/icons/icon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
