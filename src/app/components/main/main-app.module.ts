@@ -59,6 +59,7 @@ const routes: Routes = [
     MobileNegotiationBarModule,
     NgxCurrencyModule,
     RouterModule.forChild(routes),
+    
   ],
   exports: [FormatDateTimePipe],
 })

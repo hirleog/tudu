@@ -121,6 +121,7 @@ export class AppHomeComponent implements OnInit {
 
     if (permission === 'granted') {
       console.log('Permissão OK, agora o usuário pode ativar o Push.');
+      this.activatePush();
     } else {
       console.log('Usuário negou.');
     }
