@@ -92,7 +92,7 @@ self.addEventListener("push", (event) => {
   const baseOptions = {
     body: data.body || "Nova notificação",
     icon: data.icon || "/assets/icons/icon-192x192.png",
-    badge: data.badge || "/assets/icons/badge-72x72.png",
+    badge: data.badge || "/assets/icons/icon-192x192.png", // ✅ Usando icon-192 como badge
     tag: data.tag || "tudu-push-" + Date.now(),
     renotify: true,
     data: {
@@ -131,12 +131,12 @@ self.addEventListener("push", (event) => {
         {
           action: "open",
           title: "📱 Abrir App",
-          icon: "/assets/icons/open-72x72.png",
+          icon: "/assets/icons/icon-192x192.png", // ✅ Usando icon-192
         },
         {
           action: "view_card",
           title: "👀 Ver Pedido",
-          icon: "/assets/icons/eye-72x72.png",
+          icon: "/assets/icons/icon-192x192.png", // ✅ Usando icon-192
         },
       ],
       data: {
