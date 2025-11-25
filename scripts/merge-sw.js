@@ -30,7 +30,8 @@ if (!swPath) {
 
 console.log("✅ ngsw-worker.js encontrado em:", swPath);
 
-const customSwPath = path.join(distPath, "custom-sw.js");
+// ✅ CORREÇÃO: Buscar custom-sw.js na pasta src, não no dist
+const customSwPath = path.join(__dirname, "..", "src", "custom-sw.js");
 
 // Valida custom-sw.js
 if (!fs.existsSync(customSwPath)) {

@@ -9,6 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { CardSocketService } from 'src/app/services/card-socket.service';
 import { CardService } from 'src/app/services/card.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { PwaDebugService } from 'src/app/services/pwa-debug.service';
 import { StateManagementService } from 'src/app/services/state-management.service';
 
 @Component({
@@ -53,11 +54,9 @@ export class AppHomeComponent implements OnInit {
     private stateManagement: StateManagementService,
     private swPush: SwPush,
     private notificationService: NotificationService,
-    public authService: AuthService
+    public authService: AuthService,
+    private pwaDebug: PwaDebugService
   ) {
-    this.askNotificationPermission();
-    this.activatePush();
-
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
 
@@ -83,6 +82,7 @@ export class AppHomeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.pwaDebug.debugPWA();
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     this.cardSocketService.ouvirAlertaNovaCandidatura().subscribe((data) => {
@@ -115,6 +115,9 @@ export class AppHomeComponent implements OnInit {
       this.cleanActualRoute();
     });
     this.flowNavigate();
+
+    this.askNotificationPermission();
+    this.activatePush();
   }
 
   async askNotificationPermission(): Promise<boolean> {
