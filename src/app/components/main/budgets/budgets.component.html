@@ -192,11 +192,9 @@
             "
             (click)="updateCard(card, 'recusar', candidatura.prestador_id)"
           >
-            Recusar
-            <span
-              *ngIf="!processingBudget"
-              style="color: white !important"
-            ></span>
+            <span *ngIf="!processingBudget" style="color: var(--primary)"
+              >Recusar</span
+            >
             <span
               *ngIf="processingBudget"
               class="flex items-center justify-center"

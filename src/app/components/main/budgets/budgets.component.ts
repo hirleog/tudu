@@ -59,6 +59,11 @@ export class BudgetsComponent implements OnInit {
       next: (data: any) => {
         const candidaturas = data.candidaturas || [];
 
+        if (candidaturas.length === 0) {
+          this.route.navigate(['/home']);
+          return;
+        }
+
         // Primeiro monta o card com ícone e candidaturas
         this.card = {
           ...data,

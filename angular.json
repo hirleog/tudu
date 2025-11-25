@@ -37,6 +37,11 @@
                 "glob": "service-worker.js",
                 "input": "src",
                 "output": "/"
+              },
+              {
+                "glob": "ngsw-worker.js",
+                "input": "src",
+                "output": "/"
               }
             ],
             "styles": ["src/styles.css", "node_modules/aos/dist/aos.css"],

@@ -129,7 +129,10 @@ export class CardDetailComponent implements OnInit {
         );
 
         // Se já existe candidatura, redireciona para home/proposta
-        if (this.temCandidaturaDoPrestadorLogado && !this.isProfessionalIndicator) {
+        if (
+          this.temCandidaturaDoPrestadorLogado &&
+          !this.isProfessionalIndicator
+        ) {
           this.goToHomeSeeProposal();
         }
       },
@@ -141,31 +144,23 @@ export class CardDetailComponent implements OnInit {
   updateCard(card: CardOrders): Observable<CardOrders> {
     this.isLoadingBtn = true;
 
-    const dateTime = `${this.dateSelected} - ${this.timeSelected}`;
+    const dateTime = this.dateTimeSelected;
 
     // CORREÇÃO: Verificar se a data e hora são válidas antes de formatar
     let horario_negociado_formatted = null;
 
-    if (this.dateSelected && this.timeSelected) {
+    if (dateTime) {
       const momentDate = moment(dateTime, 'DD/MM/YYYY - HH:mm');
 
       // Verificar se a data é válida
       if (momentDate.isValid()) {
         horario_negociado_formatted = momentDate.format('YYYY-MM-DD HH:mm');
       } else {
-        console.error('Data ou hora inválida:', dateTime);
-        // Usar o horário original do card como fallback
         horario_negociado_formatted = card.horario_preferencial;
       }
     } else {
-      // Se não há data/hora selecionada, usar o horário original
       horario_negociado_formatted = card.horario_preferencial;
     }
-
-    // // Obtém a candidatura do prestador atual (se existir)
-    // const candidaturaAtual = card.candidaturas?.find(
-    //   (c) => c.prestador_id === this.id_prestador
-    // );
 
     const valor = formatDecimal(Number(card.valor));
     const valorNegociadoRaw = formatDecimal(Number(this.priceNegotiated));

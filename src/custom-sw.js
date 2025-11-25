@@ -1,5 +1,5 @@
 // ==========================
-//   MENSAGEM PARA CLIENTE
+//   MENSAGEM PARA CLIENTE + INSTALAÇÃO ANDROID
 // ==========================
 self.addEventListener("message", (event) => {
   console.log("[SW] Mensagem recebida do cliente:", event.data);
@@ -7,6 +7,13 @@ self.addEventListener("message", (event) => {
   if (event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
   }
+});
+
+// ✅ EVENTO DE INSTALAÇÃO PWA ANDROID
+self.addEventListener("beforeinstallprompt", (event) => {
+  console.log("[SW] 📱 PWA install prompt disponível para Android");
+  event.preventDefault();
+  self.deferredPrompt = event;
 });
 
 // ==========================
@@ -20,6 +27,28 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   console.log("[SW] Service Worker ativado - assumindo controle");
   event.waitUntil(self.clients.claim()); // Toma controle de todas as abas
+});
+
+// ==========================
+//   CACHE PARA OFFLINE (ANDROID)
+// ==========================
+const CACHE_NAME = "tudu-v1";
+const urlsToCache = [
+  "/",
+  "/assets/icons/icon-192x192.png",
+  "/assets/icons/icon-512x512.png",
+];
+
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      // Cache hit - return response
+      if (response) {
+        return response;
+      }
+      return fetch(event.request);
+    })
+  );
 });
 
 // ==========================
@@ -53,17 +82,11 @@ self.addEventListener("push", (event) => {
   // ✅ DETECÇÃO DE PLATAFORMA MAIS PRECISA
   const userAgent = navigator.userAgent || self.clientUserAgent || "";
   const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+  const isAndroid = /Android/.test(userAgent);
   const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
   const isOpera = /Opera Mini|OPiOS/.test(userAgent);
 
-  console.log(
-    "[SW] Plataforma detectada - iOS:",
-    isIOS,
-    "Safari:",
-    isSafari,
-    "Opera:",
-    isOpera
-  );
+  console.log("[SW] Plataforma:", { isIOS, isAndroid, isSafari, isOpera });
 
   // 🔥 CONFIGURAÇÃO BASE PARA TODAS AS PLATAFORMAS
   const baseOptions = {
@@ -77,7 +100,7 @@ self.addEventListener("push", (event) => {
       cardId: data.data?.cardId,
       categoria: data.data?.categoria,
       timestamp: new Date().toISOString(),
-      platform: isIOS ? "ios" : isSafari ? "safari" : "android",
+      platform: isIOS ? "ios" : isAndroid ? "android" : "desktop",
     },
   };
 
@@ -85,13 +108,10 @@ self.addEventListener("push", (event) => {
 
   // ✅ CONFIGURAÇÕES ESPECÍFICAS POR PLATAFORMA
   if (isIOS || isSafari) {
-    // 🍎 CONFIGURAÇÕES iOS/SAFARI (MAIS RESTRITAS)
+    // 🍎 CONFIGURAÇÕES iOS/SAFARI
     console.log("[SW] Aplicando configurações iOS/Safari");
-
-    // iOS/Safari ignoram muitas opções, manter mínimo
     finalOptions = {
       ...baseOptions,
-      // iOS pode suportar actions básicas, testar
       actions: data.actions || [
         {
           action: "open",
@@ -99,10 +119,9 @@ self.addEventListener("push", (event) => {
         },
       ],
     };
-  } else {
-    // 🤖 CONFIGURAÇÕES ANDROID/DESKTOP (COMPLETAS)
-    console.log("[SW] Aplicando configurações Android/Desktop");
-
+  } else if (isAndroid) {
+    // 🤖 CONFIGURAÇÕES ANDROID
+    console.log("[SW] Aplicando configurações Android");
     finalOptions = {
       ...baseOptions,
       requireInteraction: true,
@@ -126,12 +145,28 @@ self.addEventListener("push", (event) => {
         supportsActions: true,
       },
     };
+  } else {
+    // 🖥️ CONFIGURAÇÕES DESKTOP
+    console.log("[SW] Aplicando configurações Desktop");
+    finalOptions = {
+      ...baseOptions,
+      requireInteraction: true,
+      actions: [
+        {
+          action: "open",
+          title: "🌐 Abrir Site",
+        },
+        {
+          action: "view_card",
+          title: "👀 Ver Pedido",
+        },
+      ],
+    };
   }
 
   // 🎯 CONFIGURAÇÕES ESPECIAIS PARA OPERA MINI
   if (isOpera) {
     console.log("[SW] Aplicando configurações Opera Mini");
-    // Opera Mini tem limitações extremas
     finalOptions.actions = undefined;
     finalOptions.vibrate = undefined;
     finalOptions.requireInteraction = false;
@@ -146,12 +181,13 @@ self.addEventListener("push", (event) => {
       .then(() => {
         console.log(`[SW] ✅ Notificação exibida com sucesso!`);
 
-        // ✅ ENVIAR CONFIRMAÇÃO PARA O CLIENTE (opcional)
+        // ✅ ENVIAR CONFIRMAÇÃO PARA O CLIENTE
         self.clients.matchAll().then((clients) => {
           clients.forEach((client) => {
             client.postMessage({
               type: "NOTIFICATION_DISPLAYED",
               payload: data,
+              platform: isAndroid ? "android" : isIOS ? "ios" : "desktop",
               timestamp: new Date().toISOString(),
             });
           });
@@ -198,7 +234,7 @@ self.addEventListener("notificationclick", (event) => {
   } else if (action === "open") {
     urlToOpen = "/tudu-professional/home";
   } else if (!action) {
-    // Click direto na notificação (iOS/Safari)
+    // Click direto na notificação
     if (data.cardId) {
       urlToOpen = `/tudu-professional/card-details/${data.cardId}`;
     } else {
@@ -243,7 +279,6 @@ self.addEventListener("notificationclick", (event) => {
       })
       .catch((error) => {
         console.error("[SW] ❌ Erro ao abrir URL:", error);
-        // Fallback absoluto
         return clients.openWindow("https://use-tudu.com.br");
       })
   );
@@ -255,7 +290,6 @@ self.addEventListener("notificationclick", (event) => {
 self.addEventListener("notificationclose", (event) => {
   console.log("[SW] Notification fechada:", event.notification);
 
-  // 📊 Analytics: registrar fechamento de notificação
   const data = event.notification.data || {};
   console.log(
     "[SW] Notificação fechada - Duração:",
@@ -264,7 +298,7 @@ self.addEventListener("notificationclose", (event) => {
 });
 
 // ==========================
-//   BACKGROUND SYNC (FUTURO)
+//   BACKGROUND SYNC
 // ==========================
 self.addEventListener("sync", (event) => {
   console.log("[SW] Background sync:", event.tag);
@@ -275,6 +309,6 @@ self.addEventListener("sync", (event) => {
 });
 
 async function doBackgroundSync() {
-  // Implementar sync de notificações pendentes
   console.log("[SW] Executando background sync...");
+  // Implementar sync de notificações pendentes
 }
