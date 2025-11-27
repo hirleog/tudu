@@ -77,7 +77,7 @@ export class AppComponent implements OnInit {
         this.setupButton = document.getElementById('setup_button');
       }
       // Show the setup button
-      this.setupButton.style.display = 'inline';
+      // this.setupButton.style.display = 'inline';
       this.setupButton.disabled = false;
     });
 

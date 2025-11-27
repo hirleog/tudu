@@ -18,6 +18,7 @@ import { FinishHireButtonComponent } from './card-detail/finish-hire-button/fini
 import { MobileNegotiationBarModule } from '../templates/mobile-negotiation-bar/mobile-negotiation-bar.module';
 import { NgxCurrencyModule } from 'ngx-currency';
 import { TuduComponentsModule } from 'tudu-components';
+import { NotificationViewComponent } from '../notification-view/notification-view.component';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -28,7 +29,7 @@ const routes: Routes = [
   { path: 'detail', component: CardDetailComponent },
   { path: 'order-help', component: OrderHelpComponent },
 
-  // { path: 'profile', component: ProfileComponent },
+  { path: 'notifications', component: NotificationViewComponent },
   // { path: 'profile-detail', component: ProfileDetailComponent },
 
   { path: 'end', component: FlowEndComponent },
@@ -44,6 +45,7 @@ const routes: Routes = [
     FlowEndComponent,
     OrderHelpComponent,
     FinishHireButtonComponent,
+    NotificationViewComponent,
     // ProfileComponent,
     // ProfileDetailComponent,
 
@@ -59,7 +61,6 @@ const routes: Routes = [
     MobileNegotiationBarModule,
     NgxCurrencyModule,
     RouterModule.forChild(routes),
-    
   ],
   exports: [FormatDateTimePipe],
 })

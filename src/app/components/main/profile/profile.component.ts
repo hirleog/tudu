@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
-import { NotificationService } from 'src/app/services/notification.service';
+import { NotificationPushService } from 'src/app/services/notification-push.service';
 import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 
 @Component({
@@ -30,7 +30,7 @@ export class ProfileComponent implements OnInit {
     public authService: AuthService,
     private router: Router,
     private profileDetailService: ProfileDetailService,
-    private notificationService: NotificationService
+    private notificationPushService: NotificationPushService
   ) {
     this.router.events.subscribe(() => {
       this.isProfessional = this.router.url.includes('professional');
@@ -226,7 +226,7 @@ export class ProfileComponent implements OnInit {
   // qualquer.component.ts
   async enableNotifications() {
     try {
-      await this.notificationService.activatePushSimple();
+      await this.notificationPushService.activatePushSimple();
       console.log('✅ Notificações ativadas com sucesso!');
     } catch (error) {
       console.error('❌ Erro:', error);
