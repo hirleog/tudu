@@ -8,8 +8,8 @@ import { CardOrders } from 'src/app/interfaces/card-orders';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardSocketService } from 'src/app/services/card-socket.service';
 import { CardService } from 'src/app/services/card.service';
-import { NotificationService } from 'src/app/services/notification.service';
-import { PwaDebugService } from 'src/app/services/pwa-debug.service';
+import { NotificationPushService } from 'src/app/services/notification-push.service';
+import { NotificationViewService } from 'src/app/services/notification-view.service';
 import { StateManagementService } from 'src/app/services/state-management.service';
 
 @Component({
@@ -20,6 +20,8 @@ import { StateManagementService } from 'src/app/services/state-management.servic
 export class AppHomeComponent implements OnInit {
   readonly VAPID_PUBLIC_KEY =
     'BETOn-pGBaW59qF-RFin_fUGfJmZshZFIg2KynwJUDfCEg5mon6iRE6hdPTxplYV5lCKWuupLAGz56V9OSecgA4';
+
+  unreadCount$ = this.notificationViewService.unreadCount$;
 
   headerPageOptions: string[] = [];
   overlay: boolean = false;
@@ -53,9 +55,9 @@ export class AppHomeComponent implements OnInit {
     private location: Location,
     private stateManagement: StateManagementService,
     private swPush: SwPush,
-    private notificationService: NotificationService,
+    private notificationPushService: NotificationPushService,
     public authService: AuthService,
-    private pwaDebug: PwaDebugService
+    private notificationViewService: NotificationViewService
   ) {
     this.cards.forEach((card) => {
       let dateTimeFormatted: string = '';
@@ -79,11 +81,15 @@ export class AppHomeComponent implements OnInit {
     });
 
     this.id_prestador = localStorage.getItem('prestador_id');
+    this.clienteId = localStorage.getItem('cliente_id');
   }
 
   ngOnInit(): void {
-    this.pwaDebug.debugPWA();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    this.notificationViewService.unreadCount$.subscribe((count) => {
+      console.log('Contador no componente:', count);
+    });
 
     this.cardSocketService.ouvirAlertaNovaCandidatura().subscribe((data) => {
       console.log(`Nova candidatura recebida:`, data);
@@ -209,10 +215,10 @@ export class AppHomeComponent implements OnInit {
 
     if (this.authService.isClienteLoggedIn()) {
       clienteId = await firstValueFrom(this.authService.idCliente$);
-      console.log('👤 Cliente ID:', clienteId);
+      this.notificationViewService.setCurrentUser(clienteId, undefined);
     } else if (this.authService.isPrestadorLoggedIn()) {
       prestadorId = await firstValueFrom(this.authService.idPrestador$);
-      console.log('👷 Prestador ID:', prestadorId);
+      this.notificationViewService.setCurrentUser(undefined, prestadorId);
     }
 
     console.warn('SwPush step');
@@ -232,7 +238,7 @@ export class AppHomeComponent implements OnInit {
         .then((sub) => {
           console.log('Subscription criada:' + sub);
 
-          this.notificationService
+          this.notificationPushService
             .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
             .subscribe(() => {
               console.log('Subscription salva!');
@@ -256,7 +262,7 @@ export class AppHomeComponent implements OnInit {
 
   //     console.log('Subscription criada:', sub);
 
-  //     this.notificationService
+  //     this.notificationPushService
   //       .sendSubscriptionToServer(sub.toJSON())
   //       .subscribe(() => console.log('Subscription salva no servidor'));
   //   } catch (err) {
@@ -268,7 +274,7 @@ export class AppHomeComponent implements OnInit {
     this.loading = true;
     this.result = null;
 
-    this.notificationService
+    this.notificationPushService
       .sendTest(this.clienteId, this.prestadorId)
       .subscribe({
         next: (res) => {

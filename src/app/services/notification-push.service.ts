@@ -12,7 +12,7 @@ export interface PushActivationResult {
   error?: any;
 }
 @Injectable({ providedIn: 'root' })
-export class NotificationService {
+export class NotificationPushService {
   readonly vapidPublicKey =
     'BETOn-pGBaW59qF-RFin_fUGfJmZshZFIg2KynwJUDfCEg5mon6iRE6hdPTxplYV5lCKWuupLAGz56V9OSecgA4';
 

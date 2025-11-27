@@ -1,0 +1,195 @@
+<lib-nav>
+  <div left-content>
+    <a routerLink="/home" class="transition-colors mr-3">
+      <i
+        style="color: var(--light) !important"
+        class="fas fa-arrow-left text-2xl"
+      ></i>
+    </a>
+  </div>
+
+  <div central-content>
+    <a routerLink="/" class="block">
+      <img
+        src="../../../assets/logo-branco.webp"
+        style="width: 4em"
+        class="logo-responsive"
+        alt="error"
+      />
+    </a>
+  </div>
+
+  <div right-content>
+    <!-- Versão mais compatível -->
+    <!-- <button
+      [routerLink]="['/home/notifications']"
+      routerLinkActive="router-link-active"
+      class="relative p-2 text-gray-600 hover:text-gray-900 transition-colors"
+    >
+      <svg
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+        ></path>
+      </svg>
+
+      <ng-container *ngIf="unreadCount$ | async as count">
+        <span
+          *ngIf="count > 0"
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+        >
+          {{ count > 99 ? "99+" : count }}
+        </span>
+      </ng-container>
+    </button> -->
+  </div>
+</lib-nav>
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-sm">
+  <!-- Header -->
+  <div class="flex items-center justify-between p-4 border-b border-gray-200">
+    <h2 class="text-lg font-semibold text-gray-900">Notificações</h2>
+
+    <!-- <button
+      *ngIf="notifications.length > 0"
+      (click)="markAllAsRead()"
+      class="text-sm text-blue-600 hover:text-blue-800 font-medium transition-colors"
+    >
+      Marcar todas como lidas
+    </button> -->
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading && notifications.length === 0" class="p-8 text-center">
+    <div
+      class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"
+    ></div>
+    <p class="mt-2 text-sm text-gray-600">Carregando notificações...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && notifications.length === 0" class="p-8 text-center">
+    <div class="text-gray-400 mb-4">
+      <svg
+        class="w-16 h-16 mx-auto"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="1"
+          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+        ></path>
+      </svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900 mb-2">Nenhuma notificação</h3>
+    <p class="text-sm text-gray-600">Você não tem notificações no momento.</p>
+  </div>
+
+  <!-- Notifications List -->
+  <div *ngIf="notifications.length > 0" class="divide-y divide-gray-100">
+    <div
+      *ngFor="
+        let group of getGroupedNotificationsArray();
+        trackBy: trackByGroupDate
+      "
+    >
+      <!-- Date Group Header -->
+      <div class="px-4 py-2 bg-gray-50 border-b border-gray-100">
+        <h3 class="text-sm font-medium text-gray-700">{{ group.key }}</h3>
+      </div>
+
+      <!-- Notifications in Group -->
+      <div
+        *ngFor="
+          let notification of group.notifications;
+          trackBy: trackByNotificationId
+        "
+        (click)="navigateToNotification(notification)"
+        [class.bg-blue-50]="!notification.read"
+        [class.font-semibold]="!notification.read"
+        class="p-4 hover:bg-gray-50 transition-colors cursor-pointer border-b border-gray-100 last:border-b-0"
+      >
+        <div class="flex items-start space-x-3">
+          <!-- Icon -->
+          <div
+            *ngIf="notification.icon"
+            class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center"
+          >
+            <span class="text-blue-600 text-sm font-medium">
+              <img [src]="notification.icon" alt="" />
+            </span>
+          </div>
+
+          <!-- Content -->
+          <div class="flex-1 min-w-0">
+            <h4
+              [class.font-semibold]="!notification.read"
+              [class.font-normal]="notification.read"
+              class="text-sm text-gray-900 mb-1"
+            >
+              {{ notification.title }}
+            </h4>
+            <p class="text-sm text-gray-600 mb-2">
+              {{ notification.body }}
+            </p>
+            <span class="text-xs text-gray-500">
+              {{ notification.createdAt | date : "HH:mm" }}
+            </span>
+          </div>
+
+          <!-- Unread Indicator -->
+          <div class="flex-shrink-0 flex items-center h-5">
+            <button
+              *ngIf="!notification.read"
+              (click)="markAsRead(notification, $event)"
+              class="w-2 h-2 rounded-full bg-blue-600 hover:bg-blue-800 transition-colors"
+              title="Marcar como lida"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load More -->
+    <div *ngIf="hasMore" class="p-4 text-center">
+      <button
+        (click)="loadMore()"
+        [disabled]="loading"
+        class="w-full py-2 px-4 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      >
+        <span *ngIf="loading" class="flex items-center justify-center">
+          <svg
+            class="animate-spin -ml-1 mr-2 h-4 w-4 text-gray-700"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Carregando...
+        </span>
+        <span *ngIf="!loading">Carregar mais notificações</span>
+      </button>
+    </div>
+  </div>
+</div>
