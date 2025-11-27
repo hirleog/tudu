@@ -1,7 +1,7 @@
 // src/app/components/notifications/notification-view.component.ts
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subject, Subscription } from 'rxjs';
+import { Subject, Subscription, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AuthService } from 'src/app/services/auth.service';
 import {
@@ -35,6 +35,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
   limit = 20;
 
   private destroy$ = new Subject<void>();
+  private autoRefreshSubscription?: Subscription;
 
   constructor(
     private notificationViewService: NotificationViewService,
@@ -69,10 +70,11 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.loadNotifications();
+    this.startAutoRefresh();
 
     // Debug do contador
     this.notificationViewService.unreadCount$.subscribe((count) => {
-      console.log('Contador no componente:', count);
+      console.log('🔔 Contador no componente:', count);
     });
   }
 
@@ -81,14 +83,53 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
     this.subscriptionCliente.unsubscribe();
     this.subscriptionPrestador.unsubscribe();
+    this.stopAutoRefresh();
   }
 
-  loadNotifications(loadMore: boolean = false): void {
+  // ✅ AUTO-REFRESH A CADA 30 SEGUNDOS
+  private startAutoRefresh(): void {
+    this.autoRefreshSubscription = interval(30000) // 30 segundos
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        if (this.notificationViewService.shouldRefresh()) {
+          console.log('🔄 Auto-refresh das notificações');
+          this.loadNotifications(true); // força refresh
+          this.notificationViewService.loadUnreadCount(true);
+        }
+      });
+  }
+
+  private stopAutoRefresh(): void {
+    if (this.autoRefreshSubscription) {
+      this.autoRefreshSubscription.unsubscribe();
+    }
+  }
+
+  // ✅ ATUALIZA QUANDO A PÁGINA FICA VISÍVEL
+  @HostListener('window:focus')
+  onWindowFocus() {
+    console.log('👀 Página em foco - atualizando notificações');
+    this.notificationViewService.forceRefresh();
+  }
+
+  // ✅ ATUALIZA QUANDO O USUÁRIO VOLTA PARA A PÁGINA
+  @HostListener('window:visibilitychange')
+  onVisibilityChange() {
+    if (!document.hidden) {
+      console.log('📱 Página visível - atualizando notificações');
+      this.notificationViewService.forceRefresh();
+    }
+  }
+
+  loadNotifications(
+    loadMore: boolean = false,
+    forceRefresh: boolean = false
+  ): void {
     if (this.loading) return;
 
     this.loading = true;
 
-    if (!loadMore) {
+    if (!loadMore || forceRefresh) {
       this.currentPage = 1;
       this.notifications = [];
     }
@@ -98,14 +139,20 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
     const idPrestador =
       this.prestadorIsLogged && this.prestadorId ? this.prestadorId : undefined;
 
-    console.log('Carregando notificações para:', { idCliente, idPrestador });
+    console.log('📨 Carregando notificações para:', { idCliente, idPrestador });
 
     this.notificationViewService
-      .getNotifications(this.currentPage, this.limit, idCliente, idPrestador)
+      .getNotifications(
+        this.currentPage,
+        this.limit,
+        idCliente,
+        idPrestador,
+        forceRefresh
+      )
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          if (loadMore) {
+          if (loadMore && !forceRefresh) {
             this.notifications = [
               ...this.notifications,
               ...response.notifications,
@@ -119,10 +166,10 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
           this.currentPage++;
           this.loading = false;
 
-          console.log('Notificações carregadas:', this.notifications.length);
+          console.log('✅ Notificações carregadas:', this.notifications.length);
         },
         error: (err) => {
-          console.error('Erro ao carregar notificações:', err);
+          console.error('❌ Erro ao carregar notificações:', err);
           this.loading = false;
         },
       });
@@ -145,7 +192,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
 
-    console.log('Tentando marcar como lida:', notification.id);
+    console.log('🖱️ Tentando marcar como lida:', notification.id);
 
     if (!notification.read) {
       this.notificationViewService
@@ -153,16 +200,16 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            console.log('Sucesso - notificação marcada como lida');
+            console.log('✅ Sucesso - notificação marcada como lida');
             notification.read = true;
             this.notificationViewService.decrementUnreadCount();
           },
           error: (err) => {
-            console.error('Erro ao marcar como lida:', err);
+            console.error('❌ Erro ao marcar como lida:', err);
           },
         });
     } else {
-      console.log('Notificação já estava lida');
+      console.log('ℹ️ Notificação já estava lida');
     }
   }
 
@@ -180,17 +227,17 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
           this.notifications.forEach(
             (notification) => (notification.read = true)
           );
-          console.log('Todas as notificações marcadas como lidas');
+          console.log('✅ Todas as notificações marcadas como lidas');
         },
         error: (err) => {
-          console.error('Erro ao marcar todas como lidas:', err);
+          console.error('❌ Erro ao marcar todas como lidas:', err);
         },
       });
   }
 
   navigateToNotification(notification: Notification): void {
     console.log(
-      'Clicou na notificação:',
+      '🔗 Clicou na notificação:',
       notification.id,
       'Lida?',
       notification.read
@@ -198,7 +245,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
 
     this.markAsRead(notification);
 
-    console.log('Após markAsRead - Lida?', notification.read);
+    console.log('📝 Após markAsRead - Lida?', notification.read);
 
     if (notification.url) {
       this.router.navigate([notification.url]);
@@ -209,6 +256,13 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
     if (this.hasMore && !this.loading) {
       this.loadNotifications(true);
     }
+  }
+
+  // ✅ NOVO MÉTODO: Força refresh manual
+  forceRefresh(): void {
+    console.log('🔄 Forçando refresh manual');
+    this.loadNotifications(false, true);
+    this.notificationViewService.forceRefresh();
   }
 
   trackByNotificationId(index: number, notification: Notification): number {

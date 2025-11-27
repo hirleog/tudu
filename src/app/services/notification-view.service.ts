@@ -37,9 +37,10 @@ export class NotificationViewService {
   private readNotifications = new Set<number>();
   private currentClienteId?: string;
   private currentPrestadorId?: string;
+  private lastLoadTime: number = 0;
+  private readonly CACHE_DURATION = 30000; // 30 segundos
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   // Método para configurar o usuário atual
   setCurrentUser(clienteId?: string, prestadorId?: string): void {
@@ -48,18 +49,20 @@ export class NotificationViewService {
     console.log('Usuário configurado:', { clienteId, prestadorId });
 
     // CARREGA O CONTADOR APÓS CONFIGURAR O USUÁRIO
-    this.loadUnreadCount();
+    this.loadUnreadCount(true); // força recarregar
   }
 
   getNotifications(
     page: number = 1,
     limit: number = 20,
     clienteId?: string,
-    prestadorId?: string
+    prestadorId?: string,
+    forceRefresh: boolean = false
   ): Observable<NotificationsResponse> {
     let params = new HttpParams()
       .set('page', page.toString())
-      .set('limit', limit.toString());
+      .set('limit', limit.toString())
+      .set('_t', Date.now().toString()); // ✅ FORÇA CACHE BUSTING
 
     // Usa os IDs passados ou os configurados
     const finalClienteId = clienteId || this.currentClienteId;
@@ -73,13 +76,14 @@ export class NotificationViewService {
       params = params.set('prestadorId', finalPrestadorId);
     }
 
-    console.log('Buscando notificações com params:', params.toString());
+    console.log('📨 Buscando notificações com cache busting');
 
     return this.http.get<NotificationsResponse>(this.apiUrl, { params }).pipe(
       map((response) => {
         response.notifications = this.groupNotificationsByDate(
           response.notifications
         );
+        this.lastLoadTime = Date.now();
         return response;
       })
     );
@@ -90,6 +94,8 @@ export class NotificationViewService {
       tap(() => {
         this.readNotifications.add(notificationId);
         this.decrementUnreadCount();
+        // ✅ FORÇA ATUALIZAÇÃO DO CONTADOR APÓS MARCAR COMO LIDA
+        setTimeout(() => this.loadUnreadCount(true), 500);
       })
     );
   }
@@ -103,20 +109,27 @@ export class NotificationViewService {
     return this.http.post(`${this.apiUrl}/mark-all-read`, body).pipe(
       tap(() => {
         this.unreadCountSubject.next(0);
-        // Recarrega para garantir sincronização
-        setTimeout(() => this.loadUnreadCount(), 100);
+        // ✅ FORÇA RECARREGAR O CONTADOR
+        setTimeout(() => this.loadUnreadCount(true), 500);
       })
     );
   }
 
-  loadUnreadCount(): void {
-    // Só carrega se tiver um usuário configurado
-    if (!this.currentClienteId && !this.currentPrestadorId) {
-      console.log('Aguardando configuração do usuário...');
+  loadUnreadCount(force: boolean = false): void {
+    // ✅ VERIFICA CACHE - só recarrega se for forçado ou passou o tempo
+    const now = Date.now();
+    if (!force && now - this.lastLoadTime < this.CACHE_DURATION) {
+      console.log('♻️ Usando cache do contador');
       return;
     }
 
-    let params = new HttpParams();
+    // Só carrega se tiver um usuário configurado
+    if (!this.currentClienteId && !this.currentPrestadorId) {
+      console.log('⏳ Aguardando configuração do usuário...');
+      return;
+    }
+
+    let params = new HttpParams().set('_t', now.toString()); // ✅ CACHE BUSTING
 
     if (this.currentClienteId) {
       params = params.set('clienteId', this.currentClienteId);
@@ -126,26 +139,39 @@ export class NotificationViewService {
       params = params.set('prestadorId', this.currentPrestadorId);
     }
 
-    console.log('Carregando contador com params:', params.toString());
+    console.log('🔄 Carregando contador com cache busting');
 
     this.http
       .get<{ count: number }>(`${this.apiUrl}/count/unread`, { params })
       .subscribe({
         next: (response) => {
-          console.log('Contador de não lidas do servidor:', response.count);
+          console.log('✅ Contador de não lidas do servidor:', response.count);
           this.unreadCountSubject.next(response.count);
+          this.lastLoadTime = now;
         },
         error: (err) => {
-          console.error('Erro ao carregar contador de não lidas:', err);
+          console.error('❌ Erro ao carregar contador de não lidas:', err);
         },
       });
+  }
+
+  // ✅ NOVO MÉTODO: Força atualização completa
+  forceRefresh(): void {
+    console.log('🔄 Forçando atualização completa das notificações');
+    this.lastLoadTime = 0;
+    this.loadUnreadCount(true);
+  }
+
+  // ✅ NOVO MÉTODO: Verifica se precisa atualizar
+  shouldRefresh(): boolean {
+    return Date.now() - this.lastLoadTime > this.CACHE_DURATION;
   }
 
   getUnreadNotifications(
     clienteId?: string,
     prestadorId?: string
   ): Observable<Notification[]> {
-    let params = new HttpParams();
+    let params = new HttpParams().set('_t', Date.now().toString()); // ✅ CACHE BUSTING
 
     if (clienteId) params = params.set('clienteId', clienteId);
     if (prestadorId) params = params.set('prestadorId', prestadorId);
@@ -224,7 +250,7 @@ export class NotificationViewService {
     const currentCount = this.unreadCountSubject.value;
     if (currentCount > 0) {
       this.unreadCountSubject.next(currentCount - 1);
-      console.log('Contador decrementado para:', currentCount - 1);
+      console.log('➖ Contador decrementado para:', currentCount - 1);
     }
   }
 
