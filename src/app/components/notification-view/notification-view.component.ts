@@ -162,8 +162,8 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
   }
 
   // ✅ NAVEGAÇÃO INTELIGENTE BASEADA NO TIPO DE USUÁRIO
-  navigateToNotification(notification: Notification): void {
-    const statusTitle = notification.title.toLowerCase();
+  navigateToNotification(notification: any): void {
+    const statusTitle = notification.title?.toLowerCase() || '';
     const status = notification.status?.toLowerCase(); // Novo campo status
 
     this.markAsRead(notification);
@@ -181,11 +181,12 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
       // ✅ PRESTADOR: Lógica baseada no STATUS
       switch (status) {
         case 'new_card':
+          console.log('🎯 Prestador - Novo pedido disponível');
           this.router.navigate(['home/detail'], {
             queryParams: {
               param: 'professional',
               id: notification.id_pedido,
-              flow: 'publicado',
+              flow: 'disponivel',
             },
           });
           break;
@@ -197,6 +198,17 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               param: 'professional',
               id: notification.id_pedido,
               flow: 'contratado',
+            },
+          });
+          break;
+
+        case 'service_completed':
+          console.log('✅ Prestador - Serviço finalizado');
+          this.router.navigate(['home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'finalizado',
             },
           });
           break;
@@ -214,14 +226,8 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
 
         case 'card_cancelled':
           console.log('❌ Prestador - Card cancelado');
-
-          this.router.navigate(['home/detail'], {
-            queryParams: {
-              param: 'professional',
-              id: notification.id_pedido,
-              flow: 'historic',
-            },
-          });
+          // Não navega, apenas marca como lida
+          console.log('Card cancelado - mantém na tela atual');
           break;
 
         case 'contract_cancelled':
@@ -239,6 +245,18 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
           if (statusTitle.includes('cancelado')) {
             console.log('⚠️ Prestador - Fallback para notificação cancelada');
             return;
+          } else if (
+            statusTitle.includes('finalizado') ||
+            statusTitle.includes('concluído')
+          ) {
+            console.log('✅ Prestador - Fallback para serviço finalizado');
+            this.router.navigate(['home/detail'], {
+              queryParams: {
+                param: 'professional',
+                id: notification.id_pedido,
+                flow: 'finalizado',
+              },
+            });
           } else {
             console.log('🔍 Prestador - Status não mapeado, usando fallback');
             this.router.navigate(['home/detail'], {
@@ -283,6 +301,16 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
           });
           break;
 
+        case 'service_completed':
+          console.log('✅ Cliente - Serviço concluído');
+          this.router.navigate(['/home/budgets'], {
+            queryParams: {
+              id: notification.id_pedido,
+              flow: 'finalizado',
+            },
+          });
+          break;
+
         case 'candidature_cancelled':
           console.log('📝 Cliente - Candidatura cancelada pelo prestador');
           this.router.navigate(['/home/budgets'], {
@@ -314,6 +342,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             '🔍 Cliente - Status não mapeado, usando fallback por título'
           );
           let flow = 'publicado';
+
           if (
             statusTitle.includes('atualizada') ||
             statusTitle.includes('nova')
@@ -321,6 +350,11 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             flow = 'publicado';
           } else if (statusTitle.includes('confirmada')) {
             flow = 'andamento';
+          } else if (
+            statusTitle.includes('finalizado') ||
+            statusTitle.includes('concluído')
+          ) {
+            flow = 'finalizado';
           }
 
           this.router.navigate(['/home/budgets'], {
