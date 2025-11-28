@@ -167,61 +167,74 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
       id: notification.id,
       id_pedido: notification.id_pedido,
       userType: this.userType,
+      title: notification.title, // ✅ ADICIONA O TÍTULO PARA DEBUG
     });
 
     this.markAsRead(notification);
 
-    if (notification.id_pedido) {
-      // ✅ DETERMINA A ROTA BASEADA NO TIPO DE USUÁRIO
-      let route: string;
-      let flow: string;
-      let param: string = ''; // ✅ NOVA VARIÁVEL PARA O PARAM
-
-      if (this.isPrestador) {
-        // Prestador vai para a rota profissional
-        route = 'home/detail';
-        flow = 'recusado';
-        param = 'professional'; // ✅ ADICIONA O PARAM PARA PRESTADOR
-        console.log('👷 Prestador navegando para área profissional');
-      } else {
-        // Cliente vai para a rota normal
-        route = '/home/budgets';
-
-        // ✅ DETERMINA O FLOW BASEADO NO TÍTULO DA NOTIFICAÇÃO
-        const palavras = notification.title.split(' ');
-        const segundaPalavra =
-          palavras.length >= 2 ? palavras[1].toLowerCase() : '';
-
-        if (segundaPalavra === 'atualizada' || segundaPalavra === 'nova') {
-          flow = 'publicado';
-        } else if (segundaPalavra === 'confirmada') {
-          flow = 'andamento';
-        } else {
-          flow = 'publicado'; // fallback
-        }
-
-        console.log('👤 Cliente - Flow determinado:', flow);
-      }
-
-      // ✅ CONSTRÓI OS QUERY PARAMS DINAMICAMENTE
-      const queryParams: any = {
-        id: notification.id_pedido,
-        flow: flow,
-      };
-
-      // ✅ ADICIONA O PARAM APENAS PARA PRESTADOR
-      if (param) {
-        queryParams.param = param;
-      }
-
-      this.router.navigate([route], { queryParams });
-    } else {
+    if (!notification.id_pedido) {
       console.warn('⚠️ Notificação sem id_pedido');
-      // Fallback: vai para home baseado no tipo de usuário
       const fallbackRoute = this.isPrestador
         ? '/tudu-professional/home'
         : '/home';
       this.router.navigate([fallbackRoute]);
+      return;
+    }
+
+    // ✅ DEBUG DETALHADO DO TÍTULO
+    const words = notification.title.split(' ');
+    console.log('📝 Palavras do título:', words);
+    console.log(
+      '🔍 Status extraído:',
+      words.length >= 2 ? words[1].toLowerCase() : 'N/A'
+    );
+
+    const status = words.length >= 2 ? words[1].toLowerCase() : '';
+
+    if (this.isPrestador) {
+      // ✅ VERIFICAÇÃO MAIS AMPLA PARA STATUS "RECUSADO"
+      if (
+        status === 'recusado' ||
+        notification.title.toLowerCase().includes('recusado')
+      ) {
+        this.router.navigate(['home/detail'], {
+          queryParams: {
+            param: 'professional',
+            id: notification.id_pedido,
+            flow: 'recusado',
+          },
+        });
+        console.log('👷 Prestador - Notificação RECUSADA, indo para detalhes');
+      } else {
+        // ✅ SE NÃO FOR RECUSADO, VAI PARA HOME
+        this.router.navigate(['/tudu-professional/home']);
+        console.log(
+          '👷 Prestador - Status não é recusado, indo para home profissional'
+        );
+      }
+    } else {
+      // ✅ CLIENTE: Lógica existente
+      let flow = 'publicado';
+      if (
+        status === 'atualizada' ||
+        status === 'nova' ||
+        notification.title.toLowerCase().includes('nova')
+      ) {
+        flow = 'publicado';
+      } else if (
+        status === 'confirmada' ||
+        notification.title.toLowerCase().includes('confirmada')
+      ) {
+        flow = 'andamento';
+      }
+
+      this.router.navigate(['/home/budgets'], {
+        queryParams: {
+          id: notification.id_pedido,
+          flow: flow,
+        },
+      });
+      console.log('👤 Cliente - Flow determinado:', flow);
     }
   }
   // ✅ MARCA TODAS COMO LIDAS COM O ID CORRETO
