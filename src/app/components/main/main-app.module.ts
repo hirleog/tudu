@@ -1,24 +1,24 @@
 import { NgModule } from '@angular/core';
 
 import { RouterModule, Routes } from '@angular/router';
+import { NgxCurrencyModule } from 'ngx-currency';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { AddressModule } from '../address/address.module';
 import { CalendarModule } from '../calendar/calendar.module';
 import { FormatDateTimePipe } from '../helpers/format-date-time.pipe';
+import { NotificationViewComponent } from '../notification-view/notification-view.component';
 import { PaymentsModule } from '../payments/payments.module';
 import { CardSkeletonModule } from '../templates/card-skeleton/card-skeleton.module';
+import { MobileNegotiationBarModule } from '../templates/mobile-negotiation-bar/mobile-negotiation-bar.module';
 import { AppHomeComponent } from './app-home/app-home.component';
 import { BudgetsComponent } from './budgets/budgets.component';
 import { CardDetailComponent } from './card-detail/card-detail.component';
+import { FinishHireButtonComponent } from './card-detail/finish-hire-button/finish-hire-button.component';
 import { FlowEndComponent } from './flow-end/flow-end.component';
 import { OrderHelpComponent } from './order-help/order-help.component';
 import { ProgressDetailComponent } from './progress-detail/progress-detail.component';
 import { ProgressComponent } from './progress/progress.component';
-import { FinishHireButtonComponent } from './card-detail/finish-hire-button/finish-hire-button.component';
-import { MobileNegotiationBarModule } from '../templates/mobile-negotiation-bar/mobile-negotiation-bar.module';
-import { NgxCurrencyModule } from 'ngx-currency';
-import { TuduComponentsModule } from 'tudu-components';
-import { NotificationViewComponent } from '../notification-view/notification-view.component';
+import { NotificationViewModule } from '../notification-view/notification-view.module';
 
 const routes: Routes = [
   // { path: '', component: AppMenuComponent },
@@ -45,7 +45,6 @@ const routes: Routes = [
     FlowEndComponent,
     OrderHelpComponent,
     FinishHireButtonComponent,
-    NotificationViewComponent,
     // ProfileComponent,
     // ProfileDetailComponent,
 
@@ -57,6 +56,7 @@ const routes: Routes = [
     PaymentsModule,
     CalendarModule,
     AddressModule,
+    NotificationViewModule,
     CardSkeletonModule,
     MobileNegotiationBarModule,
     NgxCurrencyModule,

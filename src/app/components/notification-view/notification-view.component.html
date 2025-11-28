@@ -1,6 +1,6 @@
 <lib-nav>
   <div left-content>
-    <a routerLink="/home" class="transition-colors mr-3">
+    <a (click)="goBack()" class="transition-colors mr-3">
       <i
         style="color: var(--light) !important"
         class="fas fa-arrow-left text-2xl"
@@ -143,11 +143,18 @@
         <div class="flex items-start space-x-3">
           <!-- Icon -->
           <div
-            *ngIf="notification.icon"
+            *ngIf="notification.icon || notification.imagens.length > 0"
             class="flex-shrink-0 w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center"
           >
             <span class="text-blue-600 text-sm font-medium">
-              <img [src]="notification.icon" alt="" />
+              <img
+                [src]="
+                  notification.imagens.length > 0
+                    ? notification.imagens[0]
+                    : notification.icon
+                "
+                alt=""
+              />
             </span>
           </div>
 

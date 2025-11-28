@@ -1,5 +1,6 @@
 // src/app/components/notifications/notification-view.component.ts
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { Location } from '@angular/common';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subject, Subscription, interval } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -19,14 +20,16 @@ interface GroupedNotifications {
   styleUrls: ['./notification-view.component.css'],
 })
 export class NotificationViewComponent implements OnInit, OnDestroy {
-  private subscriptionCliente: Subscription = new Subscription();
-  private subscriptionPrestador: Subscription = new Subscription();
+  private destroy$ = new Subject<void>();
+  private autoRefreshSubscription?: Subscription;
 
-  clienteIsLogged: boolean = false;
-  prestadorIsLogged: boolean = false;
-  id_cliente!: string | null;
-  prestadorId!: string | null;
+  // ✅ PROPRIEDADES DO USUÁRIO
+  isCliente: boolean = false;
+  isPrestador: boolean = false;
+  userId: string | null = null;
+  userType: 'cliente' | 'prestador' | null = null;
 
+  // ✅ PROPRIEDADES DAS NOTIFICAÇÕES
   notifications: Notification[] = [];
   groupedNotifications: GroupedNotifications = {};
   loading = false;
@@ -34,41 +37,15 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
   currentPage = 1;
   limit = 20;
 
-  private destroy$ = new Subject<void>();
-  private autoRefreshSubscription?: Subscription;
-
   constructor(
     private notificationViewService: NotificationViewService,
     private router: Router,
-    public authService: AuthService
-  ) {
-    this.subscriptionPrestador.add(
-      this.authService.isPrestadorLoggedIn$.subscribe((loggedIn) => {
-        this.prestadorIsLogged = loggedIn;
-      })
-    );
-    this.subscriptionCliente.add(
-      this.authService.isClienteLoggedIn$.subscribe((loggedIn) => {
-        this.clienteIsLogged = loggedIn;
-      })
-    );
-
-    this.authService.idCliente$.subscribe((id) => {
-      this.id_cliente = id;
-      if (id) {
-        this.notificationViewService.setCurrentUser(id, undefined);
-      }
-    });
-
-    this.authService.idPrestador$.subscribe((id) => {
-      this.prestadorId = id;
-      if (id) {
-        this.notificationViewService.setCurrentUser(undefined, id);
-      }
-    });
-  }
+    private authService: AuthService,
+    private location: Location
+  ) {}
 
   ngOnInit(): void {
+    this.setupUserAuthentication();
     this.loadNotifications();
     this.startAutoRefresh();
 
@@ -81,46 +58,45 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.subscriptionCliente.unsubscribe();
-    this.subscriptionPrestador.unsubscribe();
     this.stopAutoRefresh();
   }
 
-  // ✅ AUTO-REFRESH A CADA 30 SEGUNDOS
-  private startAutoRefresh(): void {
-    this.autoRefreshSubscription = interval(30000) // 30 segundos
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        if (this.notificationViewService.shouldRefresh()) {
-          console.log('🔄 Auto-refresh das notificações');
-          this.loadNotifications(true); // força refresh
-          this.notificationViewService.loadUnreadCount(true);
-        }
-      });
+  // ✅ CONFIGURAÇÃO DO USUÁRIO AUTENTICADO
+  private setupUserAuthentication(): void {
+    // Observa mudanças no status de autenticação
+    this.authService.isClienteLoggedIn$.subscribe((isCliente) => {
+      this.isCliente = isCliente;
+      if (isCliente) {
+        this.userType = 'cliente';
+      }
+    });
+
+    this.authService.isPrestadorLoggedIn$.subscribe((isPrestador) => {
+      this.isPrestador = isPrestador;
+      if (isPrestador) {
+        this.userType = 'prestador';
+      }
+    });
+
+    // Observa mudanças nos IDs
+    this.authService.idCliente$.subscribe((id) => {
+      if (id && this.isCliente) {
+        this.userId = id;
+        console.log('👤 Cliente configurado:', id);
+        this.notificationViewService.setCurrentUser(id, undefined);
+      }
+    });
+
+    this.authService.idPrestador$.subscribe((id) => {
+      if (id && this.isPrestador) {
+        this.userId = id;
+        console.log('👷 Prestador configurado:', id);
+        this.notificationViewService.setCurrentUser(undefined, id);
+      }
+    });
   }
 
-  private stopAutoRefresh(): void {
-    if (this.autoRefreshSubscription) {
-      this.autoRefreshSubscription.unsubscribe();
-    }
-  }
-
-  // ✅ ATUALIZA QUANDO A PÁGINA FICA VISÍVEL
-  @HostListener('window:focus')
-  onWindowFocus() {
-    console.log('👀 Página em foco - atualizando notificações');
-    this.notificationViewService.forceRefresh();
-  }
-
-  // ✅ ATUALIZA QUANDO O USUÁRIO VOLTA PARA A PÁGINA
-  @HostListener('window:visibilitychange')
-  onVisibilityChange() {
-    if (!document.hidden) {
-      console.log('📱 Página visível - atualizando notificações');
-      this.notificationViewService.forceRefresh();
-    }
-  }
-
+  // ✅ CARREGA NOTIFICAÇÕES COM BASE NO TIPO DE USUÁRIO
   loadNotifications(
     loadMore: boolean = false,
     forceRefresh: boolean = false
@@ -134,12 +110,21 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
       this.notifications = [];
     }
 
-    const idCliente =
-      this.clienteIsLogged && this.id_cliente ? this.id_cliente : undefined;
-    const idPrestador =
-      this.prestadorIsLogged && this.prestadorId ? this.prestadorId : undefined;
+    // ✅ DETERMINA OS PARÂMETROS BASEADO NO TIPO DE USUÁRIO
+    let idCliente: string | undefined;
+    let idPrestador: string | undefined;
 
-    console.log('📨 Carregando notificações para:', { idCliente, idPrestador });
+    if (this.isCliente && this.userId) {
+      idCliente = this.userId;
+      console.log('📨 Carregando notificações do CLIENTE:', idCliente);
+    } else if (this.isPrestador && this.userId) {
+      idPrestador = this.userId;
+      console.log('📨 Carregando notificações do PRESTADOR:', idPrestador);
+    } else {
+      console.warn('⚠️ Usuário não autenticado ou sem ID');
+      this.loading = false;
+      return;
+    }
 
     this.notificationViewService
       .getNotifications(
@@ -167,12 +152,141 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
           this.loading = false;
 
           console.log('✅ Notificações carregadas:', this.notifications.length);
+          console.log('👤 Tipo de usuário:', this.userType);
         },
         error: (err) => {
           console.error('❌ Erro ao carregar notificações:', err);
           this.loading = false;
         },
       });
+  }
+
+  // ✅ NAVEGAÇÃO INTELIGENTE BASEADA NO TIPO DE USUÁRIO
+  navigateToNotification(notification: Notification): void {
+    console.log('🔗 Clicou na notificação:', {
+      id: notification.id,
+      id_pedido: notification.id_pedido,
+      userType: this.userType,
+    });
+
+    this.markAsRead(notification);
+
+    if (notification.id_pedido) {
+      // ✅ DETERMINA A ROTA BASEADA NO TIPO DE USUÁRIO
+      let route: string;
+      let flow: string;
+      let param: string = ''; // ✅ NOVA VARIÁVEL PARA O PARAM
+
+      if (this.isPrestador) {
+        // Prestador vai para a rota profissional
+        route = 'home/detail';
+        flow = 'recusado';
+        param = 'professional'; // ✅ ADICIONA O PARAM PARA PRESTADOR
+        console.log('👷 Prestador navegando para área profissional');
+      } else {
+        // Cliente vai para a rota normal
+        route = '/home/budgets';
+
+        // ✅ DETERMINA O FLOW BASEADO NO TÍTULO DA NOTIFICAÇÃO
+        const palavras = notification.title.split(' ');
+        const segundaPalavra =
+          palavras.length >= 2 ? palavras[1].toLowerCase() : '';
+
+        if (segundaPalavra === 'atualizada' || segundaPalavra === 'nova') {
+          flow = 'publicado';
+        } else if (segundaPalavra === 'confirmada') {
+          flow = 'andamento';
+        } else {
+          flow = 'publicado'; // fallback
+        }
+
+        console.log('👤 Cliente - Flow determinado:', flow);
+      }
+
+      // ✅ CONSTRÓI OS QUERY PARAMS DINAMICAMENTE
+      const queryParams: any = {
+        id: notification.id_pedido,
+        flow: flow,
+      };
+
+      // ✅ ADICIONA O PARAM APENAS PARA PRESTADOR
+      if (param) {
+        queryParams.param = param;
+      }
+
+      this.router.navigate([route], { queryParams });
+    } else {
+      console.warn('⚠️ Notificação sem id_pedido');
+      // Fallback: vai para home baseado no tipo de usuário
+      const fallbackRoute = this.isPrestador
+        ? '/tudu-professional/home'
+        : '/home';
+      this.router.navigate([fallbackRoute]);
+    }
+  }
+  // ✅ MARCA TODAS COMO LIDAS COM O ID CORRETO
+  markAllAsRead(): void {
+    let idCliente: string | undefined;
+    let idPrestador: string | undefined;
+
+    if (this.isCliente && this.userId) {
+      idCliente = this.userId;
+    } else if (this.isPrestador && this.userId) {
+      idPrestador = this.userId;
+    }
+
+    console.log('🗑️ Marcando todas como lidas para:', {
+      userType: this.userType,
+      userId: this.userId,
+    });
+
+    this.notificationViewService
+      .markAllAsRead(idCliente, idPrestador)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.notifications.forEach(
+            (notification) => (notification.read = true)
+          );
+          console.log('✅ Todas as notificações marcadas como lidas');
+        },
+        error: (err) => {
+          console.error('❌ Erro ao marcar todas como lidas:', err);
+        },
+      });
+  }
+
+  // ✅ MÉTODOS AUXILIARES (mantidos da versão anterior)
+  private startAutoRefresh(): void {
+    this.autoRefreshSubscription = interval(30000)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        if (this.notificationViewService.shouldRefresh()) {
+          console.log('🔄 Auto-refresh das notificações');
+          this.loadNotifications(true);
+          this.notificationViewService.loadUnreadCount(true);
+        }
+      });
+  }
+
+  private stopAutoRefresh(): void {
+    if (this.autoRefreshSubscription) {
+      this.autoRefreshSubscription.unsubscribe();
+    }
+  }
+
+  @HostListener('window:focus')
+  onWindowFocus() {
+    console.log('👀 Página em foco - atualizando notificações');
+    this.notificationViewService.forceRefresh();
+  }
+
+  @HostListener('window:visibilitychange')
+  onVisibilityChange() {
+    if (!document.hidden) {
+      console.log('📱 Página visível - atualizando notificações');
+      this.notificationViewService.forceRefresh();
+    }
   }
 
   groupNotifications(): void {
@@ -192,15 +306,13 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
       event.stopPropagation();
     }
 
-    console.log('🖱️ Tentando marcar como lida:', notification.id);
-
     if (!notification.read) {
       this.notificationViewService
         .markAsRead(notification.id)
         .pipe(takeUntil(this.destroy$))
         .subscribe({
           next: () => {
-            console.log('✅ Sucesso - notificação marcada como lida');
+            console.log('✅ Notificação marcada como lida');
             notification.read = true;
             this.notificationViewService.decrementUnreadCount();
           },
@@ -208,47 +320,6 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             console.error('❌ Erro ao marcar como lida:', err);
           },
         });
-    } else {
-      console.log('ℹ️ Notificação já estava lida');
-    }
-  }
-
-  markAllAsRead(): void {
-    const idCliente =
-      this.clienteIsLogged && this.id_cliente ? this.id_cliente : undefined;
-    const idPrestador =
-      this.prestadorIsLogged && this.prestadorId ? this.prestadorId : undefined;
-
-    this.notificationViewService
-      .markAllAsRead(idCliente, idPrestador)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          this.notifications.forEach(
-            (notification) => (notification.read = true)
-          );
-          console.log('✅ Todas as notificações marcadas como lidas');
-        },
-        error: (err) => {
-          console.error('❌ Erro ao marcar todas como lidas:', err);
-        },
-      });
-  }
-
-  navigateToNotification(notification: Notification): void {
-    console.log(
-      '🔗 Clicou na notificação:',
-      notification.id,
-      'Lida?',
-      notification.read
-    );
-
-    this.markAsRead(notification);
-
-    console.log('📝 Após markAsRead - Lida?', notification.read);
-
-    if (notification.url) {
-      this.router.navigate([notification.url]);
     }
   }
 
@@ -258,7 +329,6 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
     }
   }
 
-  // ✅ NOVO MÉTODO: Força refresh manual
   forceRefresh(): void {
     console.log('🔄 Forçando refresh manual');
     this.loadNotifications(false, true);
@@ -281,5 +351,16 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
       key,
       notifications: this.groupedNotifications[key],
     }));
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+  // ✅ MÉTODO PARA DEBUG (opcional)
+  getUserInfo(): string {
+    if (this.isCliente) return `Cliente: ${this.userId}`;
+    if (this.isPrestador) return `Prestador: ${this.userId}`;
+    return 'Usuário não autenticado';
   }
 }

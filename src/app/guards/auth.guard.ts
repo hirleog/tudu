@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
     }
 
     // ✅ ROTAS COMPARTILHADAS (acessíveis por ambos)
-    const sharedRoutes = ['/home/detail', '/profile'];
+    const sharedRoutes = ['/home/detail', '/profile', 'notifications'];
     if (sharedRoutes.some((route) => url.includes(route))) {
       if (isCliente || isPrestador) {
         return true;

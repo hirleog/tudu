@@ -10,12 +10,13 @@ export interface Notification {
   title: string;
   body: string;
   icon?: string;
-  url?: string;
+  id_pedido?: string;
   read: boolean;
   createdAt: string;
   metadata?: string;
   clienteId?: number;
   prestadorId?: number;
+  imagens: string[];
 }
 
 export interface NotificationsResponse {
