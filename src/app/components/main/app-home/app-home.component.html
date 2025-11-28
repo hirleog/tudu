@@ -27,7 +27,7 @@
       class="relative p-2 text-gray-600 hover:text-gray-900 transition-colors"
     >
       <svg
-      style="color: var(--light);"
+        style="color: var(--light)"
         class="w-7 h-7"
         fill="none"
         stroke="currentColor"
@@ -296,7 +296,8 @@
       <button
         *ngIf="selectedIndex === 0"
         class="btn btn-primary mt-3"
-        routerLink="/tudu-professional/home"
+        [routerLink]="['/']"
+        routerLinkActive="router-link-active"
       >
         Buscar serviços
       </button>

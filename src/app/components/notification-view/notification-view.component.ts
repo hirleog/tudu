@@ -163,12 +163,8 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
 
   // ✅ NAVEGAÇÃO INTELIGENTE BASEADA NO TIPO DE USUÁRIO
   navigateToNotification(notification: Notification): void {
-    console.log('🔗 Clicou na notificação:', {
-      id: notification.id,
-      id_pedido: notification.id_pedido,
-      userType: this.userType,
-      title: notification.title, // ✅ ADICIONA O TÍTULO PARA DEBUG
-    });
+    const statusTitle = notification.title.toLowerCase();
+    const status = notification.status?.toLowerCase(); // Novo campo status
 
     this.markAsRead(notification);
 
@@ -181,60 +177,160 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // ✅ DEBUG DETALHADO DO TÍTULO
-    const words = notification.title.split(' ');
-    console.log('📝 Palavras do título:', words);
-    console.log(
-      '🔍 Status extraído:',
-      words.length >= 2 ? words[1].toLowerCase() : 'N/A'
-    );
-
-    const status = words.length >= 2 ? words[1].toLowerCase() : '';
-
     if (this.isPrestador) {
-      // ✅ VERIFICAÇÃO MAIS AMPLA PARA STATUS "RECUSADO"
-      if (
-        status === 'recusado' ||
-        notification.title.toLowerCase().includes('recusado')
-      ) {
-        this.router.navigate(['home/detail'], {
-          queryParams: {
-            param: 'professional',
-            id: notification.id_pedido,
-            flow: 'recusado',
-          },
-        });
-        console.log('👷 Prestador - Notificação RECUSADA, indo para detalhes');
-      } else {
-        // ✅ SE NÃO FOR RECUSADO, VAI PARA HOME
-        this.router.navigate(['/tudu-professional/home']);
-        console.log(
-          '👷 Prestador - Status não é recusado, indo para home profissional'
-        );
+      // ✅ PRESTADOR: Lógica baseada no STATUS
+      switch (status) {
+        case 'new_card':
+          this.router.navigate(['home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'publicado',
+            },
+          });
+          break;
+
+        case 'provider_hired':
+          console.log('🚀 Prestador - Foi contratado');
+          this.router.navigate(['home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'contratado',
+            },
+          });
+          break;
+
+        case 'candidature_rejected':
+          console.log('📝 Prestador - Candidatura recusada');
+          this.router.navigate(['home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'recusado',
+            },
+          });
+          break;
+
+        case 'card_cancelled':
+          console.log('❌ Prestador - Card cancelado');
+
+          this.router.navigate(['home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'historic',
+            },
+          });
+          break;
+
+        case 'contract_cancelled':
+          console.log('❌ Prestador - Contrato cancelado');
+          this.router.navigate(['/tudu-professional/home']);
+          break;
+
+        case 'candidature_cancelled':
+          console.log('📝 Prestador - Candidatura cancelada pelo cliente');
+          this.router.navigate(['/tudu-professional/home']);
+          break;
+
+        default:
+          // Fallback para notificações sem status (compatibilidade)
+          if (statusTitle.includes('cancelado')) {
+            console.log('⚠️ Prestador - Fallback para notificação cancelada');
+            return;
+          } else {
+            console.log('🔍 Prestador - Status não mapeado, usando fallback');
+            this.router.navigate(['home/detail'], {
+              queryParams: {
+                param: 'professional',
+                id: notification.id_pedido,
+                flow: 'disponivel',
+              },
+            });
+          }
       }
     } else {
-      // ✅ CLIENTE: Lógica existente
-      let flow = 'publicado';
-      if (
-        status === 'atualizada' ||
-        status === 'nova' ||
-        notification.title.toLowerCase().includes('nova')
-      ) {
-        flow = 'publicado';
-      } else if (
-        status === 'confirmada' ||
-        notification.title.toLowerCase().includes('confirmada')
-      ) {
-        flow = 'andamento';
-      }
+      // ✅ CLIENTE: Lógica baseada no STATUS
+      switch (status) {
+        case 'new_candidature':
+          console.log('📨 Cliente - Nova candidatura');
+          this.router.navigate(['/home/budgets'], {
+            queryParams: {
+              id: notification.id_pedido,
+              flow: 'publicado',
+            },
+          });
+          break;
 
-      this.router.navigate(['/home/budgets'], {
-        queryParams: {
-          id: notification.id_pedido,
-          flow: flow,
-        },
-      });
-      console.log('👤 Cliente - Flow determinado:', flow);
+        case 'candidature_updated':
+          console.log('📝 Cliente - Candidatura atualizada');
+          this.router.navigate(['/home/budgets'], {
+            queryParams: {
+              id: notification.id_pedido,
+              flow: 'publicado',
+            },
+          });
+          break;
+
+        case 'hire_confirmed':
+          console.log('🎉 Cliente - Contratação confirmada');
+          this.router.navigate(['/home/budgets'], {
+            queryParams: {
+              id: notification.id_pedido,
+              flow: 'andamento',
+            },
+          });
+          break;
+
+        case 'candidature_cancelled':
+          console.log('📝 Cliente - Candidatura cancelada pelo prestador');
+          this.router.navigate(['/home/budgets'], {
+            queryParams: {
+              id: notification.id_pedido,
+              flow: 'publicado',
+            },
+          });
+          break;
+
+        case 'card_cancelled':
+          console.log('❌ Cliente - Card cancelado');
+          this.router.navigate(['/home']);
+          break;
+
+        case 'new_card':
+          console.log('🎯 Cliente - Novo card criado (próprio)');
+          this.router.navigate(['/home/budgets'], {
+            queryParams: {
+              id: notification.id_pedido,
+              flow: 'publicado',
+            },
+          });
+          break;
+
+        default:
+          // Fallback para notificações sem status (compatibilidade)
+          console.log(
+            '🔍 Cliente - Status não mapeado, usando fallback por título'
+          );
+          let flow = 'publicado';
+          if (
+            statusTitle.includes('atualizada') ||
+            statusTitle.includes('nova')
+          ) {
+            flow = 'publicado';
+          } else if (statusTitle.includes('confirmada')) {
+            flow = 'andamento';
+          }
+
+          this.router.navigate(['/home/budgets'], {
+            queryParams: {
+              id: notification.id_pedido,
+              flow: flow,
+            },
+          });
+          console.log('👤 Cliente - Flow determinado por título:', flow);
+      }
     }
   }
   // ✅ MARCA TODAS COMO LIDAS COM O ID CORRETO

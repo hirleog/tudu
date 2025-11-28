@@ -12,6 +12,7 @@ export interface Notification {
   icon?: string;
   id_pedido?: string;
   read: boolean;
+  status: string;
   createdAt: string;
   metadata?: string;
   clienteId?: number;
