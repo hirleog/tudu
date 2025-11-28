@@ -164,7 +164,6 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
   // ✅ NAVEGAÇÃO INTELIGENTE BASEADA NO TIPO DE USUÁRIO
   navigateToNotification(notification: any): void {
     const statusTitle = notification.title?.toLowerCase() || '';
-    const status = notification.status?.toLowerCase(); // Novo campo status
 
     this.markAsRead(notification);
 
@@ -186,7 +185,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             queryParams: {
               param: 'professional',
               id: notification.id_pedido,
-              flow: 'disponivel',
+              flow: 'publicado',
             },
           });
           break;
@@ -197,7 +196,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             queryParams: {
               param: 'professional',
               id: notification.id_pedido,
-              flow: 'contratado',
+              flow: 'progress',
             },
           });
           break;
@@ -208,65 +207,50 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             queryParams: {
               param: 'professional',
               id: notification.id_pedido,
-              flow: 'finalizado',
+              flow: 'historic',
             },
           });
           break;
 
         case 'candidature_rejected':
-          console.log('📝 Prestador - Candidatura recusada');
-          this.router.navigate(['home/detail'], {
-            queryParams: {
-              param: 'professional',
-              id: notification.id_pedido,
-              flow: 'recusado',
-            },
-          });
+          console.log('Adicionar pop-up de serviço já finalizado');
+
           break;
 
         case 'card_cancelled':
           console.log('❌ Prestador - Card cancelado');
-          // Não navega, apenas marca como lida
-          console.log('Card cancelado - mantém na tela atual');
+          this.router.navigate(['home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'historic',
+            },
+          });
           break;
 
         case 'contract_cancelled':
           console.log('❌ Prestador - Contrato cancelado');
-          this.router.navigate(['/tudu-professional/home']);
+          this.router.navigate(['home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'historic',
+            },
+          });
           break;
 
         case 'candidature_cancelled':
-          console.log('📝 Prestador - Candidatura cancelada pelo cliente');
-          this.router.navigate(['/tudu-professional/home']);
+          this.router.navigate(['home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'historic',
+            },
+          });
           break;
 
         default:
-          // Fallback para notificações sem status (compatibilidade)
-          if (statusTitle.includes('cancelado')) {
-            console.log('⚠️ Prestador - Fallback para notificação cancelada');
-            return;
-          } else if (
-            statusTitle.includes('finalizado') ||
-            statusTitle.includes('concluído')
-          ) {
-            console.log('✅ Prestador - Fallback para serviço finalizado');
-            this.router.navigate(['home/detail'], {
-              queryParams: {
-                param: 'professional',
-                id: notification.id_pedido,
-                flow: 'finalizado',
-              },
-            });
-          } else {
-            console.log('🔍 Prestador - Status não mapeado, usando fallback');
-            this.router.navigate(['home/detail'], {
-              queryParams: {
-                param: 'professional',
-                id: notification.id_pedido,
-                flow: 'disponivel',
-              },
-            });
-          }
+          break;
       }
     } else {
       // ✅ CLIENTE: Lógica baseada no STATUS
