@@ -163,7 +163,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
 
   // ✅ NAVEGAÇÃO INTELIGENTE BASEADA NO TIPO DE USUÁRIO
   navigateToNotification(notification: any): void {
-    const statusTitle = notification.title?.toLowerCase() || '';
+    const statusLowerCase = notification.status?.toLowerCase() || '';
 
     this.markAsRead(notification);
 
@@ -178,7 +178,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
 
     if (this.isPrestador) {
       // ✅ PRESTADOR: Lógica baseada no STATUS
-      switch (status) {
+      switch (statusLowerCase) {
         case 'new_card':
           console.log('🎯 Prestador - Novo pedido disponível');
           this.router.navigate(['home/detail'], {
@@ -327,19 +327,19 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
           );
           let flow = 'publicado';
 
-          if (
-            statusTitle.includes('atualizada') ||
-            statusTitle.includes('nova')
-          ) {
-            flow = 'publicado';
-          } else if (statusTitle.includes('confirmada')) {
-            flow = 'andamento';
-          } else if (
-            statusTitle.includes('finalizado') ||
-            statusTitle.includes('concluído')
-          ) {
-            flow = 'finalizado';
-          }
+          // if (
+          //   statusTitle.includes('atualizada') ||
+          //   statusTitle.includes('nova')
+          // ) {
+          //   flow = 'publicado';
+          // } else if (statusTitle.includes('confirmada')) {
+          //   flow = 'andamento';
+          // } else if (
+          //   statusTitle.includes('finalizado') ||
+          //   statusTitle.includes('concluído')
+          // ) {
+          //   flow = 'finalizado';
+          // }
 
           this.router.navigate(['/home/budgets'], {
             queryParams: {
