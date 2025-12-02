@@ -187,6 +187,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               id: notification.id_pedido,
               flow: 'publicado',
             },
+            state: {
+              notificationData: 'true', // Dados extras
+            },
           });
           break;
 
@@ -197,6 +200,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               param: 'professional',
               id: notification.id_pedido,
               flow: 'progress',
+            },
+            state: {
+              notificationData: 'true', // Dados extras
             },
           });
           break;
@@ -209,12 +215,23 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               id: notification.id_pedido,
               flow: 'historic',
             },
+            state: {
+              notificationData: 'true', // Dados extras
+            },
           });
           break;
 
         case 'candidature_rejected':
-          console.log('Adicionar pop-up de serviço já finalizado');
-
+          this.router.navigate(['/home/detail'], {
+            queryParams: {
+              param: 'professional',
+              id: notification.id_pedido,
+              flow: 'recusado',
+            },
+            state: {
+              notificationData: 'true', // Dados extras
+            },
+          });
           break;
 
         case 'card_cancelled':
@@ -224,6 +241,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               param: 'professional',
               id: notification.id_pedido,
               flow: 'historic',
+            },
+            state: {
+              notificationData: 'true', // Dados extras
             },
           });
           break;
@@ -236,6 +256,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               id: notification.id_pedido,
               flow: 'historic',
             },
+            state: {
+              notificationData: 'true', // Dados extras
+            },
           });
           break;
 
@@ -246,6 +269,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               id: notification.id_pedido,
               flow: 'historic',
             },
+            state: {
+              notificationData: 'true', // Dados extras
+            },
           });
           break;
 
@@ -254,13 +280,16 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
       }
     } else {
       // ✅ CLIENTE: Lógica baseada no STATUS
-      switch (status) {
+      switch (statusLowerCase) {
         case 'new_candidature':
           console.log('📨 Cliente - Nova candidatura');
           this.router.navigate(['/home/budgets'], {
             queryParams: {
               id: notification.id_pedido,
               flow: 'publicado',
+            },
+            state: {
+              notificationData: 'true', // Dados extras
             },
           });
           break;
@@ -272,6 +301,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               id: notification.id_pedido,
               flow: 'publicado',
             },
+            state: {
+              notificationData: 'true', // Dados extras
+            },
           });
           break;
 
@@ -281,6 +313,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             queryParams: {
               id: notification.id_pedido,
               flow: 'andamento',
+            },
+            state: {
+              notificationData: 'true', // Dados extras
             },
           });
           break;
@@ -292,6 +327,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               id: notification.id_pedido,
               flow: 'finalizado',
             },
+            state: {
+              notificationData: 'true', // Dados extras
+            },
           });
           break;
 
@@ -302,12 +340,19 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
               id: notification.id_pedido,
               flow: 'publicado',
             },
+            state: {
+              notificationData: 'true', // Dados extras
+            },
           });
           break;
 
         case 'card_cancelled':
           console.log('❌ Cliente - Card cancelado');
-          this.router.navigate(['/home']);
+          this.router.navigate(['/home'], {
+            state: {
+              notificationData: 'true', // Dados extras
+            },
+          });
           break;
 
         case 'new_card':
@@ -316,6 +361,9 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             queryParams: {
               id: notification.id_pedido,
               flow: 'publicado',
+            },
+            state: {
+              notificationData: 'true', // Dados extras
             },
           });
           break;
@@ -326,20 +374,6 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
             '🔍 Cliente - Status não mapeado, usando fallback por título'
           );
           let flow = 'publicado';
-
-          // if (
-          //   statusTitle.includes('atualizada') ||
-          //   statusTitle.includes('nova')
-          // ) {
-          //   flow = 'publicado';
-          // } else if (statusTitle.includes('confirmada')) {
-          //   flow = 'andamento';
-          // } else if (
-          //   statusTitle.includes('finalizado') ||
-          //   statusTitle.includes('concluído')
-          // ) {
-          //   flow = 'finalizado';
-          // }
 
           this.router.navigate(['/home/budgets'], {
             queryParams: {

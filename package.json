@@ -3,7 +3,7 @@
   "version": "0.0.14",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --live-reload=false",
     "build": "ng build --configuration production && node ./scripts/merge-sw.js",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

@@ -19,7 +19,7 @@ export class MobileNegotiationBarComponent implements OnInit, OnDestroy {
   @Input() advanceButtonText: string = 'Avançar';
   @Input() negotiateDisabled: boolean = false;
   @Input() advanceDisabled: boolean = false;
-  @Input() isVisible: boolean = true;
+  // @Input() isVisible: boolean = true;
   @Input() hideAdvanceBtn: boolean = false;
 
   @Output() onNegotiate = new EventEmitter<void>();

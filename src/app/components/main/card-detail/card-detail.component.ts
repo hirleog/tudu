@@ -63,6 +63,7 @@ export class CardDetailComponent implements OnInit {
   dateTimeSelected!: string;
   priceNegotiated: any;
   hideCalendarDays: boolean = false;
+  isNotificationFlag: any;
 
   constructor(
     public cardService: CardService,
@@ -74,9 +75,14 @@ export class CardDetailComponent implements OnInit {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
       this.flow = params['flow'];
-
       this.backIndicator = params['card'];
     });
+
+    // recupera flag para saber que veio pelo componente notification-view
+    const navigation = this.route.getCurrentNavigation();
+    if (navigation?.extras?.state) {
+      this.isNotificationFlag = navigation.extras.state['notificationData'];
+    }
 
     this.isProfessionalIndicator = this.authService.isPrestadorLoggedIn();
 
@@ -308,7 +314,10 @@ export class CardDetailComponent implements OnInit {
   }
 
   back(): void {
-    if (this.isProfessionalIndicator) {
+    // ✅ Verifica se deve voltar para notificações
+    if (this.isNotificationFlag === 'true') {
+      this.backToNotification();
+    } else if (this.isProfessionalIndicator) {
       const progressRoute =
         this.flow === 'progress'
           ? '/tudu-professional/progress'
@@ -322,17 +331,11 @@ export class CardDetailComponent implements OnInit {
       if (this.flow === 'progress') {
         this.route.navigate([progressRoute]);
         return;
-      } else {
-        this.route.navigate([progressRoute], {
-          queryParams: { homeFlow: this.flow },
-        });
-      }
-
-      if (this.flow === 'historic') {
+      } else if (this.flow === 'historic') {
         this.route.navigate([historicRoute]);
         return;
       } else {
-        this.route.navigate([historicRoute], {
+        this.route.navigate([progressRoute], {
           queryParams: { homeFlow: this.flow },
         });
       }
@@ -350,6 +353,46 @@ export class CardDetailComponent implements OnInit {
     }
   }
 
+  backToNotification(): void {
+    if (this.isProfessionalIndicator) {
+      // Verifica se a rota profissional existe
+      this.route
+        .navigate(['/home/notifications'], {
+          queryParams: {
+            param: 'professional',
+          },
+        })
+        .catch((err) => {
+          console.error('Erro ao navegar para notificações profissional:', err);
+          // Fallback para rota padrão
+          this.route.navigate(['/tudu-professional/home']);
+        });
+    } else {
+      // Rota para cliente
+      this.route.navigate(['/home/notifications']).catch((err) => {
+        console.error('Erro ao navegar para notificações cliente:', err);
+        // Fallback para rota padrão
+        this.route.navigate(['/home']);
+      });
+    }
+  }
+  hideMobileButtons(card: any): boolean {
+    // Regra 1: Card cancelado → SEMPRE esconder
+    if (card.status_pedido === 'cancelado') {
+      return false;
+    }
+
+    // Regra 2: Profissional nos flows 'publicado' ou 'recusado' → esconder
+    if (
+      this.isProfessionalIndicator &&
+      (this.flow === 'publicado' || this.flow === 'recusado')
+    ) {
+      return true;
+    }
+
+    // Demais casos: mostrar botões
+    return true;
+  }
   openModal() {
     this.isModalVisible = true;
   }

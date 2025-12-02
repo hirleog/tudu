@@ -463,10 +463,8 @@
 
     <!-- Botão de Negociação (mantido como estava) -->
     <app-mobile-negotiation-bar
-    class="py-3 px-4"
-      *ngIf="
-        (flow === 'publicado' || flow === 'recusado') && isProfessionalIndicator
-      "
+      class="py-3 px-4"
+      *ngIf="hideMobileButtons(card)"
       [startDateTime]="card.horario_preferencial"
       [value]="card.valor"
       [negotiateButtonText]="'Negociar'"
