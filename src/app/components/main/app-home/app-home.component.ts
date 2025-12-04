@@ -123,6 +123,7 @@ export class AppHomeComponent implements OnInit {
     this.flowNavigate();
 
     this.askNotificationPermission();
+    this.activatePushIfNeeded();
     this.activatePush();
   }
 
@@ -226,26 +227,93 @@ export class AppHomeComponent implements OnInit {
       console.warn('SwPush não habilitado');
       return;
     }
-    console.log('passou  do SwPush step');
+    console.log('passou do SwPush step');
 
     try {
       console.log('INICIO Subscription:');
 
-      this.swPush
-        .requestSubscription({
-          serverPublicKey: this.VAPID_PUBLIC_KEY,
-        })
-        .then((sub) => {
-          console.log('Subscription criada:' + sub);
+      // ✅ 1. Verifica se já existe subscription usando Observable
+      const existingSubscription = await firstValueFrom(
+        this.swPush.subscription
+      );
 
-          this.notificationPushService
-            .sendSubscriptionToServer(clienteId, prestadorId, sub.toJSON())
-            .subscribe(() => {
-              console.log('Subscription salva!');
-            });
+      let subscription: PushSubscription;
+
+      if (existingSubscription) {
+        console.log('✅ Usando subscription existente do dispositivo');
+        console.log('Endpoint:', existingSubscription.endpoint);
+        subscription = existingSubscription;
+      } else {
+        // ✅ 2. Só cria nova se realmente não existir
+        console.log('📱 Criando NOVA subscription para este dispositivo');
+        subscription = await this.swPush.requestSubscription({
+          serverPublicKey: this.VAPID_PUBLIC_KEY,
+        });
+        console.log(
+          'Nova subscription criada, endpoint:',
+          subscription.endpoint
+        );
+      }
+
+      // ✅ 3. Envia para o servidor
+      this.notificationPushService
+        .sendSubscriptionToServer(clienteId, prestadorId, subscription.toJSON())
+        .subscribe({
+          next: (response: any) => {
+            if (response?.action === 'updated') {
+              console.log('🔄 Subscription ATUALIZADA no servidor');
+            } else {
+              console.log('✅ Subscription SALVA no servidor');
+            }
+          },
+          error: (err) => {
+            console.error('❌ Erro ao salvar subscription:', err);
+          },
         });
     } catch (err) {
-      console.log('Erro ao criar subscription:' + err);
+      console.log('Erro ao criar subscription:', err);
+    }
+  }
+
+  // Adicione um controle por sessionStorage
+  private async shouldActivatePush(): Promise<boolean> {
+    // Verifica se já ativou push nesta sessão
+    const hasActivated = sessionStorage.getItem('push_activated');
+
+    if (hasActivated) {
+      console.log('✅ Push já foi ativado nesta sessão');
+      return false;
+    }
+
+    // Verifica se usuário está logado
+    const isLoggedIn =
+      this.authService.isClienteLoggedIn() ||
+      this.authService.isPrestadorLoggedIn();
+
+    if (!isLoggedIn) {
+      console.log('⏭️ Usuário não está logado, pulando ativação de push');
+      return false;
+    }
+
+    // Verifica permissão
+    if (Notification.permission === 'denied') {
+      console.log('⏭️ Permissão para notificações foi negada');
+      return false;
+    }
+
+    return true;
+  }
+
+  // Método público para ativar (com controle)
+  async activatePushIfNeeded() {
+    if (await this.shouldActivatePush()) {
+      await this.activatePush();
+      sessionStorage.setItem('push_activated', 'true');
+
+      // Limpa ao fechar a aba (opcional)
+      window.addEventListener('beforeunload', () => {
+        sessionStorage.removeItem('push_activated');
+      });
     }
   }
 

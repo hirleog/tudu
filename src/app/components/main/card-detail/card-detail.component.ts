@@ -378,7 +378,10 @@ export class CardDetailComponent implements OnInit {
   }
   hideMobileButtons(card: any): boolean {
     // Regra 1: Card cancelado → SEMPRE esconder
-    if (card.status_pedido === 'cancelado') {
+    if (
+      card.status_pedido === 'cancelado' ||
+      card.candidaturas[0]?.status === 'negociacao'
+    ) {
       return false;
     }
 
