@@ -59,10 +59,10 @@ export class BudgetsComponent implements OnInit {
       next: (data: any) => {
         const candidaturas = data.candidaturas || [];
 
-        if (candidaturas.length === 0) {
-          this.route.navigate(['/home']);
-          return;
-        }
+        // if (candidaturas.length === 0) {
+        //   this.route.navigate(['/home']);
+        //   return;
+        // }
 
         // Primeiro monta o card com ícone e candidaturas
         this.card = {
@@ -129,6 +129,8 @@ export class BudgetsComponent implements OnInit {
     step: string,
     candidatoEspecifico?: any
   ): Observable<CardOrders> {
+    this.processingBudget = true;
+
     // Obtém a candidatura do prestador atual (se existir)
     const candidaturaAlvo = card.candidaturas?.find(
       (c) => c.prestador_id === candidatoEspecifico
@@ -182,9 +184,11 @@ export class BudgetsComponent implements OnInit {
       next: () => {
         this.stateManagementService.clearAllState();
         this.paymentIndicator = step;
+        this.processingBudget = false;
         this.closeModal();
       },
       error: (error) => {
+        this.processingBudget = false;
         this.showModal = true;
         this.customModal.configureModal(
           'success',

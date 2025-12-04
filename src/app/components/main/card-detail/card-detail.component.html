@@ -209,7 +209,9 @@
       class="px-4 py-6 border-b border-gray-200"
     >
       <div class="flex items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-900">Propostas Recebidas</h2>
+        <h2 class="text-xl font-semibold text-gray-900">
+          {{ isProfessionalIndicator ? "Meu Lance" : "Propostas Recebidas" }}
+        </h2>
         <span
           class="bg-pink-100 text-pink-800 text-sm font-medium px-2.5 py-0.5 rounded-full ml-2"
         >
@@ -464,9 +466,7 @@
     <!-- Botão de Negociação (mantido como estava) -->
     <app-mobile-negotiation-bar
       class="py-3 px-4"
-      *ngIf="
-        hideMobileButtons(card)
-      "
+      *ngIf="hideMobileButtons(card)"
       [startDateTime]="card.horario_preferencial"
       [value]="card.valor"
       [negotiateButtonText]="'Negociar'"
@@ -509,6 +509,7 @@
 <app-custom-modal
   #modalNegociar
   [actionButtonText]="'Negociar'"
+  [isLoadingBtn]="isLoadingBtn"
   (modalAction)="handleModalAction(cards[0])"
 >
   <div optional-content>
@@ -529,21 +530,6 @@
         min="0"
         step="0.01"
       />
-      <button
-        [ngClass]="{
-          'change-renegotiate-btn':
-            cards.length > 0 && !cards[0].renegotiateActive
-        }"
-        class="btn btn-outline-secondary"
-        type="button"
-        id="btn-renegotiate"
-      >
-        <i
-          class="fa"
-          style="color: white !important"
-          [ngClass]="'fa-pencil'"
-        ></i>
-      </button>
     </div>
 
     <div #calendarContainer>
@@ -562,26 +548,6 @@
                 : ''
             "
           />
-          <button
-            (click)="calendarActive = !calendarActive"
-            [ngClass]="{
-              'change-renegotiate-btn':
-                cards.length > 0 && cards[0].calendarActive
-            }"
-            class="btn btn-outline-secondary"
-            type="button"
-            id="btn-renegotiate"
-          >
-            <i
-              class="fas"
-              style="color: white !important"
-              [ngClass]="
-                cards.length > 0 && !cards[0].calendarActive
-                  ? 'fa-calendar-alt'
-                  : 'fa-undo'
-              "
-            ></i>
-          </button>
         </div>
       </div>
 

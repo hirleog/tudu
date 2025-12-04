@@ -235,6 +235,7 @@ export class CardDetailComponent implements OnInit {
           'success',
           'Aguarde a confirmação do cliente. Você pode acompanhar o status do seu serviço na aba "Andamento'
         );
+        this.modalNegociar.closeModal();
         this.isLoadingBtn = false;
 
         // Limpa todos os estados antes de navegar
@@ -380,7 +381,8 @@ export class CardDetailComponent implements OnInit {
     // Regra 1: Card cancelado → SEMPRE esconder
     if (
       card.status_pedido === 'cancelado' ||
-      card.candidaturas[0]?.status === 'negociacao'
+      card.candidaturas[0]?.status === 'negociacao' ||
+      !this.isProfessionalIndicator
     ) {
       return false;
     }

@@ -198,11 +198,11 @@
             <span
               *ngIf="processingBudget"
               class="flex items-center justify-center"
-              style="color: white !important"
+              style="color: var(--primary) !important"
             >
               <i
                 class="fas fa-circle-notch fa-spin mr-2"
-                style="color: white !important"
+                style="color: var(--primary) !important"
               ></i>
               Aguarde...
             </span>
@@ -237,17 +237,25 @@
     ></app-payment>
   </div>
 </section>
-<div
-  *ngIf="card?.candidaturas?.length === 0"
-  class="d-flex align-items-center justify-content-center"
-  style="height: 68vh"
->
-  <div class="d-flex flex-column align-items-center gap-3">
-    <i class="fas fa-file-lines" style="font-size: 5em"></i>
-    <p class="fs-3">Sem propostas por aqui :(</p>
-    <!-- <button class="btn-ui btn-primary mt-3 send-btn" (click)="goToShowcase()">
-      Anúnciar Gratís
-    </button> -->
+<div *ngIf="card?.candidaturas?.length === 0" class="empty-state-container">
+  <div class="empty-state-card shadow-sm rounded-4 p-5">
+    <div class="empty-state-icon mb-4">
+      <i class="fas fa-file-search" style="font-size: 4rem; color: #6c757d"></i>
+    </div>
+
+    <div class="empty-state-content text-center">
+      <h3 class="fw-bold mb-3 text-gray-800">
+        {{ id_pedido ? "Proposta Indisponível" : "Nenhuma Proposta" }}
+      </h3>
+
+      <p class="text-muted mb-4 fs-5">
+        {{
+          id_pedido
+            ? "Esta proposta não está mais disponível ou foi cancelada pelo prestador."
+            : "Ainda não há propostas recebidas para seus pedidos."
+        }}
+      </p>
+    </div>
   </div>
 </div>
 
