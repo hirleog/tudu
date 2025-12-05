@@ -159,7 +159,7 @@
     </div>
 
     <!-- EXCEÇÃO QUANDO NÃO HOUVER PEDIDOS -->
-    <div *ngIf="card.length === 0" class="empty-state-container">
+    <!-- <div *ngIf="card.length === 0" class="empty-state-container">
       <div class="empty-state-card shadow-sm rounded-4 p-5">
         <div class="empty-state-icon mb-4">
           <i
@@ -179,7 +179,20 @@
           Anúnciar Grátis
         </button>
       </div>
-    </div>
+    </div> -->
+
+    <!-- <app-fallback-message
+      *ngIf="card.length === 0"
+      (primaryAction)="goToDetails(card)"
+    >
+    </app-fallback-message> -->
+
+    <app-fallback-message
+      *ngIf="card.length === 0"
+      [statusPedido]="'indisponível'"
+      (click)="goToHome()"
+    >
+    </app-fallback-message>
   </div>
 </div>
 

@@ -237,7 +237,7 @@
     ></app-payment>
   </div>
 </section>
-<div *ngIf="card?.candidaturas?.length === 0" class="empty-state-container">
+<!-- <div *ngIf="card?.candidaturas?.length === 0" class="empty-state-container">
   <div class="empty-state-card shadow-sm rounded-4 p-5">
     <div class="empty-state-icon mb-4">
       <i class="fas fa-file-search" style="font-size: 4rem; color: #6c757d"></i>
@@ -257,7 +257,29 @@
       </p>
     </div>
   </div>
+</div> -->
+<div class="container">
+  <app-fallback-message
+    *ngIf="card?.candidaturas?.length === 0"
+    [statusPedido]="'indisponível'"
+    (click)="goToHome()"
+  >
+  </app-fallback-message>
 </div>
+
+<!-- serviço indisponivel ou cancelado -->
+
+<!-- Quando não há propostas: -->
+<!-- <app-fallback-message *ngIf="!fallbackMsg" (primaryAction)="goToHome()">
+</app-fallback-message> -->
+
+<!-- serviço concluido -->
+<!-- <app-fallback-message
+  *ngIf="fallbackMsg"
+  [statusPedido]="'finalizado'"
+  (primaryAction)="goToCardDetail(card)"
+>
+</app-fallback-message> -->
 
 <!-- Modal  -->
 <app-custom-modal #meuModal (click)="closeModal()"></app-custom-modal>

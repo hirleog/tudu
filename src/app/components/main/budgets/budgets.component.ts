@@ -31,6 +31,7 @@ export class BudgetsComponent implements OnInit {
   selectedCandidatura: any;
   paymentIndicator: string = '';
   processingBudget: boolean = false;
+  fallbackMsg: boolean = false;
 
   constructor(
     public cardService: CardService,
@@ -59,11 +60,19 @@ export class BudgetsComponent implements OnInit {
       next: (data: any) => {
         const candidaturas = data.candidaturas || [];
 
-        // if (candidaturas.length === 0) {
-        //   this.route.navigate(['/home']);
-        //   return;
-        // }
-
+        if (
+          data.status_pedido === 'finalizado' ||
+          data.status_pedido === 'cancelado'
+        ) {
+          this.fallbackMsg = true;
+          this.route.navigate(['home/detail'], {
+            queryParams: {
+              id: data.id_pedido,
+              flow: 'finalizado',
+            },
+          });
+          return;
+        }
         // Primeiro monta o card com ícone e candidaturas
         this.card = {
           ...data,
@@ -231,6 +240,19 @@ export class BudgetsComponent implements OnInit {
         param: 'professional',
         id: idPrestador,
         pedido: idPedido,
+      },
+    });
+  }
+
+  goToHome() {
+    this.route.navigate(['/home']);
+  }
+
+  goToCardDetail(card: any) {
+    this.route.navigate(['/home/detail'], {
+      queryParams: {
+        id: card.id_pedido,
+        flow: 'finalizado',
       },
     });
   }

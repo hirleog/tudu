@@ -143,4 +143,7 @@ export class ProgressComponent implements OnInit {
       },
     });
   }
+  goToHome() {
+    this.route.navigate(['/home']);
+  }
 }

@@ -50,36 +50,6 @@ p {
   /* Certifique-se de que a imagem tenha bordas arredondadas */
 }
 
-.empty-state-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 68vh;
-  padding: 2rem;
-  flex-direction: column;
-}
-
-.empty-state-card {
-  max-width: 500px;
-  width: 100%;
-  background: white;
-  border: 1px solid #e9ecef;
-}
-
-.empty-state-icon {
-  display: flex;
-  justify-content: center;
-  opacity: 0.7;
-}
-
-.empty-state-content h3 {
-  color: #343a40;
-}
-
-.text-gray-800 {
-  color: #343a40 !important;
-}
-
 @media (max-width: 350px) {
   .request-card h3 {
     font-size: 20px;

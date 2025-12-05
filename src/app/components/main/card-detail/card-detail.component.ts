@@ -63,7 +63,7 @@ export class CardDetailComponent implements OnInit {
   dateTimeSelected!: string;
   priceNegotiated: any;
   hideCalendarDays: boolean = false;
-  isNotificationFlag: any;
+  isNotificationFlag: string = 'false';
 
   constructor(
     public cardService: CardService,
@@ -316,7 +316,8 @@ export class CardDetailComponent implements OnInit {
 
   back(): void {
     // ✅ Verifica se deve voltar para notificações
-    if (this.isNotificationFlag === 'true' && this.flow !== 'progress') {
+    // if (this.isNotificationFlag === 'true' && this.flow === 'progress') {
+    if (this.isNotificationFlag === 'true') {
       this.backToNotification();
     } else if (this.isProfessionalIndicator) {
       const progressRoute =
@@ -329,10 +330,13 @@ export class CardDetailComponent implements OnInit {
           ? '/tudu-professional/historic'
           : '/tudu-professional/home';
 
-      if (this.flow === 'progress') {
+      if (this.flow === 'progress' && this.isNotificationFlag === 'false') {
         this.route.navigate([progressRoute]);
         return;
-      } else if (this.flow === 'historic') {
+      } else if (
+        this.flow === 'historic' &&
+        this.isNotificationFlag === 'false'
+      ) {
         this.route.navigate([historicRoute]);
         return;
       } else {
@@ -377,27 +381,52 @@ export class CardDetailComponent implements OnInit {
       });
     }
   }
+
   hideMobileButtons(card: any): boolean {
     // Regra 1: Card cancelado → SEMPRE esconder
     if (
       card.status_pedido === 'cancelado' ||
       card.candidaturas[0]?.status === 'negociacao' ||
       this.flow === 'progress' ||
+      this.flow === 'historic' ||
       !this.isProfessionalIndicator
     ) {
       return false;
     }
 
     // Regra 2: Profissional nos flows 'publicado' ou 'recusado' → esconder
-    if (
-      this.isProfessionalIndicator &&
-      (this.flow === 'publicado' || this.flow === 'recusado')
-    ) {
-      return true;
+    if (this.isProfessionalIndicator) {
+      if (card.status_pedido === 'finalizado') {
+        return false;
+      } else if (this.flow === 'publicado' || this.flow === 'recusado') {
+        return true;
+      }
     }
 
     // Demais casos: mostrar botões
     return true;
+  }
+
+  hideCancelBtn(): boolean {
+    if (!this.isProfessionalIndicator) {
+      if (
+        this.temCandidaturaDoPrestadorLogado &&
+        this.flow !== 'historic' &&
+        this.flow !== 'finalizado'
+      ) {
+        return true;
+      }
+    } else if (this.flow === 'progress') {
+      return false;
+    } else if (this.flow === 'andamento') {
+      return true;
+    }
+
+    // if (this.isProfessionalIndicator && this.flow === 'progress') {
+    //   return false;
+    // }
+
+    return false;
   }
   openModal() {
     this.isModalVisible = true;
