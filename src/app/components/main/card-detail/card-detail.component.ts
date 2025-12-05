@@ -316,7 +316,7 @@ export class CardDetailComponent implements OnInit {
 
   back(): void {
     // ✅ Verifica se deve voltar para notificações
-    if (this.isNotificationFlag === 'true') {
+    if (this.isNotificationFlag === 'true' && this.flow !== 'progress') {
       this.backToNotification();
     } else if (this.isProfessionalIndicator) {
       const progressRoute =
@@ -382,6 +382,7 @@ export class CardDetailComponent implements OnInit {
     if (
       card.status_pedido === 'cancelado' ||
       card.candidaturas[0]?.status === 'negociacao' ||
+      this.flow === 'progress' ||
       !this.isProfessionalIndicator
     ) {
       return false;

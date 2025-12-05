@@ -309,10 +309,10 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
 
         case 'hire_confirmed':
           console.log('🎉 Cliente - Contratação confirmada');
-          this.router.navigate(['/home/budgets'], {
+          this.router.navigate(['/home/detail'], {
             queryParams: {
               id: notification.id_pedido,
-              flow: 'andamento',
+              flow: 'progress',
             },
             state: {
               notificationData: 'true', // Dados extras
@@ -322,7 +322,7 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
 
         case 'service_completed':
           console.log('✅ Cliente - Serviço concluído');
-          this.router.navigate(['/home/budgets'], {
+          this.router.navigate(['/home/detail'], {
             queryParams: {
               id: notification.id_pedido,
               flow: 'finalizado',
