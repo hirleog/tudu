@@ -2,6 +2,7 @@ export interface PixChargeData {
   reference_id: string;
   description?: string;
   value?: number;
+  totalWithTax?: number;
   customer_name?: string;
   customer_email?: string;
   customer_tax_id?: string;

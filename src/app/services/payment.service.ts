@@ -78,6 +78,7 @@ export class PaymentService {
     // O backend agora espera apenas o reference_id
     const payload = {
       reference_id: pixData.reference_id,
+      totalWithTax: pixData.totalWithTax,
     };
 
     return this.http.post(

@@ -258,8 +258,8 @@ export class PaymentsComponent implements OnInit {
       // OPÇÃO 1: Tokenizar e pagar em uma única chamada (RECOMENDADO)
       await this.tokenCardNumber(formValue);
     } else if (this.paymentMethod === 'pix') {
-      // await this.processPixPayment();
-      this.testAuthDetailed();
+      await this.processPixPayment();
+      // this.testPagBankAuthentication();
     }
   }
 
@@ -437,9 +437,10 @@ export class PaymentsComponent implements OnInit {
 
     this.paymentService.testPagBankAuthDetailed().subscribe({
       next: (response) => {
-        const res = response;
+        const res = response
       },
-      error: (error) => {},
+      error: (error) => {
+      },
     });
   }
 
@@ -448,6 +449,7 @@ export class PaymentsComponent implements OnInit {
 
     const pixData: PixChargeData = {
       reference_id: this.hiredCard.id_pedido,
+      totalWithTax: this.totalWithTax
       // Removidos os outros campos pois não são mais necessários
       // O backend busca tudo do banco usando o reference_id
     };
