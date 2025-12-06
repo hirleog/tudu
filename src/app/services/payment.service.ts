@@ -75,12 +75,16 @@ export class PaymentService {
 
   // Método para criar cobrança PIX
   createPixCharge(pixData: any): Observable<any> {
+    // O backend agora espera apenas o reference_id
+    const payload = {
+      reference_id: pixData.reference_id,
+    };
+
     return this.http.post(
-      `${environment.apiUrl}/pagseguro/pix/charge`,
-      pixData
+      `${environment.apiUrl}/pagseguro/orders/pix`,
+      payload
     );
   }
-
   // Método para buscar status de uma charge PIX
   getPixChargeStatus(chargeId: string): Observable<any> {
     return this.http.get(`${environment.apiUrl}/pagseguro/charge/${chargeId}`);
@@ -101,8 +105,9 @@ export class PaymentService {
     );
   }
 
-  // Adicione este método no seu PaymentService
-  testPagBankAuth(): Observable<any> {
-    return this.http.get(`${environment.apiUrl}/pagseguro/check-api-key`);
+  testPagBankAuthDetailed(): Observable<any> {
+    return this.http.get<any>(
+      `${environment.apiUrl}/pagseguro/test-auth-detailed`
+    );
   }
 }

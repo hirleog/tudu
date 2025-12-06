@@ -13,6 +13,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { PixChargeData, PixResponse } from 'src/app/interfaces/pix.interface';
 import {
   MalgaPaymentRequest,
   MalgaPaymentWithTokenRequest,
@@ -257,8 +258,8 @@ export class PaymentsComponent implements OnInit {
       // OPÇÃO 1: Tokenizar e pagar em uma única chamada (RECOMENDADO)
       await this.tokenCardNumber(formValue);
     } else if (this.paymentMethod === 'pix') {
-      await this.processPixPayment();
-      // this.testPagBankAuthentication();
+      // await this.processPixPayment();
+      this.testAuthDetailed();
     }
   }
 
@@ -430,72 +431,78 @@ export class PaymentsComponent implements OnInit {
     localStorage.setItem('last_charge_id', chargeId);
   }
 
-  testPagBankAuthentication(): void {
-    console.log('🧪 Testando autenticação PagBank...');
+  testAuthDetailed() {
+    // this.loading.authDetailed = true;
+    // this.errorMessage = '';
 
-    this.paymentService.testPagBankAuth().subscribe({
-      next: (response: any) => {
-        console.log('✅ Resposta:', response);
-
-        if (response.success) {
-          alert('✅ Autenticação OK!\n' + response.message);
-        } else {
-          alert(
-            `❌ Falha:\n${response.error}\n\nConfig: ${JSON.stringify(
-              response.config,
-              null,
-              2
-            )}`
-          );
-        }
+    this.paymentService.testPagBankAuthDetailed().subscribe({
+      next: (response) => {
+        const res = response;
       },
-      error: (error) => {
-        console.error('❌ Erro:', error);
-        alert('❌ Erro na requisição: ' + error.message);
-      },
+      error: (error) => {},
     });
   }
 
   private async processPixPayment(): Promise<void> {
-    // if (!this.acceptedTerms) return;
-
     this.processingPayment = true;
 
-    const pixData = {
+    const pixData: PixChargeData = {
       reference_id: this.hiredCard.id_pedido,
-      description: `Pagamento - ${this.hiredCard.categoria}`,
-      value: Number(this.hiredCardInfo.candidaturas[0].valor_negociado),
-      customer_name: `${this.clientData.nome} ${this.clientData.sobrenome}`,
-      customer_email: this.clientData.email,
-      customer_tax_id: this.clientData.cpf,
-      expires_in_minutes: 30,
+      // Removidos os outros campos pois não são mais necessários
+      // O backend busca tudo do banco usando o reference_id
     };
 
     this.paymentService.createPixCharge(pixData).subscribe({
-      next: (response: any) => {
+      next: (response: PixResponse) => {
         this.processingPayment = false;
 
         if (response.success) {
-          // AGORA É BEM SIMPLES - dados diretos na resposta
+          // Garantir que temos os dados necessários
+          if (!response.data.qr_code) {
+            this.handlePaymentError('QR Code não foi gerado');
+            return;
+          }
+
           const pixInfo = {
-            qr_code: response.data.qr_code, // Código PIX copia e cola
-            qr_code_image: response.data.qr_code_image, // URL da imagem QR Code
-            encrypted_value: response.data.qr_code, // Compatibilidade
-            expiration_date: response.data.expiration_date, // Data de expiração
-            charge_id: response.data.id, // ID da charge
-            order_id: response.data.id, // ID do pedido
-            valor: response.data.amount.value / 100, // Valor em reais
-            local_payment_id: response.data.local_payment_id, // ID local
+            qr_code: response.data.qr_code,
+            qr_code_image: response.data.qr_code_image,
+            expiration_date: response.data.expiration_date,
+            order_id: response.data.order_id,
+            reference_id: response.data.reference_id,
+            local_payment_id: response.data.local_payment_id,
+            valor: response.data.amount?.value
+              ? response.data.amount.value / 100
+              : Number(this.hiredCardInfo.candidaturas[0].valor_negociado),
           };
+
+          console.log('✅ PIX criado:', {
+            reference: pixInfo.reference_id,
+            qrCode: pixInfo.qr_code?.substring(0, 50) + '...',
+            expiration: pixInfo.expiration_date,
+          });
 
           this.handlePixSuccess(pixInfo);
         } else {
-          this.handlePaymentError(response.error);
+          this.handlePaymentError(response.message);
         }
       },
       error: (error) => {
         this.processingPayment = false;
-        this.handlePaymentError(error);
+
+        // Tratamento de erro melhorado
+        let errorMessage = 'Erro ao processar pagamento';
+
+        if (error.status === 404) {
+          errorMessage = 'Pedido não encontrado no sistema';
+        } else if (error.status === 400) {
+          errorMessage = 'Dados inválidos para criação do PIX';
+        } else if (error.status === 500) {
+          errorMessage = 'Erro interno no servidor';
+        } else if (error.error?.message) {
+          errorMessage = error.error.message;
+        }
+
+        this.handlePaymentError(errorMessage);
       },
     });
   }
