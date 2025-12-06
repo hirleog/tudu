@@ -22,6 +22,7 @@ export class ProgressDetailComponent implements OnInit {
   finalizeCode: string = '';
   mapaUrl: SafeResourceUrl | null = null;
   codigoInvalido: boolean = false;
+  isProfessional: boolean = false;
 
   constructor(
     private profileDetailService: ProfileDetailService,
@@ -33,6 +34,9 @@ export class ProgressDetailComponent implements OnInit {
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
+    });
+    this.route.events.subscribe(() => {
+      this.isProfessional = this.route.url.includes('professional');
     });
   }
 
@@ -84,6 +88,14 @@ export class ProgressDetailComponent implements OnInit {
         const candidatura = card.candidaturas?.[0];
         if (candidatura?.prestador_id) {
           this.loadPrestador(candidatura.prestador_id);
+        }
+
+        if (this.card[0].status_pedido === 'finalizado') {
+          if (this.isProfessional) {
+            this.route.navigate(['/tudu-professional/home']);
+          } else {
+            this.route.navigate(['/home']);
+          }
         }
       },
       error: (err) => {

@@ -125,12 +125,7 @@
 
         <!-- Formas de Pagamento -->
         <!-- border: 1px solid var(--bottom-transparent); -->
-        <div
-          class="lg:col-span-2 p-1"
-          style="
-            border-radius: 5px;
-          "
-        >
+        <div class="lg:col-span-2 p-1" style="border-radius: 5px">
           <div class="rounded-lg shadow-md overflow-hidden">
             <div class="p-6 border-b border-gray-200">
               <h2 class="text-xl font-semibold">Método de Pagamento</h2>
@@ -170,7 +165,7 @@
             <div class="p-3">
               <!-- Pix -->
               <div *ngIf="paymentMethod === 'pix'" class="animate-fade-in">
-                <div class="text-center mb-6">
+                <!-- <div class="text-center mb-6">
                   <div class="p-6 rounded-lg inline-block">
                     <i class="fas fa-qrcode text-6xl text-blue-500 mb-4"></i>
                     <p class="text-gray-700 mb-4">
@@ -183,29 +178,74 @@
                       Gerar QR Code
                     </button>
                   </div>
+                </div> -->
+
+                <!-- Estado de carregamento -->
+                <div *ngIf="generatingPix" class="text-center py-8">
+                  <div class="inline-block">
+                    <!-- Spinner -->
+                    <div
+                      class="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"
+                    ></div>
+
+                    <p class="text-gray-600 font-medium">
+                      Gerando QR Code PIX...
+                    </p>
+                    <p class="text-sm text-gray-500 mt-2">
+                      Aguarde alguns segundos
+                    </p>
+
+                    <!-- Barra de progresso opcional -->
+                    <div
+                      class="w-48 h-1 bg-gray-200 rounded-full overflow-hidden mt-4 mx-auto"
+                    >
+                      <div class="h-full bg-blue-500 animate-pulse"></div>
+                    </div>
+                  </div>
                 </div>
 
-                <div *ngIf="pixGenerated" class="text-center">
+                <!-- QR Code gerado -->
+                <div *ngIf="pixGenerated && !generatingPix" class="text-center">
                   <div
                     class="border border-gray-200 rounded-lg p-6 inline-block mb-4"
                   >
                     <img
-                      src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PIX1234567890"
+                      [src]="qrCodeData.data.qr_code.image_url"
                       alt="QR Code Pix"
                       class="mx-auto mb-4"
                     />
                     <p class="text-sm text-gray-600 mb-2">
                       Código Pix copiado automaticamente
                     </p>
-                    <div class="flex items-center justify-center p-2 rounded">
-                      <code class="text-sm font-mono">PIX1234567890</code>
-                      <button class="ml-2 text-blue-500 hover:text-blue-700">
+                    <div
+                      class="flex items-center justify-center p-2 rounded bg-gray-100"
+                    >
+                      <code class="text-sm font-mono truncate max-w-xs">
+                        {{ qrCodeData.data.qr_code.text | slice : 0 : 13 }}
+                      </code>
+                      <button
+                        class="ml-2 text-blue-500 hover:text-blue-700"
+                        (click)="
+                          copyToClipboard(qrCodeData.data.qr_code.text, $event)
+                        "
+                        [title]="'Copiar código PIX completo'"
+                      >
                         <i class="far fa-copy"></i>
                       </button>
                     </div>
                   </div>
                   <p class="text-sm text-gray-500">
-                    O QR Code expira em <span class="font-medium">29:59</span>
+                    O QR Code expira em
+                    <span class="font-medium">
+                      {{
+                        qrCodeData.data.qr_code.expiration_date
+                          | date : "dd/MM/yyyy"
+                      }}
+                      às
+                      {{
+                        qrCodeData.data.qr_code.expiration_date | date : "HH:mm"
+                      }}
+                    </span>
                   </p>
                 </div>
 

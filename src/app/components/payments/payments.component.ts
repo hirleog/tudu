@@ -44,6 +44,8 @@ export class PaymentsComponent implements OnInit {
   @Output() payHiredCard = new EventEmitter<string>();
 
   pixGenerated: boolean = false;
+  generatingPix: boolean = false;
+
   cardFlipped: boolean = false;
   showCvvHelp: boolean = false;
   processingPayment: boolean = false;
@@ -64,6 +66,7 @@ export class PaymentsComponent implements OnInit {
 
   paymentMethod: 'pix' | 'credit' | null = null;
   defaultTax: number = 19.9;
+  qrCodeData: any;
 
   constructor(
     private paymentService: PaymentService,
@@ -153,6 +156,7 @@ export class PaymentsComponent implements OnInit {
   selectPaymentMethod(method: 'pix' | 'credit'): void {
     this.paymentMethod = method;
     if (method === 'pix') {
+      this.submitPayment();
       this.paymentForm.reset({
         installments: '1',
         acceptedTerms: false,
@@ -379,84 +383,20 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
-  // Atualize também o handlePaymentResponse para lidar com pré-autorização
-  // private handlePaymentResponse(response: any): void {
-  //   if (response.success) {
-  //     if (response.capture === false) {
-  //       // Pré-autorização bem-sucedida - aguardar captura
-  //       this.showSuccessMessage(
-  //         'Pré-autorização realizada com sucesso! ' +
-  //           'O valor foi reservado em seu cartão e será capturado em breve.'
-  //       );
-
-  //       // Guardar o charge_id para captura futura
-  //       this.storeChargeId(response.charge_id);
-  //     } else {
-  //       // Captura imediata bem-sucedida
-  //       this.showSuccessMessage('Pagamento realizado com sucesso!');
-  //     }
-
-  //     // Navegar para página de sucesso
-  //     this.router.navigate(['/payment-success'], {
-  //       state: {
-  //         paymentData: response,
-  //         orderId: response.id_pedido,
-  //       },
-  //     });
-  //   } else {
-  //     this.handlePaymentError(response);
-  //   }
-  // }
-
-  // Método para capturar pré-autorização posteriormente
-  // async capturePreAuthorizedPayment(
-  //   chargeId: string,
-  //   amount?: number
-  // ): Promise<void> {
-  //   this.malgaService.captureCharge(chargeId, amount).subscribe({
-  //     next: (res) => {
-  //       console.log('Captura realizada com sucesso:', res);
-  //       // Atualizar status do pedido no seu sistema
-  //     },
-  //     error: (error) => {
-  //       console.error('Erro na captura:', error);
-  //       // Tratar erro de captura
-  //     },
-  //   });
-  // }
-
-  // Armazenar charge_id para uso futuro
-  private storeChargeId(chargeId: string): void {
-    // Salvar no localStorage, service state, ou enviar para seu backend
-    localStorage.setItem('last_charge_id', chargeId);
-  }
-
-  testAuthDetailed() {
-    // this.loading.authDetailed = true;
-    // this.errorMessage = '';
-
-    this.paymentService.testPagBankAuthDetailed().subscribe({
-      next: (response) => {
-        const res = response
-      },
-      error: (error) => {
-      },
-    });
-  }
-
   private async processPixPayment(): Promise<void> {
     this.processingPayment = true;
+    this.generatingPix = true;
+    this.pixGenerated = false;
 
     const pixData: PixChargeData = {
       reference_id: this.hiredCard.id_pedido,
-      totalWithTax: this.totalWithTax
-      // Removidos os outros campos pois não são mais necessários
-      // O backend busca tudo do banco usando o reference_id
+      totalWithTax: this.totalWithTax,
     };
 
     this.paymentService.createPixCharge(pixData).subscribe({
       next: (response: PixResponse) => {
         this.processingPayment = false;
+        this.generatingPix = false;
 
         if (response.success) {
           // Garantir que temos os dados necessários
@@ -464,26 +404,9 @@ export class PaymentsComponent implements OnInit {
             this.handlePaymentError('QR Code não foi gerado');
             return;
           }
+          this.pixGenerated = true;
 
-          const pixInfo = {
-            qr_code: response.data.qr_code,
-            qr_code_image: response.data.qr_code_image,
-            expiration_date: response.data.expiration_date,
-            order_id: response.data.order_id,
-            reference_id: response.data.reference_id,
-            local_payment_id: response.data.local_payment_id,
-            valor: response.data.amount?.value
-              ? response.data.amount.value / 100
-              : Number(this.hiredCardInfo.candidaturas[0].valor_negociado),
-          };
-
-          console.log('✅ PIX criado:', {
-            reference: pixInfo.reference_id,
-            qrCode: pixInfo.qr_code?.substring(0, 50) + '...',
-            expiration: pixInfo.expiration_date,
-          });
-
-          this.handlePixSuccess(pixInfo);
+          this.handlePixSuccess(response);
         } else {
           this.handlePaymentError(response.message);
         }
@@ -551,31 +474,42 @@ export class PaymentsComponent implements OnInit {
   }
 
   private handlePixSuccess(response: any): void {
-    this.payHiredCard.emit('success');
+    // FLUXO DE SUCESSO PARA AVISAR O COMPONENTE DE BUDGET QUE O PAGAMENTO DEU CERTO E FAZER DIRECIONAMENTO PARA TELA DE PEDIDO PENDENTE
+    // this.payHiredCard.emit('success');
 
-    // Extrai os dados do PIX da resposta
-    const pixData = response.payment_method?.pix;
-    const chargeId = response.id;
-    const localPaymentId = response.local_payment_id;
+    this.generatePix();
+    this.qrCodeData = response;
 
-    if (!pixData) {
-      this.handlePaymentError('Dados do PIX não encontrados na resposta');
-      return;
-    }
+    // this.customModal.openModal();
+    // this.customModal.configureModal('success', 'PIX gerado com sucesso!');
+  }
 
-    // Salva os dados do PIX para exibir no modal
-    const pixInfo = {
-      qr_code: pixData.qr_code,
-      qr_code_image: pixData.qr_code_image,
-      encrypted_value: pixData.encrypted_value,
-      expiration_date: pixData.expiration_date,
-      charge_id: chargeId,
-      local_payment_id: localPaymentId,
-      valor: response.amount.value / 100, // Converter para reais
-    };
+  copyToClipboard(text: string, event?: Event): void {
+    event?.preventDefault(); // Previne comportamento padrão se necessário
 
-    this.customModal.openModal();
-    this.customModal.configureModal('success', 'PIX gerado com sucesso!');
+    navigator.clipboard.writeText(text).then(() => {
+      // Feedback visual
+      if (event) {
+        const button = event.target as HTMLElement;
+        const originalIcon = button.innerHTML;
+
+        button.innerHTML = '<i class="fas fa-check text-green-500"></i>';
+        button.classList.remove('text-blue-500');
+        button.classList.add('text-green-500');
+
+        // Voltar ao normal após 2 segundos
+        setTimeout(() => {
+          button.innerHTML = originalIcon;
+          button.classList.remove('text-green-500');
+          button.classList.add('text-blue-500');
+        }, 2000);
+      }
+    });
+  }
+  showToast(message: string, type: 'success' | 'error' = 'success'): void {
+    // Implemente seu sistema de notificação
+    // Ou use simples alert
+    alert(message);
   }
 
   private handlePaymentError(error: any): void {
