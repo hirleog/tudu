@@ -129,18 +129,18 @@ export class CardDetailComponent implements OnInit {
           })),
         });
 
-        // Verifica se existe candidatura do prestador logado
-        this.temCandidaturaDoPrestadorLogado = this.cards[0].candidaturas.find(
-          (candidatura: any) => candidatura.prestador_id === this.id_prestador
-        );
+        // Verifica se existe candidatura do prestador logado - fluxo para prestador
+        // this.temCandidaturaDoPrestadorLogado = this.cards[0].candidaturas.find(
+        //   (candidatura: any) => candidatura.prestador_id === this.id_prestador
+        // );
 
-        // Se já existe candidatura, redireciona para home/proposta
-        if (
-          this.temCandidaturaDoPrestadorLogado &&
-          !this.isProfessionalIndicator
-        ) {
-          this.goToHomeSeeProposal();
-        }
+        // // Se já existe candidatura, redireciona para home/proposta
+        // if (
+        //   this.temCandidaturaDoPrestadorLogado &&
+        //   !this.isProfessionalIndicator
+        // ) {
+        //   this.goToHomeSeeProposal();
+        // }
       },
       error: (err) => {
         console.error(err);
@@ -407,19 +407,21 @@ export class CardDetailComponent implements OnInit {
     return true;
   }
 
-  hideCancelBtn(): boolean {
-    if (!this.isProfessionalIndicator) {
-      if (
-        this.temCandidaturaDoPrestadorLogado &&
-        this.flow !== 'historic' &&
-        this.flow !== 'finalizado'
-      ) {
+  hideCancelBtn(status_pedido: string): boolean {
+    if (this.isProfessionalIndicator) {
+      if (status_pedido !== 'finalizado' && this.flow !== 'historic') {
+        //  mostra
         return true;
+      } else {
+        return false;
       }
-    } else if (this.flow === 'progress') {
-      return false;
-    } else if (this.flow === 'andamento') {
-      return true;
+    } else {
+      if (this.flow !== 'finalizado') {
+        //  mostra
+        return true;
+      } else {
+        return false;
+      }
     }
 
     // if (this.isProfessionalIndicator && this.flow === 'progress') {

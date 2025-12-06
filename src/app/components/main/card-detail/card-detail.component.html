@@ -476,23 +476,25 @@
       (onAdvance)="handleAdvance($event)"
     >
     </app-mobile-negotiation-bar>
+    <div
+      *ngIf="hideCancelBtn(card.status_pedido)"
+      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-40"
+    >
+      <div class="max-w-4xl mx-auto">
+        <button
+          class="w-full py-3 px-4 border border-red-500 text-red-500 rounded-xl font-medium hover:bg-red-50 transition-colors"
+          (click)="handleOption('cancelar', cards[0])"
+        >
+          {{
+            isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido"
+          }}
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
 <!-- Botão Fixo no Bottom (mantido) -->
-<div
-  *ngIf="hideCancelBtn()"
-  class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-40"
->
-  <div class="max-w-4xl mx-auto">
-    <button
-      class="w-full py-3 px-4 border border-red-500 text-red-500 rounded-xl font-medium hover:bg-red-50 transition-colors"
-      (click)="handleOption('cancelar', cards[0])"
-    >
-      {{ isProfessionalIndicator ? "Cancelar candidatura" : "Cancelar pedido" }}
-    </button>
-  </div>
-</div>
 
 <!-- MODAIS (mantidos exatamente como estavam) -->
 <app-custom-modal

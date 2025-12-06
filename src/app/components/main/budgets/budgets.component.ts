@@ -7,6 +7,7 @@ import { CardService } from 'src/app/services/card.service';
 import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 import { StateManagementService } from 'src/app/services/state-management.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-budgets',
@@ -32,6 +33,7 @@ export class BudgetsComponent implements OnInit {
   paymentIndicator: string = '';
   processingBudget: boolean = false;
   fallbackMsg: boolean = false;
+  isNotificationFlag: string = 'false';
 
   constructor(
     public cardService: CardService,
@@ -39,11 +41,16 @@ export class BudgetsComponent implements OnInit {
     private route: Router,
     private authService: AuthService,
     private profileDetailService: ProfileDetailService,
-    public stateManagementService: StateManagementService
+    public stateManagementService: StateManagementService,
+    private location: Location
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
     });
+    const navigation = this.route.getCurrentNavigation();
+    if (navigation?.extras?.state) {
+      this.isNotificationFlag = navigation.extras.state['notificationData'];
+    }
 
     this.authService.idPrestador$.subscribe((id_prestador) => {
       this.id_prestador = id_prestador;
@@ -228,6 +235,8 @@ export class BudgetsComponent implements OnInit {
   backToHome() {
     if (this.paymentStep) {
       this.paymentStep = !this.paymentStep;
+    } else if (this.isNotificationFlag === 'true') {
+      this.location.back();
     } else {
       this.route.navigate(['/home']);
     }
