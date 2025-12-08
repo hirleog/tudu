@@ -413,6 +413,8 @@ export class PaymentsComponent implements OnInit {
       },
       error: (error) => {
         this.processingPayment = false;
+        this.generatingPix = false;
+        this.pixGenerated = false;
 
         // Tratamento de erro melhorado
         let errorMessage = 'Erro ao processar pagamento';
@@ -795,10 +797,11 @@ export class PaymentsComponent implements OnInit {
   }
 
   get totalWithTax(): number {
-    return (
-      (this.selectedInstallmentOption?.totalValue || 0) +
-      (this.defaultTax || 0) * 100
-    );
+    // return (
+    //   (this.selectedInstallmentOption?.totalValue || 0) +
+    //   (this.defaultTax || 0) * 100
+    // );
+    return this.selectedInstallmentOption?.totalValue;
   }
   get candidatura(): any {
     const candidato = this.hiredCardInfo.candidaturas.find(
