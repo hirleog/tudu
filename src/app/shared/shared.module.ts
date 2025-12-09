@@ -5,7 +5,6 @@ import { CustomModalModule } from 'src/app/shared/custom-modal/custom-modal.modu
 import { TuduComponentsModule } from 'tudu-components';
 import { CurrencyFormatDirective } from '../directives/currency-format.directive';
 import { GoogleReviewsService } from '../services/google-reviews.service';
-import { FallbackMessageModule } from '../components/templates/fallback-message/fallback-message.module';
 
 @NgModule({
   declarations: [CurrencyFormatDirective],
@@ -20,7 +19,7 @@ import { FallbackMessageModule } from '../components/templates/fallback-message/
     CurrencyFormatDirective,
     CustomModalModule,
     TuduComponentsModule,
-    FallbackMessageModule,
+    // FallbackMessageModule,
     // StatusFilterPipe,
   ],
   providers: [GoogleReviewsService],

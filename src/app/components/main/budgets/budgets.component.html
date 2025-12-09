@@ -259,12 +259,12 @@
   </div>
 </div> -->
 <div class="container">
-  <app-fallback-message
+  <lib-fallback-message
     *ngIf="card?.candidaturas?.length === 0"
-    [statusPedido]="'indisponível'"
+    [statusPedido]="'indisponivel'"
     (click)="goToHome()"
   >
-  </app-fallback-message>
+  </lib-fallback-message>
 </div>
 
 <!-- serviço indisponivel ou cancelado -->
