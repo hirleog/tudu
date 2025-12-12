@@ -36,13 +36,18 @@ export class NotificationViewComponent implements OnInit, OnDestroy {
   hasMore = true;
   currentPage = 1;
   limit = 20;
+  isProfessional: boolean = false;
 
   constructor(
     private notificationViewService: NotificationViewService,
     private router: Router,
     private authService: AuthService,
     private location: Location
-  ) {}
+  ) {
+    this.router.events.subscribe(() => {
+      this.isProfessional = this.router.url.includes('professional');
+    });
+  }
 
   ngOnInit(): void {
     this.setupUserAuthentication();

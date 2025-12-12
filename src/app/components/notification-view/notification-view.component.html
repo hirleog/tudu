@@ -9,7 +9,12 @@
   </div>
 
   <div central-content>
-    <a routerLink="/" class="block">
+    <a
+      routerLink="/"
+      class="block"
+      [routerLink]="isProfessional ? '/tudu-professional/home' : '/'"
+      routerLinkActive="router-link-active"
+    >
       <img
         src="../../../assets/logo-branco.webp"
         style="width: 4em"
