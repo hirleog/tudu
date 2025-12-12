@@ -55,12 +55,21 @@
               <div class="flex justify-between mb-2">
                 <span>Serviço</span>
                 <span class="font-medium">
-                  {{ formatCurrency(selectedInstallmentOption?.totalValue) }}
+                  {{
+                    paymentMethod === "pix"
+                      ? formatCurrency(totalAmountFormatted)
+                      : formatCurrency(selectedInstallmentOption?.totalValue)
+                  }}
                 </span>
               </div>
+
+              <!-- {{ pixSurchargeReais | json }} -->
               <div class="flex justify-between mb-2">
                 <span>Taxas</span>
-                <span class="font-medium">R$ 19,90</span>
+                <!-- >{{ paymentMethod === 'pix' ? formatCurrency(finalDefaultTaxCents) : 'R$ 19,90'}}</span -->
+                <span class="font-medium">{{
+                  formatCurrency(totalTaxValue)
+                }}</span>
               </div>
               <div
                 class="flex justify-between text-lg font-semibold mt-4 pt-4 border-t border-gray-200"
@@ -87,6 +96,7 @@
 
             <div class="mt-8 flex flex-column gap-2">
               <button
+                *ngIf="paymentMethod !== 'pix'"
                 style="color: var(--secondary) !important"
                 class="col-12 btn btn-primary"
                 style="font-size: 17px"

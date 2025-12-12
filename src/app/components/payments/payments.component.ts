@@ -67,6 +67,7 @@ export class PaymentsComponent implements OnInit {
   paymentMethod: 'pix' | 'credit' | null = null;
   defaultTax: number = 19.9;
   qrCodeData: any;
+  totalAmountFormatted!: number;
 
   constructor(
     private paymentService: PaymentService,
@@ -578,12 +579,12 @@ export class PaymentsComponent implements OnInit {
   }
 
   calculateInstallments() {
-    const totalAmount = convertRealToCents(
+    this.totalAmountFormatted = convertRealToCents(
       this.hiredCardInfo.candidaturas[0].valor_negociado
     );
 
     const payload = {
-      totalValue: totalAmount,
+      totalValue: this.totalAmountFormatted,
     };
 
     this.paymentService.calculateInstallments(payload).subscribe({
@@ -797,12 +798,39 @@ export class PaymentsComponent implements OnInit {
   }
 
   get totalWithTax(): number {
+    // Se for PIX
+    if (this.paymentMethod === 'pix') {
+      // Pega o valor total base (ajuste conforme o nome da sua propriedade)
+      const totalAmount = this.totalAmountFormatted || 0; // ou this.totalAmountFormatted se for em centavos
+
+      // Aplica taxa de 3,99% sobre o valor total
+      const pixTax = totalAmount * 0.0399;
+
+      // Soma com a taxa padrão (se houver) e retorna
+      return totalAmount + pixTax + (this.defaultTax || 0) * 100;
+    }
+
+    // Para outros métodos de pagamento, usa a lógica original
     return (
       (this.selectedInstallmentOption?.totalValue || 0) +
       (this.defaultTax || 0) * 100
     );
-    // return this.selectedInstallmentOption?.totalValue;
   }
+  // return this.selectedInstallmentOption?.totalValue;
+  get totalTaxValue(): number {
+    if (this.paymentMethod === 'pix') {
+      const totalAmount = this.totalAmountFormatted || 0;
+      const pixTax = totalAmount * 0.0399;
+      const defaultTaxValue = (this.defaultTax || 0) * 100;
+
+      // Retorna apenas a soma das taxas (não inclui o valor principal)
+      return pixTax + defaultTaxValue;
+    }
+
+    // Para outros métodos, retorna apenas a defaultTax
+    return 1990;
+  }
+
   get candidatura(): any {
     const candidato = this.hiredCardInfo.candidaturas.find(
       (candidato: any) => candidato.prestador_id === this.selectedCandidatura
