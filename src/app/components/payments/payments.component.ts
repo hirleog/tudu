@@ -419,7 +419,8 @@ export class PaymentsComponent implements OnInit {
 
     const pixData: PixChargeData = {
       reference_id: this.hiredCard.id_pedido,
-      totalWithTax: this.totalWithTax,
+      // totalWithTax: this.totalWithTax,
+      totalWithTax: 100,
     };
 
     this.paymentService.createPixCharge(pixData).subscribe({
