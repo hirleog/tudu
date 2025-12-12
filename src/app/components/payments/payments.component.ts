@@ -20,8 +20,8 @@ import {
   MalgaService,
 } from 'src/app/malga/service/malga.service';
 import { PaymentFormatter } from 'src/app/malga/utils/payment-formatter';
+import { CardSocketService } from 'src/app/services/card-socket.service';
 import { DeviceService } from 'src/app/services/device/service/device.service';
-import { PaymentSocketService } from 'src/app/services/payment-socket.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { convertRealToCents, formatCurrency } from 'src/app/utils/utils';
@@ -77,7 +77,7 @@ export class PaymentsComponent implements OnInit {
     private fb: FormBuilder,
     private deviceService: DeviceService,
     private malgaService: MalgaService,
-    private paymentSocketService: PaymentSocketService
+    private cardSocketService: CardSocketService
   ) {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (_, i) =>
@@ -130,7 +130,7 @@ export class PaymentsComponent implements OnInit {
     if (!this.currentReferenceId) return;
 
     // ✅ NOVO: Começa a ouvir o status de pagamento
-    this.paymentSocketService
+    this.cardSocketService
       .ouvirStatusPagamento(this.currentReferenceId)
       .subscribe((data) => {
         console.log(`Status de Pagamento PIX recebido em tempo real:`, data);
@@ -138,6 +138,7 @@ export class PaymentsComponent implements OnInit {
         // Verifica o status que o backend enviou
         if (data.status === 'paid') {
           console.log('🎉 PAGAMENTO CONFIRMADO!');
+          this.handlePixSuccess(data);
           // Aqui você faz a transição de tela:
           // Ex: this.router.navigate(['/pagamento-sucesso', this.currentReferenceId]);
         }
@@ -483,13 +484,6 @@ export class PaymentsComponent implements OnInit {
   private handlePaymentSuccess(response: any): void {
     this.payHiredCard.emit('success');
 
-    // this.customModal.openModal();
-    // this.customModal.configureModal(
-    //   'success',
-    //   'Pagamento aprovado com sucesso!'
-    // );
-
-    // Salvar tokenId se retornado (para compras futuras)
     if (response.tokenId) {
       this.saveTokenForFutureUse(response.tokenId);
     }
@@ -507,13 +501,8 @@ export class PaymentsComponent implements OnInit {
 
   private handlePixSuccess(response: any): void {
     // FLUXO DE SUCESSO PARA AVISAR O COMPONENTE DE BUDGET QUE O PAGAMENTO DEU CERTO E FAZER DIRECIONAMENTO PARA TELA DE PEDIDO PENDENTE
-    // this.payHiredCard.emit('success');
-
-    this.generatePix();
-    this.qrCodeData = response;
-
-    // this.customModal.openModal();
-    // this.customModal.configureModal('success', 'PIX gerado com sucesso!');
+    console.log('response de sucesso do pix', response);
+    this.payHiredCard.emit('success');
   }
 
   copyToClipboard(text: string, event?: Event): void {

@@ -33,4 +33,18 @@ export class CardSocketService {
       console.log('Conectado ao socket de candidatura');
     });
   }
+
+  // PAGBANK
+  ouvirStatusPagamento(orderReferenceId: string): Observable<any> {
+    // 1. Entra na "sala" específica daquele pedido/referência
+    this.socket.emit('joinOrderRoom', orderReferenceId); // <--- Você precisa de um listener no backend para isso!
+
+    // 2. Retorna um Observable que escuta o evento de sucesso
+    return new Observable((observer) => {
+      // O nome do evento deve ser o mesmo que o Backend EMITIRÁ
+      this.socket.on('paymentStatus', (data) => {
+        observer.next(data);
+      });
+    });
+  }
 }
