@@ -21,6 +21,7 @@ import {
 } from 'src/app/malga/service/malga.service';
 import { PaymentFormatter } from 'src/app/malga/utils/payment-formatter';
 import { DeviceService } from 'src/app/services/device/service/device.service';
+import { PaymentSocketService } from 'src/app/services/payment-socket.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { convertRealToCents, formatCurrency } from 'src/app/utils/utils';
@@ -69,11 +70,14 @@ export class PaymentsComponent implements OnInit {
   qrCodeData: any;
   totalAmountFormatted!: number;
 
+  currentReferenceId!: string;
+
   constructor(
     private paymentService: PaymentService,
     private fb: FormBuilder,
     private deviceService: DeviceService,
-    private malgaService: MalgaService
+    private malgaService: MalgaService,
+    private paymentSocketService: PaymentSocketService
   ) {
     const currentYear = new Date().getFullYear();
     this.years = Array.from({ length: 10 }, (_, i) =>
@@ -105,6 +109,12 @@ export class PaymentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.hiredCard && this.hiredCard.id_pedido) {
+      this.currentReferenceId = this.hiredCard.id_pedido;
+    }
+
+    this.iniciarEscutaPagamento();
+
     this.calculateInstallments();
     this.paymentService.getCharges().subscribe({
       next: (data) => {
@@ -114,6 +124,24 @@ export class PaymentsComponent implements OnInit {
         console.log('errorajdhkjahsdkjashd', error);
       },
     });
+  }
+
+  iniciarEscutaPagamento() {
+    if (!this.currentReferenceId) return;
+
+    // ✅ NOVO: Começa a ouvir o status de pagamento
+    this.paymentSocketService
+      .ouvirStatusPagamento(this.currentReferenceId)
+      .subscribe((data) => {
+        console.log(`Status de Pagamento PIX recebido em tempo real:`, data);
+
+        // Verifica o status que o backend enviou
+        if (data.status === 'paid') {
+          console.log('🎉 PAGAMENTO CONFIRMADO!');
+          // Aqui você faz a transição de tela:
+          // Ex: this.router.navigate(['/pagamento-sucesso', this.currentReferenceId]);
+        }
+      });
   }
 
   get f() {
@@ -800,17 +828,49 @@ export class PaymentsComponent implements OnInit {
   get totalWithTax(): number {
     // Se for PIX
     if (this.paymentMethod === 'pix') {
-      // Pega o valor total base (ajuste conforme o nome da sua propriedade)
-      const totalAmount = this.totalAmountFormatted || 0; // ou this.totalAmountFormatted se for em centavos
+      const totalAmount = this.totalAmountFormatted || 0; // Valor base em centavos
 
-      // Aplica taxa de 3,99% sobre o valor total
-      const pixTax = totalAmount * 0.0399;
+      // 1. Calcula as taxas em centavos
+      const pixTaxInCents = totalAmount * 0.0399; // Taxa PIX
+      const defaultTaxInCents = (this.defaultTax || 0) * 100; // Taxa padrão (se já estiver em R$, multiplica por 100)
 
-      // Soma com a taxa padrão (se houver) e retorna
-      return totalAmount + pixTax + (this.defaultTax || 0) * 100;
+      // 2. Soma todos os valores (tudo deve estar em centavos)
+      const totalInCentsWithTax =
+        totalAmount + pixTaxInCents + defaultTaxInCents;
+
+      // 🚨 O PROBLEMA: A SOMA ACIMA PODE TER CASAS DECIMAIS (e.g., 250995.45)
+      // Se totalAmount (base) estiver em centavos, a multiplicação de `pixTaxInCents` gera a decimal.
+
+      // CORREÇÃO: Vamos fazer a soma em Reais primeiro, e só então converter para Centavos e Arredondar
+
+      const totalAmountInReais = totalAmount / 100; // Converte a base de volta para R$ (se totalAmount estava em centavos)
+
+      // Se totalAmount já estiver em Reais:
+      let totalValueInReais = this.totalAmountFormatted / 100; // Seu valor base em R$
+
+      // Se `this.totalAmountFormatted` já é em Reais:
+      if (this.totalAmountFormatted < 1000) {
+        totalValueInReais = this.totalAmountFormatted; // Supondo que você ajustará o `totalAmountFormatted` para ser em Reais
+      }
+
+      // Assumindo que `totalAmount` é o valor BASE em centavos:
+      const baseValue = totalAmount / 100; // Valor base em R$ (ex: 2500.00)
+
+      // Calcula o valor total em Reais (com decimais, ex: 25.0995)
+      const calculatedValueInReais =
+        baseValue +
+        baseValue * 0.0399 + // Taxa PIX
+        (this.defaultTax || 0); // Taxa padrão em R$
+
+      // 3. Multiplica por 100 e arredonda para cima (ceil)
+      const finalValueInCents = Math.ceil(calculatedValueInReais * 100);
+
+      console.log('Valor final em Centavos para o Backend:', finalValueInCents);
+
+      return finalValueInCents;
     }
 
-    // Para outros métodos de pagamento, usa a lógica original
+    // Para outros métodos de pagamento (manter como está, ou garantir que esteja em centavos)
     return (
       (this.selectedInstallmentOption?.totalValue || 0) +
       (this.defaultTax || 0) * 100
