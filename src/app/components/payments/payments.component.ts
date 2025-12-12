@@ -797,11 +797,11 @@ export class PaymentsComponent implements OnInit {
   }
 
   get totalWithTax(): number {
-    // return (
-    //   (this.selectedInstallmentOption?.totalValue || 0) +
-    //   (this.defaultTax || 0) * 100
-    // );
-    return this.selectedInstallmentOption?.totalValue;
+    return (
+      (this.selectedInstallmentOption?.totalValue || 0) +
+      (this.defaultTax || 0) * 100
+    );
+    // return this.selectedInstallmentOption?.totalValue;
   }
   get candidatura(): any {
     const candidato = this.hiredCardInfo.candidaturas.find(
