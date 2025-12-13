@@ -436,8 +436,6 @@ export class PaymentsComponent implements OnInit {
             return;
           }
           this.pixGenerated = true;
-
-          this.handlePixSuccess(response);
         } else {
           this.handlePaymentError(response.message);
         }
