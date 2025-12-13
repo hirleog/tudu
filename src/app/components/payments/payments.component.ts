@@ -138,9 +138,7 @@ export class PaymentsComponent implements OnInit {
         // Verifica o status que o backend enviou
         if (data.status === 'paid') {
           console.log('🎉 PAGAMENTO CONFIRMADO!');
-          this.handlePixSuccess(data);
-          // Aqui você faz a transição de tela:
-          // Ex: this.router.navigate(['/pagamento-sucesso', this.currentReferenceId]);
+          this.handlePixSuccess();
         }
       });
   }
@@ -436,6 +434,9 @@ export class PaymentsComponent implements OnInit {
             return;
           }
           this.pixGenerated = true;
+
+          this.generatePix();
+          this.qrCodeData = response;
         } else {
           this.handlePaymentError(response.message);
         }
@@ -482,6 +483,13 @@ export class PaymentsComponent implements OnInit {
   private handlePaymentSuccess(response: any): void {
     this.payHiredCard.emit('success');
 
+    // this.customModal.openModal();
+    // this.customModal.configureModal(
+    //   'success',
+    //   'Pagamento aprovado com sucesso!'
+    // );
+
+    // Salvar tokenId se retornado (para compras futuras)
     if (response.tokenId) {
       this.saveTokenForFutureUse(response.tokenId);
     }
@@ -497,10 +505,12 @@ export class PaymentsComponent implements OnInit {
     );
   }
 
-  private handlePixSuccess(response: any): void {
+  private handlePixSuccess(response?: any): void {
     // FLUXO DE SUCESSO PARA AVISAR O COMPONENTE DE BUDGET QUE O PAGAMENTO DEU CERTO E FAZER DIRECIONAMENTO PARA TELA DE PEDIDO PENDENTE
-    console.log('response de sucesso do pix', response);
     this.payHiredCard.emit('success');
+
+    // this.customModal.openModal();
+    // this.customModal.configureModal('success', 'PIX gerado com sucesso!');
   }
 
   copyToClipboard(text: string, event?: Event): void {

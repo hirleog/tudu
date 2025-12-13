@@ -220,7 +220,7 @@
                     class="border border-gray-200 rounded-lg p-6 inline-block mb-4"
                   >
                     <img
-                      [src]="qrCodeData.data.qr_code.image_url"
+                      [src]="qrCodeData?.data?.qr_code?.image_url"
                       alt="QR Code Pix"
                       class="mb-4"
                     />
@@ -231,12 +231,15 @@
                       class="flex items-center justify-center p-2 rounded bg-gray-100"
                     >
                       <code class="text-sm font-mono truncate max-w-xs">
-                        {{ qrCodeData.data.qr_code.text | slice : 0 : 13 }}
+                        {{ qrCodeData?.data?.qr_code?.text | slice : 0 : 13 }}
                       </code>
                       <button
                         class="ml-2 text-blue-500 hover:text-blue-700"
                         (click)="
-                          copyToClipboard(qrCodeData.data.qr_code.text, $event)
+                          copyToClipboard(
+                            qrCodeData?.data?.qr_code?.text,
+                            $event
+                          )
                         "
                         [title]="'Copiar código PIX completo'"
                       >
@@ -248,12 +251,13 @@
                     O QR Code expira em
                     <span class="font-medium">
                       {{
-                        qrCodeData.data.qr_code.expiration_date
+                        qrCodeData?.data?.qr_code?.expiration_date
                           | date : "dd/MM/yyyy"
                       }}
                       às
                       {{
-                        qrCodeData.data.qr_code.expiration_date | date : "HH:mm"
+                        qrCodeData?.data?.qr_code?.expiration_date
+                          | date : "HH:mm"
                       }}
                     </span>
                   </p>
