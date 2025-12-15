@@ -419,8 +419,8 @@ export class PaymentsComponent implements OnInit {
 
     const pixData: PixChargeData = {
       reference_id: this.hiredCard.id_pedido,
-      // totalWithTax: this.totalWithTax,
-      totalWithTax: 100,
+      totalWithTax: this.totalWithTax,
+      // totalWithTax: 100,
     };
 
     this.pagbankService.createPixCharge(pixData).subscribe({
@@ -484,12 +484,6 @@ export class PaymentsComponent implements OnInit {
   private handlePaymentSuccess(response: any): void {
     this.payHiredCard.emit('success');
 
-    // this.customModal.openModal();
-    // this.customModal.configureModal(
-    //   'success',
-    //   'Pagamento aprovado com sucesso!'
-    // );
-
     // Salvar tokenId se retornado (para compras futuras)
     if (response.tokenId) {
       this.saveTokenForFutureUse(response.tokenId);
@@ -509,9 +503,6 @@ export class PaymentsComponent implements OnInit {
   private handlePixSuccess(response?: any): void {
     // FLUXO DE SUCESSO PARA AVISAR O COMPONENTE DE BUDGET QUE O PAGAMENTO DEU CERTO E FAZER DIRECIONAMENTO PARA TELA DE PEDIDO PENDENTE
     this.payHiredCard.emit('success');
-
-    // this.customModal.openModal();
-    // this.customModal.configureModal('success', 'PIX gerado com sucesso!');
   }
 
   copyToClipboard(text: string, event?: Event): void {
