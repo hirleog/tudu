@@ -4,7 +4,7 @@ import { CardOrders } from 'src/app/interfaces/card-orders';
 import { MalgaService } from 'src/app/malga/service/malga.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { CardService } from 'src/app/services/card.service';
-import { PaymentService } from 'src/app/services/payment.service';
+import { PagbankService } from 'src/app/services/pagbank.service';
 import { StateManagementService } from 'src/app/services/state-management.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 
@@ -29,21 +29,23 @@ export class OrderHelpComponent implements OnInit {
   id_prestador!: string | null;
   loadingBtn: boolean = false;
   flow: string = '';
+  paymentType: string = '';
 
   constructor(
     private routeActive: ActivatedRoute,
     private router: Router,
-    private paymentService: PaymentService,
     private cardService: CardService,
     public stateManagementService: StateManagementService,
     private authService: AuthService,
-    private malgaService: MalgaService
+    private malgaService: MalgaService,
+    private pagbankService: PagbankService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'] || '';
       this.questionTitle = params['questionTitle'] || '';
       this.card.push(params['card'] ? JSON.parse(params['card']) : null);
       this.flow = params['flow'] || '';
+      this.paymentType = params['paymentType'] || '';
     });
 
     this.authService.idPrestador$.subscribe((id_prestador) => {
@@ -174,35 +176,49 @@ export class OrderHelpComponent implements OnInit {
     const reason = this.message;
     const idPedido: string = this.card[0].id_pedido ?? '';
 
-    if (reason) {
-      this.cardService.cancelCard(idPedido, reason).subscribe({
-        next: (response) => {
-          this.reqStatus = response.status === 'success' ? 'success' : 'error';
-
-          if (this.flow === 'progress') {
-            this.cancelPayment();
-          } else {
-            this.customModal.openModal();
-            this.customModal.configureModal(
-              'success',
-              response.message || 'Pedido cancelado com sucesso.'
-            );
-            this.loadingBtn = false;
-          }
-
-          this.stateManagementService.clearAllState();
-        },
-        error: (err) => {
-          this.customModal.openModal();
-          this.customModal.configureModal(
-            'error',
-            err.message ||
-              'Erro ao cancelar o pedido. Tente novamente mais tarde.'
-          );
-          this.loadingBtn = false;
-        },
-      });
+    if (this.flow === 'progress') {
+      if (this.paymentType === 'pix') {
+        this.cancelPixPayment();
+      } else {
+        this.cancelCreditPayment();
+      }
+    } else {
+      this.loadingBtn = false;
     }
+
+    // if (reason) {
+    //   this.cardService.cancelCard(idPedido, reason).subscribe({
+    //     next: (response) => {
+    //       this.reqStatus = response.status === 'success' ? 'success' : 'error';
+
+    //       // if (this.flow === 'progress') {
+    //       //   if (this.paymentType === 'pix') {
+    //       //     this.cancelPixPayment();
+    //       //   } else {
+    //       //     this.cancelCreditPayment();
+    //       //   }
+    //       // } else {
+    //       //   this.customModal.openModal();
+    //       //   this.customModal.configureModal(
+    //       //     'success',
+    //       //     response.message || 'Pedido cancelado com sucesso.'
+    //       //   );
+    //       //   this.loadingBtn = false;
+    //       // }
+
+    //       this.stateManagementService.clearAllState();
+    //     },
+    //     error: (err) => {
+    //       this.customModal.openModal();
+    //       this.customModal.configureModal(
+    //         'error',
+    //         err.message ||
+    //           'Erro ao cancelar o pedido. Tente novamente mais tarde.'
+    //       );
+    //       this.loadingBtn = false;
+    //     },
+    //   });
+    // }
   }
 
   cancelarCandidatura() {
@@ -222,7 +238,7 @@ export class OrderHelpComponent implements OnInit {
           this.reqStatus = response.status;
 
           if (this.flow === 'progress') {
-            this.cancelPayment();
+            this.cancelCreditPayment();
           } else {
             this.customModal.openModal();
             this.customModal.configureModal(
@@ -246,7 +262,7 @@ export class OrderHelpComponent implements OnInit {
       });
   }
 
-  cancelPayment() {
+  cancelCreditPayment() {
     const payload = {
       amount: Number(this.card[0].chargeInfos?.total_amount),
     };
@@ -273,6 +289,50 @@ export class OrderHelpComponent implements OnInit {
               'Erro ao cancelar o pagamento. Tente novamente mais tarde.'
           );
           this.loadingBtn = false;
+        },
+      });
+  }
+
+  cancelPixPayment() {
+    // 1. Obter o identificador PagBank
+    const paymentId = this.card[0].chargeInfos?.charge_id ?? '';
+    const payload = {
+      amount: 100,
+    };
+
+    if (!paymentId) {
+      // Lógica de erro para ID ausente
+      // ...
+      return;
+    }
+
+    this.loadingBtn = true;
+
+    // 2. Chamada do serviço (sem payload de amount)
+    this.pagbankService // ⚠️ Use o nome correto do seu serviço injetado
+      .cancelPixPayment(paymentId, payload)
+      .subscribe({
+        next: (response: any) => {
+          this.reqStatus = response.success === true ? 'success' : 'error';
+
+          this.customModal.openModal();
+          this.customModal.configureModal(
+            'success',
+            response.message ||
+              'Estorno PIX solicitado. O backend enviou o amount total ao PagBank.'
+          );
+          this.stateManagementService.clearAllState();
+          this.loadingBtn = false;
+        },
+        error: (err) => {
+          this.loadingBtn = false;
+          const errorMessage =
+            err.error?.message ||
+            err.message ||
+            'Erro na solicitação de estorno PIX.';
+
+          this.customModal.openModal();
+          this.customModal.configureModal('error', errorMessage);
         },
       });
   }

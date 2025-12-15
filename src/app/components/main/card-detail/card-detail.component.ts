@@ -463,6 +463,7 @@ export class CardDetailComponent implements OnInit {
           questionTitle: option,
           card: JSON.stringify(card),
           flow: this.flow,
+          paymentType: this.cards[0]?.chargeInfos?.paymentType,
         },
       });
     } else {
@@ -472,6 +473,7 @@ export class CardDetailComponent implements OnInit {
           questionTitle: option,
           card: JSON.stringify(card),
           flow: this.flow,
+          paymentType: this.cards[0]?.chargeInfos?.paymentType,
         },
       });
     }

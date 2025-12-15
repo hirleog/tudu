@@ -41,6 +41,7 @@ export interface CardOrders {
   chargeInfos?: {
     charge_id?: string;
     total_amount?: string;
+    paymentType?: string;
   };
   charge_id?: string; // ID da cobrança no Malga
   temNovaCandidatura?: boolean; // Indica se há uma nova candidatura

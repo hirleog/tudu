@@ -22,6 +22,7 @@ import {
 import { PaymentFormatter } from 'src/app/malga/utils/payment-formatter';
 import { CardSocketService } from 'src/app/services/card-socket.service';
 import { DeviceService } from 'src/app/services/device/service/device.service';
+import { PagbankService } from 'src/app/services/pagbank.service';
 import { PaymentService } from 'src/app/services/payment.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { convertRealToCents, formatCurrency } from 'src/app/utils/utils';
@@ -74,6 +75,7 @@ export class PaymentsComponent implements OnInit {
 
   constructor(
     private paymentService: PaymentService,
+    private pagbankService: PagbankService,
     private fb: FormBuilder,
     private deviceService: DeviceService,
     private malgaService: MalgaService,
@@ -111,9 +113,8 @@ export class PaymentsComponent implements OnInit {
   ngOnInit(): void {
     if (this.hiredCard && this.hiredCard.id_pedido) {
       this.currentReferenceId = this.hiredCard.id_pedido;
+      this.iniciarEscutaPagamento();
     }
-
-    this.iniciarEscutaPagamento();
 
     this.calculateInstallments();
     this.paymentService.getCharges().subscribe({
@@ -422,7 +423,7 @@ export class PaymentsComponent implements OnInit {
       totalWithTax: 100,
     };
 
-    this.paymentService.createPixCharge(pixData).subscribe({
+    this.pagbankService.createPixCharge(pixData).subscribe({
       next: (response: PixResponse) => {
         this.processingPayment = false;
         this.generatingPix = false;
@@ -662,29 +663,6 @@ export class PaymentsComponent implements OnInit {
     console.log('Parcela selecionada:', this.selectedInstallmentOption);
   }
 
-  // cancelarPagamento(idPagamento: string) {
-  //   this.loading = true;
-  //   this.errorMessage = '';
-  //   this.successMessage = '';
-
-  //   this.paymentService.cancelarPagamento(idPagamento).subscribe({
-  //     next: (response: any) => {
-  //       if (response.success) {
-  //         this.successMessage = 'Pagamento cancelado com sucesso!';
-  //         this.carregarPagamentos(); // Recarrega a lista
-  //       } else {
-  //         this.errorMessage = response.error || 'Erro ao cancelar pagamento';
-  //       }
-  //       this.loading = false;
-  //     },
-  //     error: (error) => {
-  //       this.errorMessage = 'Erro de conexão ao cancelar pagamento';
-  //       this.loading = false;
-  //       console.error('Erro:', error);
-  //     },
-  //   });
-  // }
-
   closePaymentModal(): void {
     this.customModal.closeModal();
   }
@@ -715,94 +693,6 @@ export class PaymentsComponent implements OnInit {
     const isValid = sum % 10 === 0;
 
     return isValid ? null : { invalidCardNumber: true };
-  }
-
-  private startPaymentPolling(chargeId: string): void {
-    let attempts = 0;
-    const maxAttempts = 180; // 30 minutos (10 segundos * 180 = 30 minutos)
-    const interval = 10000; // 10 segundos
-
-    const pollInterval = setInterval(() => {
-      attempts++;
-
-      this.paymentService.getPixChargeStatus(chargeId).subscribe({
-        next: (response: any) => {
-          if (response.success) {
-            const status = response.data.pagseguro?.status;
-
-            switch (status) {
-              case 'PAID':
-                clearInterval(pollInterval);
-                this.handlePixPaid(response.data);
-                break;
-              case 'EXPIRED':
-                clearInterval(pollInterval);
-                this.handlePixExpired();
-                break;
-              case 'CANCELLED':
-                clearInterval(pollInterval);
-                this.handlePixCancelled();
-                break;
-              default:
-                // Continua polling se ainda estiver pendente
-                if (attempts >= maxAttempts) {
-                  clearInterval(pollInterval);
-                  this.handlePixTimeout();
-                }
-            }
-          }
-        },
-        error: (error) => {
-          console.error('Erro no polling:', error);
-          if (attempts >= maxAttempts) {
-            clearInterval(pollInterval);
-            this.handlePixTimeout();
-          }
-        },
-      });
-    }, interval);
-  }
-
-  // Handlers para diferentes status do PIX
-  private handlePixPaid(paymentData: any): void {
-    this.payHiredCard.emit('success');
-
-    this.customModal.openModal();
-    this.customModal.configureModal(
-      'success',
-      'Pagamento PIX confirmado com sucesso!'
-    );
-
-    // Limpa dados do PIX do localStorage
-    localStorage.removeItem('last_pix_charge_id');
-    localStorage.removeItem('last_pix_data');
-  }
-
-  private handlePixExpired(): void {
-    this.payHiredCard.emit('expired');
-
-    this.customModal.openModal();
-    this.customModal.configureModal(
-      'warning',
-      'PIX expirado. Gere um novo código para pagar.'
-    );
-  }
-
-  private handlePixCancelled(): void {
-    this.payHiredCard.emit('cancelled');
-
-    this.customModal.openModal();
-    this.customModal.configureModal('warning', 'PIX cancelado.');
-  }
-
-  private handlePixTimeout(): void {
-    this.payHiredCard.emit('timeout');
-
-    this.customModal.openModal();
-    this.customModal.configureModal(
-      'warning',
-      'Tempo de verificação esgotado. Verifique o status do pagamento mais tarde.'
-    );
   }
 
   formatCpf(event: any): void {

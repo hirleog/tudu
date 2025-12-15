@@ -152,14 +152,6 @@ export class MalgaService {
 
   constructor(private http: HttpClient) {}
 
-  // Tokenizar cartão
-  tokenizeCard(tokenData: MalgaTokenizationRequest) {
-    return this.http.post<MalgaTokenizationResponse>(
-      `${this.apiUrl}/malga/tokens`,
-      tokenData
-    );
-  }
-
   // Processar pagamento com token salvo
   processPaymentWithToken(paymentData: MalgaPaymentWithTokenRequest) {
     return this.http.post<MalgaPaymentResponse>(
@@ -181,15 +173,5 @@ export class MalgaService {
       `${this.apiUrl}/malga/cancel/charges/${chargeId}/void`,
       payload
     );
-  }
-
-  // Processar PIX
-  processPixPayment(paymentData: any) {
-    return this.http.post(`${this.apiUrl}/malga/charges`, {
-      ...paymentData,
-      paymentMethod: {
-        paymentType: 'pix',
-      },
-    });
   }
 }
