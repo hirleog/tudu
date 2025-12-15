@@ -24,12 +24,12 @@ export class PagbankService {
   }
 
   cancelPixPayment(
-    paymentId: string,
+    chargeId: string,
     payload: { amount?: number }
   ): Observable<any> {
     // ⚠️ ATENÇÃO: Ajuste a URL do endpoint para bater no novo método do seu NestJS
     return this.http.post<any>(
-      `${environment.apiUrl}/pagseguro/${paymentId}/refunds`, // Exemplo de endpoint ajustado
+      `${environment.apiUrl}/pagseguro/${chargeId}/cancel`, // Exemplo de endpoint ajustado
       payload // O payload continua o mesmo para enviar o amount (opcional)
     );
   }

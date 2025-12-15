@@ -295,12 +295,12 @@ export class OrderHelpComponent implements OnInit {
 
   cancelPixPayment() {
     // 1. Obter o identificador PagBank
-    const paymentId = this.card[0].chargeInfos?.charge_id ?? '';
+    const chargeId = this.card[0].chargeInfos?.charge_id ?? '';
     const payload = {
       amount: 100,
     };
 
-    if (!paymentId) {
+    if (!chargeId) {
       // Lógica de erro para ID ausente
       // ...
       return;
@@ -310,7 +310,7 @@ export class OrderHelpComponent implements OnInit {
 
     // 2. Chamada do serviço (sem payload de amount)
     this.pagbankService // ⚠️ Use o nome correto do seu serviço injetado
-      .cancelPixPayment(paymentId, payload)
+      .cancelPixPayment(chargeId, payload)
       .subscribe({
         next: (response: any) => {
           this.reqStatus = response.success === true ? 'success' : 'error';
