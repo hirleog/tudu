@@ -111,10 +111,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.hiredCard && this.hiredCard.id_pedido) {
-      this.currentReferenceId = this.hiredCard.id_pedido;
-      this.iniciarEscutaPagamento();
-    }
+    this.iniciarEscutaPagamento();
 
     this.calculateInstallments();
     this.paymentService.getCharges().subscribe({
@@ -128,8 +125,6 @@ export class PaymentsComponent implements OnInit {
   }
 
   iniciarEscutaPagamento() {
-    if (!this.currentReferenceId) return;
-
     // ✅ NOVO: Começa a ouvir o status de pagamento
     this.cardSocketService
       .ouvirStatusPagamento(this.currentReferenceId)
@@ -419,8 +414,8 @@ export class PaymentsComponent implements OnInit {
 
     const pixData: PixChargeData = {
       reference_id: this.hiredCard.id_pedido,
-      totalWithTax: this.totalWithTax,
-      // totalWithTax: 100,
+      // totalWithTax: this.totalWithTax,
+      totalWithTax: 100,
     };
 
     this.pagbankService.createPixCharge(pixData).subscribe({

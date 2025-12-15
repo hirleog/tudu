@@ -36,15 +36,27 @@ export class CardSocketService {
 
   // PAGBANK
   ouvirStatusPagamento(orderReferenceId: string): Observable<any> {
-    // 1. Entra na "sala" específica daquele pedido/referência
-    this.socket.emit('joinOrderRoom', orderReferenceId); // <--- Você precisa de um listener no backend para isso!
-
-    // 2. Retorna um Observable que escuta o evento de sucesso
     return new Observable((observer) => {
-      // O nome do evento deve ser o mesmo que o Backend EMITIRÁ
-      this.socket.on('paymentStatus', (data) => {
-        observer.next(data);
-      });
+      // 1. Emite para entrar na sala e ESPERA a confirmação (callback)
+      this.socket.emit(
+        'joinOrderRoom',
+        orderReferenceId,
+        (roomName: string) => {
+          console.log(`[WS] Entrou na sala '${roomName}'. Agora pode escutar.`);
+
+          // 2. ✅ MOVEMOS A ESCUTA PARA DENTRO DO CALLBACK!
+          //    Isso garante que só escutaremos após estarmos confirmadamente na sala.
+          this.socket.on('paymentStatus', (data) => {
+            observer.next(data);
+          });
+        }
+      );
+
+      // Opcional: Lidar com a desconexão (unsubscribe)
+      return () => {
+        this.socket.off('paymentStatus');
+        // Se necessário, implementar client.leave(roomName) no backend
+      };
     });
   }
 }
