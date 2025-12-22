@@ -13,6 +13,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { PixChargeData, PixResponse } from 'src/app/interfaces/pix.interface';
 import {
   MalgaPaymentRequest,
@@ -34,6 +35,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./payments.component.css'],
 })
 export class PaymentsComponent implements OnInit {
+  private paymentSubscription: Subscription | undefined;
   formatCurrency = formatCurrency;
 
   @ViewChild('meuModal') customModal!: CustomModalComponent;
@@ -111,15 +113,10 @@ export class PaymentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 1. Entra na sala IMEDIATAMENTE
-    this.cardSocketService.entrarNaSalaDoPedido(this.currentReferenceId);
-
-    // 2. Começa a ouvir
-    this.cardSocketService.ouvirStatusPagamento().subscribe((data) => {
-      console.log('Pagamento recebido no frontend WEBSOCKET:', data);
-      if (data.status === 'paid') this.handlePixSuccess();
-    });
-
+    // 1. Garante que temos o ID antes de prosseguir
+    if (this.currentReferenceId) {
+      this.configurarWebsocket();
+    }
     this.calculateInstallments();
     this.paymentService.getCharges().subscribe({
       next: (data) => {
@@ -131,21 +128,23 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
-  // iniciarEscutaPagamento() {
-  //   // ✅ NOVO: Começa a ouvir o status de pagamento
-  //   this.cardSocketService
-  //     .ouvirStatusPagamento(this.currentReferenceId)
-  //     .subscribe((data) => {
-  //       console.log(`Status de Pagamento PIX recebido em tempo real:`, data);
+  configurarWebsocket() {
+    // 2. Entra na sala
+    this.cardSocketService.entrarNaSalaDoPedido(this.currentReferenceId);
 
-  //       // Verifica o status que o backend enviou
-  //       if (data.status === 'paid') {
-  //         console.log('🎉 PAGAMENTO CONFIRMADO!');
-  //         this.handlePixSuccess();
-  //       }
-  //     });
-  // }
-
+    // 3. Ouve o status (armazenamos na subscrição para poder cancelar depois)
+    this.paymentSubscription = this.cardSocketService
+      .ouvirStatusPagamento()
+      .subscribe({
+        next: (data) => {
+          console.log('✅ Evento de pagamento recebido via WS:', data);
+          if (data.status === 'paid') {
+            this.handlePixSuccess();
+          }
+        },
+        error: (err) => console.error('Erro no socket:', err),
+      });
+  }
   get f() {
     return this.paymentForm.controls;
   }
@@ -778,5 +777,11 @@ export class PaymentsComponent implements OnInit {
     );
 
     return candidato;
+  }
+
+  ngOnDestroy(): void {
+    if (this.paymentSubscription) {
+      this.paymentSubscription.unsubscribe();
+    }
   }
 }

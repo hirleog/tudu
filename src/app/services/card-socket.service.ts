@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 })
 export class CardSocketService {
   private socket: Socket;
+  private ultimoIdPedido: string | null = null;
 
   constructor() {
     this.socket = io(environment.apiUrl, {
@@ -17,7 +18,11 @@ export class CardSocketService {
       withCredentials: true,
     });
     this.socket.on('connect', () => {
-      console.log('Conectado ao servidor WS:', this.socket.id);
+      console.log('Conectado ao WS');
+      // Se já tivermos um ID de pedido, entramos na sala de novo automaticamente ao reconectar
+      if (this.ultimoIdPedido) {
+        this.entrarNaSalaDoPedido(this.ultimoIdPedido);
+      }
     });
   }
   ouvirAtualizacaoPedido(): Observable<any> {
@@ -39,8 +44,11 @@ export class CardSocketService {
 
   // PAGBANK
   entrarNaSalaDoPedido(referenceId: string) {
-    this.socket.emit('joinOrderRoom', referenceId, (res: any) => {
-      console.log('Confirmação de sala:', res);
+    this.ultimoIdPedido = referenceId;
+    console.log(`[WS] Solicitando entrada na sala: order:${referenceId}`);
+
+    this.socket.emit('joinOrderRoom', referenceId, (roomName: string) => {
+      console.log(`[WS] Confirmação do servidor: conectado à sala ${roomName}`);
     });
   }
 
@@ -49,7 +57,11 @@ export class CardSocketService {
       this.socket.on('paymentStatus', (data) => {
         observer.next(data);
       });
-      // Importante: não remova o listener aqui se for reusar o service
+
+      // Cleanup ao destruir o componente
+      return () => {
+        this.socket.off('paymentStatus');
+      };
     });
   }
 }
