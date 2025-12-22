@@ -346,6 +346,7 @@ export class OrderHelpComponent implements OnInit {
       this.back();
     } else {
       this.customModal.closeModal();
+      this.router.navigate(['/home']); // Ajuste para sua rota
     }
 
     // this.payHiredCard.emit(this.closeModalIndicator);
