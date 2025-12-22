@@ -16,6 +16,9 @@ export class CardSocketService {
       secure: true,
       withCredentials: true,
     });
+    this.socket.on('connect', () => {
+      console.log('Conectado ao servidor WS:', this.socket.id);
+    });
   }
   ouvirAtualizacaoPedido(): Observable<any> {
     return new Observable((subscriber) => {
@@ -35,28 +38,18 @@ export class CardSocketService {
   }
 
   // PAGBANK
-  ouvirStatusPagamento(orderReferenceId: string): Observable<any> {
+  entrarNaSalaDoPedido(referenceId: string) {
+    this.socket.emit('joinOrderRoom', referenceId, (res: any) => {
+      console.log('Confirmação de sala:', res);
+    });
+  }
+
+  ouvirStatusPagamento(): Observable<any> {
     return new Observable((observer) => {
-      // 1. Emite para entrar na sala e ESPERA a confirmação (callback)
-      this.socket.emit(
-        'joinOrderRoom',
-        orderReferenceId,
-        (roomName: string) => {
-          console.log(`[WS] Entrou na sala '${roomName}'. Agora pode escutar.`);
-
-          // 2. ✅ MOVEMOS A ESCUTA PARA DENTRO DO CALLBACK!
-          //    Isso garante que só escutaremos após estarmos confirmadamente na sala.
-          this.socket.on('paymentStatus', (data) => {
-            observer.next(data);
-          });
-        }
-      );
-
-      // Opcional: Lidar com a desconexão (unsubscribe)
-      return () => {
-        this.socket.off('paymentStatus');
-        // Se necessário, implementar client.leave(roomName) no backend
-      };
+      this.socket.on('paymentStatus', (data) => {
+        observer.next(data);
+      });
+      // Importante: não remova o listener aqui se for reusar o service
     });
   }
 }

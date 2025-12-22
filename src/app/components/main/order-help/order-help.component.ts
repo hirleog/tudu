@@ -345,10 +345,14 @@ export class OrderHelpComponent implements OnInit {
     } else if (this.reqStatus === 'whatsapp') {
       this.back();
     } else {
-      this.customModal.closeModal();
-      this.router.navigate(['/home']); // Ajuste para sua rota
+      if (this.authService.isPrestadorLoggedIn()) {
+        this.customModal.closeModal();
+        this.router.navigate(['/tudu-professional/home']);
+      } else {
+        this.customModal.closeModal();
+        this.router.navigate(['/home']); // Ajuste para sua rota
+      }
     }
-
     // this.payHiredCard.emit(this.closeModalIndicator);
   }
 }

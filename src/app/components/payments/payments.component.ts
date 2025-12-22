@@ -111,7 +111,14 @@ export class PaymentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.iniciarEscutaPagamento();
+    // 1. Entra na sala IMEDIATAMENTE
+    this.cardSocketService.entrarNaSalaDoPedido(this.currentReferenceId);
+
+    // 2. Começa a ouvir
+    this.cardSocketService.ouvirStatusPagamento().subscribe((data) => {
+      console.log('Pagamento recebido no frontend WEBSOCKET:', data);
+      if (data.status === 'paid') this.handlePixSuccess();
+    });
 
     this.calculateInstallments();
     this.paymentService.getCharges().subscribe({
@@ -124,20 +131,20 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
-  iniciarEscutaPagamento() {
-    // ✅ NOVO: Começa a ouvir o status de pagamento
-    this.cardSocketService
-      .ouvirStatusPagamento(this.currentReferenceId)
-      .subscribe((data) => {
-        console.log(`Status de Pagamento PIX recebido em tempo real:`, data);
+  // iniciarEscutaPagamento() {
+  //   // ✅ NOVO: Começa a ouvir o status de pagamento
+  //   this.cardSocketService
+  //     .ouvirStatusPagamento(this.currentReferenceId)
+  //     .subscribe((data) => {
+  //       console.log(`Status de Pagamento PIX recebido em tempo real:`, data);
 
-        // Verifica o status que o backend enviou
-        if (data.status === 'paid') {
-          console.log('🎉 PAGAMENTO CONFIRMADO!');
-          this.handlePixSuccess();
-        }
-      });
-  }
+  //       // Verifica o status que o backend enviou
+  //       if (data.status === 'paid') {
+  //         console.log('🎉 PAGAMENTO CONFIRMADO!');
+  //         this.handlePixSuccess();
+  //       }
+  //     });
+  // }
 
   get f() {
     return this.paymentForm.controls;
