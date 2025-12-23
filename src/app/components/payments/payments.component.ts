@@ -13,7 +13,14 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import {
+  interval,
+  Subject,
+  Subscription,
+  switchMap,
+  takeUntil,
+  takeWhile,
+} from 'rxjs';
 import { PixChargeData, PixResponse } from 'src/app/interfaces/pix.interface';
 import {
   MalgaPaymentRequest,
@@ -35,7 +42,10 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./payments.component.css'],
 })
 export class PaymentsComponent implements OnInit {
-  private paymentSubscription: Subscription | undefined;
+  private pollingSubscription!: Subscription;
+  private destroy$ = new Subject<void>();
+  private pollingSub?: Subscription;
+
   formatCurrency = formatCurrency;
 
   @ViewChild('meuModal') customModal!: CustomModalComponent;
@@ -113,10 +123,8 @@ export class PaymentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // 1. Garante que temos o ID antes de prosseguir
-    if (this.currentReferenceId) {
-      this.configurarWebsocket();
-    }
+    this.iniciarFluxoPagamento();
+
     this.calculateInstallments();
     this.paymentService.getCharges().subscribe({
       next: (data) => {
@@ -128,22 +136,50 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
-  configurarWebsocket() {
-    // 2. Entra na sala
-    this.cardSocketService.entrarNaSalaDoPedido(this.currentReferenceId);
+  iniciarFluxoPagamento() {
+    const refId = this.currentReferenceId;
 
-    // 3. Ouve o status (armazenamos na subscrição para poder cancelar depois)
-    this.paymentSubscription = this.cardSocketService
+    // --- 1. ESTRATÉGIA WEBSOCKET ---
+    this.cardSocketService.entrarNaSalaDoPedido(refId);
+    this.cardSocketService
       .ouvirStatusPagamento()
-      .subscribe({
-        next: (data) => {
-          console.log('✅ Evento de pagamento recebido via WS:', data);
-          if (data.status === 'paid') {
-            this.handlePixSuccess();
-          }
-        },
-        error: (err) => console.error('Erro no socket:', err),
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        if (data.status === 'paid') {
+          console.log('[WS] Pago detectado via WebSocket');
+          this.handlePixSuccess();
+          this.pararServicos();
+        }
       });
+
+    // --- 2. ESTRATÉGIA POLLING (Redundância para Mobile) ---
+    this.pollingSub = interval(5000) // 5 em 5 segundos
+      .pipe(
+        switchMap(() => this.paymentService.verificarStatusPagamento(refId)),
+        // Continua apenas enquanto NÃO for 'paid'
+        takeWhile((res) => res.status !== 'paid', true),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((res) => {
+        console.log('[Polling] Status atual:', res.status);
+        if (res.status === 'paid') {
+          console.log('[Polling] Pago detectado via HTTP');
+          this.handlePixSuccess();
+          this.pararServicos();
+        }
+      });
+  }
+
+  pararServicos() {
+    // Para o Polling
+    if (this.pollingSub) {
+      this.pollingSub.unsubscribe();
+    }
+    // Para o WebSocket
+    this.cardSocketService.pararSocket();
+
+    // Emite sinal para todos os observables com takeUntil
+    this.destroy$.next();
   }
   get f() {
     return this.paymentForm.controls;
@@ -779,9 +815,8 @@ export class PaymentsComponent implements OnInit {
     return candidato;
   }
 
-  ngOnDestroy(): void {
-    if (this.paymentSubscription) {
-      this.paymentSubscription.unsubscribe();
-    }
+  ngOnDestroy() {
+    this.pararServicos();
+    this.destroy$.complete();
   }
 }

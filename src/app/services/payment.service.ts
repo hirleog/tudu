@@ -24,4 +24,12 @@ export class PaymentService {
   createToken(cardData: any): Observable<any> {
     return this.http.post(`${environment.apiUrl}/malga/tokens`, cardData);
   }
+
+  verificarStatusPagamento(
+    referenceId: string
+  ): Observable<{ status: string }> {
+    return this.http.get<{ status: string }>(
+      `${environment.apiUrl}/status/${referenceId}`
+    );
+  }
 }

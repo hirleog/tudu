@@ -64,4 +64,17 @@ export class CardSocketService {
       };
     });
   }
+
+  // Método para parar o Socket
+  pararSocket() {
+    if (this.socket) {
+      this.socket.off('paymentStatus'); // Remove o ouvinte específico
+      console.log('[WS] Ouvintes de pagamento removidos.');
+    }
+  }
+
+  // Opcional: Desconectar totalmente (se não for usar o socket em outras telas)
+  desconectar() {
+    this.socket.disconnect();
+  }
 }
