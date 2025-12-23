@@ -29,7 +29,7 @@ export class PaymentService {
     referenceId: string
   ): Observable<{ status: string }> {
     return this.http.get<{ status: string }>(
-      `${environment.apiUrl}/status/${referenceId}`
+      `${environment.apiUrl}/pagseguro/status/${referenceId}`
     );
   }
 }
