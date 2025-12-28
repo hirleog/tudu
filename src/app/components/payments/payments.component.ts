@@ -84,6 +84,7 @@ export class PaymentsComponent implements OnInit {
   totalAmountFormatted!: number;
 
   currentReferenceId!: string;
+  openPixComponent: boolean = false;
 
   constructor(
     private paymentService: PaymentService,
@@ -123,7 +124,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.iniciarFluxoPagamento();
+    // this.iniciarFluxoPagamento();
 
     this.calculateInstallments();
     this.paymentService.getCharges().subscribe({
@@ -136,51 +137,51 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
-  iniciarFluxoPagamento() {
-    const refId = this.currentReferenceId;
+  // iniciarFluxoPagamento() {
+  //   const refId = this.currentReferenceId;
 
-    // --- 1. ESTRATÉGIA WEBSOCKET ---
-    this.cardSocketService.entrarNaSalaDoPedido(refId);
-    this.cardSocketService
-      .ouvirStatusPagamento()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        if (data.status === 'paid') {
-          console.log('[WS] Pago detectado via WebSocket');
-          this.handlePixSuccess();
-          this.pararServicos();
-        }
-      });
+  //   // --- 1. ESTRATÉGIA WEBSOCKET ---
+  //   this.cardSocketService.entrarNaSalaDoPedido(refId);
+  //   this.cardSocketService
+  //     .ouvirStatusPagamento()
+  //     .pipe(takeUntil(this.destroy$))
+  //     .subscribe((data) => {
+  //       if (data.status === 'paid') {
+  //         console.log('[WS] Pago detectado via WebSocket');
+  //         this.handlePixSuccess();
+  //         this.pararServicos();
+  //       }
+  //     });
 
-    // --- 2. ESTRATÉGIA POLLING (Redundância para Mobile) ---
-    this.pollingSub = interval(5000) // 5 em 5 segundos
-      .pipe(
-        switchMap(() => this.paymentService.verificarStatusPagamento(refId)),
-        // Continua apenas enquanto NÃO for 'paid'
-        takeWhile((res) => res.status !== 'paid', true),
-        takeUntil(this.destroy$)
-      )
-      .subscribe((res) => {
-        console.log('[Polling] Status atual:', res.status);
-        if (res.status === 'paid') {
-          console.log('[Polling] Pago detectado via HTTP');
-          this.handlePixSuccess();
-          this.pararServicos();
-        }
-      });
-  }
+  //   // --- 2. ESTRATÉGIA POLLING (Redundância para Mobile) ---
+  //   this.pollingSub = interval(5000) // 5 em 5 segundos
+  //     .pipe(
+  //       switchMap(() => this.paymentService.verificarStatusPagamento(refId)),
+  //       // Continua apenas enquanto NÃO for 'paid'
+  //       takeWhile((res) => res.status !== 'paid', true),
+  //       takeUntil(this.destroy$)
+  //     )
+  //     .subscribe((res) => {
+  //       console.log('[Polling] Status atual:', res.status);
+  //       if (res.status === 'paid') {
+  //         console.log('[Polling] Pago detectado via HTTP');
+  //         this.handlePixSuccess();
+  //         this.pararServicos();
+  //       }
+  //     });
+  // }
 
-  pararServicos() {
-    // Para o Polling
-    if (this.pollingSub) {
-      this.pollingSub.unsubscribe();
-    }
-    // Para o WebSocket
-    this.cardSocketService.pararSocket();
+  // pararServicos() {
+  //   // Para o Polling
+  //   if (this.pollingSub) {
+  //     this.pollingSub.unsubscribe();
+  //   }
+  //   // Para o WebSocket
+  //   this.cardSocketService.pararSocket();
 
-    // Emite sinal para todos os observables com takeUntil
-    this.destroy$.next();
-  }
+  //   // Emite sinal para todos os observables com takeUntil
+  //   this.destroy$.next();
+  // }
   get f() {
     return this.paymentForm.controls;
   }
@@ -221,13 +222,13 @@ export class PaymentsComponent implements OnInit {
 
   selectPaymentMethod(method: 'pix' | 'credit'): void {
     this.paymentMethod = method;
-    if (method === 'pix') {
-      this.submitPayment();
-      this.paymentForm.reset({
-        installments: '1',
-        acceptedTerms: false,
-      });
-    }
+    // if (method === 'pix') {
+    //   this.submitPayment();
+    //   this.paymentForm.reset({
+    //     installments: '1',
+    //     acceptedTerms: false,
+    //   });
+    // }
   }
 
   generatePix(): void {
@@ -328,7 +329,12 @@ export class PaymentsComponent implements OnInit {
       // OPÇÃO 1: Tokenizar e pagar em uma única chamada (RECOMENDADO)
       await this.tokenCardNumber(formValue);
     } else if (this.paymentMethod === 'pix') {
-      await this.processPixPayment();
+      // await this.processPixPayment();
+      this.openPixComponent = true;
+      this.paymentForm.reset({
+        installments: '1',
+        acceptedTerms: false,
+      });
       // this.testPagBankAuthentication();
     }
   }
@@ -449,58 +455,6 @@ export class PaymentsComponent implements OnInit {
     });
   }
 
-  private async processPixPayment(): Promise<void> {
-    this.processingPayment = true;
-    this.generatingPix = true;
-    this.pixGenerated = false;
-
-    const pixData: PixChargeData = {
-      reference_id: this.hiredCard.id_pedido,
-      // totalWithTax: this.totalWithTax,
-      totalWithTax: 100,
-    };
-
-    this.pagbankService.createPixCharge(pixData).subscribe({
-      next: (response: PixResponse) => {
-        this.processingPayment = false;
-        this.generatingPix = false;
-
-        if (response.success) {
-          // Garantir que temos os dados necessários
-          if (!response.data.qr_code) {
-            this.handlePaymentError('QR Code não foi gerado');
-            return;
-          }
-          this.pixGenerated = true;
-
-          this.generatePix();
-          this.qrCodeData = response;
-        } else {
-          this.handlePaymentError(response.message);
-        }
-      },
-      error: (error) => {
-        this.processingPayment = false;
-        this.generatingPix = false;
-        this.pixGenerated = false;
-
-        // Tratamento de erro melhorado
-        let errorMessage = 'Erro ao processar pagamento';
-
-        if (error.status === 404) {
-          errorMessage = 'Pedido não encontrado no sistema';
-        } else if (error.status === 400) {
-          errorMessage = 'Dados inválidos para criação do PIX';
-        } else if (error.status === 500) {
-          errorMessage = 'Erro interno no servidor';
-        } else if (error.error?.message) {
-          errorMessage = error.error.message;
-        }
-
-        this.handlePaymentError(errorMessage);
-      },
-    });
-  }
   private handlePaymentResponse(response: any): void {
     if (
       response.status === 'approved' ||
@@ -537,40 +491,18 @@ export class PaymentsComponent implements OnInit {
     );
   }
 
-  private handlePixSuccess(response?: any): void {
+  public handlePixSuccess(event?: any): void {
     // FLUXO DE SUCESSO PARA AVISAR O COMPONENTE DE BUDGET QUE O PAGAMENTO DEU CERTO E FAZER DIRECIONAMENTO PARA TELA DE PEDIDO PENDENTE
     this.payHiredCard.emit('success');
   }
 
-  copyToClipboard(text: string, event?: Event): void {
-    event?.preventDefault(); // Previne comportamento padrão se necessário
-
-    navigator.clipboard.writeText(text).then(() => {
-      // Feedback visual
-      if (event) {
-        const button = event.target as HTMLElement;
-        const originalIcon = button.innerHTML;
-
-        button.innerHTML = '<i class="fas fa-check text-green-500"></i>';
-        button.classList.remove('text-blue-500');
-        button.classList.add('text-green-500');
-
-        // Voltar ao normal após 2 segundos
-        setTimeout(() => {
-          button.innerHTML = originalIcon;
-          button.classList.remove('text-green-500');
-          button.classList.add('text-blue-500');
-        }, 2000);
-      }
-    });
-  }
   showToast(message: string, type: 'success' | 'error' = 'success'): void {
     // Implemente seu sistema de notificação
     // Ou use simples alert
     alert(message);
   }
 
-  private handlePaymentError(error: any): void {
+  public handlePaymentError(error: any): void {
     this.payHiredCard.emit('error');
     console.log('errroooo');
 
@@ -781,8 +713,6 @@ export class PaymentsComponent implements OnInit {
       // 3. Multiplica por 100 e arredonda para cima (ceil)
       const finalValueInCents = Math.ceil(calculatedValueInReais * 100);
 
-      console.log('Valor final em Centavos para o Backend:', finalValueInCents);
-
       return finalValueInCents;
     }
 
@@ -816,7 +746,7 @@ export class PaymentsComponent implements OnInit {
   }
 
   ngOnDestroy() {
-    this.pararServicos();
+    // this.pararServicos();
     this.destroy$.complete();
   }
 }

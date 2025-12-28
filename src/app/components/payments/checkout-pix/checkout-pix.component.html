@@ -1,0 +1,141 @@
+<div
+  class="lg:px-8 max-w-4xl mx-auto w-full rounded-xl transition-smooth"
+  style="margin-top: 50px"
+>
+  <div class="container mx-auto px-1">
+    <div class="max-w-4xl mx-auto">
+      <div class="animate-fade-in">
+        <div *ngIf="generatingPix" class="text-center py-8">
+          <div class="inline-block">
+            <div
+              class="w-16 h-16 border-4 border-blue-200 border-t-blue-500 rounded-full animate-spin mx-auto mb-4"
+            ></div>
+            <p class="text-gray-600 font-medium">Gerando QR Code PIX...</p>
+            <p class="text-sm text-gray-500 mt-2">Aguarde alguns segundos</p>
+            <div
+              class="w-48 h-1 bg-gray-200 rounded-full overflow-hidden mt-4 mx-auto"
+            >
+              <div class="h-full bg-blue-500 animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="
+            pixGenerated &&
+            !generatingPix &&
+            paymentStatus === 'pending' 
+          "
+          class="text-center"
+        >
+          <div class="border border-gray-200 rounded-lg p-6 inline-block mb-4">
+            <img
+              [src]="qrCodeData?.data?.qr_code?.image_url"
+              alt="QR Code Pix"
+              class="mb-4 mx-auto"
+            />
+
+            <p class="text-sm text-gray-600 mb-2">
+              Código Pix copiado automaticamente
+            </p>
+
+            <div
+              class="flex items-center justify-center p-2 rounded bg-gray-100"
+            >
+              <code class="text-sm font-mono truncate max-w-xs">
+                {{ qrCodeData?.data?.qr_code?.text | slice : 0 : 25 }}...
+              </code>
+              <button
+                class="ml-2 text-blue-500 hover:text-blue-700"
+                (click)="
+                  copyToClipboard(qrCodeData?.data?.qr_code?.text, $event)
+                "
+                [title]="'Copiar código PIX completo'"
+              >
+                <i class="far fa-copy"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <p class="text-gray-600">
+              Aguardando pagamento... Expira em:
+              <span class="font-bold text-blue-600 text-lg">{{
+                displayTimer
+              }}</span>
+            </p>
+          </div>
+
+          <p class="text-sm text-gray-500">
+            O QR Code expira originalmente em:
+            <span class="font-medium">
+              {{
+                qrCodeData?.data?.qr_code?.expiration_date | date : "dd/MM/yyyy"
+              }}
+              às
+              {{ qrCodeData?.data?.qr_code?.expiration_date | date : "HH:mm" }}
+            </span>
+          </p>
+
+          <div class="mt-6 border-l-4 border-blue-500 p-4 text-left">
+            <div class="flex">
+              <div class="flex-shrink-0">
+                <i class="fas fa-info-circle text-blue-500"></i>
+              </div>
+              <div class="ml-3">
+                <p class="text-sm text-blue-700">
+                  O pagamento via Pix é processado instantaneamente. Após a
+                  confirmação, esta tela será atualizada automaticamente.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          *ngIf="paymentStatus === 'paid'"
+          class="text-center py-12 animate-fade-in"
+        >
+          <div
+            class="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fas fa-check text-4xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800">
+            Pagamento Confirmado!
+          </h2>
+          <p class="text-gray-600 mt-2">Recebemos seu Pix com sucesso.</p>
+          <p class="text-sm text-gray-500 mt-4">
+            Você será redirecionado em instantes...
+          </p>
+        </div>
+
+        <div
+          *ngIf="
+            (paymentStatus === 'expired' ||
+              (remainingSeconds <= 0 && pixGenerated)) &&
+            paymentStatus !== 'paid' &&
+            !generatingPix
+          "
+          class="text-center py-12 animate-fade-in"
+        >
+          <div
+            class="w-20 h-20 bg-red-100 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4"
+          >
+            <i class="fas fa-clock text-4xl"></i>
+          </div>
+          <h2 class="text-2xl font-bold text-gray-800">QR Code Expirado</h2>
+          <p class="text-gray-600 mt-2">
+            O tempo para realizar este pagamento acabou.
+          </p>
+          <button
+            (click)="processPixPayment()"
+            class="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-8 rounded-lg transition duration-200"
+          >
+            Gerar Novo QR Code
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

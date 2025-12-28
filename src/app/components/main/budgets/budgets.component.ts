@@ -30,7 +30,6 @@ export class BudgetsComponent implements OnInit {
   clientData: any;
   showModal: boolean = false;
   selectedCandidatura: any;
-  paymentIndicator: string = '';
   processingBudget: boolean = false;
   fallbackMsg: boolean = false;
   isNotificationFlag: string = 'false';
@@ -129,16 +128,16 @@ export class BudgetsComponent implements OnInit {
   }
 
   payHiredCard(paymentIndicator?: any): void {
-    // if (paymentIndicator === 'success') {
-    //   this.updateCard(
-    //     this.hiredCardInfo,
-    //     'contratar',
-    //     this.selectedCandidatura
-    //   );
-    // } else {
-    //   console.log('pagamento negado');
-    // }
-    this.updateCard(this.hiredCardInfo, 'contratar', this.selectedCandidatura);
+    if (paymentIndicator === 'success') {
+      this.updateCard(
+        this.hiredCardInfo,
+        'contratar',
+        this.selectedCandidatura
+      );
+    } else {
+      console.log('pagamento negado');
+    }
+    // this.updateCard(this.hiredCardInfo, 'contratar', this.selectedCandidatura);
   }
 
   updateCard(
@@ -200,15 +199,22 @@ export class BudgetsComponent implements OnInit {
     this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
       next: () => {
         this.stateManagementService.clearAllState();
-        this.paymentIndicator = step;
         this.processingBudget = false;
-        this.closeModal();
+
+        if (step === 'contratar') {
+          setTimeout(() => {
+            this.route.navigate(['/home/progress']);
+          }, 3000);
+        } else {
+          this.getCardById(); // Atualiza a lista de cartões após a atualização
+        }
+        // this.closeModal();
       },
       error: (error) => {
         this.processingBudget = false;
         this.showModal = true;
         this.customModal.configureModal(
-          'success',
+          'error',
           error.message || 'Erro ao recusar a proposta, tente novamente'
         );
       },
@@ -220,14 +226,14 @@ export class BudgetsComponent implements OnInit {
     return of();
   }
 
-  closeModal(): void {
-    if (this.paymentIndicator === 'contratar') {
-      this.route.navigate(['/home/progress']);
-    } else {
-      this.getCardById(); // Atualiza a lista de cartões após a atualização
-    }
-    this.customModal.closeModal();
-  }
+  // closeModal(): void {
+  //   if (this.paymentIndicator === 'contratar') {
+  //     this.route.navigate(['/home/progress']);
+  //   } else {
+  //     this.getCardById(); // Atualiza a lista de cartões após a atualização
+  //   }
+  //   this.customModal.closeModal();
+  // }
 
   backToOffer(indicator: any): void {
     this.paymentStep = indicator;

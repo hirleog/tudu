@@ -23,6 +23,12 @@ export class PagbankService {
     );
   }
 
+  statusPaymentVerify(idPagamento: string) {
+    return this.http.get<{ status: string }>(
+      `${environment.apiUrl}/pagseguro/pix/status/${idPagamento}`
+    );
+  }
+
   cancelPixPayment(
     chargeId: string,
     payload: { amount?: number }
