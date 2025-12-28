@@ -202,9 +202,7 @@ export class BudgetsComponent implements OnInit {
         this.processingBudget = false;
 
         if (step === 'contratar') {
-          setTimeout(() => {
-            this.route.navigate(['/home/progress']);
-          }, 3000);
+          this.route.navigate(['/home/progress']);
         } else {
           this.getCardById(); // Atualiza a lista de cartões após a atualização
         }
