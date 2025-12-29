@@ -14,7 +14,6 @@ import {
 import * as AOS from 'aos';
 import { PagbankService } from './services/pagbank.service';
 import { CustomModalComponent } from './shared/custom-modal/custom-modal.component';
-import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -97,20 +96,17 @@ export class AppComponent implements OnInit {
     // }
     // localStorage.setItem('temaEscuro', JSON.stringify(isProfessional));
 
-    this.pagbankService.statusPagamento$
-      .pipe(
-        filter((status) => status === 'paid'), // Só age quando for pago
-        take(1) // Garante que o código do modal só rode uma vez
-      )
-      .subscribe(() => {
+    this.pagbankService.statusPagamento$.subscribe((status) => {
+      if (status === 'paid') {
+        // Ação que ocorre na aplicação toda:
+        this.showSuccessModal = true;
         this.customModal.openModal();
         this.customModal.configureModal(
           'success',
           'Pagamento pix aprovado com sucesso!'
         );
-
-        // O Polling já parou sozinho lá no service por causa do takeWhile(..., true)
-      });
+      }
+    });
   }
 
   goToHome(event: any) {

@@ -38,6 +38,8 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
   constructor(private pagbankService: PagbankService) {}
 
   ngOnInit(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
     this.processPixPayment();
     this.setupVisibilityListener();
   }
