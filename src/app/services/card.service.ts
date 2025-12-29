@@ -110,9 +110,12 @@ export class CardService {
     return this.http.put(`${this.url}/${idPedido}`, payload).subscribe({
       next: (response) => {
         // Se for o fluxo de contratação, avisamos o estado global
+        console.log('--- API UPDATE CARD RESPONDEU ---'); // Adicione isso
         if (step === 'contratar') {
           this.sharedService.setSuccessPixStatus(true);
           this.stateManagementService.clearAllState();
+
+          console.log('--- STATUS SETADO PARA TRUE NO SHARED ---'); // Adicione isso
         }
         console.log('Update finalizado com sucesso em background.');
       },
