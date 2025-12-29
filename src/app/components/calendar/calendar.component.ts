@@ -7,6 +7,7 @@ import {
   SimpleChanges,
   HostListener,
   ElementRef,
+  ViewChild,
 } from '@angular/core';
 import * as moment from 'moment';
 
@@ -16,8 +17,10 @@ import * as moment from 'moment';
   styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit {
-  // currentDate = moment();
+  // Referência para o container pai (que você já marcou com #calendarContainer)
+  @ViewChild('calendarContainer') calendarContainer!: ElementRef;
   days: moment.Moment[] = [];
+
   weekdays = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
 
   selectedDate: moment.Moment | null = null;
@@ -212,7 +215,18 @@ export class CalendarComponent implements OnInit {
 
   onCalenderButtonInput() {
     this.calendarActive = !this.calendarActive;
-    this.hideCalendarDays = false;
+
+    if (this.calendarActive) {
+      this.hideCalendarDays = false;
+
+      // O setTimeout de 0 ou 100ms permite que o Angular renderize o *ngIf primeiro
+      setTimeout(() => {
+        this.calendarContainer.nativeElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center', // 'center' centraliza o calendário na tela, 'start' coloca no topo
+        });
+      }, 100);
+    }
   }
 
   isTimeDisabled(time: string): boolean {
