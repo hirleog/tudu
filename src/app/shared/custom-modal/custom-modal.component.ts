@@ -49,28 +49,27 @@ export class CustomModalComponent {
   }
 
   private setSuccessStyles(message: string): void {
-    this.modalIcon = 'fa-check';
-    this.modalIconColor = 'text-green-600';
-    this.modalBgColor = 'bg-green-100';
+    this.modalIcon = 'fa-check-circle'; // Ícone mais moderno
+    this.modalIconColor = 'text-green-500';
+    this.modalBgColor = 'bg-green-100'; // Background suave
     this.messageTitle = 'Sucesso!';
     this.messageBody = message || 'Operação realizada com sucesso.';
   }
 
   private setErrorStyles(message: string): void {
-    this.modalIcon = 'fa-exclamation-triangle';
-    this.modalIconColor = 'text-red-600';
+    this.modalIcon = 'fa-times-circle'; // Ícone de erro circular
+    this.modalIconColor = 'text-red-500';
     this.modalBgColor = 'bg-red-100';
-    this.messageTitle = 'Erro';
-    this.messageBody = message || 'Ocorreu um erro na operação.';
+    this.messageTitle = 'Ops! Algo deu errado';
+    this.messageBody = message || 'Não conseguimos processar sua solicitação.';
   }
 
   private setWarningStyles(message: string): void {
     this.modalIcon = 'fa-exclamation-circle';
-    this.modalIconColor = 'text-yellow-600';
-    this.modalBgColor = 'bg-yellow-100';
+    this.modalIconColor = 'text-amber-500';
+    this.modalBgColor = 'bg-amber-100';
     this.messageTitle = 'Atenção';
-    this.messageBody =
-      message || 'Verifique as informações antes de prosseguir.';
+    this.messageBody = message || 'Verifique os dados antes de continuar.';
   }
 
   actionModal(): void {

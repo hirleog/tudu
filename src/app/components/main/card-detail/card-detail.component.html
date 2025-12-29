@@ -510,46 +510,60 @@
   [isLoadingBtn]="isLoadingBtn"
   (modalAction)="handleModalAction(cards[0])"
 >
-  <div optional-content>
-    <div class="input-group mb-3">
-      <span class="input-group-text">$</span>
-
-      <input
-        type="text"
-        class="form-control"
-        [placeholder]="
-          (cards.length > 0 ? cards[0].valor : 0)
-            | currency : 'BRL' : 'symbol' : '1.2-2'
-        "
-        [(ngModel)]="priceNegotiated"
-        currencyMask
-        [options]="currencyOptions"
-        inputmode="numeric"
-        min="0"
-        step="0.01"
-      />
+  <div optional-content class="space-y-4">
+    <div class="bg-gray-50 p-4 rounded-3xl border border-gray-100">
+      <label class="block text-xs font-bold text-gray-400 uppercase ml-1 mb-2"
+        >Sua proposta de valor</label
+      >
+      <div class="relative">
+        <div
+          class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+        >
+          <span class="text-gray-900 font-bold text-lg">R$</span>
+        </div>
+        <input
+          type="text"
+          class="block w-full pl-12 pr-4 py-4 bg-white border-none rounded-2xl text-lg font-bold shadow-sm focus:ring-2 focus:ring-gray-900 transition-all"
+          [(ngModel)]="priceNegotiated"
+          currencyMask
+          [options]="currencyOptions"
+          inputmode="numeric"
+        />
+      </div>
+      <p class="mt-2 text-[11px] text-gray-500 ml-1">
+        Valor original:
+        {{ (cards.length > 0 ? cards[0].valor : 0) | currency : "BRL" }}
+      </p>
     </div>
 
-    <div #calendarContainer>
-      <div>
-        <div class="input-group mb-3">
-          <span class="input-group-text">#</span>
-          <input
-            [readonly]="true"
-            type="text"
-            class="form-control"
-            [(ngModel)]="dateTimeSelected"
-            (click)="calendarActive = !calendarActive"
-            [placeholder]="
-              cards.length > 0
-                ? (cards[0].horario_preferencial | date : 'dd/MM/yyyy - HH:mm')
-                : ''
-            "
-          />
+    <div class="bg-gray-50 p-4 rounded-3xl border border-gray-100">
+      <label class="block text-xs font-bold text-gray-400 uppercase ml-1 mb-2"
+        >Nova data e horário</label
+      >
+      <div class="relative" (click)="calendarActive = !calendarActive">
+        <div
+          class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+        >
+          <i class="far fa-calendar-alt text-gray-900 text-lg"></i>
         </div>
+        <input
+          readonly
+          type="text"
+          class="block w-full pl-12 pr-4 py-4 bg-white border-none rounded-2xl text-sm font-semibold shadow-sm cursor-pointer"
+          [value]="
+            dateTimeSelected ||
+            (cards.length > 0
+              ? (cards[0].horario_preferencial | date : 'dd/MM/yyyy - HH:mm')
+              : '')
+          "
+          placeholder="Selecione uma data"
+        />
       </div>
 
-      <div class="container" style="z-index: 1001">
+      <div
+        *ngIf="calendarActive"
+        class="mt-4 overflow-hidden rounded-2xl border border-gray-200 shadow-inner bg-white animate-fade-in"
+      >
         <app-calendar
           [hasTime]="true"
           [showWeekView]="false"
@@ -557,13 +571,11 @@
             cards.length > 0 ? cards[0].horario_preferencial : null
           "
           [hideCalendarInput]="true"
-          [calendarActive]="calendarActive || false"
-          [hideCalendarDays]="hideCalendarDays"
-          (closeCalendar)="onCalendarClose()"
+          [calendarActive]="true"
           (dateSelectedChange)="onDateSelected($event)"
           (timeSelectedChange)="onTimeSelected($event)"
-        >
-        </app-calendar>
+          (closeCalendar)="calendarActive = false"
+        ></app-calendar>
       </div>
     </div>
   </div>

@@ -1,0 +1,44 @@
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+/* Efeito de hover dinâmico para a variável --primary */
+.btn-primary-custom:hover:not(:disabled) {
+  filter: brightness(0.9);
+  transition: filter 0.2s ease;
+}
+
+.btn-primary-custom:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (min-width: 768px) {
+  .animate-slide-up {
+    margin-bottom: 2rem;
+    border-radius: 2.5rem;
+    width: 90%;
+  }
+}
