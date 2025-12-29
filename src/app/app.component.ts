@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import {
   trigger,
@@ -12,6 +12,9 @@ import {
 // import { SwUpdate } from '@angular/service-worker';
 
 import * as AOS from 'aos';
+import { PagbankService } from './services/pagbank.service';
+import { CustomModalComponent } from './shared/custom-modal/custom-modal.component';
+import { filter, take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -53,14 +56,17 @@ import * as AOS from 'aos';
   ],
 })
 export class AppComponent implements OnInit {
+  @ViewChild('meuModal') customModal!: CustomModalComponent;
+
   showInstallButton = false;
   title = 'automotive-services';
   showHomeMobile: boolean = true;
   deferredPrompt: any; // Allows to show the install prompt
   setupButton: any;
   logoUrl: string = 'assets/logo.png'; // Caminho padrão
+  showSuccessModal: boolean = false;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, public pagbankService: PagbankService) {
     this.themas();
   }
 
@@ -90,7 +96,33 @@ export class AppComponent implements OnInit {
     //   root.style.setProperty('--primary', '#f80e6e'); // Tema cliente
     // }
     // localStorage.setItem('temaEscuro', JSON.stringify(isProfessional));
+
+    this.pagbankService.statusPagamento$
+      .pipe(
+        filter((status) => status === 'paid'), // Só age quando for pago
+        take(1) // Garante que o código do modal só rode uma vez
+      )
+      .subscribe(() => {
+        this.customModal.openModal();
+        this.customModal.configureModal(
+          'success',
+          'Pagamento pix aprovado com sucesso!'
+        );
+
+        // O Polling já parou sozinho lá no service por causa do takeWhile(..., true)
+      });
   }
+
+  goToHome(event: any) {
+    this.showSuccessModal = false;
+    this.router.navigate(['/home']);
+  }
+
+  handleModalAction(event: any) {
+    this.showSuccessModal = false;
+    this.router.navigate(['/home/progress']);
+  }
+
   installApp() {
     // Show the prompt
     this.deferredPrompt.prompt();

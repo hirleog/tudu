@@ -5,7 +5,7 @@
   </lib-nav>
 
   <!-- Container Principal (com margin-top para o navbar) -->
-  <div class="flex flex-col md:flex-row flex-1" style="margin-top: 4em;">
+  <div class="flex flex-col md:flex-row flex-1" style="margin-top: 4em">
     <!-- mt-16 = altura do navbar -->
     <!-- Menu Lateral Desktop -->
     <app-menu
@@ -18,6 +18,13 @@
         <router-outlet #outlet="outlet"></router-outlet>
       </div>
     </main>
+
+    <app-custom-modal
+      #meuModal
+      [actionButtonText]="'Ver pedidos'"
+      (modalAction)="handleModalAction($event)"
+      (modalClosed)="goToHome($event)"
+    ></app-custom-modal>
   </div>
 
   <!-- Menu Mobile (fixo na parte inferior) -->

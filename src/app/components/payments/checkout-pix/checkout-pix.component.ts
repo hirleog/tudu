@@ -55,7 +55,7 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
         if (document.hidden) {
           this.stopPolling();
         } else if (this.paymentStatus === 'pending' && this.pixGenerated) {
-          this.startPolling();
+          this.pagbankService.monitorarPagamentoGlobal(this.orderId);
         }
       });
   }
@@ -82,7 +82,7 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
 
           // Iniciar lógicas automáticas
           this.startCountdown(this.qrCodeData.data.qr_code.expiration_date);
-          this.startPolling();
+          this.pagbankService.monitorarPagamentoGlobal(this.orderId);
         } else {
           this.handlePaymentError(response.message || 'Erro ao gerar QR Code');
         }
@@ -94,29 +94,29 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
     });
   }
 
-  private startPolling(): void {
-    this.stopPolling(); // Evita múltiplas subscrições
+  // private startPolling(): void {
+  //   this.stopPolling(); // Evita múltiplas subscrições
 
-    this.pollingSub = timer(0, 5000) // Tenta imediatamente e depois a cada 5s
-      .pipe(
-        takeWhile(
-          () => this.paymentStatus === 'pending' && this.remainingSeconds > 0
-        ),
-        switchMap(() => this.pagbankService.statusPaymentVerify(this.orderId))
-      )
-      .subscribe({
-        next: (res: any) => {
-          this.paymentStatus = res.status;
-          
-          if (this.paymentStatus === 'paid') {
-            this.handlePaymentSuccess();
-            this.stopPolling();
-            // Opcional: Redirecionar usuário ou emitir evento de sucesso
-          }
-        },
-        error: (err) => console.error('Erro ao consultar status', err),
-      });
-  }
+  //   this.pollingSub = timer(0, 5000) // Tenta imediatamente e depois a cada 5s
+  //     .pipe(
+  //       takeWhile(
+  //         () => this.paymentStatus === 'pending' && this.remainingSeconds > 0
+  //       ),
+  //       switchMap(() => this.pagbankService.statusPaymentVerify(this.orderId))
+  //     )
+  //     .subscribe({
+  //       next: (res: any) => {
+  //         this.paymentStatus = res.status;
+
+  //         if (this.paymentStatus === 'paid') {
+  //           this.handlePaymentSuccess();
+  //           this.stopPolling();
+  //           // Opcional: Redirecionar usuário ou emitir evento de sucesso
+  //         }
+  //       },
+  //       error: (err) => console.error('Erro ao consultar status', err),
+  //     });
+  // }
 
   private stopPolling(): void {
     if (this.pollingSub) {
