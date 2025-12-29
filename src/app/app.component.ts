@@ -94,52 +94,8 @@ export class AppComponent implements OnInit {
 
     this.recuperarTransacaoPendente();
 
-    // const isProfessional = this.router.url.includes('professional');
-    // const root = document.documentElement;
-
-    // if (isProfessional) {
-    //   root.style.setProperty('--primary', 'blueviolet'); // Tema profissional
-    // } else {
-    //   root.style.setProperty('--primary', '#f80e6e'); // Tema cliente
-    // }
-    // localStorage.setItem('temaEscuro', JSON.stringify(isProfessional));
-
-    // mostra modal de pix mediante ao pagamento ser varificado e o card em questão ser atualizado
-    // combineLatest([
-    //   this.pagbankService.statusPagamento$, // Canal 1
-    //   this.sharedService.updatedCard$, // Canal 2
-    // ]).subscribe(([status, cardPronto]) => {
-    //   console.log('Sincronia Global:', { status, cardPronto });
-
-    //   if (status === 'paid' && cardPronto) {
-    //     this.showSuccessModal = true;
-    //     this.customModal.openModal();
-    //     this.customModal.configureModal(
-    //       'success',
-    //       'Pagamento pix aprovado com sucesso!'
-    //     );
-
-    //     // Limpa para não abrir o modal de novo
-    //     this.pagbankService.pararMonitoramento();
-    //   }
-    // });
-
-    // this.pagbankService.statusPagamento$.subscribe((status) => {
-    //   if (status === 'paid') {
-    //     // Ação que ocorre na aplicação toda:
-    //     this.showSuccessModal = true;
-    //     this.customModal.openModal();
-    //     this.customModal.configureModal(
-    //       'success',
-    //       'Pagamento pix aprovado com sucesso!'
-    //     );
-    //   }
-    //   this.sharedService.clearSuccessPixStatus();
-    //   this.pagbankService.pararMonitoramento();
-    // });
-
     this.pagbankService.statusPagamento$.subscribe((status) => {
-      // Se o pagamento expirou ou foi cancelado, limpamos o storage para não travar o F5
+      // Se expirou ou cancelou, limpa o rastro e para o polling
       if (status === 'expired' || status === 'canceled') {
         localStorage.removeItem('pending_pix_transaction');
         this.pagbankService.pararMonitoramento();
@@ -147,7 +103,7 @@ export class AppComponent implements OnInit {
       }
 
       if (status === 'paid') {
-        // 1. PRIMEIRO: Começamos a ouvir o sinal de conclusão
+        // PRIMEIRO: Prepara a escuta para quando o banco de dados for atualizado
         const sub = this.sharedService.updateFinalizado$.subscribe(
           (sucesso) => {
             if (sucesso) {
@@ -159,14 +115,14 @@ export class AppComponent implements OnInit {
               );
             } else {
               alert(
-                'Pagamento aprovado, mas houve um erro ao atualizar seu pedido. Entre em contato com o suporte.'
+                'Pagamento aprovado, mas houve um erro ao atualizar seu pedido.'
               );
             }
             sub.unsubscribe();
           }
         );
 
-        // 2. DEPOIS: Damos a ordem e limpamos o monitoramento/storage
+        // DEPOIS: Dispara o processo de atualização no CardService e limpa o lixo
         this.sharedService.requestUpdate();
         localStorage.removeItem('pending_pix_transaction');
         this.pagbankService.pararMonitoramento();
@@ -179,7 +135,7 @@ export class AppComponent implements OnInit {
     if (saved) {
       const data = JSON.parse(saved);
 
-      // 1. CHECAGEM DE SEGURANÇA: O tempo já passou?
+      // Validação de tempo real: se o browser ficou fechado por muito tempo
       const expiraEm = new Date(data.expirationDate).getTime();
       const agora = new Date().getTime();
 
@@ -188,10 +144,10 @@ export class AppComponent implements OnInit {
           'O Pix recuperado já expirou no tempo do cliente. Limpando...'
         );
         localStorage.removeItem('pending_pix_transaction');
-        return; // Nem tenta monitorar
+        return;
       }
 
-      // 2. Se ainda é válido, reabastece e monitora
+      // Se ainda está no prazo, reidrata o serviço compartilhado e volta a monitorar
       this.sharedService.setUpdatedCardPayload(
         data.id_pedido,
         data.payloadCard
