@@ -9,6 +9,13 @@ export class SharedService {
   private cardUpdatedSource = new BehaviorSubject<boolean>(false);
   cardUpdated$ = this.cardUpdatedSource.asObservable();
 
+  private updatedCardSource = new BehaviorSubject<{
+    id_pedido: string;
+    payloadCard: any;
+  } | null>(null);
+  // Esse é o cara que o AppComponent vai assinar (subscribe)
+  updatedCard$ = this.updatedCardSource.asObservable();
+  
   private selectedFiles: File[] = [];
   private proposalData: CreateCard | null = null;
   private priceData: CreateCard | null = null;
@@ -58,16 +65,19 @@ export class SharedService {
     this.cardUpdatedSource.next(false);
   }
 
-  getUpdatedCardPayload(): any {
-    return this.updatedCardPayload;
-  }
-  clearUpdatedCardPayload() {
-    this.updatedCardPayload = null;
-  }
   setUpdatedCardPayload(id_pedido: string, payloadCard: any) {
-    this.updatedCardPayload = {
+    console.log('Enviando payload para o AppComponent...');
+    this.updatedCardSource.next({
       id_pedido: id_pedido,
       payloadCard: payloadCard,
-    };
+    });
+  }
+
+  getUpdatedCardPayload() {
+    return this.updatedCardSource.value;
+  }
+
+  clearUpdatedCardPayload() {
+    this.updatedCardSource.next(null);
   }
 }

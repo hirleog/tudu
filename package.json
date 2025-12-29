@@ -1,6 +1,6 @@
 {
   "name": "tudu",
-  "version": "0.0.53",
+  "version": "0.0.55",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --live-reload=false",

@@ -142,7 +142,11 @@ export class BudgetsComponent implements OnInit {
     // this.updateCard(this.hiredCardInfo, 'contratar', this.selectedCandidatura);
   }
 
-  updateCard(card: CardOrders, step: string, candidatoEspecifico?: any): void {
+  updateCard(
+    card: CardOrders,
+    step: string,
+    candidatoEspecifico?: any
+  ): Observable<CardOrders> {
     this.processingBudget = true;
 
     // Obtém a candidatura do prestador atual (se existir)
@@ -152,7 +156,7 @@ export class BudgetsComponent implements OnInit {
 
     if (!candidaturaAlvo) {
       console.error('Candidatura não encontrada');
-      return;
+      return of();
     }
 
     // Determina o valor negociado apenas para a candidatura alvo
@@ -194,36 +198,33 @@ export class BudgetsComponent implements OnInit {
       ],
     };
 
-    if (step === 'contratar') {
-      this.sharedService.setUpdatedCardPayload(card.id_pedido!, payloadCard);
-    } else {
-      this.getCardById(); // Atualiza a lista de cartões após a atualização
-    }
+    this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
+      next: () => {
+        this.stateManagementService.clearAllState();
+        this.processingBudget = false;
 
-    // this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
-    //   next: () => {
-    //     this.stateManagementService.clearAllState();
-    //     this.processingBudget = false;
+        if (step === 'contratar') {
+          // this.route.navigate(['/home/progress']);
+          this.sharedService.setSuccessPixStatus(true);
+        } else {
+          this.getCardById(); // Atualiza a lista de cartões após a atualização
+        }
+        // this.closeModal();
+      },
+      error: (error) => {
+        this.processingBudget = false;
+        this.showModal = true;
+        this.customModal.configureModal(
+          'error',
+          error.message || 'Erro ao recusar a proposta, tente novamente'
+        );
+      },
+      complete: () => {
+        console.log('Requisição concluída');
+      },
+    });
 
-    //     if (step === 'contratar') {
-    //       this.sharedService.setSuccessPixStatus(true);
-    //     } else {
-    //       this.getCardById(); // Atualiza a lista de cartões após a atualização
-    //     }
-    //     // this.closeModal();
-    //   },
-    //   error: (error) => {
-    //     this.processingBudget = false;
-    //     this.showModal = true;
-    //     this.customModal.configureModal(
-    //       'error',
-    //       error.message || 'Erro ao recusar a proposta, tente novamente'
-    //     );
-    //   },
-    //   complete: () => {
-    //     console.log('Requisição concluída');
-    //   },
-    // });
+    return of();
   }
 
   // closeModal(): void {
