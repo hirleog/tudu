@@ -53,33 +53,57 @@ export class PagbankService {
     );
   }
 
+  // Inicia o polling globalmente
   monitorarPagamentoGlobal(orderId: string) {
-    this.pararMonitoramento();
+    this.pararMonitoramento(); // Evita duplicados
 
     this.pollingSub = timer(0, 5000)
       .pipe(
         switchMap(() => this.statusPaymentVerify(orderId)),
-        // ✅ A MÁGICA ESTÁ AQUI:
-        // Ele continua enquanto for 'pending'.
-        // Quando recebe 'paid', ele envia o 'paid' uma última vez e ENCERRA o polling.
+        // Para o polling se for pago ou se o serviço decidir
         takeWhile((res) => res.status === 'pending', true)
       )
       .subscribe({
         next: (res) => {
-          console.log('Polling ativo - Status:', res.status);
           this.statusPagamentoSource.next(res.status);
+          if (res.status === 'paid') {
+            this.pararMonitoramento();
+          }
         },
-        error: (err) => console.error('Erro no polling', err),
-        complete: () =>
-          console.log(
-            '✅ Polling encerrado: Pagamento concluído ou cancelado.'
-          ),
       });
   }
 
   pararMonitoramento() {
-    if (this.pollingSub) {
-      this.pollingSub.unsubscribe();
-    }
+    this.pollingSub?.unsubscribe();
   }
+
+  // monitorarPagamentoGlobal(orderId: string) {
+  //   this.pararMonitoramento();
+
+  //   this.pollingSub = timer(0, 5000)
+  //     .pipe(
+  //       switchMap(() => this.statusPaymentVerify(orderId)),
+  //       // ✅ A MÁGICA ESTÁ AQUI:
+  //       // Ele continua enquanto for 'pending'.
+  //       // Quando recebe 'paid', ele envia o 'paid' uma última vez e ENCERRA o polling.
+  //       takeWhile((res) => res.status === 'paid', true)
+  //     )
+  //     .subscribe({
+  //       next: (res) => {
+  //         console.log('Polling ativo - Status:', res.status);
+  //         this.statusPagamentoSource.next(res.status);
+  //       },
+  //       error: (err) => console.error('Erro no polling', err),
+  //       complete: () =>
+  //         console.log(
+  //           '✅ Polling encerrado: Pagamento concluído ou cancelado.'
+  //         ),
+  //     });
+  // }
+
+  // pararMonitoramento() {
+  //   if (this.pollingSub) {
+  //     this.pollingSub.unsubscribe();
+  //   }
+  // }
 }

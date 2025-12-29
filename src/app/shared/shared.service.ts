@@ -56,4 +56,5 @@ export class SharedService {
   clearSuccessPixStatus() {
     this.cardUpdatedSource.next(false);
   }
+  
 }
