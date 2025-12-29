@@ -15,6 +15,7 @@ import * as AOS from 'aos';
 import { PagbankService } from './services/pagbank.service';
 import { CustomModalComponent } from './shared/custom-modal/custom-modal.component';
 import { SharedService } from './shared/shared.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -102,15 +103,13 @@ export class AppComponent implements OnInit {
     // localStorage.setItem('temaEscuro', JSON.stringify(isProfessional));
 
     // mostra modal de pix mediante ao pagamento ser varificado e o card em questão ser atualizado
-    this.pagbankService.statusPagamento$.subscribe((status) => {
-      // Log para debug: ajuda a ver os dois estados chegando
-      console.log('Verificando condições:', {
-        status,
-        cardPronto: this.sharedService.getSuccessPixStatus(),
-      });
+    combineLatest([
+      this.pagbankService.statusPagamento$, // Canal 1
+      this.sharedService.cardUpdated$, // Canal 2
+    ]).subscribe(([status, cardPronto]) => {
+      console.log('Sincronia Global:', { status, cardPronto });
 
-      if (status === 'paid' && this.sharedService.getSuccessPixStatus()) {
-        // 1. Abre o modal
+      if (status === 'paid' && cardPronto === true) {
         this.showSuccessModal = true;
         this.customModal.openModal();
         this.customModal.configureModal(
@@ -118,10 +117,8 @@ export class AppComponent implements OnInit {
           'Pagamento pix aprovado com sucesso!'
         );
 
-        // 2. SÓ LIMPA O STATUS AQUI DENTRO (Após o sucesso confirmado)
+        // Limpa para não abrir o modal de novo
         this.sharedService.clearSuccessPixStatus();
-
-        // 3. Opcional: Para o polling manualmente se quiser garantia extra
         this.pagbankService.pararMonitoramento();
       }
     });
