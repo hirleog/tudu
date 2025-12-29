@@ -81,10 +81,10 @@ export class AppComponent implements OnInit {
 
     const payload = this.sharedService.getUpdatedCardPayload();
     console.log(
-      'Shared Service Payload:',
+      'Shared Service Payload construtor:',
       this.sharedService.getUpdatedCardPayload()
     );
-    console.log('payload', payload);
+    console.log('payload construtor', payload);
   }
 
   ngOnInit() {
@@ -135,43 +135,51 @@ export class AppComponent implements OnInit {
     //   }
     // });
 
-    // this.pagbankService.statusPagamento$.subscribe((status) => {
-    //   if (status === 'paid') {
-    //     this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
-    //       next: () => {
-    //         this.stateManagementService.clearAllState();
+    this.pagbankService.statusPagamento$.subscribe((status) => {
+      if (status === 'paid') {
+        // this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
+        //   next: () => {
+        //     this.stateManagementService.clearAllState();
 
-    //         if (step === 'contratar') {
-    //           this.sharedService.setSuccessPixStatus(true);
-    //         } else {
-    //           this.getCardById(); // Atualiza a lista de cartões após a atualização
-    //         }
-    //         // this.closeModal();
-    //       },
-    //       error: (error) => {
-    //         this.processingBudget = false;
-    //         this.showModal = true;
-    //         this.customModal.configureModal(
-    //           'error',
-    //           error.message || 'Erro ao recusar a proposta, tente novamente'
-    //         );
-    //       },
-    //       complete: () => {
-    //         console.log('Requisição concluída');
-    //       },
-    //     });
+        //     if (step === 'contratar') {
+        //       this.sharedService.setSuccessPixStatus(true);
+        //     } else {
+        //       this.getCardById(); // Atualiza a lista de cartões após a atualização
+        //     }
+        //     // this.closeModal();
+        //   },
+        //   error: (error) => {
+        //     this.processingBudget = false;
+        //     this.showModal = true;
+        //     this.customModal.configureModal(
+        //       'error',
+        //       error.message || 'Erro ao recusar a proposta, tente novamente'
+        //     );
+        //   },
+        //   complete: () => {
+        //     console.log('Requisição concluída');
+        //   },
+        // });
+        this.sharedService.getUpdatedCardPayload();
 
-    //     // Ação que ocorre na aplicação toda:
-    //     this.showSuccessModal = true;
-    //     this.customModal.openModal();
-    //     this.customModal.configureModal(
-    //       'success',
-    //       'Pagamento pix aprovado com sucesso!'
-    //     );
-    //   }
-    //   this.sharedService.clearSuccessPixStatus();
-    //   this.pagbankService.pararMonitoramento();
-    // });
+        const payload = this.sharedService.getUpdatedCardPayload();
+        console.log(
+          'Shared Service Payload:',
+          this.sharedService.getUpdatedCardPayload()
+        );
+        console.log('payload', payload);
+
+        // Ação que ocorre na aplicação toda:
+        this.showSuccessModal = true;
+        this.customModal.openModal();
+        this.customModal.configureModal(
+          'success',
+          'Pagamento pix aprovado com sucesso!'
+        );
+      }
+      this.sharedService.clearSuccessPixStatus();
+      this.pagbankService.pararMonitoramento();
+    });
   }
 
   goToHome(event: any) {
