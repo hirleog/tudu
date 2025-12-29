@@ -13,6 +13,7 @@ export class SharedService {
   private proposalData: CreateCard | null = null;
   private priceData: CreateCard | null = null;
   private pixStatus: boolean = false;
+  updatedCardPayload: any;
 
   constructor() {}
 
@@ -56,5 +57,17 @@ export class SharedService {
   clearSuccessPixStatus() {
     this.cardUpdatedSource.next(false);
   }
-  
+
+  getUpdatedCardPayload(): any {
+    return this.updatedCardPayload;
+  }
+  clearUpdatedCardPayload() {
+    this.updatedCardPayload = null;
+  }
+  setUpdatedCardPayload(id_pedido: string, payloadCard: any) {
+    this.updatedCardPayload = {
+      id_pedido: id_pedido,
+      payloadCard: payloadCard,
+    };
+  }
 }

@@ -142,7 +142,7 @@ export class BudgetsComponent implements OnInit {
     // this.updateCard(this.hiredCardInfo, 'contratar', this.selectedCandidatura);
   }
 
-  updateCard(card: CardOrders, step: string, candidatoEspecifico?: any) {
+  updateCard(card: CardOrders, step: string, candidatoEspecifico?: any): void {
     this.processingBudget = true;
 
     // Obtém a candidatura do prestador atual (se existir)
@@ -194,16 +194,36 @@ export class BudgetsComponent implements OnInit {
       ],
     };
 
-    // 2. Lógica de UI imediata:
     if (step === 'contratar') {
-      this.cardService.updateCardAndNotifyPixPayment(
-        card.id_pedido!,
-        payloadCard,
-        step
-      );
+      this.sharedService.setUpdatedCardPayload(card.id_pedido!, payloadCard);
     } else {
       this.getCardById(); // Atualiza a lista de cartões após a atualização
     }
+
+    // this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
+    //   next: () => {
+    //     this.stateManagementService.clearAllState();
+    //     this.processingBudget = false;
+
+    //     if (step === 'contratar') {
+    //       this.sharedService.setSuccessPixStatus(true);
+    //     } else {
+    //       this.getCardById(); // Atualiza a lista de cartões após a atualização
+    //     }
+    //     // this.closeModal();
+    //   },
+    //   error: (error) => {
+    //     this.processingBudget = false;
+    //     this.showModal = true;
+    //     this.customModal.configureModal(
+    //       'error',
+    //       error.message || 'Erro ao recusar a proposta, tente novamente'
+    //     );
+    //   },
+    //   complete: () => {
+    //     console.log('Requisição concluída');
+    //   },
+    // });
   }
 
   // closeModal(): void {

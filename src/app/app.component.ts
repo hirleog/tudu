@@ -16,6 +16,8 @@ import { PagbankService } from './services/pagbank.service';
 import { CustomModalComponent } from './shared/custom-modal/custom-modal.component';
 import { SharedService } from './shared/shared.service';
 import { combineLatest } from 'rxjs';
+import { CardService } from './services/card.service';
+import { StateManagementService } from './services/state-management.service';
 
 @Component({
   selector: 'app-root',
@@ -70,9 +72,19 @@ export class AppComponent implements OnInit {
   constructor(
     private router: Router,
     public pagbankService: PagbankService,
-    public sharedService: SharedService
+    public sharedService: SharedService,
+    public cardService: CardService,
+    public stateManagementService: StateManagementService
   ) {
     this.themas();
+    this.sharedService.getUpdatedCardPayload();
+
+    const payload = this.sharedService.getUpdatedCardPayload();
+    console.log(
+      'Shared Service Payload:',
+      this.sharedService.getUpdatedCardPayload()
+    );
+    console.log('payload', payload);
   }
 
   ngOnInit() {
@@ -103,25 +115,63 @@ export class AppComponent implements OnInit {
     // localStorage.setItem('temaEscuro', JSON.stringify(isProfessional));
 
     // mostra modal de pix mediante ao pagamento ser varificado e o card em questão ser atualizado
-    combineLatest([
-      this.pagbankService.statusPagamento$, // Canal 1
-      this.sharedService.cardUpdated$, // Canal 2
-    ]).subscribe(([status, cardPronto]) => {
-      console.log('Sincronia Global:', { status, cardPronto });
+    // combineLatest([
+    //   this.pagbankService.statusPagamento$, // Canal 1
+    //   this.sharedService.cardUpdated$, // Canal 2
+    // ]).subscribe(([status, cardPronto]) => {
+    //   console.log('Sincronia Global:', { status, cardPronto });
 
-      if (status === 'paid' && cardPronto === true) {
-        this.showSuccessModal = true;
-        this.customModal.openModal();
-        this.customModal.configureModal(
-          'success',
-          'Pagamento pix aprovado com sucesso!'
-        );
+    //   if (status === 'paid' && cardPronto === true) {
+    //     this.showSuccessModal = true;
+    //     this.customModal.openModal();
+    //     this.customModal.configureModal(
+    //       'success',
+    //       'Pagamento pix aprovado com sucesso!'
+    //     );
 
-        // Limpa para não abrir o modal de novo
-        this.sharedService.clearSuccessPixStatus();
-        this.pagbankService.pararMonitoramento();
-      }
-    });
+    //     // Limpa para não abrir o modal de novo
+    //     this.sharedService.clearSuccessPixStatus();
+    //     this.pagbankService.pararMonitoramento();
+    //   }
+    // });
+
+    // this.pagbankService.statusPagamento$.subscribe((status) => {
+    //   if (status === 'paid') {
+    //     this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
+    //       next: () => {
+    //         this.stateManagementService.clearAllState();
+
+    //         if (step === 'contratar') {
+    //           this.sharedService.setSuccessPixStatus(true);
+    //         } else {
+    //           this.getCardById(); // Atualiza a lista de cartões após a atualização
+    //         }
+    //         // this.closeModal();
+    //       },
+    //       error: (error) => {
+    //         this.processingBudget = false;
+    //         this.showModal = true;
+    //         this.customModal.configureModal(
+    //           'error',
+    //           error.message || 'Erro ao recusar a proposta, tente novamente'
+    //         );
+    //       },
+    //       complete: () => {
+    //         console.log('Requisição concluída');
+    //       },
+    //     });
+
+    //     // Ação que ocorre na aplicação toda:
+    //     this.showSuccessModal = true;
+    //     this.customModal.openModal();
+    //     this.customModal.configureModal(
+    //       'success',
+    //       'Pagamento pix aprovado com sucesso!'
+    //     );
+    //   }
+    //   this.sharedService.clearSuccessPixStatus();
+    //   this.pagbankService.pararMonitoramento();
+    // });
   }
 
   goToHome(event: any) {

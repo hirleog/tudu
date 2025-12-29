@@ -106,25 +106,25 @@ export class CardService {
       headers,
     });
   }
-  updateCardAndNotifyPixPayment(id: string, payload: any, step: string) {
-    this.http.put(`${this.url}/cards/${id}`, payload).subscribe({
-      next: (response) => {
-        // Se for o fluxo de contratação, avisamos o estado global
-        console.log('--- API UPDATE CARD RESPONDEU ---'); // Adicione isso
-        if (step === 'contratar') {
-          this.sharedService.setSuccessPixStatus(true);
-          this.stateManagementService.clearAllState();
+  // updateCardAndNotifyPixPayment(id: string, payload: any, step: string) {
+  //   this.http.put(`${this.url}/cards/${id}`, payload).subscribe({
+  //     next: (response) => {
+  //       // Se for o fluxo de contratação, avisamos o estado global
+  //       console.log('--- API UPDATE CARD RESPONDEU ---'); // Adicione isso
+  //       if (step === 'contratar') {
+  //         this.sharedService.setSuccessPixStatus(true);
+  //         this.stateManagementService.clearAllState();
 
-          console.log('--- STATUS SETADO PARA TRUE NO SHARED ---'); // Adicione isso
-        }
-        console.log('Update finalizado com sucesso em background.');
-      },
-      error: (error) => {
-        console.error('Erro no update em background:', error);
-        // Aqui você poderia disparar um alerta global de erro se quisesse
-      },
-    });
-  }
+  //         console.log('--- STATUS SETADO PARA TRUE NO SHARED ---'); // Adicione isso
+  //       }
+  //       console.log('Update finalizado com sucesso em background.');
+  //     },
+  //     error: (error) => {
+  //       console.error('Erro no update em background:', error);
+  //       // Aqui você poderia disparar um alerta global de erro se quisesse
+  //     },
+  //   });
+  // }
 
   getCards(status_pedido: string, offset: number = 0, limit: number = 10) {
     const headers = new HttpHeaders({
