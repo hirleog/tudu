@@ -2,10 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
+  filter,
   Observable,
   Subscription,
   switchMap,
+  take,
   takeWhile,
+  tap,
   timer,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -54,23 +57,38 @@ export class PagbankService {
   }
 
   // Inicia o polling globalmente
-  monitorarPagamentoGlobal(orderId: string) {
-    this.pararMonitoramento(); // Evita duplicados
+  // monitorarPagamentoGlobal(orderId: string) {
+  //   this.pararMonitoramento(); // Evita duplicados
 
-    this.pollingSub = timer(0, 5000)
-      .pipe(
-        switchMap(() => this.statusPaymentVerify(orderId)),
-        // Para o polling se for pago ou se o serviço decidir
-        takeWhile((res) => res.status === 'pending', true)
-      )
-      .subscribe({
-        next: (res) => {
-          this.statusPagamentoSource.next(res.status);
-          if (res.status === 'paid') {
-            this.pararMonitoramento();
-          }
-        },
-      });
+  //   this.pollingSub = timer(0, 5000)
+  //     .pipe(
+  //       switchMap(() => this.statusPaymentVerify(orderId)),
+  //       // Para o polling se for pago ou se o serviço decidir
+  //       takeWhile((res) => res.status === 'pending', true)
+  //     )
+  //     .subscribe({
+  //       next: (res) => {
+  //         this.statusPagamentoSource.next(res.status);
+  //         if (res.status === 'paid') {
+  //           this.pararMonitoramento();
+  //         }
+  //       },
+  //     });
+  // }
+
+  monitorarPagamentoGlobal(orderId: string): Observable<any> {
+    this.pararMonitoramento();
+
+    return timer(0, 5000).pipe(
+      switchMap(() => this.statusPaymentVerify(orderId)),
+      // Emite os status para o resto da app (AppComponent, etc)
+      tap((res) => this.statusPagamentoSource.next(res.status)),
+      // Para o polling quando for 'paid'
+      takeWhile((res) => res.status === 'pending', true),
+      // Filtra para que o subscribe do componente só receba o sucesso
+      filter((res) => res.status === 'paid'),
+      take(1)
+    );
   }
 
   pararMonitoramento() {
