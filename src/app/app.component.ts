@@ -178,18 +178,24 @@ export class AppComponent implements OnInit {
     const saved = localStorage.getItem('pending_pix_transaction');
     if (saved) {
       const data = JSON.parse(saved);
-      console.log(
-        'F5 Detectado! Recuperando monitoramento do Pix:',
-        data.pixOrderId
-      );
 
-      // Reabastece o SharedService (que foi limpo pelo F5)
+      // 1. CHECAGEM DE SEGURANÇA: O tempo já passou?
+      const expiraEm = new Date(data.expirationDate).getTime();
+      const agora = new Date().getTime();
+
+      if (agora > expiraEm) {
+        console.warn(
+          'O Pix recuperado já expirou no tempo do cliente. Limpando...'
+        );
+        localStorage.removeItem('pending_pix_transaction');
+        return; // Nem tenta monitorar
+      }
+
+      // 2. Se ainda é válido, reabastece e monitora
       this.sharedService.setUpdatedCardPayload(
         data.id_pedido,
         data.payloadCard
       );
-
-      // Reinicia o monitoramento no Service
       this.pagbankService.monitorarPagamentoGlobal(data.pixOrderId).subscribe();
     }
   }
