@@ -183,16 +183,13 @@ export class BudgetsComponent implements OnInit {
   }
 
   // --- MÉTODO DISPARADO PELO PAGAMENTO ---
-  payHiredCard(paymentIndicator?: string, pixOrderId?: string): void {
-    // const moc = 'success';
-    // const moc2 = 'ORDE_2312312312';
+  // No BudgetsComponent
+  payHiredCard(event: { paymentIndicator: string; pixOrderId?: string }): void {
+    // Desestruturamos o objeto que veio do emit
+    const { paymentIndicator, pixOrderId } = event;
 
-    // paymentIndicator = moc;
-    // pixOrderId = moc2;
-
-    console.log(paymentIndicator, 'paymentIndicatorrrr');
-    console.log(pixOrderId, 'payHiredCardddd');
-    
+    console.log('Status do Pagamento:', paymentIndicator);
+    console.log('ID da Order Pix:', pixOrderId);
 
     if (paymentIndicator === 'success') {
       // 1. Preparamos o pacote de dados
@@ -203,15 +200,26 @@ export class BudgetsComponent implements OnInit {
       );
 
       if (payloadCard) {
-        // 2. Salvamos no SharedService (O AppComponent vai usar isso depois)
-
+        // 2. Se for PIX (tem pixOrderId)
         if (pixOrderId) {
+          console.log('Iniciando fluxo Pix Background...');
+
+          // Salvamos o payload para o CardService usar depois
           this.sharedService.setUpdatedCardPayload(
             this.hiredCardInfo.id_pedido!,
             payloadCard
           );
+
+          // Disparamos o monitoramento global
           this.pagbankService.monitorarPagamentoGlobal(pixOrderId).subscribe();
+
+          // Opcional: Navegar para tela de espera
+          // this.route.navigate(['/home/progress']);
         } else {
+          // 3. Se não for PIX (ex: Crédito ou Fluxo Direto), atualiza na hora
+          console.log(
+            'Iniciando fluxo de atualização imediata (Crédito/Direto)...'
+          );
           this.updateCard(
             this.hiredCardInfo,
             'contratar',
@@ -219,15 +227,12 @@ export class BudgetsComponent implements OnInit {
           );
         }
 
-        // 3. Limpamos estados locais e navegamos (O CardService cuidará do resto no background)
         this.stateManagementService.clearAllState();
-        // this.route.navigate(['/home/progress']);
       }
     } else {
       console.log('Pagamento negado ou cancelado');
     }
   }
-
   // --- MÉTODO PARA OUTROS TIPOS DE UPDATE (Ex: Recusar) ---
   updateCard(card: CardOrders, step: string, candidatoEspecifico?: any): void {
     this.processingBudget = true;
