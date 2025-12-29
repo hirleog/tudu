@@ -92,6 +92,8 @@ export class AppComponent implements OnInit {
       this.setupButton.disabled = false;
     });
 
+    this.recuperarTransacaoPendente();
+
     // const isProfessional = this.router.url.includes('professional');
     // const root = document.documentElement;
 
@@ -137,14 +139,15 @@ export class AppComponent implements OnInit {
     // });
 
     this.pagbankService.statusPagamento$.subscribe((status) => {
-      if (status === 'paid') {
-        // 1. Pede para o Service atualizar
-        this.sharedService.requestUpdate();
-
-        // 2. Para o monitoramento do PagBank (já sabemos que está pago)
+      // Se o pagamento expirou ou foi cancelado, limpamos o storage para não travar o F5
+      if (status === 'expired' || status === 'canceled') {
+        localStorage.removeItem('pending_pix_transaction');
         this.pagbankService.pararMonitoramento();
+        return;
+      }
 
-        // 3. Fica ouvindo o sinal de "Update Concluído" para mostrar o modal
+      if (status === 'paid') {
+        // 1. PRIMEIRO: Começamos a ouvir o sinal de conclusão
         const sub = this.sharedService.updateFinalizado$.subscribe(
           (sucesso) => {
             if (sucesso) {
@@ -155,16 +158,40 @@ export class AppComponent implements OnInit {
                 'Pagamento e pedido confirmados!'
               );
             } else {
-              // Tratar erro de banco de dados se necessário
               alert(
                 'Pagamento aprovado, mas houve um erro ao atualizar seu pedido. Entre em contato com o suporte.'
               );
             }
-            sub.unsubscribe(); // Limpa a escuta após o uso
+            sub.unsubscribe();
           }
         );
+
+        // 2. DEPOIS: Damos a ordem e limpamos o monitoramento/storage
+        this.sharedService.requestUpdate();
+        localStorage.removeItem('pending_pix_transaction');
+        this.pagbankService.pararMonitoramento();
       }
     });
+  }
+
+  recuperarTransacaoPendente() {
+    const saved = localStorage.getItem('pending_pix_transaction');
+    if (saved) {
+      const data = JSON.parse(saved);
+      console.log(
+        'F5 Detectado! Recuperando monitoramento do Pix:',
+        data.pixOrderId
+      );
+
+      // Reabastece o SharedService (que foi limpo pelo F5)
+      this.sharedService.setUpdatedCardPayload(
+        data.id_pedido,
+        data.payloadCard
+      );
+
+      // Reinicia o monitoramento no Service
+      this.pagbankService.monitorarPagamentoGlobal(data.pixOrderId).subscribe();
+    }
   }
 
   goToHome(event: any) {

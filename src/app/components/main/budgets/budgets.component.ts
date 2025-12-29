@@ -202,7 +202,17 @@ export class BudgetsComponent implements OnInit {
       if (payloadCard) {
         // 2. Se for PIX (tem pixOrderId)
         if (pixOrderId) {
-          console.log('Iniciando fluxo Pix Background...');
+          const updatedPayload = {
+            id_pedido: this.hiredCardInfo.id_pedido!,
+            payloadCard: payloadCard,
+            pixOrderId: pixOrderId,
+          };
+
+          // Salva no "disco" do navegador para recuperar caso atualize a pagina ele continua monitorando o status do pagamento
+          localStorage.setItem(
+            'pending_pix_transaction',
+            JSON.stringify(updatedPayload)
+          );
 
           // Salvamos o payload para o CardService usar depois
           this.sharedService.setUpdatedCardPayload(

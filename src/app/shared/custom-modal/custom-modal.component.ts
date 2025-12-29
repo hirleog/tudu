@@ -22,14 +22,13 @@ export class CustomModalComponent {
   @Input() showModal = false;
   @Input() messageTitle: string = 'Pagamento Aprovado!';
   @Input() showBtn = true;
-  
 
   // Configuração dinâmica
   modalIcon: string = 'fa-check';
   modalIconColor: string = 'text-green-600';
   modalBgColor: string = 'bg-green-100';
   messageBody: string = 'Seu pagamento foi processado com sucesso.';
-  @Input() isLoadingBtn!: boolean;
+  @Input() isLoadingBtn: boolean | undefined;
 
   openModal(): void {
     this.showModal = true;

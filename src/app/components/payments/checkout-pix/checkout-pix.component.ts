@@ -41,25 +41,12 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     this.processPixPayment();
-    this.setupVisibilityListener();
   }
 
   ngOnDestroy(): void {
     this.stopPolling();
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  private setupVisibilityListener(): void {
-    fromEvent(document, 'visibilitychange')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(() => {
-        if (document.hidden) {
-          this.stopPolling();
-        } else if (this.paymentStatus === 'pending' && this.pixGenerated) {
-          this.pagbankService.monitorarPagamentoGlobal(this.orderId);
-        }
-      });
   }
 
   public async processPixPayment(): Promise<void> {
