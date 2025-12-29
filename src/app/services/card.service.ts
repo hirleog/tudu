@@ -76,7 +76,27 @@ export class CardService {
     private http: HttpClient,
     public stateManagementService: StateManagementService,
     public sharedService: SharedService
-  ) {}
+  ) {
+    // O Service "acorda" sempre que o AppComponent der a ordem
+    this.sharedService.triggerUpdate$.subscribe(() => {
+      const dados = this.sharedService.getPayload();
+      if (dados) {
+        this.http
+          .put(`${this.url}/cards/${dados.id_pedido}`, dados.payload)
+          .subscribe({
+            next: () => {
+              console.log('Update de card concluído!');
+              // AVISA QUE TERMINOU
+              this.sharedService.notifyUpdateComplete(true);
+            },
+            error: (err) => {
+              console.error('Erro no update', err);
+              this.sharedService.notifyUpdateComplete(false);
+            },
+          });
+      }
+    });
+  }
 
   postCardWithImages(cardData: any, files: File[]) {
     const formData = new FormData();
@@ -106,6 +126,21 @@ export class CardService {
       headers,
     });
   }
+
+  // private executarUpdateAutomatico() {
+  //   const dados = this.sharedService.getPayload();
+  //   if (!dados) return;
+
+  //   this.http
+  //     .put(`${this.url}/cards/${dados.id_pedido}`, dados.payload)
+  //     .subscribe({
+  //       next: () => {
+  //         console.log('--- Background Update: SUCESSO ---');
+  //         this.sharedService.clearAll();
+  //       },
+  //       error: (err) => console.error('--- Background Update: ERRO ---', err),
+  //     });
+  // }
   // updateCardAndNotifyPixPayment(id: string, payload: any, step: string) {
   //   this.http.put(`${this.url}/cards/${id}`, payload).subscribe({
   //     next: (response) => {

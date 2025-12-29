@@ -103,24 +103,24 @@ export class AppComponent implements OnInit {
     // localStorage.setItem('temaEscuro', JSON.stringify(isProfessional));
 
     // mostra modal de pix mediante ao pagamento ser varificado e o card em questão ser atualizado
-    combineLatest([
-      this.pagbankService.statusPagamento$, // Canal 1
-      this.sharedService.updatedCard$, // Canal 2
-    ]).subscribe(([status, cardPronto]) => {
-      console.log('Sincronia Global:', { status, cardPronto });
+    // combineLatest([
+    //   this.pagbankService.statusPagamento$, // Canal 1
+    //   this.sharedService.updatedCard$, // Canal 2
+    // ]).subscribe(([status, cardPronto]) => {
+    //   console.log('Sincronia Global:', { status, cardPronto });
 
-      if (status === 'paid' && cardPronto) {
-        this.showSuccessModal = true;
-        this.customModal.openModal();
-        this.customModal.configureModal(
-          'success',
-          'Pagamento pix aprovado com sucesso!'
-        );
+    //   if (status === 'paid' && cardPronto) {
+    //     this.showSuccessModal = true;
+    //     this.customModal.openModal();
+    //     this.customModal.configureModal(
+    //       'success',
+    //       'Pagamento pix aprovado com sucesso!'
+    //     );
 
-        // Limpa para não abrir o modal de novo
-        this.pagbankService.pararMonitoramento();
-      }
-    });
+    //     // Limpa para não abrir o modal de novo
+    //     this.pagbankService.pararMonitoramento();
+    //   }
+    // });
 
     // this.pagbankService.statusPagamento$.subscribe((status) => {
     //   if (status === 'paid') {
@@ -135,6 +135,36 @@ export class AppComponent implements OnInit {
     //   this.sharedService.clearSuccessPixStatus();
     //   this.pagbankService.pararMonitoramento();
     // });
+
+    this.pagbankService.statusPagamento$.subscribe((status) => {
+      if (status === 'paid') {
+        // 1. Pede para o Service atualizar
+        this.sharedService.requestUpdate();
+
+        // 2. Para o monitoramento do PagBank (já sabemos que está pago)
+        this.pagbankService.pararMonitoramento();
+
+        // 3. Fica ouvindo o sinal de "Update Concluído" para mostrar o modal
+        const sub = this.sharedService.updateFinalizado$.subscribe(
+          (sucesso) => {
+            if (sucesso) {
+              this.showSuccessModal = true;
+              this.customModal.openModal();
+              this.customModal.configureModal(
+                'success',
+                'Pagamento e pedido confirmados!'
+              );
+            } else {
+              // Tratar erro de banco de dados se necessário
+              alert(
+                'Pagamento aprovado, mas houve um erro ao atualizar seu pedido. Entre em contato com o suporte.'
+              );
+            }
+            sub.unsubscribe(); // Limpa a escuta após o uso
+          }
+        );
+      }
+    });
   }
 
   goToHome(event: any) {

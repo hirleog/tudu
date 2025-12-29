@@ -83,15 +83,16 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
           this.orderId = response.data.order_id;
 
           this.startCountdown(this.qrCodeData.data.qr_code.expiration_date);
+          this.handlePaymentSuccess(this.orderId); // <--- Agora sim, no lugar que você queria
 
           // Chamamos o monitoramento e JÁ agendamos o que fazer no sucesso
-          this.pagbankService.monitorarPagamentoGlobal(this.orderId).subscribe({
-            next: (res) => {
-              console.log('Sucesso detectado dentro do processPixPayment!');
-              this.handlePaymentSuccess(); // <--- Agora sim, no lugar que você queria
-            },
-            error: (err) => console.error('Erro no monitoramento', err),
-          });
+          // this.pagbankService.monitorarPagamentoGlobal(this.orderId).subscribe({
+          //   next: (res) => {
+          //     console.log('Sucesso detectado dentro do processPixPayment!');
+          //     this.handlePaymentSuccess(); // <--- Agora sim, no lugar que você queria
+          //   },
+          //   error: (err) => console.error('Erro no monitoramento', err),
+          // });
         } else {
           this.handlePaymentError(response.message || 'Erro ao gerar QR Code');
         }
@@ -188,8 +189,8 @@ export class CheckoutPixComponent implements OnInit, OnDestroy {
     });
   }
 
-  handlePaymentSuccess(): void {
-    this.handlePixSuccess.emit();
+  handlePaymentSuccess(pixOrderId: string): void {
+    this.handlePixSuccess.emit(pixOrderId);
   }
   handlePaymentError(message: string): void {
     this.handleErrorPix.emit(message);

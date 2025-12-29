@@ -55,7 +55,7 @@ export class PaymentsComponent implements OnInit {
   @Input() hiredCard!: any;
   @Input() selectedCandidatura!: any;
   @Output() backToOffer = new EventEmitter<string>();
-  @Output() payHiredCard = new EventEmitter<string>();
+  @Output() payHiredCard = new EventEmitter<any>();
 
   pixGenerated: boolean = false;
   generatingPix: boolean = false;
@@ -498,11 +498,13 @@ export class PaymentsComponent implements OnInit {
     );
   }
 
-  public handlePixSuccess(event?: any): void {
+  public handlePixSuccess(orderId?: string): void {
     // FLUXO DE SUCESSO PARA AVISAR O COMPONENTE DE BUDGET QUE O PAGAMENTO DEU CERTO E FAZER DIRECIONAMENTO PARA TELA DE PEDIDO PENDENTE
-    this.payHiredCard.emit('success');
+    this.payHiredCard.emit({
+      paymentIndicator: 'success',
+      pixOrderId: orderId,
+    });
   }
-
   showToast(message: string, type: 'success' | 'error' = 'success'): void {
     // Implemente seu sistema de notificação
     // Ou use simples alert

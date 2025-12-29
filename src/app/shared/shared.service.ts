@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CreateCard } from '../interfaces/create-card.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,13 +9,14 @@ export class SharedService {
   private cardUpdatedSource = new BehaviorSubject<boolean>(false);
   cardUpdated$ = this.cardUpdatedSource.asObservable();
 
-  private updatedCardSource = new BehaviorSubject<{
-    id_pedido: string;
-    payloadCard: any;
-  } | null>(null);
-  // Esse é o cara que o AppComponent vai assinar (subscribe)
-  updatedCard$ = this.updatedCardSource.asObservable();
-  
+  private updatedCardPayloadSource = new BehaviorSubject<any>(null);
+
+  private triggerUpdateSource = new Subject<void>();
+  triggerUpdate$ = this.triggerUpdateSource.asObservable();
+
+  private updateFinalizadoSource = new Subject<boolean>();
+  updateFinalizado$ = this.updateFinalizadoSource.asObservable();
+
   private selectedFiles: File[] = [];
   private proposalData: CreateCard | null = null;
   private priceData: CreateCard | null = null;
@@ -65,19 +66,22 @@ export class SharedService {
     this.cardUpdatedSource.next(false);
   }
 
-  setUpdatedCardPayload(id_pedido: string, payloadCard: any) {
-    console.log('Enviando payload para o AppComponent...');
-    this.updatedCardSource.next({
-      id_pedido: id_pedido,
-      payloadCard: payloadCard,
-    });
+  setUpdatedCardPayload(id_pedido: string, payload: any) {
+    this.updatedCardPayloadSource.next({ id_pedido, payload });
   }
 
-  getUpdatedCardPayload() {
-    return this.updatedCardSource.value;
+  getPayload() {
+    return this.updatedCardPayloadSource.value;
   }
 
-  clearUpdatedCardPayload() {
-    this.updatedCardSource.next(null);
+  requestUpdate() {
+    this.triggerUpdateSource.next();
+  }
+  notifyUpdateComplete(sucesso: boolean) {
+    this.updateFinalizadoSource.next(sucesso);
+  }
+
+  clearAll() {
+    this.updatedCardPayloadSource.next(null);
   }
 }

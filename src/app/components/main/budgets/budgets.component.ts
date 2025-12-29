@@ -9,6 +9,7 @@ import { StateManagementService } from 'src/app/services/state-management.servic
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { Location } from '@angular/common';
 import { SharedService } from 'src/app/shared/shared.service';
+import { PagbankService } from 'src/app/services/pagbank.service';
 
 @Component({
   selector: 'app-budgets',
@@ -43,7 +44,8 @@ export class BudgetsComponent implements OnInit {
     private profileDetailService: ProfileDetailService,
     public stateManagementService: StateManagementService,
     private location: Location,
-    public sharedService: SharedService
+    public sharedService: SharedService,
+    public pagbankService: PagbankService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
@@ -129,37 +131,21 @@ export class BudgetsComponent implements OnInit {
     });
   }
 
-  payHiredCard(paymentIndicator?: any): void {
-    if (paymentIndicator === 'success') {
-      this.updateCard(
-        this.hiredCardInfo,
-        'contratar',
-        this.selectedCandidatura
-      );
-    } else {
-      console.log('pagamento negado');
-    }
-    // this.updateCard(this.hiredCardInfo, 'contratar', this.selectedCandidatura);
-  }
-
-  updateCard(
+  // --- NOVO MÉTODO: APENAS CONSTRÓI O PAYLOAD ---
+  private buildCardPayload(
     card: CardOrders,
     step: string,
     candidatoEspecifico?: any
-  ): Observable<CardOrders> {
-    this.processingBudget = true;
-
-    // Obtém a candidatura do prestador atual (se existir)
+  ): any {
     const candidaturaAlvo = card.candidaturas?.find(
       (c) => c.prestador_id === candidatoEspecifico
     );
 
     if (!candidaturaAlvo) {
-      console.error('Candidatura não encontrada');
-      return of();
+      console.error('Candidatura não encontrada para gerar payload');
+      return null;
     }
 
-    // Determina o valor negociado apenas para a candidatura alvo
     const valorNegociado =
       candidaturaAlvo.valor_negociado === ''
         ? card.valor
@@ -170,7 +156,7 @@ export class BudgetsComponent implements OnInit {
         ? card.horario_preferencial
         : candidaturaAlvo.horario_negociado ?? card.horario_preferencial;
 
-    const payloadCard: any = {
+    return {
       id_cliente: Number(card.id_pedido),
       id_prestador: step === 'contratar' ? candidaturaAlvo.prestador_id : null,
       categoria: card.categoria,
@@ -178,7 +164,6 @@ export class BudgetsComponent implements OnInit {
       subcategoria: card.subcategoria,
       valor: card.valor,
       horario_preferencial: card.horario_preferencial,
-
       cep: card.address.cep,
       street: card.address.street,
       neighborhood: card.address.neighborhood,
@@ -186,8 +171,6 @@ export class BudgetsComponent implements OnInit {
       state: card.address.state,
       number: card.address.number,
       complement: card.address.complement,
-
-      // Envia apenas a candidatura específica que está sendo atualizada
       candidaturas: [
         {
           prestador_id: candidaturaAlvo.prestador_id,
@@ -197,36 +180,84 @@ export class BudgetsComponent implements OnInit {
         },
       ],
     };
+  }
 
+  // --- MÉTODO DISPARADO PELO PAGAMENTO ---
+  payHiredCard(paymentIndicator?: string, pixOrderId?: string): void {
+    // const moc = 'success';
+    // const moc2 = 'ORDE_2312312312';
+
+    // paymentIndicator = moc;
+    // pixOrderId = moc2;
+
+    console.log(paymentIndicator, 'paymentIndicatorrrr');
+    console.log(pixOrderId, 'payHiredCardddd');
+    
+
+    if (paymentIndicator === 'success') {
+      // 1. Preparamos o pacote de dados
+      const payloadCard = this.buildCardPayload(
+        this.hiredCardInfo,
+        'contratar',
+        this.selectedCandidatura
+      );
+
+      if (payloadCard) {
+        // 2. Salvamos no SharedService (O AppComponent vai usar isso depois)
+
+        if (pixOrderId) {
+          this.sharedService.setUpdatedCardPayload(
+            this.hiredCardInfo.id_pedido!,
+            payloadCard
+          );
+          this.pagbankService.monitorarPagamentoGlobal(pixOrderId).subscribe();
+        } else {
+          this.updateCard(
+            this.hiredCardInfo,
+            'contratar',
+            this.selectedCandidatura
+          );
+        }
+
+        // 3. Limpamos estados locais e navegamos (O CardService cuidará do resto no background)
+        this.stateManagementService.clearAllState();
+        // this.route.navigate(['/home/progress']);
+      }
+    } else {
+      console.log('Pagamento negado ou cancelado');
+    }
+  }
+
+  // --- MÉTODO PARA OUTROS TIPOS DE UPDATE (Ex: Recusar) ---
+  updateCard(card: CardOrders, step: string, candidatoEspecifico?: any): void {
+    this.processingBudget = true;
+    const payloadCard = this.buildCardPayload(card, step, candidatoEspecifico);
+
+    if (!payloadCard) {
+      this.processingBudget = false;
+      return;
+    }
+
+    // Para casos que NÃO são 'contratar' (como recusar), fazemos o update na hora
     this.cardService.updateCard(card.id_pedido!, payloadCard).subscribe({
       next: () => {
-        this.stateManagementService.clearAllState();
         this.processingBudget = false;
 
         if (step === 'contratar') {
-          // this.route.navigate(['/home/progress']);
+          this.route.navigate(['/home/progress']);
+          alert('Serviço contratado com sucesso!');
           this.sharedService.setSuccessPixStatus(true);
         } else {
           this.getCardById(); // Atualiza a lista de cartões após a atualização
         }
-        // this.closeModal();
       },
       error: (error) => {
         this.processingBudget = false;
-        this.showModal = true;
-        this.customModal.configureModal(
-          'error',
-          error.message || 'Erro ao recusar a proposta, tente novamente'
-        );
-      },
-      complete: () => {
-        console.log('Requisição concluída');
+        this.customModal.configureModal('error', 'Erro ao atualizar proposta');
+        this.customModal.openModal();
       },
     });
-
-    return of();
   }
-
   // closeModal(): void {
   //   if (this.paymentIndicator === 'contratar') {
   //     this.route.navigate(['/home/progress']);
