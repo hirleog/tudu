@@ -1,10 +1,14 @@
 import { Injectable } from '@angular/core';
 import { CreateCard } from '../interfaces/create-card.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SharedService {
+  private cardUpdatedSource = new BehaviorSubject<boolean>(false);
+  cardUpdated$ = this.cardUpdatedSource.asObservable();
+
   private selectedFiles: File[] = [];
   private proposalData: CreateCard | null = null;
   private priceData: CreateCard | null = null;
@@ -42,13 +46,14 @@ export class SharedService {
   }
 
   setSuccessPixStatus(status: boolean) {
-    this.pixStatus = status;
+    this.cardUpdatedSource.next(status);
   }
 
-  getSuccessPixStatus(): boolean | null {
-    return this.pixStatus;
+  getSuccessPixStatus(): boolean {
+    return this.cardUpdatedSource.value;
   }
+
   clearSuccessPixStatus() {
-    this.pixStatus = false;
+    this.cardUpdatedSource.next(false);
   }
 }

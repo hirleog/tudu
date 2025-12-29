@@ -103,16 +103,27 @@ export class AppComponent implements OnInit {
 
     // mostra modal de pix mediante ao pagamento ser varificado e o card em questão ser atualizado
     this.pagbankService.statusPagamento$.subscribe((status) => {
+      // Log para debug: ajuda a ver os dois estados chegando
+      console.log('Verificando condições:', {
+        status,
+        cardPronto: this.sharedService.getSuccessPixStatus(),
+      });
+
       if (status === 'paid' && this.sharedService.getSuccessPixStatus()) {
-        // Ação que ocorre na aplicação toda:
+        // 1. Abre o modal
         this.showSuccessModal = true;
         this.customModal.openModal();
         this.customModal.configureModal(
           'success',
           'Pagamento pix aprovado com sucesso!'
         );
+
+        // 2. SÓ LIMPA O STATUS AQUI DENTRO (Após o sucesso confirmado)
+        this.sharedService.clearSuccessPixStatus();
+
+        // 3. Opcional: Para o polling manualmente se quiser garantia extra
+        this.pagbankService.pararMonitoramento();
       }
-      this.sharedService.clearSuccessPixStatus();
     });
   }
 
