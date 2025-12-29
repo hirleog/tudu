@@ -4,6 +4,8 @@ import { environment } from 'src/environments/environment';
 import { card } from '../interfaces/card';
 import { CardOrders } from '../interfaces/card-orders';
 import { Observable } from 'rxjs';
+import { StateManagementService } from './state-management.service';
+import { SharedService } from '../shared/shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -70,7 +72,11 @@ export class CardService {
 
   public serviceCards: card[] = [];
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    public stateManagementService: StateManagementService,
+    public sharedService: SharedService
+  ) {}
 
   postCardWithImages(cardData: any, files: File[]) {
     const formData = new FormData();
@@ -98,6 +104,22 @@ export class CardService {
 
     return this.http.put<CardOrders>(`${this.url}/cards/${id}`, updatedFields, {
       headers,
+    });
+  }
+  updateCardAndNotifyPixPayment(idPedido: string, payload: any, step: string) {
+    return this.http.put(`${this.url}/${idPedido}`, payload).subscribe({
+      next: (response) => {
+        // Se for o fluxo de contratação, avisamos o estado global
+        if (step === 'contratar') {
+          this.sharedService.setSuccessPixStatus(true);
+          this.stateManagementService.clearAllState();
+        }
+        console.log('Update finalizado com sucesso em background.');
+      },
+      error: (error) => {
+        console.error('Erro no update em background:', error);
+        // Aqui você poderia disparar um alerta global de erro se quisesse
+      },
     });
   }
 
