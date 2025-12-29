@@ -4,9 +4,11 @@ import {
   BehaviorSubject,
   filter,
   Observable,
+  Subject,
   Subscription,
   switchMap,
   take,
+  takeUntil,
   takeWhile,
   tap,
   timer,
@@ -23,7 +25,7 @@ export class PagbankService {
   public statusPagamento$ = this.statusPagamentoSource.asObservable();
 
   private pollingSub?: Subscription;
-
+  private stopPolling$ = new Subject<void>();
   constructor(private http: HttpClient) {}
 
   createPixCharge(pixData: any): Observable<any> {
@@ -77,22 +79,30 @@ export class PagbankService {
   // }
 
   monitorarPagamentoGlobal(orderId: string): Observable<any> {
-    this.pararMonitoramento();
+    // 1. Mata qualquer monitoramento anterior IMEDIATAMENTE
+    this.stopPolling$.next();
+
+    console.log(`Iniciando monitoramento exclusivo para: ${orderId}`);
 
     return timer(0, 5000).pipe(
+      // 2. O takeUntil garante que este timer morra se stopPolling$ disparar
+      takeUntil(this.stopPolling$),
       switchMap(() => this.statusPaymentVerify(orderId)),
-      // Emite os status para o resto da app (AppComponent, etc)
-      tap((res) => this.statusPagamentoSource.next(res.status)),
-      // Para o polling quando for 'paid'
+      tap((res) => {
+        this.statusPagamentoSource.next(res.status);
+        if (res.status === 'paid') {
+          this.stopPolling$.next(); // Para tudo ao confirmar pagamento
+        }
+      }),
       takeWhile((res) => res.status === 'pending', true),
-      // Filtra para que o subscribe do componente só receba o sucesso
       filter((res) => res.status === 'paid'),
       take(1)
     );
   }
 
-  pararMonitoramento() {
-    this.pollingSub?.unsubscribe();
+  pararMonitoramento(): void {
+    this.stopPolling$.next();
+    this.statusPagamentoSource.next('idle'); // Status neutro
   }
 
   // monitorarPagamentoGlobal(orderId: string) {

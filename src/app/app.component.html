@@ -22,6 +22,7 @@
     <app-custom-modal
       #meuModal
       [actionButtonText]="'Ver pedidos'"
+      [isLoadingBtn]="showSuccessModal"
       (modalAction)="handleModalAction($event)"
       (modalClosed)="goToHome($event)"
     ></app-custom-modal>
