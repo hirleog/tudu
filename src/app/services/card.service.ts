@@ -107,7 +107,7 @@ export class CardService {
     });
   }
   updateCardAndNotifyPixPayment(id: string, payload: any, step: string) {
-    return this.http.put(`${this.url}/cards${id}`, payload).subscribe({
+    this.http.put(`${this.url}/cards/${id}`, payload).subscribe({
       next: (response) => {
         // Se for o fluxo de contratação, avisamos o estado global
         console.log('--- API UPDATE CARD RESPONDEU ---'); // Adicione isso
