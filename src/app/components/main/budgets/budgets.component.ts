@@ -205,7 +205,6 @@ export class BudgetsComponent implements OnInit {
 
         if (step === 'contratar') {
           this.sharedService.setSuccessPixStatus(true);
-          this.route.navigate(['/home/progress']);
         } else {
           this.getCardById(); // Atualiza a lista de cartões após a atualização
         }
