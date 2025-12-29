@@ -194,14 +194,14 @@ export class BudgetsComponent implements OnInit {
       ],
     };
 
-    this.cardService.updateCardAndNotifyPixPayment(
-      card.id_pedido!,
-      payloadCard,
-      step
-    );
-
     // 2. Lógica de UI imediata:
-    if (step === 'recusar') {
+    if (step === 'contratar') {
+      this.cardService.updateCardAndNotifyPixPayment(
+        card.id_pedido!,
+        payloadCard,
+        step
+      );
+    } else {
       this.getCardById(); // Atualiza a lista de cartões após a atualização
     }
   }
