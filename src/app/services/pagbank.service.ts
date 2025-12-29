@@ -79,22 +79,23 @@ export class PagbankService {
   // }
 
   monitorarPagamentoGlobal(orderId: string): Observable<any> {
-    // 1. Mata qualquer monitoramento anterior IMEDIATAMENTE
     this.stopPolling$.next();
 
-    console.log(`Iniciando monitoramento exclusivo para: ${orderId}`);
-
     return timer(0, 5000).pipe(
-      // 2. O takeUntil garante que este timer morra se stopPolling$ disparar
       takeUntil(this.stopPolling$),
       switchMap(() => this.statusPaymentVerify(orderId)),
       tap((res) => {
+        // 1. SEMPRE avisa o AppComponent qual o novo status
         this.statusPagamentoSource.next(res.status);
-        if (res.status === 'paid') {
-          this.stopPolling$.next(); // Para tudo ao confirmar pagamento
+
+        // 2. Se não estiver mais pendente (Paid, Expired, Canceled), para o timer
+        if (res.status !== 'pending') {
+          this.stopPolling$.next();
         }
       }),
+      // Inclui o objeto final que não é 'pending' no fluxo para o subscribe receber
       takeWhile((res) => res.status === 'pending', true),
+      // O subscribe aqui só vai disparar se for o objeto de sucesso (paid)
       filter((res) => res.status === 'paid'),
       take(1)
     );
