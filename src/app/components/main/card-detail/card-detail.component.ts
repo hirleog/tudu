@@ -28,7 +28,7 @@ export class CardDetailComponent implements OnInit {
   @Output() messageEvent = new EventEmitter<any>();
 
   public currencyOptions: CurrencyMaskConfig = {
-    prefix: 'R$',
+    prefix: '',
     thousands: '.',
     decimal: ',',
     precision: 2,
