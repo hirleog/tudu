@@ -8,6 +8,7 @@ import { ProfileDetailService } from 'src/app/services/profile-detail.service';
 import { StateManagementService } from 'src/app/services/state-management.service';
 import { CustomModalComponent } from 'src/app/shared/custom-modal/custom-modal.component';
 import { Location } from '@angular/common';
+import { SharedService } from 'src/app/shared/shared.service';
 
 @Component({
   selector: 'app-budgets',
@@ -41,7 +42,8 @@ export class BudgetsComponent implements OnInit {
     private authService: AuthService,
     private profileDetailService: ProfileDetailService,
     public stateManagementService: StateManagementService,
-    private location: Location
+    private location: Location,
+    public sharedService: SharedService
   ) {
     this.routeActive.queryParams.subscribe((params) => {
       this.id_pedido = params['id'];
@@ -203,6 +205,7 @@ export class BudgetsComponent implements OnInit {
 
         if (step === 'contratar') {
           this.route.navigate(['/home/progress']);
+          this.sharedService.setSuccessPixStatus(true);
         } else {
           this.getCardById(); // Atualiza a lista de cartões após a atualização
         }

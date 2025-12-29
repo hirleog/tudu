@@ -8,6 +8,7 @@ export class SharedService {
   private selectedFiles: File[] = [];
   private proposalData: CreateCard | null = null;
   private priceData: CreateCard | null = null;
+  private pixStatus: boolean = false;
 
   constructor() {}
 
@@ -38,5 +39,16 @@ export class SharedService {
   }
   clearPriceEstimation() {
     this.priceData = null;
+  }
+
+  setSuccessPixStatus(status: boolean) {
+    this.pixStatus = status;
+  }
+
+  getSuccessPixStatus(): boolean | null {
+    return this.pixStatus;
+  }
+  clearSuccessPixStatus() {
+    this.pixStatus = false;
   }
 }

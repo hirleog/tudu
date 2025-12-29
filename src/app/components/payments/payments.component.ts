@@ -222,6 +222,12 @@ export class PaymentsComponent implements OnInit {
 
   selectPaymentMethod(method: 'pix' | 'credit'): void {
     this.paymentMethod = method;
+    if (method === 'pix') {
+      window.scrollTo({
+        top: document.body.scrollHeight,
+        behavior: 'smooth', // Faz o scroll ser deslizado, não um pulo seco
+      });
+    }
     // if (method === 'pix') {
     //   this.submitPayment();
     //   this.paymentForm.reset({
@@ -330,6 +336,7 @@ export class PaymentsComponent implements OnInit {
       await this.tokenCardNumber(formValue);
     } else if (this.paymentMethod === 'pix') {
       // await this.processPixPayment();
+
       this.openPixComponent = true;
       this.paymentForm.reset({
         installments: '1',

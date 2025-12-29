@@ -14,6 +14,7 @@ import {
 import * as AOS from 'aos';
 import { PagbankService } from './services/pagbank.service';
 import { CustomModalComponent } from './shared/custom-modal/custom-modal.component';
+import { SharedService } from './shared/shared.service';
 
 @Component({
   selector: 'app-root',
@@ -65,7 +66,11 @@ export class AppComponent implements OnInit {
   logoUrl: string = 'assets/logo.png'; // Caminho padrão
   showSuccessModal: boolean = false;
 
-  constructor(private router: Router, public pagbankService: PagbankService) {
+  constructor(
+    private router: Router,
+    public pagbankService: PagbankService,
+    public sharedService: SharedService
+  ) {
     this.themas();
   }
 
@@ -96,8 +101,9 @@ export class AppComponent implements OnInit {
     // }
     // localStorage.setItem('temaEscuro', JSON.stringify(isProfessional));
 
+    // mostra modal de pix mediante ao pagamento ser varificado e o card em questão ser atualizado
     this.pagbankService.statusPagamento$.subscribe((status) => {
-      if (status === 'paid') {
+      if (status === 'paid' && this.sharedService.getSuccessPixStatus()) {
         // Ação que ocorre na aplicação toda:
         this.showSuccessModal = true;
         this.customModal.openModal();
@@ -106,6 +112,7 @@ export class AppComponent implements OnInit {
           'Pagamento pix aprovado com sucesso!'
         );
       }
+      this.sharedService.clearSuccessPixStatus();
     });
   }
 
