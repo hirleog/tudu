@@ -1,49 +1,85 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+interface HeroSlide {
+  image: string;
+  badge: string;
+  title: string;
+  subtitle: string;
+  buttonText: string;
+}
 
 @Component({
   selector: 'app-hero',
   templateUrl: './hero.component.html',
-  styleUrls: ['./hero.component.css']
+  styleUrls: ['./hero.component.css'],
 })
 export class HeroComponent implements OnInit {
-  @ViewChild('bannerVideo') bannerVideo!: ElementRef;
-  isVideoPlaying: boolean = true;  // Flag para controlar se o vídeo está sendo exibido
-  loading: boolean = false;
-  constructor() { }
+  currentSlide = -1;
+  private intervalId: any;
 
-  ngOnInit(): void {
-    // Adiciona a classe 'fade-in' ao banner quando o componente é inicializado
-    const banner = document.getElementById('banner');
-    const bannerText = document.getElementById('banner-text');
+  slides: HeroSlide[] = [
+    {
+      image: '../../../assets/eeeE107B6H4.webp',
+      badge: 'App Tudü',
+      title: 'Um app, muitos serviços.',
+      subtitle:
+        'Conectamos você aos melhores profissionais para sua casa ou empresa.',
+      buttonText: 'Ver serviços disponíveis',
+    },
+    {
+      image: '../../../assets/ex1.webp',
+      badge: 'Profissionais',
+      title: 'Ganhe dinheiro com suas habilidades.',
+      subtitle: 'Seja um parceiro Tudü e aumente sua carteira de clientes.',
+      buttonText: 'Saiba mais',
+    },
+  ];
+  constructor() {}
 
-    // Aplica o efeito de fade-in no banner e no texto após um pequeno atraso
-    if (banner && bannerText) {
+  ngOnInit() {
+    setTimeout(() => {
+      this.currentSlide = 0;
+      this.startAutoPlay();
+    }, 50);
+  }
+
+  ngOnDestroy() {
+    if (this.intervalId) clearInterval(this.intervalId);
+  }
+
+  startAutoPlay() {
+    // Limpa qualquer intervalo existente antes de criar um novo
+    if (this.intervalId) clearInterval(this.intervalId);
+
+    this.intervalId = setInterval(() => {
+      this.nextSlide();
+    }, 5000);
+  }
+
+  nextSlide() {
+    const next = (this.currentSlide + 1) % this.slides.length;
+
+    // Se o próximo slide for o primeiro (0), resetamos tudo momentaneamente
+    if (next === 0) {
+      this.currentSlide = -1;
       setTimeout(() => {
-        banner.classList.add('fade-in');
-        bannerText.classList.add('fade-in');
-      }, 100); // Um pequeno atraso antes de aplicar o fade-in
+        this.currentSlide = 0;
+      }, 10);
+    } else {
+      this.currentSlide = next;
     }
   }
 
-  ngAfterViewInit() {
-    // const video: HTMLVideoElement = this.bannerVideo.nativeElement;
+  setSlide(index: number) {
+    clearInterval(this.intervalId);
+    this.currentSlide = -1;
 
-    // // Tenta carregar o vídeo
-    // video.load();
-
-    // // Tenta reproduzir o vídeo quando estiver pronto
-    // video.addEventListener('canplay', () => {
-    //   video.play().catch(error => {
-    //     console.error("Erro ao tentar reproduzir o vídeo, substituindo por imagem:", error);
-    //     this.isVideoPlaying = false;  // Se der erro, substitui o vídeo pela imagem
-    //   });
-    // });
-
-    // // Caso o vídeo falhe ao carregar
-    // video.addEventListener('error', () => {
-    //   console.error("Erro ao carregar o vídeo, substituindo por imagem.");
-    //   this.isVideoPlaying = false;
-    // });
+    setTimeout(() => {
+      this.currentSlide = index;
+      this.startAutoPlay();
+    }, 10);
   }
-
+  scrollToServices() {
+    const element = document.getElementById('hero'); // Ou o ID da sua seção de serviços
+    if (element) element.scrollIntoView({ behavior: 'smooth' });
+  }
 }

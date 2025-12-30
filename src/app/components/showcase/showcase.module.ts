@@ -12,7 +12,9 @@ import { ClientReviewsComponent } from './client-reviews/client-reviews.componen
 import { MidBannerComponent } from './mid-banner/mid-banner.component';
 import { HomeSkeletonComponent } from '../templates/home-skeleton/home-skeleton.component';
 
-const routes: Routes = [{ path: '', component: ShowcaseComponent }];
+const routes: Routes = [
+  { path: '', component: ShowcaseComponent, data: { transparentNav: true } },
+];
 @NgModule({
   declarations: [
     ShowcaseComponent,
@@ -22,7 +24,7 @@ const routes: Routes = [{ path: '', component: ShowcaseComponent }];
     ClientReviewsComponent,
     MidBannerComponent,
     FooterComponent,
-    HomeSkeletonComponent
+    HomeSkeletonComponent,
   ],
   imports: [SharedModule, RouterModule.forChild(routes)],
   exports: [

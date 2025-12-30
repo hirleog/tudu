@@ -1,13 +1,13 @@
+import {
+  animate,
+  group,
+  query,
+  style,
+  transition,
+  trigger,
+} from '@angular/animations';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import {
-  trigger,
-  transition,
-  style,
-  animate,
-  query,
-  group,
-} from '@angular/animations';
 
 // import { SwUpdate } from '@angular/service-worker';
 
@@ -15,7 +15,6 @@ import * as AOS from 'aos';
 import { PagbankService } from './services/pagbank.service';
 import { CustomModalComponent } from './shared/custom-modal/custom-modal.component';
 import { SharedService } from './shared/shared.service';
-import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -66,13 +65,20 @@ export class AppComponent implements OnInit {
   setupButton: any;
   logoUrl: string = 'assets/logo.png'; // Caminho padrão
   showSuccessModal: boolean = false;
-
+  allowTransparency: boolean = false;
+  changeNavColor: boolean = true;
+  
   constructor(
     private router: Router,
     public pagbankService: PagbankService,
     public sharedService: SharedService
   ) {
     this.themas();
+    this.router.events.subscribe(() => {
+      // Se a URL for a home '/', permite transparência, senão, sólido
+      this.allowTransparency = this.router.url === '/';
+      if (!this.allowTransparency) this.changeNavColor = true;
+    });
   }
 
   ngOnInit() {

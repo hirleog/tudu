@@ -11,7 +11,6 @@
   </div>
 
   <div central-content></div>
-  <!-- <div central-content></div> -->
   <div right-content style="flex: none !important">
     <div class="d-flex align-items-center gap-1">
       <a
@@ -24,7 +23,6 @@
             : "Seja um profissional"
         }}</a
       >
-      <!-- Botão de login -->
       <a
         *ngIf="!skeletonLoader"
         [routerLink]="
@@ -43,26 +41,27 @@
   </div>
 </lib-nav>
 
+<app-hero></app-hero>
+
 <app-home-skeleton *ngIf="skeletonLoader"></app-home-skeleton>
 
 <section
   id="hero"
   *ngIf="!skeletonLoader"
-  class="mx-auto py-8 max-w-6xl overflow-hidden"
+  class="mx-auto max-w-6xl overflow-hidden"
 >
   <ng-container #mfeContainer></ng-container>
 
   <div class="container-fluid" data-aos="fade-down">
-    <!-- Barra de busca -->
-    <!-- <div class="row justify-content-center space">
-      <div class="col-12">
+    <div class="row justify-content-center space">
+      <div class="col-12 m-0 p-0">
         <h1 class="text-start mb-3">Qual serviço você precisa?</h1>
         <div class="position-relative">
           <input
             type="text"
             class="form-control input-ui pe-5"
             style="border-radius: 52px; padding-right: 70px; height: 58px"
-            placeholder="Encontre o serviço que precisa..."
+            placeholder="O que você precisa hoje? (ex: Eletricista)"
             aria-label="Buscar serviços"
           />
 
@@ -81,9 +80,37 @@
           </button>
         </div>
       </div>
-    </div> -->
+    </div>
 
-    <!-- <hr class="hr mt-5"> -->
+    <!-- <div class="container-fluid pt-4" data-aos="fade-down">
+        <div class="row mb-4">
+          <div class="col-12">
+            <h1 class="fw-bold" style="font-size: 1.8rem; color: #333">
+              Tudo o que sua casa precisa, em um só lugar.
+            </h1>
+            <p class="text-muted">
+              Encontre profissionais qualificados para qualquer serviço.
+            </p>
+          </div>
+        </div>
+
+        <div class="row justify-content-center mb-5">
+          <div class="col-12 position-relative">
+            <input
+              type="text"
+              class="form-control shadow-sm"
+              style="border-radius: 15px; height: 55px; border: 1px solid #ddd"
+              placeholder="O que você precisa hoje? (ex: Eletricista)"
+            />
+            <button
+              class="btn btn-pink position-absolute"
+              style="right: 10px; top: 7px; border-radius: 10px; height: 40px"
+            >
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+        </div>
+      </div> -->
 
     <!-- Vitrine de serviços -->
     <div class="row g-2 pb-5">

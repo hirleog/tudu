@@ -1,9 +1,8 @@
 <section>
   <div
     *ngIf="
-      showDiv &&
-      ((prestadorIsLogged && isProfessional === true && !isEndFlow) ||
-        (clienteIsLogged === true && isProfessional === false && !isEndFlow))
+      (showDiv && prestadorIsLogged && isProfessional === true && !isEndFlow) ||
+      (clienteIsLogged === true && isProfessional === false && !isEndFlow)
     "
   >
     <!-- Menu Mobile Flutuante -->
@@ -102,10 +101,8 @@
     class="flex-col w-full py-14 h-full hidden md:block"
     style="height: 10000vw"
   >
-    <!-- Conteúdo do menu desktop (mesmo do seu código original) -->
     <div class="flex flex-col h-full justify-between fixed">
       <div>
-        <!-- Serviços -->
         <div
           class="flex items-center px-4 py-3 menu-item-desktop"
           [class.active]="
@@ -124,7 +121,6 @@
           >
         </div>
 
-        <!-- Pedidos -->
         <div
           *ngIf="isProfessional === false && isProfileRoute === false"
           class="flex items-center px-4 py-3 menu-item-desktop"
@@ -137,7 +133,6 @@
           >
         </div>
 
-        <!-- Pendentes -->
         <div
           class="flex items-center px-4 py-3 menu-item-desktop"
           [class.active]="
@@ -172,17 +167,6 @@
           >
         </div>
 
-        <!-- <div
-          *ngIf="isProfessional"
-          class="menu-item flex flex-col items-center p-2"
-          [class.active]="router.url === '/tudu-professional/historic'"
-          (click)="switchRoute('/tudu-professional/historic')"
-        >
-          <i class="fas fa-scroll text-lg"></i>
-          <p class="text-xs mt-1">Histórico</p>
-        </div> -->
-
-        <!-- Perfil -->
         <div
           class="flex items-center px-4 py-3 menu-item-desktop"
           [class.active]="profileActiveColor || isProfileRoute"
@@ -193,7 +177,6 @@
             >Perfil</span
           >
         </div>
-        <!-- Botão de expandir/recolher -->
         <div class="px-4 mb-4 mt-10">
           <button
             class="flex items-center text-gray-600 hover:text-primary focus:outline-none w-full"

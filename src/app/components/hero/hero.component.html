@@ -1,18 +1,40 @@
-<section id="hero" data-aos="fade-down" class="mb-5 max-w-4xl mx-auto lg:px-8">
-  <div class="container">
-    <!-- <hr class="hr mt-5 mb-5"> -->
+<div class="hero-wrapper">
+  <div class="carousel-container">
+    <div
+      *ngFor="let slide of slides; let i = index"
+      class="slide"
+      [class.active]="i === currentSlide"
+      [style.background-image]="
+        'linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5)), url(' +
+        slide.image +
+        ')'
+      "
+    >
+      <div class="hero-content" *ngIf="i === currentSlide" data-aos="fade-up">
+        <span class="badge-app">{{ slide.badge }}</span>
+        <h1>{{ slide.title }}</h1>
+        <p>{{ slide.subtitle }}</p>
 
-    <!-- Mensagem de boas-vindas -->
-    <div class="col-12 space">
-      <div class="text-center">
-        <h1 class="text-center">Tudü que você precisa dentro de um app!</h1>
-        <h2
-          class="text-muted text-center"
-          style="color: var(--secondary) !important"
-        >
-          Anuncie um serviço e escolha o profissional <br />que mais se adequar!
-        </h2>
+        <div class="hero-actions">
+          <button class="btn-primary-hero" (click)="scrollToServices()">
+            {{ slide.buttonText }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
-</section>
+
+  <div class="carousel-indicators">
+    <div
+      *ngFor="let slide of slides; let i = index"
+      class="indicator"
+      (click)="setSlide(i)"
+    >
+      <div
+        class="progress-bar"
+        [class.filling]="i === currentSlide"
+        [class.finished]="currentSlide > i && currentSlide !== -1"
+      ></div>
+    </div>
+  </div>
+</div>
