@@ -20,7 +20,7 @@
   </div>
 </lib-nav>
 
-<section class="min-h-screen bg-white pb-24">
+<section class="bg-white pb-26">
   <!-- padding bottom para o botão fixo -->
   <div id="card-detail" class="max-w-4xl mx-auto" *ngFor="let card of cards">
     <!-- Galeria de Imagens (Estilo Airbnb) -->
@@ -121,22 +121,85 @@
 
     <!-- Informações do Serviço (Estilo Airbnb) -->
     <div class="px-4 py-6 border-b border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">Sobre o serviço</h2>
+      <div class="flex items-start">
+        <i class="fas fa-file-alt text-gray-400 mt-1 mr-4 w-5 text-center"></i>
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">
+          Sobre o serviço
+        </h2>
+      </div>
 
       <div class="space-y-4">
-        <!-- Descrição -->
-        <div class="flex items-start">
-          <i
-            class="fas fa-file-alt text-gray-400 mt-1 mr-4 w-5 text-center"
-          ></i>
+        <div
+          *ngIf="card.serviceDescription !== ''"
+          class="flex items-start p-4 bg-white border border-gray-100 rounded-3xl shadow-sm col-span-full"
+        >
+          <div
+            class="w-10 h-10 rounded-2xl bg-purple-50 flex items-center justify-center mr-4 shrink-0"
+          >
+            <i class="fas fa-file-alt text-purple-400"></i>
+          </div>
           <div class="flex-1">
-            <p class="text-gray-900 font-medium mb-1">Descrição</p>
-            <p class="text-gray-600">{{ card.serviceDescription }}</p>
+            <p
+              class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+            >
+              Descrição do Serviço
+            </p>
+            <p class="text-sm text-gray-600 leading-relaxed mt-1">
+              {{ card.serviceDescription }}
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div
+            class="flex items-start p-4 bg-white border border-gray-100 rounded-3xl shadow-sm"
+          >
+            <div
+              class="w-10 h-10 rounded-2xl bg-red-50 flex items-center justify-center mr-4 shrink-0"
+            >
+              <i class="fas fa-map-marker-alt text-red-400"></i>
+            </div>
+            <div>
+              <p
+                class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+              >
+                Onde
+              </p>
+              <p class="text-sm text-gray-700 font-medium mt-0.5">
+                {{ card.address.street }}, {{ card.address.number }}
+              </p>
+              <p class="text-xs text-gray-500">
+                {{ card.address.neighborhood }}, {{ card.address.city }}
+              </p>
+            </div>
+          </div>
+
+          <div
+            class="flex items-start p-4 bg-white border border-gray-100 rounded-3xl shadow-sm"
+          >
+            <div
+              class="w-10 h-10 rounded-2xl bg-blue-50 flex items-center justify-center mr-4 shrink-0"
+            >
+              <i class="fas fa-clock text-blue-400"></i>
+            </div>
+            <div>
+              <p
+                class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+              >
+                Quando
+              </p>
+              <p class="text-sm text-gray-700 font-medium mt-0.5">
+                {{
+                  formatDateTime(card.horario_preferencial)
+                    | date : "dd/MM/yyyy - HH:mm"
+                }}
+              </p>
+            </div>
           </div>
         </div>
 
         <!-- Localização -->
-        <div class="flex items-start">
+        <!-- <div class="flex items-start">
           <i
             class="fas fa-map-marker-alt text-gray-400 mt-1 mr-4 w-5 text-center"
           ></i>
@@ -150,7 +213,6 @@
           </div>
         </div>
 
-        <!-- Horário -->
         <div class="flex items-start">
           <i class="fas fa-clock text-gray-400 mt-1 mr-4 w-5 text-center"></i>
           <div class="flex-1">
@@ -159,16 +221,27 @@
               {{ formatDateTime(card.horario_preferencial) }}
             </p>
           </div>
-        </div>
+        </div> -->
 
         <!-- Valor -->
-        <div class="flex items-start">
-          <i
-            class="fas fa-dollar-sign text-gray-400 mt-1 mr-4 w-5 text-center"
-          ></i>
-          <div class="flex-1">
-            <p class="text-gray-900 font-medium mb-1">Valor</p>
-            <p class="text-2xl font-bold text-gray-900">R$ {{ card.valor }}</p>
+        <div
+          class="flex items-start p-4 bg-white border border-gray-100 rounded-3xl shadow-sm"
+        >
+          <div
+            class="w-10 h-10 rounded-2xl bg-green-50 flex items-center justify-center mr-4 shrink-0"
+          >
+            <i class="fas fa-dollar-sign text-green-500"></i>
+          </div>
+          <div>
+            <p
+              class="text-[10px] font-black text-gray-400 uppercase tracking-widest"
+            >
+              Valor Estimado
+            </p>
+            <p class="text-xl font-bold text-gray-900 mt-0.5">
+              R$ {{ card.valor }}
+            </p>
+            <p class="text-[10px] text-gray-400 italic">Sujeito a negociação</p>
           </div>
         </div>
       </div>
@@ -206,7 +279,7 @@
     <!-- Candidaturas (se houver) -->
     <div
       *ngIf="card.candidaturas && card.candidaturas.length > 0"
-      class="px-4 py-6 border-b border-gray-200"
+      class="px-4 py-6 border-gray-200 mb-[9em] md:mb-0"
     >
       <div class="flex items-center mb-4">
         <h2 class="text-xl font-semibold text-gray-900">
@@ -464,25 +537,29 @@
     </div>
 
     <!-- Botão de Negociação (mantido como estava) -->
-    <app-mobile-negotiation-bar
-      class="py-3 px-4"
-      *ngIf="hideMobileButtons(card)"
-      [startDateTime]="card.horario_preferencial"
-      [value]="card.valor"
-      [negotiateButtonText]="'Negociar'"
-      [advanceButtonText]="'Avançar'"
-      [hideAdvanceBtn]="flow === 'recusado' ? true : false"
-      (onNegotiate)="handleNegotiate($event)"
-      (onAdvance)="handleAdvance($event)"
-    >
-    </app-mobile-negotiation-bar>
     <div
-      *ngIf="hideCancelBtn(card.status_pedido)"
-      class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-40"
+      class="fixed bottom-0 left-0 right-0 border-gray-100 z-50 md:relative md:bg-transparent md:border-none md:backdrop-blur-none"
     >
-      <div class="max-w-4xl mx-auto">
+      <div class="max-w-4xl mx-auto flex flex-col gap-3">
+        <app-mobile-negotiation-bar
+          class="py-3 px-4"
+          *ngIf="hideMobileButtons(card)"
+          [startDateTime]="card.horario_preferencial"
+          [value]="card.valor"
+          [negotiateButtonText]="'Negociar'"
+          [advanceButtonText]="'Avançar'"
+          [hideAdvanceBtn]="flow === 'recusado' ? true : false"
+          (onNegotiate)="handleNegotiate($event)"
+          (onAdvance)="handleAdvance($event)"
+        >
+        </app-mobile-negotiation-bar>
+      </div>
+      <div
+        class="footer-cancel-btn border-t border-gray-200 p-4 shadow-[0_-4px_10px_rgba(0,0,0,0.05)] md:border-0 md:shadow-none md:p-0"
+      >
         <button
-          class="w-full py-3 px-4 border border-red-500 text-red-500 rounded-xl font-medium hover:bg-red-50 transition-colors"
+          *ngIf="hideCancelBtn(card.status_pedido) && !hideMobileButtons(card)"
+          class="w-full py-4 px-4 border border-red-500 text-red-500 rounded-2xl font-bold bg-white border-t hover:bg-red-50 active:scale-[0.98] transition-all"
           (click)="handleOption('cancelar', cards[0])"
         >
           {{
@@ -558,11 +635,10 @@
 
       <div
         class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl cursor-pointer active:bg-gray-100 transition-all"
-        (click)="calendarActive = !calendarActive"
+        (click)="openCalendarCard()"
       >
         <i class="far fa-calendar text-gray-400"></i>
-        <span class="text-sm font-medium text-gray-700"
-        >
+        <span class="text-sm font-medium text-gray-700">
           {{
             dateTimeSelected ||
               (cards.length > 0

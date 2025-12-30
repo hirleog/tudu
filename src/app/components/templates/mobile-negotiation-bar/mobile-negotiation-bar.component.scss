@@ -54,7 +54,17 @@
 /* Esconder em desktop */
 @media (min-width: 768px) {
   .mobile-negotiation-bar {
-    display: none;
+    position: relative; /* Sai do rodapé e vai para onde for chamado no HTML */
+    bottom: auto;
+    left: auto;
+    right: auto;
+    background: transparent; /* Remove o fundo branco */
+    border: none; /* Remove a borda de separação do rodapé */
+    box-shadow: none; /* Remove a sombra */
+    padding: 0; /* Remove o padding extra */
+    animation: none; /* Remove a animação de subir */
+    margin-top: 20px; /* Espaço para não colar no item de cima */
+    display: block; /* Garante que ele apareça */
   }
 }
 

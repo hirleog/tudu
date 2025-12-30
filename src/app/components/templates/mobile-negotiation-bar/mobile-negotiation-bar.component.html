@@ -1,5 +1,6 @@
-<div *ngIf="isMobile" class="mobile-negotiation-bar">
-  <!-- Header com data/hora e valor -->
+<div
+  class="fixed bottom-0 left-0 right-0 z-[1000] bg-white border-t-2 border-[#e2e8f0] p-[12px_16px] shadow-[0_-4px_12px_rgba(0,0,0,0.1)] animate-[slideUp_0.3s_ease-out] md:relative md:bottom-auto md:left-auto md:right-auto md:bg-transparent md:border-0 md:shadow-none md:p-0 md:mt-6 md:animate-none"
+>
   <div class="bar-header">
     <div class="date-time">
       <i class="fas fa-calendar-alt mr-1"></i>
@@ -11,26 +12,23 @@
     </div>
   </div>
 
-  <!-- Botões de ação -->
-  <div class="bar-actions">
-   <button
-  class="btn-negotiate btn btn-outline-primary"
-  [class.col-12]="hideAdvanceBtn"
-  [class.col-6]="!hideAdvanceBtn"
-  (click)="handleNegotiate()"
-  [disabled]="negotiateDisabled"
-  [class.disabled]="negotiateDisabled"
->
-  <i class="fas fa-handshake mr-1"></i>
-  {{ negotiateButtonText }}
-</button>
+  <div class="bar-actions !flex !justify-center !gap-3 !w-full">
+    <button
+      class="btn-negotiate btn btn-outline-primary !py-4 !rounded-2xl !font-bold !flex !items-center !justify-center"
+      [class.col-12]="hideAdvanceBtn"
+      [class.col-6]="!hideAdvanceBtn"
+      (click)="handleNegotiate()"
+      [disabled]="negotiateDisabled"
+    >
+      <i class="fas fa-handshake mr-1"></i>
+      {{ negotiateButtonText }}
+    </button>
 
     <button
-    *ngIf="!hideAdvanceBtn"
-      class="btn-advance col-6 btn btn-primary"
+      *ngIf="!hideAdvanceBtn"
+      class="btn-advance col-6 btn btn-primary !py-4 !rounded-2xl !font-bold !flex !items-center !justify-center"
       (click)="handleAdvance()"
       [disabled]="advanceDisabled"
-      [class.disabled]="advanceDisabled"
     >
       <i class="fas fa-arrow-right mr-1"></i>
       {{ advanceButtonText }}

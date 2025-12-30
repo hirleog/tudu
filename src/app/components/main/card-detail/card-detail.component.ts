@@ -527,6 +527,14 @@ export class CardDetailComponent implements OnInit {
     return statusMap[status] || status;
   }
 
+  openCalendarCard(): void {
+    this.calendarActive = !this.calendarActive;
+    window.scrollTo({
+      top: document.body.scrollHeight,
+      behavior: 'smooth', // Faz o scroll ser deslizado, não um pulo seco
+    });
+  }
+
   formatDateTime(dateTime: string): string {
     // Implemente a formatação conforme necessário
     // Exemplo: return moment(dateTime).format('DD/MM/YYYY [às] HH:mm');
