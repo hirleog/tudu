@@ -26,3 +26,17 @@ span {
 .modal-backdrop {
   background-color: rgba(0, 0, 0, 0.7);
 }
+.btn-primary-custom {
+  /* Removemos o shadow-lg e usamos um preenchimento sólido */
+  box-shadow: none;
+  border: none;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.btn-primary-custom:disabled {
+  background-color: #f3f4f6 !important; /* Cinza bem claro */
+  color: #9ca3af !important; /* Texto cinza */
+  filter: none;
+  opacity: 1;
+}

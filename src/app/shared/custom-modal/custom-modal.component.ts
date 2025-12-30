@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 type ModalType = 'success' | 'error' | 'warning';
 
@@ -8,7 +8,7 @@ type ModalType = 'success' | 'error' | 'warning';
   templateUrl: './custom-modal.component.html',
   styleUrls: ['./custom-modal.component.css'],
 })
-export class CustomModalComponent {
+export class CustomModalComponent implements OnInit {
   @Input() modalId = 'customModal';
   @Input() title = 'Aviso';
   @Input() message = '';
@@ -22,6 +22,7 @@ export class CustomModalComponent {
   @Input() showModal = false;
   @Input() messageTitle: string = 'Pagamento Aprovado!';
   @Input() showBtn = true;
+  @Input() priceNegotiated = 0;
 
   // Configuração dinâmica
   modalIcon: string = 'fa-check';
@@ -30,6 +31,9 @@ export class CustomModalComponent {
   messageBody: string = 'Seu pagamento foi processado com sucesso.';
   @Input() isLoadingBtn: boolean | undefined;
 
+  ngOnInit(): void {
+    console.log('dadsasad', this.priceNegotiated);
+  }
   openModal(): void {
     this.showModal = true;
   }

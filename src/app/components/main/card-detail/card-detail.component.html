@@ -508,61 +508,74 @@
   #modalNegociar
   [actionButtonText]="'Negociar'"
   [isLoadingBtn]="isLoadingBtn"
+  [priceNegotiated]="priceNegotiated"
   (modalAction)="handleModalAction(cards[0])"
 >
-  <div optional-content class="space-y-4">
-    <div class="bg-gray-50 p-4 rounded-3xl border border-gray-100">
-      <label class="block text-xs font-bold text-gray-400 uppercase ml-1 mb-2"
-        >Sua proposta de valor</label
-      >
-      <div class="relative">
-        <div
-          class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+  <div optional-content class="mt-4 px-1">
+    <div class="mb-8">
+      <div class="flex justify-between items-end mb-2">
+        <label
+          class="text-[11px] font-bold text-gray-400 uppercase tracking-wider"
+          >Sua Proposta</label
         >
-          <span class="text-gray-900 font-bold text-lg">R$</span>
-        </div>
+        <span
+          class="text-[10px]"
+          [ngClass]="
+            priceNegotiated < 50 ? 'text-red-500 font-bold' : 'text-gray-400'
+          "
+        >
+          Mínimo R$ 50,00
+        </span>
+      </div>
+
+      <div
+        class="relative border-b-2 border-gray-100 focus-within:border-gray-900 transition-all py-2"
+      >
+        <span class="absolute left-0 bottom-3 text-xl font-medium text-gray-400"
+          >R$</span
+        >
         <input
           type="text"
-          class="block w-full pl-12 pr-4 py-4 bg-white border-none rounded-2xl text-lg font-bold shadow-sm focus:ring-2 focus:ring-gray-900 transition-all"
+          class="w-full pl-8 bg-transparent text-3xl font-semibold outline-none text-gray-900 placeholder:text-gray-200"
           [(ngModel)]="priceNegotiated"
           currencyMask
           [options]="currencyOptions"
           inputmode="numeric"
+          placeholder="0,00"
         />
       </div>
-      <p class="mt-2 text-[11px] text-gray-500 ml-1">
+      <p class="mt-2 text-[11px] text-gray-400 italic">
         Valor original:
         {{ (cards.length > 0 ? cards[0].valor : 0) | currency : "BRL" }}
       </p>
     </div>
 
-    <div class="bg-gray-50 p-4 rounded-3xl border border-gray-100">
-      <label class="block text-xs font-bold text-gray-400 uppercase ml-1 mb-2"
-        >Nova data e horário</label
+    <div class="mb-4">
+      <label
+        class="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-3"
+        >Data Sugerida</label
       >
-      <div class="relative" (click)="calendarActive = !calendarActive">
-        <div
-          class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none"
+
+      <div
+        class="flex items-center gap-3 py-3 px-4 bg-gray-50 rounded-xl cursor-pointer active:bg-gray-100 transition-all"
+        (click)="calendarActive = !calendarActive"
+      >
+        <i class="far fa-calendar text-gray-400"></i>
+        <span class="text-sm font-medium text-gray-700"
         >
-          <i class="far fa-calendar-alt text-gray-900 text-lg"></i>
-        </div>
-        <input
-          readonly
-          type="text"
-          class="block w-full pl-12 pr-4 py-4 bg-white border-none rounded-2xl text-sm font-semibold shadow-sm cursor-pointer"
-          [value]="
+          {{
             dateTimeSelected ||
-            (cards.length > 0
-              ? (cards[0].horario_preferencial | date : 'dd/MM/yyyy - HH:mm')
-              : '')
-          "
-          placeholder="Selecione uma data"
-        />
+              (cards.length > 0
+                ? (cards[0].horario_preferencial | date : "dd/MM/yyyy - HH:mm")
+                : "Escolher data")
+          }}
+        </span>
+        <i class="fas fa-chevron-down ml-auto text-[10px] text-gray-300"></i>
       </div>
 
       <div
         *ngIf="calendarActive"
-        class="mt-4 overflow-hidden rounded-2xl border border-gray-200 shadow-inner bg-white animate-fade-in"
+        class="mt-4 animate-fade-in border border-gray-50 rounded-2xl overflow-hidden shadow-sm"
       >
         <app-calendar
           [hasTime]="true"

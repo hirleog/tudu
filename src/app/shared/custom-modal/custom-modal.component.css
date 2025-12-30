@@ -42,3 +42,25 @@
     width: 90%;
   }
 }
+/* Substitua o seletor antigo .max-h-\[60vh\] por este: */
+.modal-scroll-area {
+  /* Define o limite inicial */
+  max-height: 60vh; 
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Quando houver conteúdo expandido (como o calendário), 
+   o container pai flex vai permitir que esta div cresça */
+.modal-scroll-area:has(.animate-fade-in), 
+.modal-scroll-area:focus-within {
+  max-height: 85vh;
+}
+
+/* Garante que o conteúdo injetado não seja cortado */
+.modal-dynamic-content {
+  height: auto;
+  overflow: visible !important;
+  display: block;
+}

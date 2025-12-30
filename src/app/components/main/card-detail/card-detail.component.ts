@@ -61,7 +61,7 @@ export class CardDetailComponent implements OnInit {
   dateSelected!: string;
   timeSelected: string = '12:00';
   dateTimeSelected!: string;
-  priceNegotiated: any;
+  priceNegotiated: number = 0;
   hideCalendarDays: boolean = false;
   isNotificationFlag: string = 'false';
 
