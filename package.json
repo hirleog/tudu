@@ -37,7 +37,7 @@
     "rxjs": "~7.5.0",
     "socket.io-client": "^4.5.4",
     "tslib": "^2.3.0",
-    "tudu-components": "^0.2.8",
+    "tudu-components": "^0.2.9",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
