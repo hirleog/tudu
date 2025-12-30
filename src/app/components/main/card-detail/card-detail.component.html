@@ -248,85 +248,89 @@
     </div>
 
     <!-- Detalhes do Pedido -->
-    <div class="px-4 py-6 border-b border-gray-200">
-      <h2 class="text-xl font-semibold text-gray-900 mb-4">
-        Detalhes do pedido
-      </h2>
-
-      <div class="grid grid-cols-2 gap-6">
-        <div>
-          <p class="text-gray-500 text-sm mb-1">Solicitado em</p>
-          <p class="text-gray-900 font-medium">
-            {{ card.createdAt | date : "dd/MM/yyyy" }}
-          </p>
-          <p class="text-gray-500 text-xs">
-            {{ card.createdAt | date : "HH:mm" }}
-          </p>
-        </div>
-
-        <div *ngIf="card.data_finalizacao">
-          <p class="text-gray-500 text-sm mb-1">Concluído em</p>
-          <p class="text-gray-900 font-medium">
-            {{ card.data_finalizacao | date : "dd/MM/yyyy" }}
-          </p>
-          <p class="text-gray-500 text-xs">
-            {{ card.data_finalizacao | date : "HH:mm" }}
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Candidaturas (se houver) -->
-    <div
-      *ngIf="card.candidaturas && card.candidaturas.length > 0"
-      class="px-4 py-6 border-gray-200 mb-[9em] md:mb-0"
-    >
-      <div class="flex items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-900">
-          {{ isProfessionalIndicator ? "Meu Lance" : "Propostas Recebidas" }}
+    <div class="mb-[8em] md:mb-0">
+      <div class="px-4 py-6 border-b border-gray-200">
+        <h2 class="text-xl font-semibold text-gray-900 mb-4">
+          Detalhes do pedido
         </h2>
-        <span
-          class="bg-pink-100 text-pink-800 text-sm font-medium px-2.5 py-0.5 rounded-full ml-2"
-        >
-          {{ card.candidaturas.length }}
-        </span>
+
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <p class="text-gray-500 text-sm mb-1">Solicitado em</p>
+            <p class="text-gray-900 font-medium">
+              {{ card.createdAt | date : "dd/MM/yyyy" }}
+            </p>
+            <p class="text-gray-500 text-xs">
+              {{ card.createdAt | date : "HH:mm" }}
+            </p>
+          </div>
+
+          <div *ngIf="card.data_finalizacao">
+            <p class="text-gray-500 text-sm mb-1">Concluído em</p>
+            <p class="text-gray-900 font-medium">
+              {{ card.data_finalizacao | date : "dd/MM/yyyy" }}
+            </p>
+            <p class="text-gray-500 text-xs">
+              {{ card.data_finalizacao | date : "HH:mm" }}
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div class="space-y-3">
-        <div
-          *ngFor="let candidatura of card.candidaturas"
-          class="p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors bg-white"
-        >
-          <div class="flex justify-between items-start mb-2">
-            <div>
-              <p class="text-lg font-bold text-gray-900">
-                R$ {{ candidatura.valor_negociado }}
-              </p>
-              <p class="text-gray-600 text-sm">
-                {{ candidatura.horario_negociado }}
-              </p>
+      <!-- Candidaturas (se houver) -->
+      <div
+        *ngIf="card.candidaturas && card.candidaturas.length > 0"
+        class="px-4 py-6 border-gray-200"
+      >
+        <div class="flex items-center mb-4">
+          <h2 class="text-xl font-semibold text-gray-900">
+            {{ isProfessionalIndicator ? "Meu Lance" : "Propostas Recebidas" }}
+          </h2>
+          <span
+            class="bg-pink-100 text-pink-800 text-sm font-medium px-2.5 py-0.5 rounded-full ml-2"
+          >
+            {{ card.candidaturas.length }}
+          </span>
+        </div>
+
+        <div class="space-y-3">
+          <div
+            *ngFor="let candidatura of card.candidaturas"
+            class="p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors bg-white"
+          >
+            <div class="flex justify-between items-start mb-2">
+              <div>
+                <p class="text-lg font-bold text-gray-900">
+                  R$ {{ candidatura.valor_negociado }}
+                </p>
+                <p class="text-gray-600 text-sm">
+                  {{ candidatura.horario_negociado }}
+                </p>
+              </div>
+              <span
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [ngClass]="{
+                  'bg-blue-100 text-blue-800':
+                    candidatura.status === 'negociacao',
+                  'bg-green-100 text-green-800':
+                    candidatura.status === 'aceito',
+                  'bg-red-100 text-red-800': candidatura.status === 'recusado',
+                  'bg-gray-100 text-gray-800':
+                    candidatura.status === 'cancelado'
+                }"
+              >
+                {{
+                  getCandidaturaStatusText(
+                    candidatura.status ? candidatura.status : ""
+                  )
+                }}
+              </span>
             </div>
-            <span
-              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
-              [ngClass]="{
-                'bg-blue-100 text-blue-800':
-                  candidatura.status === 'negociacao',
-                'bg-green-100 text-green-800': candidatura.status === 'aceito',
-                'bg-red-100 text-red-800': candidatura.status === 'recusado',
-                'bg-gray-100 text-gray-800': candidatura.status === 'cancelado'
-              }"
-            >
-              {{
-                getCandidaturaStatusText(
-                  candidatura.status ? candidatura.status : ""
-                )
-              }}
-            </span>
+            <p class="text-gray-500 text-xs">
+              Candidatado em:
+              <!-- {{ candidatura.data_candidatura | date : "dd/MM/yyyy 'às' HH:mm" }} -->
+            </p>
           </div>
-          <p class="text-gray-500 text-xs">
-            Candidatado em:
-            <!-- {{ candidatura.data_candidatura | date : "dd/MM/yyyy 'às' HH:mm" }} -->
-          </p>
         </div>
       </div>
     </div>
